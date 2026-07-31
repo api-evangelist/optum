@@ -1,0 +1,43 @@
+generated: '2026-07-20'
+method: searched
+source: https://developer.optum.com/eligibilityandclaims/docs/api-urls
+docs:
+- https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
+- https://developer.optum.com/eligibilityandclaims/docs/api-environments
+conventions:
+  authentication:
+    style: oauth2-client-credentials
+    header: 'Authorization: Bearer <access_token>'
+    token_url: https://apigw.optum.com/apip/auth/v2/token
+    ref: authentication/optum-authentication.yml
+  transport:
+    tls: TLS 1.2+
+    content_type: application/json
+  versioning:
+    style: uri-path
+    examples:
+    - eligibility/v3
+    - professionalclaims/v3
+    - institutionalclaims/v1
+    - claimstatus/v2
+    - reports/v2
+    ref: lifecycle/optum-lifecycle.yml
+  payloads:
+    formats:
+    - json
+    - x12-edi
+    notes: >-
+      Most transaction APIs accept and return both a JSON representation and native
+      X12 EDI (270/271 eligibility, 837 claims, 276/277 status, 835 remittance) via
+      dedicated raw-x12 endpoints.
+  health_check:
+    pattern: GET /healthcheck per API for availability/latency polling
+  tracing:
+    identifier: traceId
+    notes: Attachment operations track submissions by traceId (e.g. attachments/status/v1/{traceId}).
+  idempotency:
+    supported: false
+    notes: No documented idempotency-key contract; transaction de-duplication is handled server-side by payer/claim identifiers.
+  errors:
+    ref: not-published
+    notes: X12 999/277CA acknowledgements and HTTP status codes convey transaction-level errors.

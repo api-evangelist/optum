@@ -1,0 +1,25 @@
+generated: '2026-07-20'
+method: derived
+source: developer.optum.com docs + apis.yml
+standards:
+- id: oauth2
+  conforms: true
+  evidence: OAuth2 client-credentials grant documented for all APIs (security-and-authorization-v2)
+- id: oidc
+  conforms: false
+  evidence: no OpenID Connect discovery documented; client-credentials only
+- id: fhir-r4
+  conforms: true
+  evidence: Data Access and Interoperability APIs expose FHIR R4 resources (Endpoint, Procedure, DocumentReference, ObservationVitalSigns, Immunization)
+- id: hl7-x12-edi
+  conforms: true
+  evidence: eligibility (270/271), claims (837), status (276/277), remittance (835) supported as native X12
+- id: hipaa
+  conforms: true
+  evidence: HIPAA data-use agreements and training required during API onboarding; healthcare transaction platform for covered entities
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: no application/problem+json error envelope documented
+- id: tls12
+  conforms: true
+  evidence: all API connections require TLS 1.2 or higher

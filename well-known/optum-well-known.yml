@@ -1,0 +1,32 @@
+generated: '2026-07-20'
+method: searched
+source: live probes of /.well-known/* on Optum hosts
+hosts:
+- host: https://www.optum.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: optum-security.txt
+  - path: /.well-known/openid-configuration
+    status: 301
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+  - path: /.well-known/api-catalog
+    status: 301
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://developer.optum.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 302
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+- host: https://apigw.optum.com
+  note: API gateway returns 400 to unauthenticated /.well-known/* probes
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 400
+  - path: /.well-known/oauth-authorization-server
+    status: 400

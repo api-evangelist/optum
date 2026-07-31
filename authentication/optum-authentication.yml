@@ -1,0 +1,27 @@
+generated: '2026-07-20'
+method: searched
+source: https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
+docs: https://developer.optum.com/eligibilityandclaims/docs/optum-security-and-authorization
+summary:
+  types:
+  - oauth2
+  oauth2_flows:
+  - clientCredentials
+  transport_security: TLS 1.2+
+schemes:
+- name: OptumOAuth2
+  type: oauth2
+  scheme: bearer
+  bearer_format: JWT
+  flows:
+  - flow: clientCredentials
+    token_url_production: https://apigw.optum.com/apip/auth/v2/token
+    token_url_sandbox: https://sandbox-apigw.optum.com/apip/auth/v2/token
+  token_lifetime_seconds: 3600
+  request_header: 'Authorization: Bearer <access_token>'
+  credentials: client_id + client_secret provisioned during onboarding / sandbox access
+  notes: >-
+    Access is controlled via OAuth2 client-credentials grant. Consumers exchange a
+    client_id and client_secret for a short-lived (1 hour) JWT access_token, returned
+    with token_type "bearer" and expires_in 3600, then send it as a Bearer token on
+    subsequent requests over TLS 1.2+.

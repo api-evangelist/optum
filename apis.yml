@@ -1,7 +1,15 @@
 aid: optum
 name: Optum
-description: Optum is a company surfaced as a portfolio company of insight-partners and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Optum, part of UnitedHealth Group, is a health services and technology company that
+  operates one of the largest medical and pharmacy networks in the United States. Its
+  developer platform (developer.optum.com) exposes RESTful, JSON- and X12 EDI-based
+  healthcare APIs for eligibility verification, professional and institutional claims
+  validation and submission, claim status, ERA/remittance reports, prior authorization,
+  attachments, payer directory, dental pre-care and claims, pharmacy solutions, and
+  FHIR-based Data Access and Interoperability (Patient Access) endpoints. APIs are
+  secured with OAuth2 client-credentials bearer tokens over TLS 1.2+, with free sandbox
+  access, interactive "Try It" documentation, and downloadable OpenAPI specifications.
 url: https://raw.githubusercontent.com/api-evangelist/optum/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -9,14 +17,128 @@ x-backed-by:
 - insight-partners
 x-tier: stub
 x-tier-reason: portfolio-lead
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://www.optum.com/content/dam/optum4/images/logos/optum-logo.svg
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-20'
 tags:
 - Company
-apis: []
+- Healthcare
+- Health Insurance
+- Claims
+- Eligibility
+- FHIR
+- Interoperability
+- Pharmacy
+- EDI
+- X12
+- Payments
+- Prior Authorization
+apis:
+- name: Optum Medical Network Eligibility and Claims API
+  description: >-
+    RESTful, JSON and X12 EDI (270/271, 837, 276/277, 835) healthcare transaction APIs
+    for real-time patient eligibility and coverage verification, professional and
+    institutional claim validation and submission, claim status inquiry, ERA/claim
+    responses and reports, prior authorization, attachments, and payer list lookup.
+  humanURL: https://developer.optum.com/eligibilityandclaims
+  baseURL: https://apigw.optum.com/medicalnetwork/
+  tags:
+  - Eligibility
+  - Claims
+  - Claim Status
+  - ERA
+  - Prior Authorization
+  - X12
+  properties:
+  - type: APIReference
+    url: https://developer.optum.com/eligibilityandclaims/reference/api-overview
+  - type: GettingStarted
+    url: https://developer.optum.com/eligibilityandclaims/docs/get-started-with-optum-api
+  - type: Authentication
+    url: https://developer.optum.com/eligibilityandclaims/docs/optum-security-and-authorization
+- name: Optum Data Access and Interoperability (FHIR) API
+  description: >-
+    FHIR R4-based Patient Access and interoperability APIs (Endpoint, Procedure,
+    DocumentReference, ObservationVitalSigns, Immunization, and related resources)
+    supporting CMS interoperability and patient data access requirements.
+  humanURL: https://developer.optum.com/dataaccessandinteroperability
+  baseURL: https://apigw.optum.com/
+  tags:
+  - FHIR
+  - Interoperability
+  - Patient Access
+- name: Optum Real for Dental API
+  description: >-
+    Real-time dental data exchange APIs for pre-care estimates, eligibility, claims
+    submission and inquiry, attachments with image intelligence, and ERA, with GraphQL
+    options for select operations.
+  humanURL: https://developer.optum.com/optumreal-dental
+  baseURL: https://apigw.optum.com/dentalnetwork/
+  tags:
+  - Dental
+  - Eligibility
+  - Claims
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+common:
+- type: VulnerabilityDisclosure
+  url: security/optum-vulnerability-disclosure.yml
+- type: Security
+  url: https://www.optum.com/vulnerability.html
+- type: DomainSecurity
+  url: security/optum-domain-security.yml
+- type: Authentication
+  url: authentication/optum-authentication.yml
+- type: Conventions
+  url: conventions/optum-conventions.yml
+- type: Conformance
+  url: conformance/optum-conformance.yml
+- type: Lifecycle
+  url: lifecycle/optum-lifecycle.yml
+- type: WellKnown
+  url: well-known/optum-well-known.yml
+- type: SecurityTxt
+  url: well-known/optum-security.txt
+- type: LLMsTxt
+  url: llms/optum-llms.txt
+- type: DeveloperPortal
+  url: https://developer.optum.com/
+- type: Documentation
+  url: https://developer.optum.com/apitools/docs/getting-started
+- type: APIReference
+  url: https://developer.optum.com/eligibilityandclaims/reference/api-overview
+- type: GettingStarted
+  url: https://developer.optum.com/eligibilityandclaims/docs/get-started-with-optum-api
+- type: Support
+  url: https://community.optum.com/developers/home
+- type: SignUp
+  url: https://marketplace.optum.com/apiservices/api-sandbox-access
+- type: Sandbox
+  url: https://marketplace.optum.com/apiservices/api-sandbox-access
+- type: Website
+  url: https://www.optum.com/
+- type: TermsOfService
+  url: https://www.optum.com/terms-of-use.html
+- type: PrivacyPolicy
+  url: https://www.optum.com/privacy-policy.html
+x-enrichment:
+  date: '2026-07-20'
+  status: enriched
+  artifacts_added: 9
+  pass: local-v1

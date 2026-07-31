@@ -1,0 +1,39 @@
+# Optum
+
+> Optum, part of UnitedHealth Group, operates one of the largest U.S. medical and pharmacy networks and publishes RESTful JSON/X12 EDI and FHIR healthcare APIs for eligibility, claims, claim status, ERA/remittance, prior authorization, attachments, dental, pharmacy, and patient-access interoperability. APIs use OAuth2 client-credentials bearer tokens over TLS 1.2+, with free sandbox access and downloadable OpenAPI specs.
+
+## APIs
+
+- [Eligibility and Claims (Medical Network)](https://developer.optum.com/eligibilityandclaims): eligibility/v3, professional & institutional claims, claim status, ERA reports, prior authorization, attachments, payer list. Base: https://apigw.optum.com/medicalnetwork/
+- [Data Access and Interoperability (FHIR R4)](https://developer.optum.com/dataaccessandinteroperability): Patient Access FHIR resources — Endpoint, Procedure, DocumentReference, ObservationVitalSigns, Immunization.
+- [Optum Real for Dental](https://developer.optum.com/optumreal-dental): dental pre-care estimates, eligibility, claims, attachments, ERA.
+
+## Authentication
+
+- [Security and Authorization V2](https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview): OAuth2 client-credentials grant; POST client_id/client_secret to the token endpoint for a 1-hour JWT bearer token.
+- Token URL (production): https://apigw.optum.com/apip/auth/v2/token
+- Token URL (sandbox): https://sandbox-apigw.optum.com/apip/auth/v2/token
+
+## Docs
+
+- [Developer Portal](https://developer.optum.com/)
+- [Getting Started](https://developer.optum.com/eligibilityandclaims/docs/get-started-with-optum-api)
+- [API URLs and Environments](https://developer.optum.com/eligibilityandclaims/docs/api-urls)
+- [API Reference / Overview](https://developer.optum.com/eligibilityandclaims/reference/api-overview)
+- [Sandbox Access](https://marketplace.optum.com/apiservices/api-sandbox-access)
+- [Developer Community](https://community.optum.com/developers/home)
+
+## Artifacts
+
+- Authentication: authentication/optum-authentication.yml
+- Conventions: conventions/optum-conventions.yml
+- Conformance: conformance/optum-conformance.yml
+- Lifecycle: lifecycle/optum-lifecycle.yml
+- Well-Known: well-known/optum-well-known.yml
+- Security (vulnerability disclosure): security/optum-vulnerability-disclosure.yml
+- Domain security: security/optum-domain-security.yml
+
+## Security
+
+- [Vulnerability reporting policy](https://www.optum.com/vulnerability.html)
+- security.txt: https://www.optum.com/.well-known/security.txt (Contact: Securityreporting@optum.com)

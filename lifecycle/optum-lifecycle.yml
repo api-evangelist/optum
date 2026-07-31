@@ -1,0 +1,26 @@
+generated: '2026-07-20'
+method: searched
+source: https://developer.optum.com/eligibilityandclaims/docs/api-environments
+versioning:
+  scheme: uri-path
+  observed_versions:
+  - eligibility/v3
+  - professionalclaims/v3
+  - institutionalclaims/v1
+  - claimstatus/v2
+  - reports/v2
+  - payerlist/v1
+  - attachments/v1
+  docs: https://developer.optum.com/eligibilityandclaims/docs/api-urls
+environments:
+- name: sandbox
+  base: https://sandbox-apigw.optum.com/
+- name: production
+  base: https://apigw.optum.com/
+deprecation:
+  policy_url: null
+  notes: No public deprecation/sunset (RFC 8594) policy documented; versions coexist under distinct URI paths.
+status_page:
+  url: null
+  notes: No public status page found; each API exposes a /healthcheck endpoint for availability polling.
+deprecated_operations: []
