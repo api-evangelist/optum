@@ -1,0 +1,203 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Submitter API",
+    "description": "Submitter API Service",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://springdoc.org"
+    },
+    "version": "v1.0"
+  },
+  "servers": [
+    {
+      "url": "https://sandbox-apigw.optum.com/pharmacynetwork/submitter/v1",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/healthcheck": {
+      "get": {
+        "tags": [
+          "Health Check"
+        ],
+        "summary": "Health Check",
+        "operationId": "healthCheck",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Bearer Your-Access-Token<br/>Example: <b>Bearer eyJraWQiOiIxIiwid…</b>",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheck"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pharmacy-claims": {
+      "post": {
+        "tags": [
+          "submitter-api-request-http-controller"
+        ],
+        "security": [
+          {
+            "oAuth": [
+              "read_healthcheck"
+            ]
+          }
+        ],
+        "operationId": "sendMessage",
+        "parameters": [
+          {
+            "name": "x-optum-trace-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "description": "Identification string automatically assigned to this message by Optum. You do not need to include this on your message.",
+              "example": "X-optum-trace-id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitterResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "KeyValuePair": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the first pair must be submitterID. The name for the second pair, if applicable, must be hostSubmitterID.",
+            "example": "submitterID",
+            "type": "string"
+          },
+          "value": {
+            "description": "Enter the submitter ID in the first pair. If applicable, enter the Host Submitter ID in the second pair.",
+            "example": "BR_126",
+            "type": "string"
+          }
+        }
+      },
+      "SubmitterRequest": {
+        "type": "object",
+        "properties": {
+          "headers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KeyValuePair"
+            }
+          },
+          "messageData": {
+            "description": "The D0/F6 format claim encoded in Base 64 format.",
+            "example": "NjEwMTQ0RDBCMUQwVEVTVCAgICAxMDExMTk5OTk5OTkwICAgICAyMDI1MDEwMSAgICAgICAgICAeHEFNMDQcQzIxMjMzNTY3ODkcQzMwMRxDNjEcQ0NQVEZJUlNUMRxDRFBUTEFTVDEcQzExMjM0NTYeHEFNMDEcQzQxOTgwMDExORxDNTEcQzcxHENBUFRGSVJTVDEcQ0JQVExBU1QxHENNMTAwIFRlc3QcQ05GT1IgVFdPUlRIHENPVFgcQ1A3NjEwMhxDUTk4OTg5ODk4OTgcQ1gwMRxDWTYxMjgzNx0eHEFNMDccRU0xHEQyMjAyNDAxMDMwMRxFMTAzHEQ3NTIzNzIwNzg1MDEcRTcwMDAwMjAwMDAcRDMwHEQ1MRxENjEcRDgwHERFMjAyMDAxMTkcREYxHERKMRxFVTAcRFQxHDI4RUEeHEFNMTEcRDk5MxxEQzAcRE45ORxEUTk5MBxEVTEyMBxEWDMzMBxFMzM0MBxCRTQ1MBxIQTU1MBxHRTY2MBxIRTc3MDAwHEpFODgcSDcxHEg4MDIcSDk1NjAeHEFNMDMcMkpTVEVWRU4cMksxMDFUZXN0HDJNRk9SVFdPUlRIHDJOVFgcMlA0NDEyMhxFWjAxHERCMTc2MDY5MjAxNhxEUlNUUkFOR0UcUE01NzE5OTk1OTQ5",
+            "type": "string"
+          }
+        }
+      },
+      "SubmitterResponse": {
+        "type": "object",
+        "properties": {
+          "headers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KeyValuePair"
+            }
+          },
+          "responseData": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string"
+          }
+        }
+      },
+      "HealthCheck": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Health Status"
+          },
+          "version": {
+            "type": "string",
+            "description": "API version"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "oAuth": {
+        "type": "oauth2",
+        "description": "This API uses OAuth 2 with the client_credentials grant flow.",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "/apip/auth/sntl/v1/token",
+            "scopes": {
+              "read_txn": "read transactions",
+              "create_txn": "submit a new transaction request",
+              "read_coveragediscovery": "read coverage discovery tasks",
+              "create_coveragediscovery": "submit a new coverage discovery task",
+              "read_healthcheck": "check the status of the system"
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true
+  }
+}

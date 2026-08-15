@@ -1,43 +1,113 @@
-generated: '2026-07-20'
+generated: '2026-08-14'
 method: searched
 source: https://developer.optum.com/eligibilityandclaims/docs/api-urls
 docs:
-- https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
-- https://developer.optum.com/eligibilityandclaims/docs/api-environments
+  - https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
+  - https://developer.optum.com/apitools/reference/security-and-authorization-v3-overview
+  - https://developer.optum.com/eligibilityandclaims/docs/api-environments
+  - https://developer.optum.com/eligibilityandclaims/docs/troubleshoot-apis
+derived_from: openapi/_original/*.json (59 harvested OpenAPI documents)
 conventions:
   authentication:
     style: oauth2-client-credentials
     header: 'Authorization: Bearer <access_token>'
     token_url: https://apigw.optum.com/apip/auth/v2/token
+    token_url_v3: https://apigw.optum.com/apip/auth/sntl/v1/token
+    token_lifetime_seconds: 3600
+    note: >-
+      Two generations of the token endpoint are live simultaneously. Security and Authorization v2
+      (/apip/auth/v2/token) backs the older Medical Network and Dental APIs; v3
+      (/apip/auth/sntl/v1/token) backs the Optum Real / oihub APIs. Across the harvested specs 50
+      security schemes are declared — 25 oauth2, 23 bare http bearer, 2 apiKey — split between the
+      two token URLs.
     ref: authentication/optum-authentication.yml
   transport:
     tls: TLS 1.2+
     content_type: application/json
+    additional: application/edi-x12 on the raw-x12 operations; multipart/form-data on attachment uploads
   versioning:
     style: uri-path
     examples:
-    - eligibility/v3
-    - professionalclaims/v3
-    - institutionalclaims/v1
-    - claimstatus/v2
-    - reports/v2
+      - medicalnetwork/eligibility/v3
+      - medicalnetwork/professionalclaims/v3
+      - medicalnetwork/institutionalclaims/v1
+      - medicalnetwork/claimstatus/v2
+      - medicalnetwork/reports/v2
+      - medicalnetwork/payerlist/v1
+      - rcm/eligibility/v1
+      - rcm/prior-authorization/v1
+      - oihub/fhirpriorauth/v1
+      - oihub/fhirprovideraccess/v1
+      - dentalnetwork/attachments/v1
     ref: lifecycle/optum-lifecycle.yml
+  environments:
+    style: separate-host
+    sandbox: https://sandbox-apigw.optum.com
+    production: https://apigw.optum.com
+    header: >-
+      25 operations across the harvested specs additionally declare a required `environment` header
+      parameter, so host separation is not always sufficient on its own.
+    ref: sandbox/optum-sandbox.yml
   payloads:
-    formats:
-    - json
-    - x12-edi
+    formats: [json, x12-edi]
+    case: snake_case, case-sensitive (per the sandbox guide)
     notes: >-
-      Most transaction APIs accept and return both a JSON representation and native
-      X12 EDI (270/271 eligibility, 837 claims, 276/277 status, 835 remittance) via
-      dedicated raw-x12 endpoints.
-  health_check:
-    pattern: GET /healthcheck per API for availability/latency polling
+      Most transaction APIs accept and return BOTH a JSON representation and native X12 EDI
+      (270/271 eligibility, 837P/837I claims, 276/277 status, 835 remittance) through dedicated
+      `/raw-x12` sibling endpoints — e.g. medicalEligibility vs rawX12, processClaim vs
+      rawX12Submission. Choosing the JSON form is the whole value proposition of the platform.
   tracing:
-    identifier: traceId
-    notes: Attachment operations track submissions by traceId (e.g. attachments/status/v1/{traceId}).
+    request_headers:
+      - x-optum-consumer-correlation-id
+      - x-chng-trace-id
+      - X-CHC-TraceId
+    response_headers:
+      - x-optum-correlation-id
+      - x-optum-trace-id
+      - x-optum-tenant-id
+      - transaction-id
+      - x-amzn-trace-id
+    body_identifiers: [traceId, outboundTraceId, submitterId, senderId, billerId, applicationMode]
+    docs: https://developer.optum.com/eligibilityandclaims/docs/troubleshoot-apis
+    notes: >-
+      Tracing is inconsistent across generations. The `x-chng-` and `X-CHC-` prefixes are inherited
+      from Change Healthcare (acquired by Optum); the `x-optum-` prefix is the newer convention.
+      Both are live and neither is documented as canonical, so an agent must read the per-API spec
+      to know which header to send.
+  pagination:
+    style: token
+    request: 'nextPageToken (header parameter, 3 operations)'
+    response_headers: [link, x-total-count]
+    notes: >-
+      Pagination is the exception, not the rule — most operations are single-transaction POSTs with
+      no collection to page. Only the Payer List and Reports collections page, and they do it
+      differently from one another (Payer List exposes an /export operation for bulk retrieval).
   idempotency:
     supported: false
-    notes: No documented idempotency-key contract; transaction de-duplication is handled server-side by payer/claim identifiers.
+    notes: >-
+      There is NO idempotency-key contract on any Optum API. No `Idempotency-Key` header or
+      parameter appears in any of the 59 harvested specs, and none is documented. The only mention
+      of idempotency in the whole surface runs the other way: the Enhanced Eligibility callback
+      documentation instructs the CONSUMER to process a redelivered coverage-discovery callback
+      idempotently. De-duplication of submitted claims is handled server-side by payer/claim
+      identifiers (controlNumber, submitterId), which is a business-rule guarantee, not a retry-safe
+      API contract. A network interruption on a claim submission is therefore not safely retryable
+      by an agent.
+    ref: asyncapi/optum-webhooks.yml
   errors:
-    ref: not-published
-    notes: X12 999/277CA acknowledgements and HTTP status codes convey transaction-level errors.
+    envelope: vendor-json
+    dominant_schema: 'Notification (164, Optum Insight Platform); ErrorResponse (97, Medical Network + Optum Real); ApiErrorResponse (25)'
+    rfc9457: false
+    transaction_level: X12 999 and 277CA acknowledgements carry business-rule rejections separately from the HTTP status
+    ref: errors/optum-problem-types.yml
+  rate_limits:
+    published: false
+    signal: 429 declared on the Dental Attachment API only; no rate-limit response headers anywhere
+    ref: rate-limits/optum-rate-limits.yml
+  health_check:
+    pattern: 'GET <api-base>/healthcheck on every API (27 of 59 specs declare one)'
+    purpose: availability/latency polling in the absence of a per-API status feed
+    note: status.optum.com covers the products, not the individual API endpoints
+  events:
+    style: caller-registered callback URL (coverage discovery only)
+    ref: asyncapi/optum-webhooks.yml

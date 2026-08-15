@@ -1,0 +1,59 @@
+generated: '2026-08-14'
+method: derived
+source: openapi/_original/optum-enhanced-eligibility-api.json (OpenAPI 3.0.1 `callbacks` objects)
+spec_type: Webhooks
+asyncapi_published: false
+note: >-
+  Optum publishes no AsyncAPI document and operates no event bus, stream or subscription API. It
+  does, however, ship ONE genuine asynchronous callback surface, and it is declared in the contract
+  rather than only in prose: the Enhanced Eligibility API's coverage-discovery operations each carry
+  an OpenAPI `callbacks` object that POSTs the completed task back to a caller-supplied
+  `callbackUrl`. That is the whole event surface — everything else on the platform is
+  request/response, or file polling (the ERA/reports API is a list-and-download pattern, not a
+  push). Recorded as Webhooks, not AsyncAPI, because no AsyncAPI document exists and this pipeline
+  never fabricates one.
+delivery:
+  style: caller-registered callback URL per request
+  registration: >-
+    The subscriber URL is supplied inline on the request body (`callbackUrl`) of the coverage
+    discovery submission — there is no webhook-endpoint management API, no signing secret documented,
+    and no replay/redelivery console.
+  transport: HTTPS POST
+  expected_response: 204 No Content
+  security: >-
+    NOT DOCUMENTED. No signature header, no shared secret, no mTLS requirement is declared on the
+    callback operation. The only headers the callback declares are x-optum-tenant-id and
+    x-optum-correlation-id, both propagated from the originating request. A consumer cannot verify
+    that a delivery came from Optum.
+  retries: >-
+    Redelivery is implied — the spec instructs consumers to "process the same task idempotently if a
+    delivery is retried" — but no retry schedule, backoff, or maximum attempt count is published.
+webhooks:
+  - name: coverage-discovery.completed
+    trigger: An asynchronous coverage-discovery task reaches a terminal state (success or failure).
+    source_operation: openapi/optum-enhanced-eligibility-api-openapi.yml#postDiscovery
+    callback_target: '{$request.body#/callbackUrl}'
+    method: POST
+    payload_schema: CoverageDiscoveryTask
+    headers: [x-optum-tenant-id, x-optum-correlation-id]
+    expected_response: 204
+    examples_in_spec:
+      - GetCoverageDiscoveryTaskSerialSuccess
+      - GetCoverageDiscoveryTaskSerialSuccessRealTime
+      - GetCoverageDiscoveryTaskChainedSuccess
+      - GetCoverageDiscoveryTaskSerialFailure
+      - GetCoverageDiscoveryTaskSerialFailureRealTime
+      - GetCoverageDiscoveryTaskChainedFailure
+  - name: coverage-discovery.completed (X12)
+    trigger: An asynchronous coverage-discovery task submitted as native X12 270 reaches a terminal state.
+    source_operation: openapi/optum-enhanced-eligibility-api-openapi.yml#postDiscoveryX12
+    callback_target: '{$request.body#/callbackUrl}'
+    method: POST
+    payload_schema: CoverageDiscoveryTask
+    headers: [x-optum-tenant-id, x-optum-correlation-id]
+    expected_response: 204
+webhook_count: 2
+polling_alternative:
+  - {operation: 'openapi/optum-enhanced-eligibility-api-openapi.yml#getDiscoveryById', note: 'GET /rcm/eligibility/v1/coverage-discovery/{id} returns the same CoverageDiscoveryTask model, so the callback is optional.'}
+  - {operation: 'openapi/optum-medical-network-attachment-status-v1-openapi.yml#GET /{traceId}', note: 'Attachment submissions are polled by traceId — no push.'}
+  - {operation: 'openapi/optum-medical-network-claims-responses-and-reports-v2-openapi.yml#list_reports_v2_reports_get', note: 'ERA/277CA delivery is list-then-download; consumers poll for new report files.'}

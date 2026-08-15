@@ -1,0 +1,110 @@
+generated: '2026-08-14'
+method: derived
+status: candidate
+source: openapi/_original/*.json (59 harvested OpenAPI documents)
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+  note: >-
+    No Optum MCP server exists. Searched the MCP registries, npm (@optum scope and the
+    @modelcontextprotocol namespace), github.com/Optum (88 public repos), and the
+    developer.optum.com documentation on 2026-08-14 — nothing. Optum ships neither a hosted remote
+    endpoint nor a stdio package, so there is no agent-reachable surface today. The tools below are
+    a CANDIDATE list derived from real operationIds in the harvested specs; they are a design
+    starting point, not something an agent can call.
+server:
+  name: optum
+  transport: null
+  url: null
+search_evidence:
+  - {source: 'npm registry search "optum"', result: 'no MCP server package under @optum or any optum-* name'}
+  - {source: 'github.com/Optum (88 public repositories)', result: 'no MCP server repository'}
+  - {source: developer.optum.com docs, result: 'no agent/MCP documentation of any kind'}
+  - {source: 'https://www.optum.com/llms.txt', result: '200 — consumer marketing llms.txt only; names no API and no MCP endpoint'}
+tools:
+  - name: check_eligibility
+    description: Real-time medical benefit and coverage verification (X12 270/271) for a patient at a payer.
+    source_operation: openapi/optum-medical-network-eligibility-v3-openapi.yml#medicalEligibility
+  - name: check_eligibility_x12
+    description: Same eligibility inquiry submitted as native X12 270 and returned as 271.
+    source_operation: openapi/optum-medical-network-eligibility-v3-openapi.yml#rawX12
+  - name: check_enhanced_eligibility
+    description: Enhanced eligibility inquiry with value-add benefit detail.
+    source_operation: openapi/optum-enhanced-eligibility-api-openapi.yml#postEligibility
+  - name: start_coverage_discovery
+    description: Submit an asynchronous coverage-discovery task to find unknown patient coverage; result is delivered to a callbackUrl.
+    source_operation: openapi/optum-enhanced-eligibility-api-openapi.yml#postDiscovery
+  - name: get_coverage_discovery
+    description: Read the state and result of a coverage-discovery task.
+    source_operation: openapi/optum-enhanced-eligibility-api-openapi.yml#getDiscoveryById
+  - name: list_coverage_discoveries
+    description: List coverage-discovery tasks.
+    source_operation: openapi/optum-enhanced-eligibility-api-openapi.yml#getAllDiscoveries
+  - name: validate_professional_claim
+    description: Validate an X12 837P professional claim before submission.
+    source_operation: openapi/optum-medical-network-professional-claims-v3-openapi.yml#validateClaim
+  - name: submit_professional_claim
+    description: Submit an X12 837P professional claim.
+    source_operation: openapi/optum-medical-network-professional-claims-v3-openapi.yml#processClaim
+  - name: validate_institutional_claim
+    description: Validate an X12 837I institutional claim before submission.
+    source_operation: openapi/optum-medical-network-institutional-claims-v1-openapi.yml#validateClaim
+  - name: submit_institutional_claim
+    description: Submit an X12 837I institutional claim.
+    source_operation: openapi/optum-medical-network-institutional-claims-v1-openapi.yml#processClaim
+  - name: check_claim_status
+    description: Claim status inquiry (X12 276/277) for a submitted claim.
+    source_operation: openapi/optum-medical-network-claim-status-v2-openapi.yml#claimstatus
+  - name: list_reports
+    description: List available ERA/claim-response report files (X12 835/277CA).
+    source_operation: openapi/optum-medical-network-claims-responses-and-reports-v2-openapi.yml#list_reports_v2_reports_get
+  - name: get_report
+    description: Download a single ERA/claim-response report file.
+    source_operation: openapi/optum-medical-network-claims-responses-and-reports-v2-openapi.yml#get_single_report_v2_reports__filename__get
+  - name: convert_report_835
+    description: Convert a stored report to JSON-rendered X12 835 remittance advice.
+    source_operation: openapi/optum-medical-network-claims-responses-and-reports-v2-openapi.yml#convert_report_835_v2_reports__filename__835_get
+  - name: convert_report_277
+    description: Convert a stored report to JSON-rendered X12 277CA claim acknowledgement.
+    source_operation: openapi/optum-medical-network-claims-responses-and-reports-v2-openapi.yml#convert_report_277_v2_reports__filename__277_get
+  - name: upload_attachment
+    description: Upload a medical-network claim attachment; returns a traceId to poll.
+    source_operation: openapi/optum-medical-network-attachments-submission-v1-openapi.yml#upload
+  - name: get_payers
+    description: Look up supported payers and their capabilities in the Optum payer list.
+    source_operation: openapi/optum-payer-list-api-v1-openapi.yml#getPayers
+  - name: get_payer_outages
+    description: Read current payer connectivity outages before submitting a transaction.
+    source_operation: openapi/optum-payer-list-api-v1-openapi.yml#getOutages
+  - name: submit_prior_authorization
+    description: Submit a prior-authorization request (FHIR Da Vinci PAS $submit).
+    source_operation: openapi/optum-real-prior-authorization-api-openapi.yml#submitClaim
+  - name: inquire_prior_authorization
+    description: Inquire on an existing prior authorization (FHIR Da Vinci PAS $inquire).
+    source_operation: openapi/optum-real-prior-authorization-api-openapi.yml#inquireClaim
+  - name: get_questionnaire_package
+    description: Retrieve the DTR questionnaire package required for a prior authorization.
+    source_operation: openapi/optum-real-prior-authorization-api-openapi.yml#getQuestionnairePackage
+  - name: check_dental_eligibility
+    description: Dental pre-service eligibility check.
+    source_operation: openapi/optum-real-dental-pre-care-eligibility-api-openapi.yml#checkEligibility
+  - name: dental_pre_care_estimate
+    description: Dental pre-care cost estimate for a planned treatment.
+    source_operation: openapi/optum-dental-pre-care-estimate-api-openapi.yml#dentalClaimPrecheck
+  - name: check_patient_benefit
+    description: Patient benefit check for a service at point of care.
+    source_operation: openapi/optum-benefit-check-api-openapi.yml#benefitCheck
+  - name: search_documents
+    description: Search clinical/administrative documents attached to a member or claim.
+    source_operation: openapi/optum-document-search-api-openapi.yml#documentSearch
+agentic_caution: >-
+  Nearly every write operation on this platform is a real healthcare financial or clinical
+  transaction — a submitted claim, a prior-authorization request, an attachment containing PHI.
+  agentic-access/optum-agentic-access.yml classifies 122 of 483 operations as `acting`, three of
+  them safety-critical requiring human-in-the-loop. Any MCP
+  server built over this surface should require human-in-the-loop on claim submission and prior
+  authorization, and must never be pointed at production with sandbox-shaped test data.

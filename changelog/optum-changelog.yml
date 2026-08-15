@@ -1,0 +1,81 @@
+generated: '2026-08-14'
+method: searched
+source: https://developer.optum.com/eligibilityandclaims/docs/eligibility-release-notes
+docs:
+  - https://developer.optum.com/eligibilityandclaims/docs/eligibility-release-notes
+  - https://developer.optum.com/eligibilityandclaims/docs/enhanced-eligibility-change-log-release-notes
+  - https://developer.optum.com/optumreal-medical/reference/real-api-release-notes
+scheme: >-
+  Per-API major version in the URI path (v1/v2/v3). There is no single platform changelog and no
+  semantic versioning; each API carries its own "Release Notes" page under the ReadMe docs project,
+  and superseded majors are marked deprecated on that page rather than through Sunset headers.
+current_versions:
+  - {api: Medical Network Eligibility, version: v3}
+  - {api: Enhanced Eligibility, version: v1.6}
+  - {api: Medical Network Professional Claims, version: v3}
+  - {api: Medical Network Institutional Claims, version: v1}
+  - {api: Medical Network Claim Status, version: v2}
+  - {api: Medical Network Claims Responses and Reports (ERA), version: v2}
+  - {api: Medical Network Attachments (Submission / Status / Retrieval), version: v1}
+  - {api: Payer List, version: v1}
+  - {api: Dental Attachments, version: v1}
+  - {api: Prior Authorization, version: v1}
+entries:
+  - api: Medical Network Claim Status
+    version: v2
+    date: '2026-07'
+    type: additions
+    highlights: Added STC10 and STC11 segments carrying secondary and tertiary claim status information.
+  - api: Payer List
+    version: v1
+    date: '2025-09'
+    type: release
+    highlights: New API released for payer information access (payers, fields, export, outages).
+  - api: Dental Attachments
+    version: v1
+    date: '2024-09'
+    type: release
+    highlights: Dental-specific attachment handling introduced.
+  - api: Enhanced Eligibility
+    version: v1.6
+    date: '2025-08-20'
+    type: additions
+    highlights: Latest documented entry on the Enhanced Eligibility change log page.
+  - api: Medical Network Claims Responses and Reports (ERA)
+    version: v2
+    date: '2021-05'
+    type: additions
+    highlights: Streaming support for large report files plus documented 413 response scenarios.
+  - api: Medical Network Eligibility
+    version: v3
+    date: '2021-04'
+    type: breaking
+    highlights: >-
+      Security/authorization change, host and URL change, and deprecation of the legacy accept
+      headers. A 2021-03-05 update added the benefitsRelatedEntities and
+      eligibilityAdditionalInformationList arrays mapping to their EDI loops.
+  - api: Medical Network Attachments Status / Retrieval
+    version: v1
+    date: '2020-12'
+    type: release
+    highlights: Original release; still the active major.
+  - api: Medical Network Institutional Claims
+    version: v1
+    date: '2019-11'
+    type: release
+    highlights: Original release; still the active major.
+  - api: Medical Network Professional Claims
+    version: v3
+    date: '2019-04'
+    type: breaking
+    highlights: v3 became current; v1 and v2 deprecated.
+  - api: Medical Network Claim Status
+    version: v2
+    date: '2019-04'
+    type: breaking
+    highlights: v2 became current; v1 deprecated.
+notes: >-
+  The change history is fragmented across four ReadMe docs projects (eligibilityandclaims,
+  optumreal-medical, optumreal-dental, apitools) and is not dated consistently — several entries
+  carry only a month. There is no RSS/Atom feed for API changes; the only machine-readable dated
+  feed Optum operates is the incident history on status.optum.com.

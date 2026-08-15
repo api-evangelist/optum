@@ -1,0 +1,30 @@
+generated: '2026-08-14'
+method: generated
+source: >-
+  Packaged Agent Skills generated from the 59 OpenAPI documents harvested through Optum's own RFC
+  9727 API catalog (https://developer.optum.com/.well-known/api-catalog) into openapi/. Every step
+  is grounded in an operationId verified verbatim in the referenced spec; the cross-cutting rules
+  cite ../authentication/, ../conventions/, ../errors/, ../rate-limits/, ../sandbox/ and
+  ../agentic-access/. No provider-published skills or AGENTS.md exist — searched developer.optum.com
+  and github.com/Optum on 2026-08-14.
+skills:
+  - file: optum-verify-patient-eligibility.md
+    name: Verify patient eligibility and benefits
+    api: openapi/optum-medical-network-eligibility-v3-openapi.yml
+    operations: [medicalEligibility, rawX12, healthCheck, getPayers, getOutages, postEligibility, postDiscovery, getDiscoveryById]
+  - file: optum-validate-and-submit-a-claim.md
+    name: Validate and submit a professional or institutional claim
+    api: openapi/optum-medical-network-professional-claims-v3-openapi.yml
+    operations: [validateClaim, processClaim, rawX12Validation, rawX12Submission, validateRawX12, processClaim_1, claimstatus, list_reports_v2_reports_get, convert_report_277_v2_reports__filename__277_get, convert_report_835_v2_reports__filename__835_get]
+  - file: optum-fhir-prior-authorization.md
+    name: Run a FHIR Da Vinci prior authorization
+    api: openapi/optum-real-prior-authorization-api-openapi.yml
+    operations: [getDiscovery, orderSign, getPasCapabilityStatement, getDtrCapabilityStatement, getQuestionnairePackage, getNextQuestion, submitClaim, inquireClaim, submitAttachment, getDocumentReference]
+  - file: optum-resolve-payers-and-outages.md
+    name: Resolve payers and check connectivity outages
+    api: openapi/optum-payer-list-api-v1-openapi.yml
+    operations: [getPayers, getPayerListFields, exportPayers, getOutages, getPayerListHealthCheck]
+  - file: optum-dental-pre-care-and-claims.md
+    name: Run a dental pre-care estimate and submit a dental claim
+    api: openapi/optum-real-dental-pre-care-eligibility-api-openapi.yml
+    operations: [checkEligibility, checkEnhancedEligibility, dentalClaimPrecheck, dntClaimActions, claimStatus, createAttachments, createAttachmentsImageIntel, searchAttachments]

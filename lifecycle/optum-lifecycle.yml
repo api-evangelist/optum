@@ -1,26 +1,82 @@
-generated: '2026-07-20'
+generated: '2026-08-14'
 method: searched
 source: https://developer.optum.com/eligibilityandclaims/docs/api-environments
+docs:
+  - https://developer.optum.com/eligibilityandclaims/docs/api-urls
+  - https://developer.optum.com/eligibilityandclaims/docs/eligibility-release-notes
+  - https://developer.optum.com/optumreal-medical/reference/real-api-release-notes
 versioning:
   scheme: uri-path
   observed_versions:
-  - eligibility/v3
-  - professionalclaims/v3
-  - institutionalclaims/v1
-  - claimstatus/v2
-  - reports/v2
-  - payerlist/v1
-  - attachments/v1
+    - medicalnetwork/eligibility/v3
+    - medicalnetwork/professionalclaims/v3
+    - medicalnetwork/institutionalclaims/v1
+    - medicalnetwork/claimstatus/v2
+    - medicalnetwork/reports/v2
+    - medicalnetwork/payerlist/v1
+    - medicalnetwork/attachments/{submission,status,retrieval}/v1
+    - dentalnetwork/attachments/v1
+    - rcm/eligibility/v1
+    - rcm/prior-authorization/v1
+    - oihub/fhirpriorauth/v1
+    - oihub/fhirprovideraccess/v1
+    - apip/auth/v2/token and apip/auth/sntl/v1/token (two live auth generations)
   docs: https://developer.optum.com/eligibilityandclaims/docs/api-urls
 environments:
-- name: sandbox
-  base: https://sandbox-apigw.optum.com/
-- name: production
-  base: https://apigw.optum.com/
+  - name: sandbox
+    base: https://sandbox-apigw.optum.com
+  - name: production
+    base: https://apigw.optum.com
 deprecation:
   policy_url: null
-  notes: No public deprecation/sunset (RFC 8594) policy documented; versions coexist under distinct URI paths.
-status_page:
+  sunset_header: false
+  deprecation_header: false
+  announced_via: per-API release notes pages
+  known_deprecated:
+    - {api: Medical Network Professional Claims, versions: [v1, v2], superseded_by: v3, date: '2019-04'}
+    - {api: Medical Network Claim Status, versions: [v1], superseded_by: v2, date: '2019-04'}
+    - {api: Medical Network Eligibility, note: 'legacy accept headers deprecated at the v3 cutover', date: '2021-04'}
+  retired_surfaces:
+    - surface: developer.optum.com/dataaccessandinteroperability (Data Access and Interoperability / Patient Access FHIR docs)
+      status: gone
+      evidence: 'Every path under that project returns the generic portal shell (HTTP 200, 1,490,453 bytes) as of 2026-08-14, including reference pages still indexed by search engines.'
+      note: >-
+        Removed without a redirect, a tombstone or a deprecation notice. This is the clearest
+        lifecycle failure on the platform — a CMS-mandated public API surface whose developer
+        documentation silently stopped existing.
+  notes: >-
+    No public deprecation or sunset policy (RFC 8594) exists. Superseded majors coexist under
+    distinct URI paths and are marked deprecated only in prose on a release-notes page. Nothing in
+    the machine-readable contracts carries `deprecated: true` — zero of the 116 harvested operations.
+sla:
   url: null
-  notes: No public status page found; each API exposes a /healthcheck endpoint for availability polling.
+  uptime_target: null
+  note: No public SLA or uptime commitment is published on developer.optum.com.
+status_page:
+  url: https://status.optum.com/
+  platform: Atlassian Statuspage
+  machine_readable:
+    summary: https://status.optum.com/api/v2/summary.json
+    status: https://status.optum.com/api/v2/status.json
+    atom: https://status.optum.com/history.atom
+    rss: https://status.optum.com/history.rss
+  component_count: 35
+  components_relevant_to_apis:
+    - Medical Network (Batch, Portal, Real Time)
+    - Dental Network
+    - Optum Real
+    - Clinical Exchange
+    - Claims Management
+    - Revenue Cycle Management
+    - Revenue Performance Advisor
+  probed: '2026-08-14'
+  probe_result: 'HTTP 200; status.json returned {"indicator":"none","description":"All Systems Operational"}'
+  note: >-
+    The status page is organized by PRODUCT, not by API endpoint. "Medical Network" covers the
+    eligibility/claims/status APIs collectively; there is no per-API or per-version component. Each
+    API's own GET /healthcheck operation is the finer-grained signal.
+health_check_operations:
+  pattern: GET <api-base>/healthcheck
+  count: 22
+  note: 22 of the 38 harvested specs declare a health-check operation.
 deprecated_operations: []

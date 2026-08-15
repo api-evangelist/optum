@@ -1,32 +1,121 @@
-generated: '2026-07-20'
-method: searched
-source: live probes of /.well-known/* on Optum hosts
+generated: '2026-08-14'
+method: probed
+source: live probes of /.well-known/* across every Optum host in apis.yml and every OpenAPI servers[] host
+probed: '2026-08-14'
+headline: >-
+  Optum serves a real RFC 9727 API catalog. https://developer.optum.com/.well-known/api-catalog
+  returns HTTP 200 application/linkset+json listing all eight developer-portal product lines, and
+  each product line serves its own nested catalog naming the direct OpenAPI URL of every API it
+  publishes. This is the single most valuable discovery artifact on the platform and nothing on the
+  human-facing portal points at it — it was found by probing, not by reading the docs. Every
+  OpenAPI in openapi/ was harvested through it.
 hosts:
-- host: https://www.optum.com
-  documents:
-  - path: /.well-known/security.txt
-    status: 200
-    file: optum-security.txt
-  - path: /.well-known/openid-configuration
-    status: 301
-  - path: /.well-known/oauth-authorization-server
-    status: 301
-  - path: /.well-known/api-catalog
-    status: 301
-  - path: /.well-known/ai-plugin.json
-    status: 404
-- host: https://developer.optum.com
-  documents:
-  - path: /.well-known/security.txt
-    status: 302
-  - path: /.well-known/openid-configuration
-    status: 404
-  - path: /.well-known/api-catalog
-    status: 404
-- host: https://apigw.optum.com
-  note: API gateway returns 400 to unauthenticated /.well-known/* probes
-  documents:
-  - path: /.well-known/openid-configuration
-    status: 400
-  - path: /.well-known/oauth-authorization-server
-    status: 400
+  - host: https://developer.optum.com
+    documents:
+      - path: /.well-known/api-catalog
+        status: 200
+        content_type: application/linkset+json
+        file: optum-api-catalog.json
+        note: RFC 9727 API catalog. 8 product-line anchors, each with a nested catalog.
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/html
+        note: NOT A DOCUMENT — the ReadMe single-page app answers 200 with the same 1,490,453-byte HTML shell for every unmatched path. Treated as a miss.
+      - path: /.well-known/agent-card.json
+        status: 200
+        content_type: text/html
+        note: SPA catch-all HTML, not an AgentCard. Rejected — no a2a/ artifact written.
+      - path: /.well-known/agent.json
+        status: 200
+        content_type: text/html
+        note: SPA catch-all HTML. Rejected.
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        content_type: text/html
+        note: SPA catch-all HTML. Rejected.
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+  - host: https://www.optum.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/plain
+        file: optum-security.txt
+        note: RFC 9116. Contact Securityreporting@optum.com, Policy https://www.optum.com/vulnerability.html
+      - path: /.well-known/openid-configuration
+        status: 403
+      - path: /.well-known/oauth-authorization-server
+        status: 403
+      - path: /.well-known/oauth-protected-resource
+        status: 403
+      - path: /.well-known/api-catalog
+        status: 403
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://apigw.optum.com
+    note: >-
+      The production API gateway answers every unauthenticated /.well-known/* probe with HTTP 400
+      {"error":"invalid_request"} — it does not serve a discovery surface. The gateway root returns
+      200 "ALB Good!".
+    documents:
+      - {path: /.well-known/security.txt, status: 400}
+      - {path: /.well-known/openid-configuration, status: 400}
+      - {path: /.well-known/oauth-authorization-server, status: 400}
+      - {path: /.well-known/oauth-protected-resource, status: 400}
+      - {path: /.well-known/api-catalog, status: 400}
+      - {path: /.well-known/agent-card.json, status: 400}
+      - {path: /.well-known/agent.json, status: 400}
+  - host: https://sandbox-apigw.optum.com
+    note: Identical behaviour to the production gateway — HTTP 400 on every /.well-known/* path.
+    documents:
+      - {path: /.well-known/security.txt, status: 400}
+      - {path: /.well-known/openid-configuration, status: 400}
+      - {path: /.well-known/oauth-authorization-server, status: 400}
+      - {path: /.well-known/api-catalog, status: 400}
+      - {path: /.well-known/agent-card.json, status: 400}
+  - host: https://marketplace.optum.com
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+  - host: https://status.optum.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/plain
+        note: >-
+          Served by Atlassian Statuspage, NOT by Optum — it names Atlassian's security program. Not
+          saved as an Optum artifact and not counted toward Optum's security.txt posture.
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+api_catalog:
+  url: https://developer.optum.com/.well-known/api-catalog
+  spec: RFC 9727 (application/linkset+json)
+  product_lines:
+    - {anchor: 'https://developer.optum.com/eligibilityandclaims', spec_urls_listed: 101}
+    - {anchor: 'https://developer.optum.com/optumreal-medical', spec_urls_listed: 22}
+    - {anchor: 'https://developer.optum.com/optumreal-dental', spec_urls_listed: 13}
+    - {anchor: 'https://developer.optum.com/paymentandreimbursement', spec_urls_listed: 10}
+    - {anchor: 'https://developer.optum.com/platformandinteroperability', spec_urls_listed: 9}
+    - {anchor: 'https://developer.optum.com/analyticsandinsights', spec_urls_listed: 8}
+    - {anchor: 'https://developer.optum.com/pharmacysolutions', spec_urls_listed: 4}
+    - {anchor: 'https://developer.optum.com/apitools', spec_urls_listed: 3}
+  spec_urls_listed_total: 170
+  spec_urls_resolving_to_a_spec: 59
+  defect: >-
+    111 of the 170 OpenAPI URLs advertised in Optum's own API catalog do not return a spec. They
+    return HTTP 200 with the portal's HTML shell instead of application/vnd.oai.openapi+json — a
+    soft-404. A machine following the catalog as specified gets a 200 and a document that is not an
+    API description, with no way to tell from the status line that the entry is dead. Reported here
+    as measured on 2026-08-14. The 59 URLs that DO resolve, deduplicated against the definitions
+    reachable through the ReadMe reference pages, are the 59 specs saved in openapi/.

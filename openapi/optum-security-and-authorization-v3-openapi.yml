@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info:
+  title: Security and Authorization v3
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+  description: Authentication Token URL for Sandbox  environment
+paths:
+  /apip/auth/sntl/v1/token:
+    post:
+      summary: Generate and return auth token for a given set of client credentials.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - client_credentials
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+      responses:
+        '200':
+          description: Token response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  expires_in:
+                    type: integer
+                  refresh_expires_in:
+                    type: integer
+                  refresh_token:
+                    type: string
+                  token_type:
+                    type: string
+                  id_token:
+                    type: string
+                  not-before-policy:
+                    type: integer
+                  session_state:
+                    type: string
+                  scope:
+                    type: string

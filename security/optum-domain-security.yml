@@ -1,4 +1,4 @@
-generated: '2026-07-20'
+generated: '2026-08-14'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
@@ -11,13 +11,12 @@ hosts:
 - host: developer.optum.com
   https: true
   tls_version: TLSv1.3
-  cert_expires: Aug 27 08:12:37 2026 GMT
-  hsts: true
-  hsts_max_age: 31536000
+  cert_expires: Oct 25 12:43:52 2026 GMT
+  hsts: null
 - host: apigw.optum.com
   https: true
   tls_version: TLSv1.3
-  cert_expires: Sep  7 04:13:37 2026 GMT
+  cert_expires: Nov  5 05:03:48 2026 GMT
   hsts: true
   hsts_max_age: 15552000
 domains:

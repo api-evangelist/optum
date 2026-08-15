@@ -1,0 +1,28 @@
+generated: '2026-08-14'
+method: searched
+source: https://marketplace.optum.com/apiservices/api-sandbox-access
+docs:
+  - https://marketplace.optum.com/apiservices/api-sandbox-access
+  - https://developer.optum.com/eligibilityandclaims/docs/get-started-with-optum-api
+plan_count: 0
+public_pricing: false
+model: enterprise-contract
+note: >-
+  Optum publishes no price, no tier, no per-transaction rate and no published quota for any API on
+  developer.optum.com. The only self-serve path is a free sandbox request form on
+  marketplace.optum.com — which the docs describe as testing "without financial obligation",
+  implying but never stating that production is paid. Production access is negotiated through an
+  Optum representative or an existing clearinghouse/revenue-cycle contract; the developer portal
+  carries no pricing page, no calculator, and no "contact sales" pricing tier table. Recording
+  plan_count: 0 is the finding, not a gap in the search: for a clearinghouse of this size, the
+  per-transaction economics live entirely inside a commercial agreement.
+plans: []
+free_tier:
+  exists: true
+  name: Sandbox
+  price: 0
+  currency: USD
+  url: https://marketplace.optum.com/apiservices/api-sandbox-access
+  scope: >-
+    Canned-response sandbox only. No production data, no PHI/PII, load testing explicitly
+    prohibited. Credentials are issued manually after a request form is reviewed.

@@ -1,0 +1,159 @@
+openapi: 3.0.3
+info:
+  title: ABM Prepay DME Claim API-1.0.0
+  version: 1.0.0
+  description: 'This is a wrapper API which internally calls ABM CES API to get the claim edits and DME
+    Pricing API to get the rate and then update the claim amount.
+
+    CES calls ABM PriorAuth API to get the matching PriorAuth record with remaining claimed unit. DME
+    Claim API calculates Claim amount based on remaining unit and rate. This API needs auth bearer token
+    which can be retrieved using https://sandbox-apigw.optum.com/apip/auth/sntl/v1/token. Please check
+    documentation under Security section to get more details on auth token.'
+servers:
+- url: https://sandbox-apigw.optum.com
+paths:
+  /abm/prepaydme/v1:
+    post:
+      summary: PrePay DME API Endpoint
+      tags:
+      - prepaydme
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: object
+              xml:
+                name: request
+              properties:
+                environment:
+                  type: string
+                  xml:
+                    name: environment
+                enterprise-id:
+                  type: string
+                  xml:
+                    name: enterprise-id
+                claim:
+                  type: object
+                  xml:
+                    name: claim
+                  properties:
+                    id:
+                      type: string
+                      xml:
+                        name: id
+                    subscriber-id:
+                      type: string
+                      xml:
+                        name: subscriber-id
+                    line:
+                      type: object
+                      xml:
+                        name: line
+                      properties:
+                        id:
+                          type: string
+                          xml:
+                            name: id
+                        procedure-code:
+                          type: string
+                          xml:
+                            name: procedure-code
+              example: "<request>\n    <environment>live</environment>\n    <enterprise-id>ENTERPRISEID</enterprise-id>\n\
+                \    <claim>\n        <id>ClaimId</id>\n        <subscriber-id>54654</subscriber-id>\n\
+                \        <line>\n            <id>1</id>\n            <procedure-code>EXXXX</procedure-code>\n\
+                \        </line>\n    </claim>\n</request>"
+      responses:
+        '200':
+          description: Response for PREPAY DME API
+          content:
+            application/xml:
+              schema:
+                type: object
+                xml:
+                  name: request
+                properties:
+                  environment:
+                    type: string
+                    xml:
+                      name: environment
+                  enterprise-id:
+                    type: string
+                    xml:
+                      name: enterprise-id
+                  claim:
+                    type: object
+                    xml:
+                      name: claim
+                    properties:
+                      id:
+                        type: string
+                        xml:
+                          name: id
+                      subscriber-id:
+                        type: string
+                        xml:
+                          name: subscriber-id
+                      line:
+                        type: object
+                        xml:
+                          name: line
+                        properties:
+                          id:
+                            type: string
+                            xml:
+                              name: id
+                          procedure-code:
+                            type: string
+                            xml:
+                              name: procedure-code
+                example: "<request>\n    <environment>live</environment>\n    <enterprise-id>ENTERPRISEID</enterprise-id>\n\
+                  \    <claim>\n        <id>ClaimId</id>\n        <subscriber-id>54654</subscriber-id>\n\
+                  \        <line>\n            <id>1</id>\n            <procedure-code>EXXXX</procedure-code>\n\
+                  \        </line>\n    </claim>\n</request>"
+components:
+  requestBodies:
+    oauth2:
+      description: payload for auth API
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              client_id:
+                type: string
+                example: abm-pa-clientid
+              client_secret:
+                type: string
+                example: abm-pa-client-secret
+              grant_type:
+                type: string
+                example: client_credentials
+  responses:
+    oauth2:
+      description: response for auth API
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              access_token:
+                type: string
+                example: token string
+              expires_in:
+                type: integer
+                example: 3599
+              ext_expires_in:
+                type: integer
+                example: 3599
+              token_type:
+                type: string
+                example: Bearer
+tags:
+- name: ABM
+  description: ABM Pre-Pay Post-Adjudication DME Claims API
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

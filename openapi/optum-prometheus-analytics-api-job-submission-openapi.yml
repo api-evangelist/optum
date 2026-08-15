@@ -1,0 +1,99 @@
+openapi: 3.0.1
+info:
+  title: Prometheus Analytics API - Job Submission
+  description: Job Submission API Proxy - responsible for sending the control file name, validates, initializes
+    a Prometheus job processing and retrieves JobIds.
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com/
+tags:
+- name: HQX_PrometheusAPI 1.0
+  description: This API analyze claims data to create an episode of care that can be used for value-based
+    payment models and performance evaluation in order to improve the quality of care and patient outcomes.
+- name: JobSubmission
+  description: Trigger to initialize a Prometheus job processing and retrieve a JobId
+- name: controlFileName
+  description: The name of the control file the partner sent in either SFTP or S3 Bucket
+paths:
+  /prometheus/jobsubmission/v1:
+    post:
+      summary: Triggers a Prometheus job initialization and returns the JobId for users' reference.
+      requestBody:
+        description: Sends the control file name and triggers a job initialization
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/JobSummission_Request'
+        required: true
+      responses:
+        '200':
+          description: Successful Job Initialization response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/JobSubmission_Response_Success'
+        '400':
+          description: The request was not properly formatted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/JobSubmission_Response_Failure_400'
+        '500':
+          description: The request has encountered an Internal Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/JobSubmission_Response_Failure_500'
+      x-codegen-request-body-name: JobSubmission_Request
+components:
+  schemas:
+    JobSummission_Request:
+      type: object
+      properties:
+        controlFileName:
+          type: string
+          example: control.tsv.gz
+    JobSubmission_Response_Success:
+      type: object
+      properties:
+        JobId:
+          type: string
+          description: Field that provides the Job identifier for this initialized job
+          example: '729'
+        BatchName:
+          type: string
+          description: Field that returns the name of the batch defined in the configuration file sent
+          example: HQXclaims0421
+        Status:
+          type: string
+          description: Field that provides the status of the initialized job
+          example: Processing
+        Message:
+          type: string
+          description: Field that provides successful or non-error messages
+          example: Job has queued for processing.
+    JobSubmission_Response_Failure_500:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Short description of the error encountered
+          example: Internal error occurred
+        error_description:
+          type: string
+          description: Long description of the error that further explains why the request was unsuccessful
+          example: Internal error occurred. Support has been notified.
+    JobSubmission_Response_Failure_400:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Short description of the error encountered
+          example: Invalid Request
+        error_description:
+          type: string
+          description: Long description of the error that further explains why the request was unsuccessful
+          example: The request was not properly formatted.
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

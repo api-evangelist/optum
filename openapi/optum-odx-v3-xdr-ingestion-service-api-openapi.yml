@@ -1,0 +1,108 @@
+openapi: 3.1.0
+info:
+  title: ODX V3-XDR Ingestion Service API
+  description: 'REST API for ingesting XDR Request in Provide and Register format (P&R) with HL7 V3 payloads.
+
+
+    **Optional Tracking Headers:**
+
+    - `X-Correlation-ID`: UUID for correlation tracking (auto-generated if not provided)
+
+    - `X-Event-ID`: UUID for event tracking (auto-generated if not provided)'
+  contact:
+    name: ODX Foundation Team
+    email: Interoperability_Solutions_Foundation_Team <ODXCDevOpsteam_DL@ds.uhc.com>
+  license:
+    name: Proprietary
+  version: 1.0.0
+servers:
+- url: https://odxui.dev06.odx-nonprod.o360.cloud/v3-ingestion
+  description: Generated server url
+security:
+- BearerAuth: []
+tags:
+- name: V3 Ingestion
+  description: ODX V3 Ingestion Service API for processing XDR Request in P&R request with HL7 V3 payload
+paths:
+  /v3/ingest:
+    post:
+      tags:
+      - V3 Ingestion
+      summary: Ingest V3 payload with P&R Request
+      description: Processes XDR Request in Provide and Register format (P&R) with HL7 V3 payload via
+        REST API.
+      operationId: ingestV3Payload
+      parameters:
+      - name: Content-Type
+        in: header
+        description: Content type of the request
+        required: false
+        schema:
+          type: string
+      - name: X-Forwarded-For
+        in: header
+        description: X-Forwarded-For header for sender IP tracking
+        required: false
+        schema:
+          type: string
+      - name: X-Correlation-ID
+        in: header
+        description: Optional correlation ID for request tracking. Must be a valid 36-character UUID.
+          Auto-generated if not provided or invalid.
+        required: false
+        schema:
+          type: string
+          format: uuid
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        example: a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d
+      - name: X-Event-ID
+        in: header
+        description: Optional event ID for tracking. Must be a valid 36-character UUID. Auto-generated
+          if not provided or invalid.
+        required: false
+        schema:
+          type: string
+          format: uuid
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+        example: f1e2d3c4-b5a6-4d7e-9f8a-1b2c3d4e5f6a
+      requestBody:
+        description: Provider and Register Request with HL7 V3 payload
+        content:
+          application/xml:
+            schema:
+              type: string
+          text/xml:
+            schema:
+              type: string
+          application/soap+xml:
+            schema:
+              type: string
+        required: true
+      responses:
+        '200':
+          description: Payload successfully ingested
+          content:
+            application/xml:
+              schema:
+                type: string
+        '400':
+          description: Bad request - Invalid payload
+          content:
+            application/xml:
+              schema:
+                type: string
+        '500':
+          description: Internal server error
+          content:
+            application/xml:
+              schema:
+                type: string
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

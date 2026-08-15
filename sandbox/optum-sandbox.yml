@@ -1,0 +1,59 @@
+generated: '2026-08-14'
+method: searched
+source: https://developer.optum.com/eligibilityandclaims/docs/create-a-sandbox-account
+docs:
+  - https://developer.optum.com/eligibilityandclaims/docs/create-a-sandbox-account
+  - https://marketplace.optum.com/apiservices/api-sandbox-access
+  - https://developer.optum.com/eligibilityandclaims/docs/api-environments
+available: true
+access:
+  request_url: https://marketplace.optum.com/apiservices/api-sandbox-access
+  gate: form
+  form_fields: [work email, first name, last name, company name, work phone (optional), role, company HQ state, API product category, referral source]
+  cost: none
+  provisioning: manual — Optum issues client_id and client_secret after the request is reviewed
+  note: >-
+    "Test Optum APIs in a controlled sandbox before moving to production. Validate request and
+    response patterns, simulate common scenarios and confirm how results will surface in your
+    systems." Sandbox credentials are not self-issued; there is no instant-signup path.
+environments:
+  - name: sandbox
+    base: https://sandbox-apigw.optum.com
+    token_url: https://sandbox-apigw.optum.com/apip/auth/v2/token
+    token_url_v3: https://sandbox-apigw.optum.com/apip/auth/sntl/v1/token
+    note: >-
+      Every harvested OpenAPI in openapi/ declares sandbox-apigw.optum.com as its first (often only)
+      servers[] entry — the published contracts are sandbox-first.
+  - name: production
+    base: https://apigw.optum.com
+    token_url: https://apigw.optum.com/apip/auth/v2/token
+test_data:
+  model: canned-values
+  description: >-
+    The sandbox returns pre-recorded ("canned") responses keyed to a fixed set of test values. It
+    does NOT run the production validation chain, so a payload that passes in sandbox can still fail
+    in production.
+  required_values:
+    - canned patient values (test Personal Medical Information / PMI)
+    - canned provider values
+    - simulated Medical Service IDs
+  published_value_location: >-
+    The specific canned values are published inside the per-API sandbox guides on
+    developer.optum.com (Eligibility and Claim Status sandbox guides) rather than in one table.
+    They are NOT reproduced here — the pipeline records only what it read verbatim, and the guide
+    pages render client-side.
+restrictions:
+  - "Do not use real-world values in our sandbox API endpoints! Doing so will produce errors."
+  - "DO NOT perform load testing or production data testing in the sandbox environment."
+  - Inventing new PMI values produces errors — only the predefined values resolve.
+  - 'Do not submit PHI or PII data in the sandbox environment. (marketplace.optum.com sandbox request page)'
+  - JSON payloads are snake_case and case-sensitive.
+key_separation:
+  mode: environment-host
+  note: >-
+    Optum separates test from live by HOSTNAME (sandbox-apigw vs apigw) and by separately issued
+    credentials, not by a key prefix. There is no `sk_test_`-style prefix an agent can inspect, and
+    several APIs additionally take an `environment` header — 25 operations across the harvested
+    specs declare a header parameter named `environment`.
+test_clocks: false
+fixture_tooling: false

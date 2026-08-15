@@ -1,0 +1,82 @@
+generated: '2026-08-14'
+method: searched
+source: >-
+  npm registry search + registry.npmjs.org metadata endpoints, pypi.org, search.maven.org
+  (g:com.optum), rubygems.org, and the developer.optum.com documentation. Probed 2026-08-14.
+summary: >-
+  Optum publishes NO first-party client library for any of the healthcare transaction APIs on
+  developer.optum.com. The 59 OpenAPI documents harvested into openapi/ are consumed directly over
+  HTTPS with an OAuth2 client-credentials bearer token; the docs' only code artifacts are the
+  ReadMe "Try It" console and copy-paste curl snippets. The @optum npm scope IS first-party (it maps
+  to github.com/Optum, 88 public repositories), but everything published under it is internal
+  engineering tooling that Optum open-sourced — Kafka clients, React hooks, an OIDC relying-party
+  server, a JSON Schema editor — not a client for the eligibility/claims/FHIR APIs. That distinction
+  is the finding: a large, active open-source org next to an API platform with zero SDK coverage.
+sdk_for_documented_apis: false
+official_api_client_count: 0
+packages:
+  - language: javascript
+    registry: npm
+    name: "@optum/react-hooks"
+    url: https://www.npmjs.com/package/@optum/react-hooks
+    install: npm install @optum/react-hooks
+    version: 1.1.0
+    published: '2025-07-24'
+    official: true
+    api_client: false
+    repository: https://github.com/Optum/react-hooks
+    note: First-party Optum open source (github.com/Optum). A reusable React hooks library — not a client for any developer.optum.com API.
+  - language: javascript
+    registry: npm
+    name: "@optum/openid-client-server"
+    url: https://www.npmjs.com/package/@optum/openid-client-server
+    install: npm install @optum/openid-client-server
+    version: 1.1.5
+    published: '2023-06-12'
+    official: true
+    api_client: false
+    repository: https://github.com/Optum/openid-client-server
+    note: First-party OpenID Connect relying-party application server. Auth infrastructure, not an Optum API SDK.
+  - language: javascript
+    registry: npm
+    name: "@optum/json-schema-editor"
+    url: https://www.npmjs.com/package/@optum/json-schema-editor
+    install: npm install @optum/json-schema-editor
+    version: 2.1.0
+    published: '2021-06-03'
+    official: true
+    api_client: false
+    repository: https://github.com/Optum/jsonschema-editor-react
+    note: First-party JSON Schema editor React control. Last published 2021-06-03 — nearly five years stale.
+  - language: javascript
+    registry: npm
+    name: "@optum/knack-cli"
+    url: https://www.npmjs.com/package/@optum/knack-cli
+    install: npm install -g @optum/knack-cli
+    version: 1.4.1
+    published: '2020-04-17'
+    official: true
+    api_client: false
+    repository: https://github.com/Optum/knack
+    note: First-party Apache Kafka development CLI. Last published 2020-04-17 — abandoned.
+  - language: javascript
+    registry: npm
+    name: optum-eligibility-sdk
+    url: https://www.npmjs.com/package/optum-eligibility-sdk
+    install: npm install optum-eligibility-sdk
+    version: 1.0.0
+    published: '2025-02-21'
+    official: false
+    api_client: true
+    repository: https://github.com/mobilestar2015/optum-eligibility-sdk
+    note: >-
+      THIRD PARTY, not Optum. Published by npm user `mobilestar2015`, self-described as an
+      "OpenAPI client for Optum Eligibility APIs". Recorded because it is the only eligibility
+      client library on any registry — and it is not Optum's. Single 1.0.0 release.
+registries_probed:
+  - {registry: npm, query: "optum", result: "@optum scope present (first-party, non-API tooling); no API client SDK"}
+  - {registry: pypi, query: "optum / optum-api / optum-sdk", result: "404 — no package"}
+  - {registry: maven-central, query: "g:com.optum", result: "numFound 0"}
+  - {registry: nuget, query: optum, result: "no first-party API client found"}
+  - {registry: rubygems, query: optum, result: "only the Optum-published LegionIO framework gems; no API client"}
+github_organization: https://github.com/Optum

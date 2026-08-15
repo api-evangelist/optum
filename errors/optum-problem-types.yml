@@ -1,0 +1,1498 @@
+generated: '2026-08-14'
+method: derived
+source: openapi/_original/*.json (59 OpenAPI documents harvested via the RFC 9727 API catalog at https://developer.optum.com/.well-known/api-catalog
+  and the ReadMe reference pages)
+format: vendor-json
+rfc9457: false
+notes: 'Optum does NOT use RFC 9457 application/problem+json anywhere. All 1,057 declared 4xx/5xx responses across
+  the 59 harvested specs are application/json carrying a vendor error envelope, and the envelope differs between
+  product lines: `Notification` (164) on the Optum Insight Platform specs, `ErrorResponse` (97) on Medical Network
+  and Optum Real, `ApiErrorResponse` (25) elsewhere. There is no platform-wide error contract. Transaction-level
+  (business-rule) rejections are returned separately as X12 999 and 277CA acknowledgements on the EDI transaction
+  APIs, so an agent must inspect BOTH the HTTP status and the returned X12 acknowledgement to know whether a claim
+  was actually accepted.'
+envelope_schemas:
+- schema: Notification
+  occurrences: 164
+- schema: ErrorResponse
+  occurrences: 97
+- schema: ApiErrorResponse
+  occurrences: 25
+- schema: Modifiers
+  occurrences: 10
+- schema: HttpClientServerError
+  occurrences: 8
+- schema: ColorCodes
+  occurrences: 6
+- schema: Errors
+  occurrences: 5
+- schema: HTTPValidationError
+  occurrences: 4
+- schema: Icd10CmColorCodes
+  occurrences: 4
+- schema: Link
+  occurrences: 4
+- schema: Hcc
+  occurrences: 4
+- schema: PhysicianDocs
+  occurrences: 4
+- schema: Items
+  occurrences: 3
+- schema: ClaimResponses
+  occurrences: 3
+- schema: BadRequest
+  occurrences: 2
+- schema: NotAuthorized
+  occurrences: 2
+- schema: Cci
+  occurrences: 2
+- schema: Cdi
+  occurrences: 2
+- schema: CompleteCodeHistory
+  occurrences: 2
+- schema: CodeProperties
+  occurrences: 2
+problem_count: 153
+problems:
+- status: 400
+  title: Bad Request
+  media_types:
+  - '*/*'
+  - application/json
+  schemas:
+  - BadRequest
+  - ClaimResponses
+  - ErrorResponse
+  - Items
+  - Notification
+  occurrences: 69
+  source_operations:
+  - openapi/optum-attachment-openapi.yml#claimActions
+  - openapi/optum-auth-referral-submission-api-openapi.yml#authReferralSubmission
+  - openapi/optum-claim-actions-api-openapi.yml#claimActions
+- status: 400
+  title: 'Bad Request: Some parameters were invalid'
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 46
+  source_operations:
+  - openapi/optum-cms-common-facility-openapi.yml#getMueTableData
+  - openapi/optum-cms-common-facility-openapi.yml#getNCDPolicyList
+  - openapi/optum-cms-common-facility-openapi.yml#getProcedureToDeviceToProcedureCodes
+- status: 400
+  title: Wrong CodeType
+  media_types:
+  - application/json
+  schemas:
+  - Cdi
+  - CodeProperties
+  - ColorCodes
+  - CompleteCodeHistory
+  - Icd10CmColorCodes
+  - Icd10Mapping
+  - Icd10pcsCodeSpecificGuidelines
+  - Icd10pcsColorCodes
+  - Icd9Mapping
+  - Link
+  - Modifiers
+  - Multicci
+  - PhysicianDocs
+  occurrences: 20
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getCDICodeLinks
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getCodehistory
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getProperty
+- status: 400
+  media_types: []
+  occurrences: 19
+  source_operations:
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#postEligibility
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#postEligibilityX12
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#postDiscovery
+- status: 400
+  title: Bad data parameter
+  media_types:
+  - application/json
+  schemas:
+  - CodingSupportResources
+  - DrgCodeDesc
+  - ModifierDesc
+  - Modifiers
+  - OPPSCrossCode
+  - OptumSpecialtyArticles
+  - RevCodeDesc
+  occurrences: 7
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getOPPSCrossCode
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getDocuments
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getProperty_1
+- status: 400
+  title: The request has missing, invalid, or malformed data.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 6
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#PATCH /dentalnetwork/attachments/v1/CommitAttachment/{attachmentId}
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAttachmentbyId/{attachmentId}
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAttachmentList/{AttachmentId}
+- status: 400
+  title: Bad Request. Please try again
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 5
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#placeOrder
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#getClientOrderDetails
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#getVendorOrderDetails
+- status: 400
+  title: Bad Request - some parameters were invalid
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 4
+  source_operations:
+  - openapi/optum-cms-common-facility-openapi.yml#fetchCARCList
+  - openapi/optum-cms-common-facility-openapi.yml#getDiagnosisCodes
+  - openapi/optum-cms-common-physician-openapi.yml#getDiagnosisCodes
+- status: 400
+  title: Bad Request, Please try again
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 4
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#getClientOrderStatus
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#getVendorOrderStatus
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#v1GetClientOrderStatus
+- status: 400
+  title: Bad Request.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 3
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/AddAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/IsParticipatingPayer
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetPayerBusinessRules/me
+- status: 400
+  title: Not a valid 'codetype' code
+  media_types:
+  - application/json
+  schemas:
+  - CodeRange
+  - ContractorList
+  occurrences: 2
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#findRange
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getContractors
+- status: 400
+  title: ContractorNum is larger than 5 characters
+  media_types:
+  - application/json
+  schemas:
+  - ContractorPolicies
+  - ContractorPolicyDetails
+  occurrences: 2
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getPolicies
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getPolicyDetails
+- status: 400
+  title: The provided code is not a valid icd9v1 code
+  media_types:
+  - application/json
+  schemas:
+  - InstructionalNotes
+  - Items
+  occurrences: 2
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getInstructions
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getInstructions_1
+- status: 400
+  title: The request was not properly formatted
+  media_types:
+  - '*/*'
+  schemas:
+  - CheckJob_Response_Failure_400
+  - JobSubmission_Response_Failure_400
+  occurrences: 2
+  source_operations:
+  - openapi/optum-prometheus-analytics-api-job-submission-openapi.yml#POST /prometheus/jobsubmission/v1
+  - openapi/optum-prometheus-analytics-checkjob-openapi.yml#POST /prometheus/checkjob/v1
+- status: 400
+  title: Bad Request. The request body is malformed or missing required information.
+  media_types:
+  - application/json
+  schemas:
+  - Errors
+  occurrences: 1
+  source_operations:
+  - openapi/optum-authorization-auth-only-openapi.yml#POST /apip/auth/sntl/v1/token
+- status: 400
+  title: <ul>   <li>GRAPHQL_VALIDATION_FAILED     <ul>       <li>Cannot query field <field name> on type <type></li>     </ul>   </li>   <li>GRAPHQL_PARSE_FAILED     <ul>       <li>Syntax
+    E
+  media_types:
+  - application/json
+  occurrences: 1
+  source_operations:
+  - openapi/optum-benefit-check-api-openapi.yml#benefitCheck
+- status: 400
+  title: 'Bad request: If any of the path parameters are invalid'
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 1
+  source_operations:
+  - openapi/optum-cms-common-facility-openapi.yml#getTobOceByCode
+- status: 400
+  title: 'Bad Request: Filter parameter is invalid'
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 1
+  source_operations:
+  - openapi/optum-cms-common-facility-openapi.yml#getDeviceOffsetCodePairs
+- status: 400
+  title: 'Bad request: Invalid parameters provided'
+  media_types:
+  - application/json
+  occurrences: 1
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#dictTerms
+- status: 400
+  title: 'Bad request: No code notes found for this code and codetype'
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 1
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#codeNotes
+- status: 400
+  title: Bad Request - Invalid file name
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 1
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#imageResource
+- status: 400
+  title: Response status 400
+  media_types:
+  - application/json
+  occurrences: 1
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#fetchQuantityColorCodes
+- status: 400
+  title: Bad request - includes validation errors for missing or invalid fields
+  media_types:
+  - application/json
+  occurrences: 1
+  source_operations:
+  - openapi/optum-document-search-api-openapi.yml#documentSearch
+- status: 400
+  title: Missing required query parameters.
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#trackPackage
+- status: 400
+  title: 'Bad Request. Some issue in the properties supplied to the API. For example Invalid vendor details, special
+    chars in client order name, invalid vendor type, roster file not present '
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#v1CreateClientOrder
+- status: 400
+  title: Bad request - Invalid payload
+  media_types:
+  - application/xml
+  occurrences: 1
+  source_operations:
+  - openapi/optum-odx-v3-xdr-ingestion-service-api-openapi.yml#ingestV3Payload
+- status: 400
+  title: Unknown data element
+  media_types:
+  - application/json
+  schemas:
+  - Cci
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getColumnCci
+- status: 400
+  title: Wrong Code Type
+  media_types:
+  - application/json
+  schemas:
+  - Link
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getProperties
+- status: 400
+  title: The search term can contain maximum of 62 characters
+  media_types:
+  - application/json
+  schemas:
+  - IndexSearchResults
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#indexSearchResults
+- status: 400
+  title: The provided code is not a valid HCC code
+  media_types:
+  - application/json
+  schemas:
+  - DiagnosisCodeList
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getDiagList
+- status: 400
+  title: The provided code is not a valid icd9v1/icd10cm code
+  media_types:
+  - application/json
+  schemas:
+  - Hcc
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getI9I10HccData
+- status: 400
+  title: Not a valid HCC Code for the cms-hcc type
+  media_types:
+  - application/json
+  schemas:
+  - Hcc
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getHccData
+- status: 400
+  title: Code does not exist
+  media_types:
+  - application/json
+  schemas:
+  - Contractors
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getContractorLinks
+- status: 400
+  title: '''Start'' value is negative'
+  media_types:
+  - application/json
+  schemas:
+  - Policies
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getPolicies_1
+- status: 400
+  title: Invalid parameter passed
+  media_types:
+  - application/json
+  schemas:
+  - Link
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getModifiers
+- status: 400
+  title: Bad Types Parameter
+  media_types:
+  - application/json
+  schemas:
+  - Modifier51Exempt
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getOptumAmaMod51Exempt
+- status: 400
+  title: Unknown Type Element
+  media_types:
+  - application/json
+  schemas:
+  - ModifierProperty
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getProperty_2
+- status: 400
+  title: Start value is negative
+  media_types:
+  - application/json
+  schemas:
+  - RevenueCodeToProcedure
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getprocCodes
+- status: 400
+  title: Status 400
+  media_types:
+  - application/json
+  occurrences: 1
+  source_operations:
+  - openapi/optum-pes-payer-enrollments-v1-openapi.yml#get-pes-enrollments-enrollment-status
+- status: 400
+  title: Invalid or missing request fields
+  media_types: []
+  occurrences: 1
+  source_operations:
+  - openapi/optum-real-dental-pre-care-eligibility-api-openapi.yml#checkEligibility
+- status: 400
+  title: Request was not properly formed.
+  media_types:
+  - '*/*'
+  schemas:
+  - Auth_Response_Failure
+  occurrences: 1
+  source_operations:
+  - openapi/optum-security-and-authorization-v2-openapi.yml#POST /apip/auth/v2/token
+- status: 401
+  title: Not Authorized
+  media_types:
+  - application/json
+  schemas:
+  - NotAuthorized
+  occurrences: 66
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#dictTerms
+  - openapi/optum-medical-network-attachment-status-v1-openapi.yml#GET /{traceId}
+  - openapi/optum-medical-network-attachment-status-v1-openapi.yml#POST /metadata
+- status: 401
+  title: Unauthorized
+  media_types:
+  - '*/*'
+  - application/json
+  schemas:
+  - NCPDPRequestConverterV1Response
+  - NCPDPResponseConverterV1Response
+  occurrences: 29
+  source_operations:
+  - openapi/optum-attachment-openapi.yml#claimActions
+  - openapi/optum-auth-referral-submission-api-openapi.yml#authReferralSubmission
+  - openapi/optum-claim-actions-api-openapi.yml#claimActions
+- status: 401
+  media_types: []
+  occurrences: 26
+  source_operations:
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#postEligibility
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#postEligibilityX12
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#GET /rcm/eligibility/v1/transactions
+- status: 401
+  title: User is unauthorized to access vendor order status API
+  media_types:
+  - application/json
+  occurrences: 3
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#getVendorOrderStatus
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#v1GetVendorOrderStatus
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#findProviders
+- status: 401
+  title: Status 401
+  media_types:
+  - application/json
+  occurrences: 3
+  source_operations:
+  - openapi/optum-pes-payer-enrollments-v1-openapi.yml#get-pes-enrollments
+  - openapi/optum-pes-payer-enrollments-v1-openapi.yml#patch-pes-payer-enrollments-v1
+  - openapi/optum-pes-payer-enrollments-v1-openapi.yml#get-pes-enrollments-enrollment-status
+- status: 401
+  title: Response when the missing token/token is expired.
+  media_types:
+  - application/json
+  schemas:
+  - HttpClientServerError
+  occurrences: 2
+  source_operations:
+  - openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml#documentSearch
+  - openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml#documentRetrieve
+- status: 401
+  title: The request is not authorized.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 2
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAttachmentbyId/{attachmentId}
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetPayerBusinessRules/me
+- status: 401
+  title: User is unauthorized to access client order details API
+  media_types:
+  - application/json
+  occurrences: 2
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#getClientOrderDetails
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#v1GetClientOrderDetails
+- status: 401
+  title: User is unauthorized to access client order status API
+  media_types:
+  - application/json
+  occurrences: 2
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#getClientOrderStatus
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#v1GetClientOrderStatus
+- status: 401
+  title: User is unauthorized to access vendor order details API
+  media_types:
+  - application/json
+  occurrences: 2
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#getVendorOrderDetails
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#v1GetVendorOrderDetails
+- status: 401
+  title: Not Authorised
+  media_types:
+  - application/json
+  schemas:
+  - ClaimResponses
+  occurrences: 2
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getClaims
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#process
+- status: 401
+  title: Unauthorized. No or invalid authentication details are provided.
+  media_types:
+  - application/json
+  schemas:
+  - Errors
+  occurrences: 1
+  source_operations:
+  - openapi/optum-authorization-auth-only-openapi.yml#POST /apip/auth/sntl/v1/token
+- status: 401
+  title: 'Authentication failed: Invalid or expired token'
+  media_types:
+  - application/json
+  occurrences: 1
+  source_operations:
+  - openapi/optum-benefit-check-api-openapi.yml#benefitCheck
+- status: 401
+  title: Unauthorized - Authentication failed
+  media_types:
+  - application/json
+  occurrences: 1
+  source_operations:
+  - openapi/optum-document-search-api-openapi.yml#documentSearch
+- status: 401
+  title: User is unauthorized to access Place order API
+  media_types:
+  - application/json
+  occurrences: 1
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#placeOrder
+- status: 401
+  title: User is unauthorized to access Place client order API
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#v1CreateClientOrder
+- status: 401
+  title: Missing or invalid access token
+  media_types: []
+  occurrences: 1
+  source_operations:
+  - openapi/optum-real-dental-pre-care-eligibility-api-openapi.yml#checkEligibility
+- status: 401
+  title: Unauthorized - the client_id and/or client_secret are invalid
+  media_types:
+  - '*/*'
+  schemas:
+  - Auth_Response_Failure
+  occurrences: 1
+  source_operations:
+  - openapi/optum-security-and-authorization-v2-openapi.yml#POST /apip/auth/v2/token
+- status: 403
+  media_types: []
+  occurrences: 18
+  source_operations:
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#postEligibility
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#postEligibilityX12
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#GET /rcm/eligibility/v1/transactions
+- status: 403
+  title: Forbidden.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 3
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/AddAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#PUT /dentalnetwork/attachments/v1/{attachmentId}/UpdateAttachmentFile/{attachmentFileId}
+  - openapi/optum-dental-attachment-api-openapi.yml#PATCH /dentalnetwork/attachments/v1/CommitAttachment/{attachmentId}
+- status: 403
+  title: The requestor is forbidden to access this resource.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 3
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAttachmentbyId/{attachmentId}
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAttachmentList/{AttachmentId}
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/IsParticipatingPayer
+- status: 403
+  title: Forbidded.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 3
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAllParticipatingPayers
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetPayerBusinessRules/me
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /apip/auth/v2/token
+- status: 403
+  title: Forbidden. Authentication succeeded but authenticated client doesn't have access to the resource.
+  media_types:
+  - application/json
+  schemas:
+  - Errors
+  occurrences: 1
+  source_operations:
+  - openapi/optum-authorization-auth-only-openapi.yml#POST /apip/auth/sntl/v1/token
+- status: 403
+  title: Response when forbidden access.
+  media_types:
+  - application/json
+  schemas:
+  - HttpClientServerError
+  occurrences: 1
+  source_operations:
+  - openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml#documentSearch
+- status: 403
+  title: Response when access is forbidden.
+  media_types:
+  - application/json
+  schemas:
+  - HttpClientServerError
+  occurrences: 1
+  source_operations:
+  - openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml#documentRetrieve
+- status: 403
+  title: Forbidden
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/CreateAttachment
+- status: 403
+  title: Cannot delete a committed attachment file.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#DELETE /dentalnetwork/attachments/v1/{attachmentId}/DeleteAttachmentFile/{attachmentFileId}
+- status: 403
+  title: Token lacks required scopes
+  media_types: []
+  occurrences: 1
+  source_operations:
+  - openapi/optum-real-dental-pre-care-eligibility-api-openapi.yml#checkEligibility
+- status: 404
+  title: Not found
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 73
+  source_operations:
+  - openapi/optum-cms-common-facility-openapi.yml#getSupportingDocumentationDetails
+  - openapi/optum-cms-common-facility-openapi.yml#getCMSTransmittal
+  - openapi/optum-cms-common-facility-openapi.yml#searchPolicyLookup
+- status: 404
+  title: Not Found - the data was not found
+  media_types:
+  - application/json
+  occurrences: 23
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getAnesBaseUnit
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getCodeImageLinks
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getImage
+- status: 404
+  title: Code does not exist
+  media_types:
+  - application/json
+  schemas:
+  - Cci
+  - CodeProperties
+  - ColorCodes
+  - CompleteCodeHistory
+  - Icd10CmColorCodes
+  - Icd10pcsCodeSpecificGuidelines
+  - Icd10pcsColorCodes
+  - Link
+  - Policies
+  occurrences: 12
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getColumnCci
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getCodehistory
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getProperty
+- status: 404
+  title: Not Found.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  - Notification
+  occurrences: 8
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAttachmentList/{AttachmentId}
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetPayerBusinessRules/me
+  - openapi/optum-optum-common-facility-openapi.yml#modifierCrosswalk
+- status: 404
+  title: 'Not found: Sub terms not found'
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 7
+  source_operations:
+  - openapi/optum-cms-common-facility-openapi.yml#getCMSTransmittalDocument
+  - openapi/optum-cms-common-physician-openapi.yml#qppMipsDocument
+  - openapi/optum-cms-common-physician-openapi.yml#getRelativeFile
+- status: 404
+  title: The resource could not be found.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 6
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/CreateAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/AddAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#PUT /dentalnetwork/attachments/v1/{attachmentId}/UpdateAttachmentFile/{attachmentFileId}
+- status: 404
+  media_types: []
+  occurrences: 4
+  source_operations:
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#GET /rcm/eligibility/v1/transactions/{id}
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#getDiscoveryById
+  - openapi/optum-medical-network-attachment-retrieval-v1-openapi.yml#POST /search
+- status: 404
+  title: Not found- No Data Found.
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 3
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#printModCodesReport
+  - openapi/optum-optum-common-facility-openapi.yml#printModCodesReport
+  - openapi/optum-optum-common-physician-openapi.yml#printModCodesReport
+- status: 404
+  title: Not found- sub terms not found
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 2
+  source_operations:
+  - openapi/optum-cms-common-facility-openapi.yml#getSupportingDocumentPDF
+  - openapi/optum-core-service-openapi.yml#getMerckManualPDF
+- status: 404
+  title: 'Not found: Only CPT and HCPCS are applicable for modifiers list'
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 2
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#modifierCodeList
+  - openapi/optum-core-service-openapi.yml#modifiers
+- status: 404
+  title: File Not Found
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 2
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#imageResource
+  - openapi/optum-real-provider-access-api-openapi.yml#downloadDaVinciExportFile
+- status: 404
+  title: The given unsubmitted claim does not exist.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 2
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#PATCH /dentalnetwork/attachments/v1/CommitAttachment/{attachmentId}
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAttachmentbyId/{attachmentId}
+- status: 404
+  title: CDI Document not found
+  media_types:
+  - application/json
+  - application/pdf
+  schemas:
+  - Cdi
+  occurrences: 2
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getCDICodeLinks
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getCDIPDF_1
+- status: 404
+  title: No Drg code description found
+  media_types:
+  - application/json
+  schemas:
+  - DiagnosisCodeList
+  - DrgCodeDesc
+  occurrences: 2
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getProperty_1
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getDiagList
+- status: 404
+  title: Code 'code' does not exist
+  media_types:
+  - application/json
+  schemas:
+  - InstructionalNotes
+  - Items
+  occurrences: 2
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getInstructions
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getInstructions_1
+- status: 404
+  title: Modifiers not found for the code entered
+  media_types:
+  - application/json
+  schemas:
+  - Modifiers
+  occurrences: 2
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getModifiers_1
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getCarriers
+- status: 404
+  title: Code {code} does not exist
+  media_types:
+  - application/json
+  schemas:
+  - Modifiers
+  - PhysicianDocs
+  occurrences: 2
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getMpfsLinks
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getPhysicianDocs
+- status: 404
+  title: Not Found - the endpoint was not found
+  media_types: []
+  occurrences: 1
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#dictTerms
+- status: 404
+  title: 'Not found: Only CPT and HCPCS code types are applicable for modifier crosswalk'
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 1
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#modifierCrosswalk
+- status: 404
+  title: Not Found - lay descriptions were not found for given code and codetype
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 1
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#validateCode
+- status: 404
+  title: 'Not found: Lay descriptions were not found for given code and codetype'
+  media_types:
+  - application/json
+  schemas:
+  - Notification
+  occurrences: 1
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#layDescription
+- status: 404
+  title: Response when path is not found.
+  media_types:
+  - application/json
+  schemas:
+  - HttpClientServerError
+  occurrences: 1
+  source_operations:
+  - openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml#documentSearch
+- status: 404
+  title: Response when the path is not found.
+  media_types:
+  - application/json
+  schemas:
+  - HttpClientServerError
+  occurrences: 1
+  source_operations:
+  - openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml#documentRetrieve
+- status: 404
+  title: If a “Delete” is attempted on a file that has previously been deleted a 404 will be returned.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#DELETE /dentalnetwork/attachments/v1/{attachmentId}/DeleteAttachmentFile/{attachmentFileId}
+- status: 404
+  title: Package not found with the provided input details.
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#trackPackage
+- status: 404
+  title: CDI or Coding Support PDF Document not found
+  media_types:
+  - application/pdf
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getCDIPDF
+- status: 404
+  title: OPPS crosscode was not found
+  media_types:
+  - application/json
+  schemas:
+  - OPPSCrossCode
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getOPPSCrossCode
+- status: 404
+  title: No search results found
+  media_types:
+  - application/json
+  schemas:
+  - IndexSearchResults
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#indexSearchResults
+- status: 404
+  title: No E&M or auditor desk reference doucuments were found
+  media_types:
+  - application/json
+  schemas:
+  - CodingSupportResources
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getDocuments
+- status: 404
+  title: Policy 'A9999' does not exist for Contractor '%04111'
+  media_types:
+  - application/json
+  schemas:
+  - ContractorPolicyDetails
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getPolicyDetails
+- status: 404
+  title: HCC Data does not exist for the particular icd9v1/icd10cm code
+  media_types:
+  - application/json
+  schemas:
+  - Hcc
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getI9I10HccData
+- status: 404
+  title: No Diagnosis Code found for the HCC Code entered
+  media_types:
+  - application/json
+  schemas:
+  - Hcc
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getHccData
+- status: 404
+  title: Code does not have ICD-10 Mapping
+  media_types:
+  - application/json
+  schemas:
+  - Icd10Mapping
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getI10Mapping
+- status: 404
+  title: Wrong codetype
+  media_types:
+  - application/json
+  schemas:
+  - Contractors
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getContractorLinks
+- status: 404
+  title: Code not found for modifier entered
+  media_types:
+  - application/json
+  schemas:
+  - ModifierProperty
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getProperty_2
+- status: 404
+  title: No modifier code description found
+  media_types:
+  - application/json
+  schemas:
+  - ModifierDesc
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getProperty_3
+- status: 404
+  title: Carrier/Locality length is incorrect
+  media_types:
+  - application/json
+  schemas:
+  - Modifiers
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getFee
+- status: 404
+  title: The requested resource does not exist
+  media_types:
+  - application/json
+  schemas:
+  - Modifiers
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getGlobal
+- status: 404
+  title: CCI relationship was not found
+  media_types:
+  - application/json
+  schemas:
+  - Multicci
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getMultiCCIData
+- status: 404
+  title: No Optum Specialty Article Codes were found
+  media_types:
+  - application/json
+  schemas:
+  - OptumSpecialtyArticles
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getCodes_1
+- status: 404
+  title: No revenue code description found
+  media_types:
+  - application/json
+  schemas:
+  - RevCodeDesc
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getProperty_4
+- status: 404
+  title: Revenue code crosswalk not found
+  media_types:
+  - application/json
+  schemas:
+  - PhysicianDocs
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getRevenueCodes
+- status: 404
+  title: No cpt/hcps crosswalk codes found
+  media_types:
+  - application/json
+  schemas:
+  - RevenueCodeToProcedure
+  occurrences: 1
+  source_operations:
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getprocCodes
+- status: 405
+  title: Method Not Allowed - Request method not supported
+  media_types:
+  - application/json
+  occurrences: 64
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#dictTerms
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getAnesBaseUnit
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getColumnCci
+- status: 406
+  title: Not Acceptable
+  media_types:
+  - application/json
+  occurrences: 15
+  source_operations:
+  - openapi/optum-real-prior-authorization-api-openapi.yml#getNextQuestion
+  - openapi/optum-real-prior-authorization-api-openapi.yml#submitAttachment
+  - openapi/optum-real-prior-authorization-api-openapi.yml#getDocumentReference
+- status: 409
+  title: The given claim has already been submitted.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#PATCH /dentalnetwork/attachments/v1/CommitAttachment/{attachmentId}
+- status: 412
+  title: The given claim is not in a suitable state to be submitted.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#PATCH /dentalnetwork/attachments/v1/CommitAttachment/{attachmentId}
+- status: 412
+  title: The given customer route does not exist.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#DELETE /dentalnetwork/attachments/v1/{attachmentId}/DeleteAttachmentFile/{attachmentFileId}
+- status: 412
+  title: The account resource does not exist.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/IsParticipatingPayer
+- status: 415
+  title: Unsupported Media Type. Only application/x-www-form-urlencoded is supported for requests.
+  media_types:
+  - application/json
+  schemas:
+  - Errors
+  occurrences: 1
+  source_operations:
+  - openapi/optum-authorization-auth-only-openapi.yml#POST /apip/auth/sntl/v1/token
+- status: 422
+  media_types: []
+  occurrences: 4
+  source_operations:
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#GET /rcm/eligibility/v1/transactions/{id}
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#postDiscovery
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#postDiscoveryX12
+- status: 422
+  title: Validation Error
+  media_types:
+  - application/json
+  schemas:
+  - HTTPValidationError
+  occurrences: 4
+  source_operations:
+  - openapi/optum-medical-network-claims-responses-and-reports-v2-openapi.yml#get_single_report_v2_reports__filename__get
+  - openapi/optum-medical-network-claims-responses-and-reports-v2-openapi.yml#delete_single_report_v2_reports__filename__delete
+  - openapi/optum-medical-network-claims-responses-and-reports-v2-openapi.yml#convert_report_277_v2_reports__filename__277_get
+- status: 422
+  title: Status 422
+  media_types:
+  - application/json
+  occurrences: 3
+  source_operations:
+  - openapi/optum-pes-payer-enrollments-v1-openapi.yml#get-pes-enrollments
+  - openapi/optum-pes-payer-enrollments-v1-openapi.yml#patch-pes-payer-enrollments-v1
+  - openapi/optum-pes-payer-enrollments-v1-openapi.yml#get-pes-enrollments-enrollment-status
+- status: 422
+  title: Unprocessable Entity.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/CreateAttachment
+- status: 429
+  title: The requestor has sent more requests within a given timeframe than allowed.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 10
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/AddAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#PUT /dentalnetwork/attachments/v1/{attachmentId}/UpdateAttachmentFile/{attachmentFileId}
+  - openapi/optum-dental-attachment-api-openapi.yml#PATCH /dentalnetwork/attachments/v1/CommitAttachment/{attachmentId}
+- status: 500
+  title: Internal Server Error
+  media_types:
+  - application/json
+  - application/xml
+  schemas:
+  - ErrorResponse
+  - Notification
+  occurrences: 162
+  source_operations:
+  - openapi/optum-attachment-openapi.yml#claimActions
+  - openapi/optum-auth-referral-submission-api-openapi.yml#authReferralSubmission
+  - openapi/optum-claim-actions-api-openapi.yml#claimActions
+- status: 500
+  title: Interal server error
+  media_types:
+  - application/json
+  occurrences: 39
+  source_operations:
+  - openapi/optum-cms-common-facility-openapi.yml#getCMSTransmittal
+  - openapi/optum-cms-common-facility-openapi.yml#searchPolicyLookup
+  - openapi/optum-cms-common-facility-openapi.yml#getCMSIOMSPolicies
+- status: 500
+  media_types: []
+  occurrences: 18
+  source_operations:
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#healthcheck
+  - openapi/optum-medical-network-attachment-retrieval-v1-openapi.yml#POST /search
+  - openapi/optum-medical-network-attachment-retrieval-v1-openapi.yml#GET /{documentId}
+- status: 500
+  title: Service is unhealthy - **Note:** If you receive a response other than 200 OK, the health check failed.
+    Please submit a ticket with Optum.
+  media_types: []
+  occurrences: 9
+  source_operations:
+  - openapi/optum-auth-referral-submission-health-check-openapi.yml#healthCheck
+  - openapi/optum-claim-actions-health-check-openapi.yml#healthCheck
+  - openapi/optum-claim-inquiry-health-check-openapi.yml#healthCheck
+- status: 500
+  title: Internal Server Error.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 7
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/CreateAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#PATCH /dentalnetwork/attachments/v1/CommitAttachment/{attachmentId}
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAttachmentList/{AttachmentId}
+- status: 500
+  title: An unexpected error occurred.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 4
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/AddAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#PUT /dentalnetwork/attachments/v1/{attachmentId}/UpdateAttachmentFile/{attachmentFileId}
+  - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAttachmentbyId/{attachmentId}
+- status: 500
+  title: Status 500
+  media_types:
+  - application/json
+  occurrences: 3
+  source_operations:
+  - openapi/optum-pes-payer-enrollments-v1-openapi.yml#get-pes-enrollments
+  - openapi/optum-pes-payer-enrollments-v1-openapi.yml#patch-pes-payer-enrollments-v1
+  - openapi/optum-pes-payer-enrollments-v1-openapi.yml#get-pes-enrollments-enrollment-status
+- status: 500
+  title: Internal server error - Problem occurred on the server
+  media_types:
+  - application/json
+  occurrences: 2
+  source_operations:
+  - openapi/optum-benefit-check-api-openapi.yml#benefitCheck
+  - openapi/optum-document-search-api-openapi.yml#documentSearch
+- status: 500
+  title: Response when an internal server error occurs.
+  media_types:
+  - application/json
+  schemas:
+  - HttpClientServerError
+  occurrences: 2
+  source_operations:
+  - openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml#documentSearch
+  - openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml#documentRetrieve
+- status: 500
+  title: Server Error
+  media_types:
+  - application/json
+  occurrences: 2
+  source_operations:
+  - openapi/optum-edi-enrollment-v1-openapi.yml#submitEraEnrollment
+  - openapi/optum-edi-enrollment-v1-openapi.yml#getResults
+- status: 500
+  title: Application failed to place order in NCC, internal server error occurred
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 2
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#placeOrder
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#v1CreateClientOrder
+- status: 500
+  title: Application failed to retrieve given client order details, internal server error occurred
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 2
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#getClientOrderDetails
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#v1GetClientOrderDetails
+- status: 500
+  title: Application failed to retrieve given client order status , Internal server error occured
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 2
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#getClientOrderStatus
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#v1GetClientOrderStatus
+- status: 500
+  title: Application failed to retrieve given vendor order details, internal server error occurred
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 2
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#getVendorOrderDetails
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#v1GetVendorOrderDetails
+- status: 500
+  title: Application failed to retrieve given vendor order status , Internal server error occured
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 2
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#getVendorOrderStatus
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#v1GetVendorOrderStatus
+- status: 500
+  title: The request has encountered an Internal Error
+  media_types:
+  - '*/*'
+  schemas:
+  - CheckJob_Response_Failure_500
+  - JobSubmission_Response_Failure_500
+  occurrences: 2
+  source_operations:
+  - openapi/optum-prometheus-analytics-api-job-submission-openapi.yml#POST /prometheus/jobsubmission/v1
+  - openapi/optum-prometheus-analytics-checkjob-openapi.yml#POST /prometheus/checkjob/v1
+- status: 500
+  title: Internal Server Error. An unexpected error has occurred.
+  media_types:
+  - application/json
+  schemas:
+  - Errors
+  occurrences: 1
+  source_operations:
+  - openapi/optum-authorization-auth-only-openapi.yml#POST /apip/auth/sntl/v1/token
+- status: 500
+  title: Internal Server
+  media_types:
+  - '*/*'
+  schemas:
+  - InternalErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-medical-network-attachments-submission-v1-openapi.yml#upload
+- status: 500
+  title: Something failed while searching for the package.
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#trackPackage
+- status: 500
+  title: Application failed to retrieve provider details , Internal server error occured
+  media_types:
+  - application/json
+  schemas:
+  - ApiErrorResponse
+  occurrences: 1
+  source_operations:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml#findProviders
+- status: 500
+  title: Service is unhealthy
+  media_types: []
+  occurrences: 1
+  source_operations:
+  - openapi/optum-real-dental-claim-submission-api-openapi.yml#healthCheck
+- status: 500
+  title: Optum backend error
+  media_types: []
+  occurrences: 1
+  source_operations:
+  - openapi/optum-real-dental-pre-care-eligibility-api-openapi.yml#checkEligibility
+- status: 502
+  title: An unexpected error occurred within a gateway.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 11
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/CreateAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/AddAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#PUT /dentalnetwork/attachments/v1/{attachmentId}/UpdateAttachmentFile/{attachmentFileId}
+- status: 503
+  title: Service Unavailable
+  media_types: []
+  occurrences: 64
+  source_operations:
+  - openapi/optum-core-service-openapi.yml#dictTerms
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getAnesBaseUnit
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml#getColumnCci
+- status: 503
+  title: The endpoint is not available, or an unknown endpoint has been requested.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 11
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/CreateAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/AddAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#PUT /dentalnetwork/attachments/v1/{attachmentId}/UpdateAttachmentFile/{attachmentFileId}
+- status: 503
+  title: Response when service is not available.
+  media_types:
+  - text/plain
+  occurrences: 2
+  source_operations:
+  - openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml#documentSearch
+  - openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml#documentRetrieve
+- status: 504
+  title: A timeout has occurred within a gateway.
+  media_types:
+  - application/json
+  schemas:
+  - ErrorResponse
+  occurrences: 11
+  source_operations:
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/CreateAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/AddAttachment
+  - openapi/optum-dental-attachment-api-openapi.yml#PUT /dentalnetwork/attachments/v1/{attachmentId}/UpdateAttachmentFile/{attachmentFileId}
+- status: 504
+  title: 504 Gateway Time-out
+  media_types:
+  - application/json
+  occurrences: 1
+  source_operations:
+  - openapi/optum-benefit-check-api-openapi.yml#benefitCheck
+- status: 5XX
+  media_types: []
+  occurrences: 8
+  source_operations:
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#postEligibility
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#postEligibilityX12
+  - openapi/optum-enhanced-eligibility-api-openapi.yml#GET /rcm/eligibility/v1/transactions

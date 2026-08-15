@@ -1,22 +1,23 @@
 aid: optum
 name: Optum
-description: >-
-  Optum, part of UnitedHealth Group, is a health services and technology company that
-  operates one of the largest medical and pharmacy networks in the United States. Its
-  developer platform (developer.optum.com) exposes RESTful, JSON- and X12 EDI-based
-  healthcare APIs for eligibility verification, professional and institutional claims
-  validation and submission, claim status, ERA/remittance reports, prior authorization,
-  attachments, payer directory, dental pre-care and claims, pharmacy solutions, and
-  FHIR-based Data Access and Interoperability (Patient Access) endpoints. APIs are
-  secured with OAuth2 client-credentials bearer tokens over TLS 1.2+, with free sandbox
-  access, interactive "Try It" documentation, and downloadable OpenAPI specifications.
+description: 'Optum, part of UnitedHealth Group, is a health services and technology company that operates
+  one of the largest medical, dental and pharmacy networks in the United States and runs the clearinghouse
+  formerly known as Change Healthcare. Its developer platform (developer.optum.com) publishes eight product
+  lines of RESTful JSON, native X12 EDI and HL7 FHIR R4 APIs: eligibility and coverage discovery, professional
+  and institutional claim validation and submission, claim status, ERA/remittance reports, attachments,
+  payer directory and outage feeds, prior authorization in both X12 278 and FHIR Da Vinci PAS/DTR/CRD
+  form, provider access and bulk member match, dental pre-care estimates and claims, pharmacy formatting
+  and submitter services, payer enrollment and document tracking, and Optum Insight Platform data, code-search
+  and analytics services. Every API is secured with an OAuth2 client-credentials JWT bearer token over
+  TLS 1.2+, with a free canned-response sandbox on a separate host. Optum also publishes an RFC 9727 API
+  catalog at /.well-known/api-catalog, which is how the 59 OpenAPI documents in this repo were harvested.'
 url: https://raw.githubusercontent.com/api-evangelist/optum/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - insight-partners
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profiled
+x-tier-reason: full-contract-harvest
 accessModel:
   pricing: unknown
   onboarding: self-serve
@@ -32,7 +33,7 @@ accessModel:
 image: https://www.optum.com/content/dam/optum4/images/logos/optum-logo.svg
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-20'
+modified: '2026-08-14'
 tags:
 - Company
 - Healthcare
@@ -46,13 +47,21 @@ tags:
 - X12
 - Payments
 - Prior Authorization
+- Clearinghouse
+- Revenue Cycle
+- Dental
+- Da Vinci
+- Patient Access
+- Remittance
+- Attachments
+- Payer Directory
 apis:
 - name: Optum Medical Network Eligibility and Claims API
-  description: >-
-    RESTful, JSON and X12 EDI (270/271, 837, 276/277, 835) healthcare transaction APIs
-    for real-time patient eligibility and coverage verification, professional and
-    institutional claim validation and submission, claim status inquiry, ERA/claim
-    responses and reports, prior authorization, attachments, and payer list lookup.
+  description: RESTful JSON and native X12 EDI (270/271, 837P/837I, 276/277, 835) healthcare transaction
+    APIs for real-time patient eligibility and coverage verification, enhanced eligibility with asynchronous
+    coverage discovery, professional and institutional claim validation and submission, claim status inquiry,
+    ERA and 277CA claim-response reports, prior authorization (X12 278), attachment submission/status/retrieval,
+    and the payer directory with live payer outage data.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -62,6 +71,8 @@ apis:
   - ERA
   - Prior Authorization
   - X12
+  - Attachments
+  - Payer Directory
   properties:
   - type: APIReference
     url: https://developer.optum.com/eligibilityandclaims/reference/api-overview
@@ -69,34 +80,271 @@ apis:
     url: https://developer.optum.com/eligibilityandclaims/docs/get-started-with-optum-api
   - type: Authentication
     url: https://developer.optum.com/eligibilityandclaims/docs/optum-security-and-authorization
-- name: Optum Data Access and Interoperability (FHIR) API
-  description: >-
-    FHIR R4-based Patient Access and interoperability APIs (Endpoint, Procedure,
-    DocumentReference, ObservationVitalSigns, Immunization, and related resources)
-    supporting CMS interoperability and patient data access requirements.
-  humanURL: https://developer.optum.com/dataaccessandinteroperability
-  baseURL: https://apigw.optum.com/
+  - type: ChangeLog
+    url: https://developer.optum.com/eligibilityandclaims/docs/eligibility-release-notes
+  - type: OpenAPI
+    url: openapi/optum-dental-attachment-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-enhanced-eligibility-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-medical-network-attachment-retrieval-v1-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-medical-network-attachment-status-v1-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-medical-network-attachments-submission-v1-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-medical-network-claim-status-v2-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-medical-network-claims-responses-and-reports-v2-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-medical-network-eligibility-v3-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-medical-network-institutional-claims-v1-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-medical-network-professional-claims-v3-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-payer-list-api-v1-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-prior-authorization-v1-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-security-and-authorization-v3-openapi.yml
+- name: Optum Real (Medical) API
+  description: 'Optum Real point-of-care APIs on the oihub gateway: pre-service eligibility, claim pre-check,
+    claim actions, claim inquiry, patient benefit check, document search, auth referral submission, plus
+    HL7 FHIR R4 Da Vinci implementations — Prior Authorization Support (PAS $submit/$inquire/$submit-attachment),
+    Documentation Templates and Rules (DTR questionnaire package and adaptive $next-question), Coverage
+    Requirements Discovery over CDS Hooks, and Provider Access with $bulk-member-match and $davinci-data-export.'
+  humanURL: https://developer.optum.com/optumreal-medical
+  baseURL: https://apigw.optum.com/oihub/
   tags:
   - FHIR
-  - Interoperability
-  - Patient Access
+  - Da Vinci
+  - Prior Authorization
+  - CDS Hooks
+  - Provider Access
+  - Eligibility
+  - Claims
+  - Benefit Check
+  properties:
+  - type: APIReference
+    url: https://developer.optum.com/optumreal-medical/reference/overview-optum-real-api
+  - type: ChangeLog
+    url: https://developer.optum.com/optumreal-medical/reference/real-api-release-notes
+  - type: OpenAPI
+    url: openapi/optum-attachment-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-auth-referral-submission-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-auth-referral-submission-health-check-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-authorization-auth-only-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-benefit-check-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-claim-actions-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-claim-actions-health-check-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-claim-inquiry-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-claim-inquiry-health-check-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-claim-pre-check-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-document-search-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-document-search-health-check-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-eligibility-pre-service-health-check-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-optum-real-health-check-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-optum-real-pre-service-eligibility-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-patient-benefit-check-health-check-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-real-prior-authorization-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-real-provider-access-api-openapi.yml
 - name: Optum Real for Dental API
-  description: >-
-    Real-time dental data exchange APIs for pre-care estimates, eligibility, claims
-    submission and inquiry, attachments with image intelligence, and ERA, with GraphQL
-    options for select operations.
+  description: Real-time dental data exchange APIs for pre-care eligibility and eligibility intelligence,
+    pre-care cost estimates, claim submission (GraphQL-backed), claim status inquiry, and attachments
+    with image intelligence over dental radiographs. The legacy Change Healthcare dental attachment surface
+    (/dentalnetwork/attachments/v1) is the only Optum API that documents a 429 rate-limit response.
   humanURL: https://developer.optum.com/optumreal-dental
-  baseURL: https://apigw.optum.com/dentalnetwork/
+  baseURL: https://apigw.optum.com/oihub/dental/
   tags:
   - Dental
   - Eligibility
   - Claims
+  - Attachments
+  - Pre-Care Estimate
+  - GraphQL
+  properties:
+  - type: APIReference
+    url: https://developer.optum.com/optumreal-dental/reference/overview-real-dental
+  - type: GettingStarted
+    url: https://developer.optum.com/optumreal-dental/reference/get-started
+  - type: OpenAPI
+    url: openapi/optum-dental-pre-care-estimate-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-real-dental-attachments-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-real-dental-claim-submission-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-real-dental-pre-care-eligibility-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-real-dental-claim-status-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-real-dental-pre-care-eligibility-intelligence-api-openapi.yml
+- name: Optum Pharmacy Solutions API
+  description: 'Pharmacy network services: a formatting rule API and telecom formatter for NCPDP-style
+    pharmacy claim formatting, and a submitter API for managing pharmacy network submitters.'
+  humanURL: https://developer.optum.com/pharmacysolutions
+  baseURL: https://apigw.optum.com/pharmacynetwork/
+  tags:
+  - Pharmacy
+  - NCPDP
+  - Formatting
+  - Submitter
+  properties:
+  - type: APIReference
+    url: https://developer.optum.com/pharmacysolutions/reference
+  - type: OpenAPI
+    url: openapi/optum-formatting-rule-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-submitter-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-telecom-formatter-api-openapi.yml
+- name: Optum Payment and Reimbursement API
+  description: 'Payer enrollment and document tracking for the Optum intelligent clearinghouse: PES payer
+    enrollments, EDI enrollment, and a file and document tracking API for following submissions through
+    the clearinghouse.'
+  humanURL: https://developer.optum.com/paymentandreimbursement
+  baseURL: https://apigw.optum.com/intelligentclearinghouse/
+  tags:
+  - Payments
+  - Enrollment
+  - EDI
+  - Document Tracking
+  - Clearinghouse
+  properties:
+  - type: APIReference
+    url: https://developer.optum.com/paymentandreimbursement/reference
+  - type: OpenAPI
+    url: openapi/optum-edi-enrollment-v1-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-file-and-document-tracking-api-v1-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-pes-payer-enrollments-v1-openapi.yml
+- name: Optum Insight Platform (Platform and Interoperability) API
+  description: 'Optum Insight Platform services published on gateway.optuminsightplatform.com: NCC data
+    acquisition, a code-search core service, CMS and Optum common physician and facility provider-directory
+    services, cross-community REST document exchange, an ODX XDR ingestion service, and real-time eContent
+    web services. These are the largest specs on the platform — the CMS Common Facility service alone
+    declares 69 operations.'
+  humanURL: https://developer.optum.com/platformandinteroperability
+  baseURL: https://gateway.optuminsightplatform.com/
+  tags:
+  - Interoperability
+  - Provider Directory
+  - Data Exchange
+  - Code Search
+  - Document Exchange
+  - CMS
+  properties:
+  - type: APIReference
+    url: https://developer.optum.com/platformandinteroperability/reference
+  - type: OpenAPI
+    url: openapi/optum-cms-common-facility-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-cms-common-physician-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-core-service-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-ncc-data-acquisition-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-odx-v3-xdr-ingestion-service-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-optum-common-facility-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-optum-common-physician-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-optum-real-time-econtent-web-services-openapi.yml
+- name: Optum Analytics and Insights API
+  description: 'Analytics and payment-integrity APIs: PROMETHEUS Analytics job submission and check-job
+    for episode-of-care analytics, ABM care decision support, and ABM pre-pay DME, pre-pay lab and prior-authorization
+    review APIs.'
+  humanURL: https://developer.optum.com/analyticsandinsights
+  baseURL: https://apigw.optum.com/
+  tags:
+  - Analytics
+  - Payment Integrity
+  - Decision Support
+  - Prior Authorization
+  - Episodes of Care
+  properties:
+  - type: APIReference
+    url: https://developer.optum.com/analyticsandinsights/reference
+  - type: OpenAPI
+    url: openapi/optum-abm-care-decision-support-api-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-abm-pre-pay-lab-api-1-0-0-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-abm-prepay-dme-claim-api-1-0-0-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-abm-priorauth-api-1-0-0-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-prometheus-analytics-api-job-submission-openapi.yml
+  - type: OpenAPI
+    url: openapi/optum-prometheus-analytics-checkjob-openapi.yml
+- name: Optum API Tools — Security and Authorization
+  description: The platform OAuth2 token service. Security and Authorization v2 issues a one-hour JWT
+    bearer token at /apip/auth/v2/token for the Medical Network and Dental APIs; v3 ("sentinel") issues
+    one at /apip/auth/sntl/v1/token for the Optum Real oihub APIs. Both generations are live simultaneously.
+  humanURL: https://developer.optum.com/apitools
+  baseURL: https://apigw.optum.com/apip/auth/
+  tags:
+  - Authentication
+  - OAuth2
+  - Tokens
+  properties:
+  - type: APIReference
+    url: https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
+  - type: Documentation
+    url: https://developer.optum.com/apitools/docs/getting-started
+  - type: OpenAPI
+    url: openapi/optum-security-and-authorization-v2-openapi.yml
+- name: Optum Interoperability APIs (CMS Patient Access)
+  description: Optum's payer-side CMS Interoperability and Patient Access (CMS-9115-F) surface — Patient
+    Access, Provider Directory and Payer-to-Payer exchange for the Optum behavioral and physical health
+    plans. The former developer.optum.com/dataaccessandinteroperability ReadMe project no longer resolves
+    (every path returned the portal shell when probed on 2026-08-14); the developer information is now
+    published as per-plan PDF packets on optum.com, so there is no machine-readable contract for this
+    surface.
+  humanURL: https://www.optum.com/en/interoperability-apis.html
+  baseURL: https://apigw.optum.com/
+  tags:
+  - FHIR
+  - Patient Access
+  - Interoperability
+  - CMS
+  - Provider Directory
+  properties:
+  - type: Documentation
+    url: https://www.optum.com/en/interoperability-apis.html
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/optum-agentic-access.yml
+- type: OAuthScopes
+  url: scopes/optum-scopes.yml
 - type: VulnerabilityDisclosure
   url: security/optum-vulnerability-disclosure.yml
 - type: Security
@@ -137,8 +385,42 @@ common:
   url: https://www.optum.com/terms-of-use.html
 - type: PrivacyPolicy
   url: https://www.optum.com/privacy-policy.html
+- type: Packages
+  url: packages/optum-packages.yml
+- type: Compliance
+  url: https://business.optum.com/en/federal-government/about-optum-serve/certifications-partnerships.html
+- type: ErrorCatalog
+  url: errors/optum-problem-types.yml
+- type: DataModel
+  url: data-model/optum-data-model.yml
+- type: Examples
+  url: examples/optum-examples.yml
+- type: StatusPage
+  url: https://status.optum.com/
+- type: ChangeLog
+  url: changelog/optum-changelog.yml
+- type: Sandbox
+  url: sandbox/optum-sandbox.yml
+- type: RateLimits
+  url: rate-limits/optum-rate-limits.yml
+- type: Plans
+  url: plans/optum-plans-pricing.yml
+- type: Pricing
+  url: https://marketplace.optum.com/apiservices/api-sandbox-access
+- type: Webhooks
+  url: asyncapi/optum-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Overlay
+  url: overlays/optum-servers-and-provenance-overlay.yaml
+- type: APICatalog
+  url: https://developer.optum.com/.well-known/api-catalog
+- type: GitHubOrganization
+  url: https://github.com/Optum
+- type: Blog
+  url: https://www.optum.com/en/newsroom.html
 x-enrichment:
-  date: '2026-07-20'
+  date: '2026-08-14'
   status: enriched
-  artifacts_added: 9
+  artifacts_added: 139
   pass: local-v1

@@ -1,39 +1,77 @@
 # Optum
 
-> Optum, part of UnitedHealth Group, operates one of the largest U.S. medical and pharmacy networks and publishes RESTful JSON/X12 EDI and FHIR healthcare APIs for eligibility, claims, claim status, ERA/remittance, prior authorization, attachments, dental, pharmacy, and patient-access interoperability. APIs use OAuth2 client-credentials bearer tokens over TLS 1.2+, with free sandbox access and downloadable OpenAPI specs.
+> Optum, part of UnitedHealth Group, operates one of the largest U.S. medical, dental and pharmacy networks and publishes an eight-product-line developer platform of RESTful JSON, native X12 EDI and HL7 FHIR R4 healthcare APIs — eligibility, professional and institutional claims, claim status, ERA/remittance, prior authorization (both X12 278 and FHIR Da Vinci PAS/DTR/CRD), attachments, payer directory, dental pre-care, pharmacy formatting, payer enrollment, and analytics. Every API is secured with an OAuth2 client-credentials JWT bearer token over TLS 1.2+, with a free canned-response sandbox on a separate host. Optum publishes an RFC 9727 API catalog at https://developer.optum.com/.well-known/api-catalog, which is how the 59 OpenAPI documents in this repo were harvested.
 
 ## APIs
 
-- [Eligibility and Claims (Medical Network)](https://developer.optum.com/eligibilityandclaims): eligibility/v3, professional & institutional claims, claim status, ERA reports, prior authorization, attachments, payer list. Base: https://apigw.optum.com/medicalnetwork/
-- [Data Access and Interoperability (FHIR R4)](https://developer.optum.com/dataaccessandinteroperability): Patient Access FHIR resources — Endpoint, Procedure, DocumentReference, ObservationVitalSigns, Immunization.
-- [Optum Real for Dental](https://developer.optum.com/optumreal-dental): dental pre-care estimates, eligibility, claims, attachments, ERA.
+- [Eligibility and Claims](https://developer.optum.com/eligibilityandclaims): eligibility v3, professional claims v3, institutional claims v1, claim status v2, ERA reports v2, payer list v1, attachments (submission/status/retrieval) v1, enhanced eligibility + coverage discovery, prior authorization v1. Base: https://apigw.optum.com/medicalnetwork/
+- [Optum Real (medical)](https://developer.optum.com/optumreal-medical): pre-service eligibility, claim pre-check, claim actions, claim inquiry, benefit check, document search, auth referral submission, FHIR Da Vinci prior authorization (PAS/DTR/CRD via CDS Hooks) and FHIR provider access / bulk member match. Base: https://apigw.optum.com/oihub/
+- [Optum Real for Dental](https://developer.optum.com/optumreal-dental): dental pre-care eligibility and eligibility intelligence, pre-care estimate, claim submission (GraphQL-backed), claim status, attachments with image intelligence.
+- [Pharmacy Solutions](https://developer.optum.com/pharmacysolutions): formatting rules, telecom formatter, submitter API. Base: https://apigw.optum.com/rxn/ and /pharmacynetwork/
+- [Payment and Reimbursement](https://developer.optum.com/paymentandreimbursement): PES payer enrollments v1, file and document tracking v1, EDI enrollment v1.
+- [Platform and Interoperability](https://developer.optum.com/platformandinteroperability): Optum Insight Platform services — NCC data acquisition, code search core service, CMS/Optum common physician and facility directories, cross-community REST, real-time eContent web services. Base: https://gateway.optuminsightplatform.com/
+- [Analytics and Insights](https://developer.optum.com/analyticsandinsights): PROMETHEUS Analytics job submission and check-job, ABM care decision support, ABM pre-pay DME/lab and prior-auth APIs.
+- [API Tools](https://developer.optum.com/apitools): Security and Authorization v2 and v3 token endpoints.
+
+## Discovery
+
+- API catalog (RFC 9727, application/linkset+json): https://developer.optum.com/.well-known/api-catalog — eight product-line anchors, each with a nested catalog naming the direct OpenAPI URL of every API. 170 spec URLs advertised; 59 resolve.
+- security.txt (RFC 9116): https://www.optum.com/.well-known/security.txt
+- Status page (Atlassian Statuspage, 35 components): https://status.optum.com/ — machine-readable at /api/v2/summary.json and /api/v2/status.json, Atom at /history.atom
 
 ## Authentication
 
-- [Security and Authorization V2](https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview): OAuth2 client-credentials grant; POST client_id/client_secret to the token endpoint for a 1-hour JWT bearer token.
-- Token URL (production): https://apigw.optum.com/apip/auth/v2/token
-- Token URL (sandbox): https://sandbox-apigw.optum.com/apip/auth/v2/token
+- [Security and Authorization v2](https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview): OAuth2 client-credentials; POST client_id/client_secret for a 1-hour JWT bearer token. Backs the Medical Network and Dental APIs.
+- [Security and Authorization v3](https://developer.optum.com/apitools/reference/security-and-authorization-v3-overview): the newer "sentinel" token endpoint. Backs the Optum Real / oihub APIs.
+- Token URL v2 (production): https://apigw.optum.com/apip/auth/v2/token — sandbox: https://sandbox-apigw.optum.com/apip/auth/v2/token
+- Token URL v3 (production): https://apigw.optum.com/apip/auth/sntl/v1/token — sandbox: https://sandbox-apigw.optum.com/apip/auth/sntl/v1/token
+- Scopes observed in the specs: create_txn, read_txn, create_coveragediscovery, read_coveragediscovery, read_healthcheck
 
 ## Docs
 
 - [Developer Portal](https://developer.optum.com/)
 - [Getting Started](https://developer.optum.com/eligibilityandclaims/docs/get-started-with-optum-api)
+- [Create a Sandbox Account](https://developer.optum.com/eligibilityandclaims/docs/create-a-sandbox-account)
 - [API URLs and Environments](https://developer.optum.com/eligibilityandclaims/docs/api-urls)
 - [API Reference / Overview](https://developer.optum.com/eligibilityandclaims/reference/api-overview)
-- [Sandbox Access](https://marketplace.optum.com/apiservices/api-sandbox-access)
+- [Release Notes](https://developer.optum.com/eligibilityandclaims/docs/eligibility-release-notes)
+- [Troubleshoot APIs with Metadata](https://developer.optum.com/eligibilityandclaims/docs/troubleshoot-apis)
+- [Sandbox Access request](https://marketplace.optum.com/apiservices/api-sandbox-access)
 - [Developer Community](https://community.optum.com/developers/home)
+- [Optum on GitHub](https://github.com/Optum)
 
-## Artifacts
+## Artifacts in this repo
 
+- OpenAPI: openapi/ (59 documents; verbatim originals in openapi/_original/)
 - Authentication: authentication/optum-authentication.yml
+- OAuth scopes: scopes/optum-scopes.yml
 - Conventions: conventions/optum-conventions.yml
+- Errors: errors/optum-problem-types.yml
+- Data model: data-model/optum-data-model.yml
+- Examples index: examples/optum-examples.yml
 - Conformance: conformance/optum-conformance.yml
-- Lifecycle: lifecycle/optum-lifecycle.yml
-- Well-Known: well-known/optum-well-known.yml
-- Security (vulnerability disclosure): security/optum-vulnerability-disclosure.yml
+- Lifecycle + status page: lifecycle/optum-lifecycle.yml
+- Changelog: changelog/optum-changelog.yml
+- Sandbox: sandbox/optum-sandbox.yml
+- Rate limits: rate-limits/optum-rate-limits.yml
+- Plans and pricing: plans/optum-plans-pricing.yml
+- Packages: packages/optum-packages.yml
+- Webhooks (coverage-discovery callbacks): asyncapi/optum-webhooks.yml
+- MCP (candidate, none published): mcp/optum-mcp.yml
+- Agentic access contracts: agentic-access/optum-agentic-access.yml
+- Agent Skills: skills/_index.yml
+- Overlay: overlays/optum-servers-and-provenance-overlay.yaml
+- Well-known probes + API catalog: well-known/optum-well-known.yml
 - Domain security: security/optum-domain-security.yml
+- Vulnerability disclosure: security/optum-vulnerability-disclosure.yml
 
 ## Security
 
 - [Vulnerability reporting policy](https://www.optum.com/vulnerability.html)
 - security.txt: https://www.optum.com/.well-known/security.txt (Contact: Securityreporting@optum.com)
+
+## Notes
+
+- Optum publishes no MCP server, no A2A agent card, no AsyncAPI, no SDK for these APIs, no public pricing and no numeric rate limit.
+- Optum's own consumer-facing llms.txt is saved verbatim at llms/optum-llms-published.txt — it is marketing-scoped and names no API.
+- 57 of the 59 published specs declare only the sandbox host in servers[]; overlays/ adds the production host without mutating the originals.

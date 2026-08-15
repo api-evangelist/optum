@@ -1,0 +1,793 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Payer List API V1",
+    "version": "1.0.0",
+    "description": "PayerList API empowers providers to programmatically access and integrate accurate, up-to-date payer list data into your systems to eliminate manual processes and enable smarter transaction workflows."
+  },
+  "servers": [
+    {
+      "url": "https://sandbox-apigw.optum.com",
+      "description": "Sandbox"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Health Check"
+    },
+    {
+      "name": "Payers"
+    },
+    {
+      "name": "Fields"
+    },
+    {
+      "name": "Outages"
+    },
+    {
+      "name": "Exports"
+    }
+  ],
+  "paths": {
+    "/medicalnetwork/payerlist/v1/healthcheck": {
+      "get": {
+        "tags": [
+          "Health Check"
+        ],
+        "summary": "Health Check",
+        "operationId": "getPayerListHealthCheck",
+        "responses": {
+          "200": {
+            "description": "Successful health check response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/medicalnetwork/payerlist/v1/payers": {
+      "get": {
+        "tags": [
+          "Payers"
+        ],
+        "summary": "Get payers",
+        "operationId": "getPayers",
+        "parameters": [
+          {
+            "name": "system",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Source system. Example values from collection: exch, imn, IMN, EXCH, IEDI, RPA, DENTAL."
+          },
+          {
+            "name": "transactionType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Transaction type filter."
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Maximum number of records to return."
+          },
+          {
+            "name": "lastUpdatedAfter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Return records updated after this date. Format: YYYY-MM-DD."
+          },
+          {
+            "name": "exchangeInstClaimPayerId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exchange institutional claim payer ID."
+          },
+          {
+            "name": "exchangeProfClaimPayerId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Exchange professional claim payer ID."
+          },
+          {
+            "name": "iediInstClaimPayerId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "IEDI institutional claim payer ID."
+          },
+          {
+            "name": "iediProfClaimPayerId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "IEDI professional claim payer ID."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Payer status filter."
+          },
+          {
+            "name": "payerNotes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Payer notes filter."
+          },
+          {
+            "name": "enrollmentNotes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Enrollment notes filter."
+          },
+          {
+            "name": "claimSubmissionRequiredThroughExchange",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Indicates whether claim submission is required through exchange."
+          },
+          {
+            "name": "additionalLCHCPayerId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Additional LCHC payer ID."
+          },
+          {
+            "name": "activationDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Activation date. Format: YYYY-MM-DD."
+          },
+          {
+            "name": "standInIndicator",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Stand-in indicator."
+          },
+          {
+            "name": "serviceRestored",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Service restored indicator."
+          },
+          {
+            "name": "payerType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Payer type."
+          },
+          {
+            "name": "payerPlanName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Payer plan name."
+          },
+          {
+            "name": "stateDoingBusiness",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "State where payer does business."
+          },
+          {
+            "name": "chiPayer",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Indicates whether this is a CHI payer."
+          },
+          {
+            "name": "payerId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Payer ID."
+          },
+          {
+            "name": "additionalPayerIDs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Additional payer IDs. Repeat parameter or comma-separated value may be accepted depending on implementation."
+          },
+          {
+            "name": "X-CHC-PayerList-SubmitterId",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional submitter ID header shown in the source collection."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful payer list response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PayerListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/medicalnetwork/payerlist/v1/fields": {
+      "get": {
+        "tags": [
+          "Fields"
+        ],
+        "summary": "Get available payer list fields",
+        "operationId": "getPayerListFields",
+        "parameters": [
+          {
+            "name": "skipBusinessNames",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Skip business names in fields response."
+          },
+          {
+            "name": "skipAliases",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Skip aliases in fields response."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful fields response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FieldsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/medicalnetwork/payerlist/v1/payers/export": {
+      "get": {
+        "tags": [
+          "Exports"
+        ],
+        "summary": "Export payers",
+        "operationId": "exportPayers",
+        "parameters": [
+          {
+            "name": "system",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "serviceRestored",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "payerPlanName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "exportFields",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated list of fields to include in export."
+          },
+          {
+            "name": "chiPayer",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "stateDoingBusiness",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CSV export response",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/medicalnetwork/payerlist/v1/outages": {
+      "get": {
+        "tags": [
+          "Outages"
+        ],
+        "summary": "Get outages",
+        "description": "Returns paginated product outage records. Source collection notes that system is required and date fields use YYYY-MM-DD format.",
+        "operationId": "getOutages",
+        "parameters": [
+          {
+            "name": "system",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Required. Options shown in source collection: IMN, EXCH, IEDI, RPA, DENTAL. Comma-separated values may be used for multiple systems."
+          },
+          {
+            "name": "transactionType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Transaction type filter. Examples shown in source collection include Eligibility, Claims Institutional, Claims Professional, Claim Status, ERA Institutional, ERA Professional, Auth Inquiry, Auth Referral, Claims Attachments, Advanced Notification, Dental Claims, Dental Claim Attachments, and Dental ERA."
+          },
+          {
+            "name": "imnPayerId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated IMN payer IDs."
+          },
+          {
+            "name": "payerName",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Payer name filter. Source collection notes substring match when wildcardSearch=Yes."
+          },
+          {
+            "name": "standinReason",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated stand-in reasons, such as Optum Outage or Payer Maintenance."
+          },
+          {
+            "name": "payerProductStandinFlag",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Yes",
+                "No"
+              ]
+            },
+            "description": "Primary outage flag."
+          },
+          {
+            "name": "activeStatus",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Active",
+                "Inactive",
+                "Standby",
+                "Unknown"
+              ]
+            },
+            "description": "Service availability status."
+          },
+          {
+            "name": "startDateTimeAfter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Outages with start date on or after this date. Format: YYYY-MM-DD."
+          },
+          {
+            "name": "startDateTimeBefore",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Outages with start date on or before this date. Format: YYYY-MM-DD."
+          },
+          {
+            "name": "issueStartDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by exact issue start date. Format: YYYY-MM-DD."
+          },
+          {
+            "name": "intermittentPayerOutage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Yes",
+                "No"
+              ]
+            },
+            "description": "Intermittent versus full outage."
+          },
+          {
+            "name": "wildcardSearch",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Yes",
+                "No"
+              ]
+            },
+            "description": "Enable substring matching for text filters. Source collection notes default as Yes."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sort format: field,asc or field,desc. Repeat parameter for multi-sort."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page number. Source collection notes default as 1."
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Results per page. Source collection notes default as 100."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful outages response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OutageListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "HealthCheckResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Health check response. Exact schema was not provided in the source collection."
+      },
+      "PayerListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Payer"
+            }
+          },
+          "page": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "totalCount": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": true,
+        "description": "Payer list response placeholder. Exact response schema was not provided in the source collection."
+      },
+      "Payer": {
+        "type": "object",
+        "properties": {
+          "payerId": {
+            "type": "string"
+          },
+          "payerPlanName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "payerType": {
+            "type": "string"
+          },
+          "stateDoingBusiness": {
+            "type": "string"
+          },
+          "transactionType": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "FieldsResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Fields response placeholder. Exact response schema was not provided in the source collection."
+      },
+      "OutageListResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Outage"
+            }
+          },
+          "page": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "totalCount": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": true,
+        "description": "Outage list response placeholder. Exact response schema was not provided in the source collection."
+      },
+      "Outage": {
+        "type": "object",
+        "properties": {
+          "imnPayerId": {
+            "type": "string"
+          },
+          "payerName": {
+            "type": "string"
+          },
+          "transactionType": {
+            "type": "string"
+          },
+          "activeStatus": {
+            "type": "string"
+          },
+          "payerProductStandinFlag": {
+            "type": "string"
+          },
+          "standinReason": {
+            "type": "string"
+          },
+          "intermittentPayerOutage": {
+            "type": "string"
+          },
+          "additionalPayerIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "issueStartDate": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

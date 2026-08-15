@@ -1,0 +1,1101 @@
+openapi: 3.0.3
+info:
+  title: Dental Attachment API
+  description: The Dental Attachment API offers functionality related toDental Attachment.
+  version: 2.2.0
+security:
+- Bearer: []
+servers:
+- url: https://sandbox-apigw.optum.com
+paths:
+  /dentalnetwork/attachments/v1/CreateAttachment:
+    post:
+      summary: Create attachment container
+      tags:
+      - Attachment
+      requestBody:
+        description: Creates an attachment container that can contain a claim with its attachments. Whenever
+          a claim is submitted with attachment(s), the container creates an Optum Attachment ID.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Attachment'
+      responses:
+        '201':
+          description: 201 Created
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The resource could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Unprocessable Entity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: An unexpected error occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The endpoint is not available, or an unknown endpoint has been requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: A timeout has occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dentalnetwork/attachments/v1/AddAttachment:
+    post:
+      summary: Add attachment files
+      tags:
+      - Attachment
+      requestBody:
+        description: Uploads an attachment file to an existing attachment container with its Optum Attachment
+          ID.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttachmentFile'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The resource could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: The requestor has sent more requests within a given timeframe than allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: An unexpected error occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The endpoint is not available, or an unknown endpoint has been requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: A timeout has occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dentalnetwork/attachments/v1/{attachmentId}/UpdateAttachmentFile/{attachmentFileId}:
+    put:
+      summary: Update attachment to container.
+      tags:
+      - Attachment
+      requestBody:
+        description: Modifies/updates the attachment file information, such as ImageDate, DocumentTypeCode,
+          Narrative, or OrientationType.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttachmentFile'
+      parameters:
+      - name: attachmentId
+        in: path
+        schema:
+          type: integer
+        required: true
+        description: The id of the attachment record
+        example: 12345433
+      - name: attachmentFileId
+        in: path
+        schema:
+          type: integer
+        required: true
+        description: 'The id of the attachment file '
+        example: 1233456        -
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The resource could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: The requestor has sent more requests within a given timeframe than allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: An unexpected error occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The endpoint is not available, or an unknown endpoint has been requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: A timeout has occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dentalnetwork/attachments/v1/CommitAttachment/{attachmentId}:
+    patch:
+      summary: Commits the attachment container and files
+      description: Commits the attachment container and files. Once the attachment is committed, you can
+        add files but cannot update/modify the attachment container and files.
+      tags:
+      - Attachment
+      parameters:
+      - name: attachmentId
+        in: path
+        schema:
+          type: integer
+        required: true
+        description: The id of the unsubmitted claim to submit
+        example: 12345
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: The request has missing, invalid, or malformed data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The given unsubmitted claim does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The given claim has already been submitted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '412':
+          description: The given claim is not in a suitable state to be submitted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: The requestor has sent more requests within a given timeframe than allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: An unexpected error occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The endpoint is not available, or an unknown endpoint has been requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: A timeout has occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dentalnetwork/attachments/v1/GetAttachmentbyId/{attachmentId}:
+    get:
+      summary: Gets an attachment container.
+      description: Gets the attachment contatiner created by the /attachments/v1/CreateAttachment endpoint
+      tags:
+      - Attachment
+      parameters:
+      - name: attachmentId
+        in: path
+        schema:
+          type: integer
+        required: true
+        description: The id of the attachmentid claim
+        example: 123456
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: The request has missing, invalid, or malformed data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: The request is not authorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: The requestor is forbidden to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The given unsubmitted claim does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: The requestor has sent more requests within a given timeframe than allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: An unexpected error occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The endpoint is not available, or an unknown endpoint has been requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: A timeout has occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dentalnetwork/attachments/v1/GetAttachmentList/{AttachmentId}:
+    get:
+      summary: Get attachment files from container
+      description: Gets all the attachment files from the container
+      tags:
+      - Attachment
+      parameters:
+      - name: AttachmentId
+        in: path
+        schema:
+          type: integer
+        required: true
+        description: The AttachmentId of the Container
+        example: 898238
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: The request has missing, invalid, or malformed data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: The requestor is forbidden to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: The requestor has sent more requests within a given timeframe than allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: An unexpected error occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The endpoint is not available, or an unknown endpoint has been requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: A timeout has occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dentalnetwork/attachments/v1/{attachmentId}/DeleteAttachmentFile/{attachmentFileId}:
+    delete:
+      summary: Delete attachment file
+      description: Submitter can delete files from the attachment container.
+      tags:
+      - Attachment
+      parameters:
+      - name: attachmentId
+        in: path
+        schema:
+          type: integer
+        description: The AttachmentId is Id for the Attachment Container.
+        example: 123456
+        required: true
+      - name: attachmentFileId
+        in: path
+        schema:
+          type: integer
+        description: The id of the Attachment File to delete it from attachment container.
+        example: 123456
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: The request has missing, invalid, or malformed data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Cannot delete a committed attachment file.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: If a “Delete” is attempted on a file that has previously been deleted a 404 will
+            be returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '412':
+          description: The given customer route does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: The requestor has sent more requests within a given timeframe than allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: An unexpected error occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The endpoint is not available, or an unknown endpoint has been requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: A timeout has occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dentalnetwork/attachments/v1/GetAllParticipatingPayers:
+    get:
+      summary: Get participating payers
+      description: Optum maintains a list of payers that participate in the attachments solutions. This
+        endpoint gets all of the participating payers.
+      tags:
+      - Attachment
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: The request has missing, invalid, or malformed data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The resource could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: The requestor has sent more requests within a given timeframe than allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: An unexpected error occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The endpoint is not available, or an unknown endpoint has been requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: A timeout has occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dentalnetwork/attachments/v1/IsParticipatingPayer:
+    get:
+      summary: Check participating payer by payer ID
+      description: Optum maintains a list of payers that participate in the attachments solutions. This
+        endpoint gets participating payer by Payer.
+      tags:
+      - Attachment
+      parameters:
+      - name: payerid
+        in: query
+        schema:
+          type: string
+        description: The id of the account that owns this Legal Entity.
+        required: true
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: The requestor is forbidden to access this resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The resource could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '412':
+          description: The account resource does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: The requestor has sent more requests within a given timeframe than allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: An unexpected error occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The endpoint is not available, or an unknown endpoint has been requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: A timeout has occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /dentalnetwork/attachments/v1/GetPayerBusinessRules/me:
+    get:
+      summary: Get payer business rule
+      description: Optum stores each payer’s rules for the procedure codes that require an attachment.
+        If an attachment rule exists, it will be returned along with any details related to the attachment
+        requirement.
+      tags:
+      - Attachment
+      parameters:
+      - name: payerid
+        in: query
+        schema:
+          type: string
+        description: Identifies the payer to Optum.
+        required: true
+      - name: procedurecodes
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: The request is not authorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: The requestor has sent more requests within a given timeframe than allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: An unexpected error occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The endpoint is not available, or an unknown endpoint has been requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: A timeout has occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /apip/auth/v2/token:
+    post:
+      summary: To generate token.
+      tags:
+      - Attachment
+      requestBody:
+        description: Generate token to verify access.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttachmentFile'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: The request has missing, invalid, or malformed data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The resource could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: The requestor has sent more requests within a given timeframe than allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: An unexpected error occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: The endpoint is not available, or an unknown endpoint has been requested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: A timeout has occurred within a gateway.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  securitySchemes:
+    Bearer:
+      type: oauth2
+      flows:
+        clientCredentials:
+          scopes: {}
+          tokenUrl: '{{baseUrl}}/apip/auth/v2/token'
+  schemas:
+    Attachment:
+      type: object
+      properties:
+        vendorId:
+          type: integer
+          format: int32
+        vendorTransactionId:
+          type: integer
+          format: int32
+        vendorClaimId:
+          type: string
+          nullable: true
+        attachmentId:
+          type: integer
+          format: int32
+        clearinghouseTraceNumber:
+          type: string
+          nullable: true
+        payerId:
+          type: string
+          nullable: true
+        payerName:
+          type: string
+          nullable: true
+        payerReferenceNumber:
+          type: string
+          nullable: true
+        payerContactName:
+          type: string
+          nullable: true
+        payerCommNumberQualifier1:
+          type: string
+          nullable: true
+        payerCommNumber1:
+          type: string
+          nullable: true
+        payerCommNumberQualifier2:
+          type: string
+          nullable: true
+        payerCommNumber2:
+          type: string
+          nullable: true
+        payerCommNumberQualifier3:
+          type: string
+          nullable: true
+        payerCommNumber3:
+          type: string
+          nullable: true
+        providerEntityType:
+          type: integer
+          format: int32
+        billingProviderTaxId:
+          type: string
+          nullable: true
+        billingProviderNpi:
+          type: string
+          nullable: true
+        billingProviderLastName:
+          type: string
+          nullable: true
+        billingProviderFirstName:
+          type: string
+          nullable: true
+        billingProviderTaxonomyCode:
+          type: string
+          nullable: true
+        billingProviderStreetAddress:
+          type: string
+          nullable: true
+        billingProviderCity:
+          type: string
+          nullable: true
+        billingProviderState:
+          type: string
+          nullable: true
+        billingProviderZipCode:
+          type: string
+          nullable: true
+        renderingProviderNpi:
+          type: string
+          nullable: true
+        renderingProviderLastName:
+          type: string
+          nullable: true
+        renderingProviderFirstName:
+          type: string
+          nullable: true
+        patientControlNumber:
+          type: string
+          nullable: true
+        patientLastName:
+          type: string
+          nullable: true
+        patientFirstName:
+          type: string
+          nullable: true
+        patientDob:
+          type: string
+          format: date-time
+        insuredId:
+          type: string
+          nullable: true
+        insuredLastName:
+          type: string
+          nullable: true
+        insuredFirstName:
+          type: string
+          nullable: true
+        insuredDob:
+          type: string
+          format: date-time
+        serviceDateLow:
+          type: string
+          format: date-time
+        serviceDateHigh:
+          type: string
+          format: date-time
+        totalChargeAmt:
+          type: number
+          format: double
+        statusCode:
+          type: integer
+          format: int32
+        statusDate:
+          type: string
+          format: date-time
+        isServiceLineRequest:
+          type: boolean
+        serviceLineReferenceNumber:
+          type: string
+          nullable: true
+        serviceLineChargeAmt:
+          type: number
+          format: double
+        procedureCode:
+          type: string
+          nullable: true
+        loincCode:
+          type: string
+          nullable: true
+        requestDate:
+          type: string
+          format: date-time
+        isCommitted:
+          type: boolean
+        isSolicited:
+          type: boolean
+        attachmentFile:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttachmentFile'
+          nullable: true
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+          nullable: true
+      additionalProperties: false
+    AttachmentFile:
+      type: object
+      properties:
+        attachmentFileId:
+          type: integer
+          format: int32
+        attachmentId:
+          type: integer
+          format: int32
+        vendorId:
+          type: integer
+          format: int32
+        dateProcessed:
+          type: string
+          format: date-time
+        documentTypeCode:
+          type: integer
+          format: int32
+        imageDate:
+          type: string
+          format: date-time
+        orientationCode:
+          type: integer
+          format: int32
+        narrative:
+          type: string
+          nullable: true
+        pageCount:
+          type: integer
+          format: int32
+        fileChecksum:
+          type: string
+          nullable: true
+        fileSize:
+          type: integer
+          format: int32
+        fileExtension:
+          type: string
+          nullable: true
+        fileName:
+          type: string
+          nullable: true
+        attachmentFileData:
+          type: string
+          format: byte
+          nullable: true
+        attachmentFileContent:
+          type: string
+          nullable: true
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+          nullable: true
+      additionalProperties: false
+    HttpVersionPolicy:
+      enum:
+      - 0
+      - 1
+      - 2
+      type: integer
+      format: int32
+    Link:
+      type: object
+      properties:
+        rel:
+          type: string
+          nullable: true
+        href:
+          type: string
+          nullable: true
+        action:
+          type: string
+          nullable: true
+        types:
+          type: string
+          nullable: true
+      additionalProperties: false
+    StringStringIEnumerableKeyValuePair:
+      type: object
+      properties:
+        key:
+          type: string
+          nullable: true
+        value:
+          type: array
+          items:
+            type: string
+          nullable: true
+      additionalProperties: false
+    Version:
+      type: object
+      properties:
+        major:
+          type: integer
+          format: int32
+          readOnly: true
+        minor:
+          type: integer
+          format: int32
+          readOnly: true
+        build:
+          type: integer
+          format: int32
+          readOnly: true
+        revision:
+          type: integer
+          format: int32
+          readOnly: true
+        majorRevision:
+          type: integer
+          format: int32
+          readOnly: true
+        minorRevision:
+          type: integer
+          format: int32
+          readOnly: true
+      additionalProperties: false
+    ErrorResponse:
+      type: object
+      description: Describes an error that occurred while processing the request.
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          description: A URI reference [RFC3986] that identifies the problem type. This specification
+            encourages that, when dereferenced, it provide human-readable documentation for the problem
+            type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value
+            is assumed to be 'about:blank'.
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. It SHOULD NOT change from
+            occurrence to occurrence of the problem, except for purposes of localization (e.g., using
+            proactive content negotiation).
+        status:
+          type: integer
+          description: The HTTP status code generated by the origin server for this occurrence of the
+            problem.
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem. It may
+            or may not yield further information if dereferenced.
+        traceId:
+          type: string
+          description: An identifier that can be used to trace this error back to an external request.
+        errors:
+          type: object
+          description: An object that gives specifics on what error or errors occurred. An error code
+            is given as the property key followed by an error description in plain English.
+          additionalProperties:
+            type: string

@@ -1,0 +1,285 @@
+components:
+  requestBodies:
+    oauth2:
+      content:
+        application/json:
+          schema:
+            properties:
+              client_id:
+                example: abm-pa-clientid
+                type: string
+              client_secret:
+                example: abm-pa-client-secret
+                type: string
+              grant_type:
+                example: client_credentials
+                type: string
+            type: object
+      description: payload for auth API
+      required: true
+    priorauthdata:
+      content:
+        application/json:
+          schema:
+            properties:
+              dateOfConcern:
+                example: 2001/01/01
+                type: string
+              enterprise:
+                example: Enterprise-Name
+                type: string
+              expectedCols:
+                properties:
+                  certificationIssueDate:
+                    example: 2020/01/01
+                    type: string
+                  clientName:
+                    example: Client Name
+                    type: string
+                  dependentDob:
+                    example: 2002/01/01
+                    type: string
+                  dependentFirstName:
+                    example: EFG
+                    type: string
+                  dependentIdNum:
+                    example: '02'
+                    type: string
+                  paActionOutcomeCode:
+                    example: A
+                    type: string
+                  paEndDate:
+                    example: 2020/01/31
+                    type: string
+                  paStartDate:
+                    example: 2020/01/01
+                    type: string
+                  payerId:
+                    example: 9060
+                    type: integer
+                  priorAuthNum:
+                    example: PA101
+                    type: string
+                  procModifier1:
+                    example: '13'
+                    type: string
+                  procModifier2:
+                    example: ''
+                    type: string
+                  procModifier3:
+                    example: ''
+                    type: string
+                  procModifier4:
+                    example: ''
+                    type: string
+                  profProcedureCode:
+                    example: T10293
+                    type: string
+                  profUnitApprovedCount:
+                    example: '1'
+                    type: integer
+                  profUnitDeniedCount:
+                    example: 1
+                    type: integer
+                  profUnitRemainingCount:
+                    example: 1
+                    type: integer
+                  profUnitRequestedCount:
+                    example: 2
+                    type: integer
+                  provNpi:
+                    example: '25252'
+                    type: string
+                  provZipCode:
+                    example: 123V45
+                    type: string
+                  serviceLineAmount:
+                    example: 10.5
+                    type: string
+                  subscriberDob:
+                    example: 2001/01/01
+                    type: string
+                  subscriberFirstName:
+                    example: ABC
+                    type: string
+                  subscriberIdNum:
+                    example: '92929244'
+                    type: string
+                  subscriberLastOrgName:
+                    example: XYZ
+                    type: string
+                  vendorId:
+                    example: 2
+                    type: integer
+                  vendorZcodeField:
+                    example: Z20203
+                    type: string
+                type: object
+              look_up:
+                example: Prior-Auth
+                type: string
+              params:
+                properties:
+                  memberId:
+                    example: M0000058
+                    type: string
+                  payerId:
+                    example: '9060'
+                    type: string
+                  vendorId:
+                    example: '2'
+                    type: string
+                type: object
+              ruleSet:
+                example: 1
+                type: integer
+            type: object
+      description: payload for priorauthdata API
+      required: true
+  responses:
+    oauth2:
+      content:
+        application/json:
+          schema:
+            properties:
+              access_token:
+                example: token string
+                type: string
+              expires_in:
+                example: 3599
+                type: integer
+              ext_expires_in:
+                example: 3599
+                type: integer
+              token_type:
+                example: Bearer
+                type: string
+            type: object
+      description: response for auth API
+    priorauthdata:
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: null
+                type: object
+              errorDetails:
+                example: null
+                type: object
+              results:
+                items:
+                  properties:
+                    certificationIssueDate:
+                      example: 2020/01/01
+                      type: string
+                    clientName:
+                      example: Client Name
+                      type: string
+                    dependentDob:
+                      example: 2002/01/01
+                      type: string
+                    dependentFirstName:
+                      example: EFG
+                      type: string
+                    dependentIdNum:
+                      example: '02'
+                      type: string
+                    paActionOutcomeCode:
+                      example: A
+                      type: string
+                    paEndDate:
+                      example: 2020/01/31
+                      type: string
+                    paStartDate:
+                      example: 2020/01/01
+                      type: string
+                    payerId:
+                      example: 9060
+                      type: integer
+                    priorAuthNum:
+                      example: PA101
+                      type: string
+                    procModifier1:
+                      example: '13'
+                      type: string
+                    procModifier2:
+                      example: ''
+                      type: string
+                    procModifier3:
+                      example: ''
+                      type: string
+                    procModifier4:
+                      example: ''
+                      type: string
+                    profProcedureCode:
+                      example: T10293
+                      type: string
+                    profUnitApprovedCount:
+                      example: '1'
+                      type: integer
+                    profUnitDeniedCount:
+                      example: 1
+                      type: integer
+                    profUnitRemainingCount:
+                      example: 1
+                      type: integer
+                    profUnitRequestedCount:
+                      example: 2
+                      type: integer
+                    provNpi:
+                      example: '25252'
+                      type: string
+                    provZipCode:
+                      example: 123V45
+                      type: string
+                    serviceLineAmount:
+                      example: 10.5
+                      type: number
+                    subscriberDob:
+                      example: 2001/01/01
+                      type: string
+                    subscriberFirstName:
+                      example: ABC
+                      type: string
+                    subscriberIdNum:
+                      example: '92929244'
+                      type: string
+                    subscriberLastOrgName:
+                      example: XYZ
+                      type: string
+                    vendorId:
+                      example: 2
+                      type: integer
+                    vendorZcodeField:
+                      example: Z20203
+                      type: string
+                type: array
+            type: object
+      description: response for priorauthdata API
+info:
+  description: PRIORAUTH service is the OI API gateway to fetch priorauth details from ABM. This API needs
+    auth bearer token which can be retrieved using https://sandbox-apigw.optum.com/apip/auth/sntl/v1/token.
+    Please check documentation under Security section to get more details on auth token.
+  title: ABM PRIORAUTH API- 1.0.0
+  version: 1.0.0
+openapi: 3.0.3
+paths:
+  /abm/priorauth/v1:
+    post:
+      requestBody:
+        $ref: '#/components/requestBodies/priorauthdata'
+      responses:
+        '200':
+          $ref: '#/components/responses/priorauthdata'
+      summary: Prior Auth API Endpoint
+      tags:
+      - prior auth api
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- description: PRIORAUTH API
+  name: ABM
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

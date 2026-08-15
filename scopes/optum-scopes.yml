@@ -1,0 +1,295 @@
+generated: '2026-08-14'
+method: derived
+source: openapi/optum-attachment-openapi.yml, openapi/optum-auth-referral-submission-api-openapi.yml,
+  openapi/optum-auth-referral-submission-health-check-openapi.yml, openapi/optum-benefit-check-api-openapi.yml,
+  openapi/optum-claim-actions-api-openapi.yml, openapi/optum-claim-actions-health-check-openapi.yml,
+  openapi/optum-claim-inquiry-api-openapi.yml, openapi/optum-claim-inquiry-health-check-openapi.yml,
+  openapi/optum-claim-pre-check-api-openapi.yml, openapi/optum-dental-attachment-api-openapi.yml,
+  openapi/optum-document-search-api-openapi.yml, openapi/optum-document-search-health-check-openapi.yml,
+  openapi/optum-edi-enrollment-v1-openapi.yml, openapi/optum-eligibility-pre-service-health-check-openapi.yml,
+  openapi/optum-enhanced-eligibility-api-openapi.yml, openapi/optum-formatting-rule-api-openapi.yml,
+  openapi/optum-ncc-data-acquisition-api-openapi.yml, openapi/optum-optum-real-health-check-api-openapi.yml,
+  openapi/optum-optum-real-pre-service-eligibility-api-openapi.yml, openapi/optum-optum-real-time-econtent-web-services-openapi.yml,
+  openapi/optum-patient-benefit-check-health-check-openapi.yml, openapi/optum-real-prior-authorization-api-openapi.yml,
+  openapi/optum-real-provider-access-api-openapi.yml, openapi/optum-submitter-api-openapi.yml,
+  openapi/optum-telecom-formatter-api-openapi.yml
+schemes:
+- name: oAuth
+  source: openapi/optum-attachment-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-auth-referral-submission-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-auth-referral-submission-health-check-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-benefit-check-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-claim-actions-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-claim-actions-health-check-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/v2/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-claim-inquiry-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-claim-inquiry-health-check-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-claim-pre-check-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/v2/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: Bearer
+  source: openapi/optum-dental-attachment-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: '{{baseUrl}}/apip/auth/v2/token'
+- name: oAuth
+  source: openapi/optum-document-search-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-document-search-health-check-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oauth2
+  source: openapi/optum-edi-enrollment-v1-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://sandbox-apigw.optum.com/apip/auth/sntl/v1/token
+- name: oAuth
+  source: openapi/optum-eligibility-pre-service-health-check-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-enhanced-eligibility-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/v2/token
+  description: This API uses OAuth 2 with the client_credentials grant flow. [More info](https://api.example.com/docs/auth)
+- name: oauth2_security
+  source: openapi/optum-formatting-rule-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://idx-stage.linkhealth.com/auth/realms/developer-platform/protocol/openid-connect/token
+- name: ncc_auth
+  source: openapi/optum-ncc-data-acquisition-api-openapi.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://idx.linkhealth.com/auth
+    tokenUrl: https://idx.linkhealth.com/auth/token
+- name: oAuth
+  source: openapi/optum-optum-real-health-check-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/v2/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-optum-real-pre-service-eligibility-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: ws_auth
+  source: openapi/optum-optum-real-time-econtent-web-services-openapi.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://idx.linkhealth.com/auth
+    tokenUrl: https://idx.linkhealth.com/auth/token
+- name: oAuth
+  source: openapi/optum-patient-benefit-check-health-check-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-real-prior-authorization-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/v2/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-real-provider-access-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/v2/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oAuth
+  source: openapi/optum-submitter-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /apip/auth/sntl/v1/token
+  description: This API uses OAuth 2 with the client_credentials grant flow.
+- name: oauth2_security
+  source: openapi/optum-telecom-formatter-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://idx-stage.linkhealth.com/auth/realms/developer-platform/protocol/openid-connect/token
+scopes:
+- scope: create_coveragediscovery
+  description: submit a new coverage discovery task
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/optum-attachment-openapi.yml
+  - openapi/optum-auth-referral-submission-api-openapi.yml
+  - openapi/optum-auth-referral-submission-health-check-openapi.yml
+  - openapi/optum-benefit-check-api-openapi.yml
+  - openapi/optum-claim-actions-api-openapi.yml
+  - openapi/optum-claim-actions-health-check-openapi.yml
+  - openapi/optum-claim-inquiry-api-openapi.yml
+  - openapi/optum-claim-inquiry-health-check-openapi.yml
+  - openapi/optum-claim-pre-check-api-openapi.yml
+  - openapi/optum-document-search-api-openapi.yml
+  - openapi/optum-document-search-health-check-openapi.yml
+  - openapi/optum-eligibility-pre-service-health-check-openapi.yml
+  - openapi/optum-enhanced-eligibility-api-openapi.yml
+  - openapi/optum-optum-real-health-check-api-openapi.yml
+  - openapi/optum-optum-real-pre-service-eligibility-api-openapi.yml
+  - openapi/optum-patient-benefit-check-health-check-openapi.yml
+  - openapi/optum-real-prior-authorization-api-openapi.yml
+  - openapi/optum-real-provider-access-api-openapi.yml
+  - openapi/optum-submitter-api-openapi.yml
+- scope: create_txn
+  description: submit a new transaction request
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/optum-attachment-openapi.yml
+  - openapi/optum-auth-referral-submission-api-openapi.yml
+  - openapi/optum-auth-referral-submission-health-check-openapi.yml
+  - openapi/optum-benefit-check-api-openapi.yml
+  - openapi/optum-claim-actions-api-openapi.yml
+  - openapi/optum-claim-actions-health-check-openapi.yml
+  - openapi/optum-claim-inquiry-api-openapi.yml
+  - openapi/optum-claim-inquiry-health-check-openapi.yml
+  - openapi/optum-claim-pre-check-api-openapi.yml
+  - openapi/optum-document-search-api-openapi.yml
+  - openapi/optum-document-search-health-check-openapi.yml
+  - openapi/optum-eligibility-pre-service-health-check-openapi.yml
+  - openapi/optum-enhanced-eligibility-api-openapi.yml
+  - openapi/optum-optum-real-health-check-api-openapi.yml
+  - openapi/optum-optum-real-pre-service-eligibility-api-openapi.yml
+  - openapi/optum-patient-benefit-check-health-check-openapi.yml
+  - openapi/optum-real-prior-authorization-api-openapi.yml
+  - openapi/optum-real-provider-access-api-openapi.yml
+  - openapi/optum-submitter-api-openapi.yml
+- scope: profile
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/optum-edi-enrollment-v1-openapi.yml
+- scope: read_coveragediscovery
+  description: read coverage discovery tasks
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/optum-attachment-openapi.yml
+  - openapi/optum-auth-referral-submission-api-openapi.yml
+  - openapi/optum-auth-referral-submission-health-check-openapi.yml
+  - openapi/optum-benefit-check-api-openapi.yml
+  - openapi/optum-claim-actions-api-openapi.yml
+  - openapi/optum-claim-actions-health-check-openapi.yml
+  - openapi/optum-claim-inquiry-api-openapi.yml
+  - openapi/optum-claim-inquiry-health-check-openapi.yml
+  - openapi/optum-claim-pre-check-api-openapi.yml
+  - openapi/optum-document-search-api-openapi.yml
+  - openapi/optum-document-search-health-check-openapi.yml
+  - openapi/optum-eligibility-pre-service-health-check-openapi.yml
+  - openapi/optum-enhanced-eligibility-api-openapi.yml
+  - openapi/optum-optum-real-health-check-api-openapi.yml
+  - openapi/optum-optum-real-pre-service-eligibility-api-openapi.yml
+  - openapi/optum-patient-benefit-check-health-check-openapi.yml
+  - openapi/optum-real-prior-authorization-api-openapi.yml
+  - openapi/optum-real-provider-access-api-openapi.yml
+  - openapi/optum-submitter-api-openapi.yml
+- scope: read_healthcheck
+  description: check the status of the system
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/optum-attachment-openapi.yml
+  - openapi/optum-auth-referral-submission-api-openapi.yml
+  - openapi/optum-auth-referral-submission-health-check-openapi.yml
+  - openapi/optum-benefit-check-api-openapi.yml
+  - openapi/optum-claim-actions-api-openapi.yml
+  - openapi/optum-claim-actions-health-check-openapi.yml
+  - openapi/optum-claim-inquiry-api-openapi.yml
+  - openapi/optum-claim-inquiry-health-check-openapi.yml
+  - openapi/optum-claim-pre-check-api-openapi.yml
+  - openapi/optum-document-search-api-openapi.yml
+  - openapi/optum-document-search-health-check-openapi.yml
+  - openapi/optum-eligibility-pre-service-health-check-openapi.yml
+  - openapi/optum-enhanced-eligibility-api-openapi.yml
+  - openapi/optum-optum-real-health-check-api-openapi.yml
+  - openapi/optum-optum-real-pre-service-eligibility-api-openapi.yml
+  - openapi/optum-patient-benefit-check-health-check-openapi.yml
+  - openapi/optum-real-prior-authorization-api-openapi.yml
+  - openapi/optum-real-provider-access-api-openapi.yml
+  - openapi/optum-submitter-api-openapi.yml
+- scope: read_txn
+  description: read transactions
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/optum-attachment-openapi.yml
+  - openapi/optum-auth-referral-submission-api-openapi.yml
+  - openapi/optum-auth-referral-submission-health-check-openapi.yml
+  - openapi/optum-benefit-check-api-openapi.yml
+  - openapi/optum-claim-actions-api-openapi.yml
+  - openapi/optum-claim-actions-health-check-openapi.yml
+  - openapi/optum-claim-inquiry-api-openapi.yml
+  - openapi/optum-claim-inquiry-health-check-openapi.yml
+  - openapi/optum-claim-pre-check-api-openapi.yml
+  - openapi/optum-document-search-api-openapi.yml
+  - openapi/optum-document-search-health-check-openapi.yml
+  - openapi/optum-eligibility-pre-service-health-check-openapi.yml
+  - openapi/optum-enhanced-eligibility-api-openapi.yml
+  - openapi/optum-optum-real-health-check-api-openapi.yml
+  - openapi/optum-optum-real-pre-service-eligibility-api-openapi.yml
+  - openapi/optum-patient-benefit-check-health-check-openapi.yml
+  - openapi/optum-real-prior-authorization-api-openapi.yml
+  - openapi/optum-real-provider-access-api-openapi.yml
+  - openapi/optum-submitter-api-openapi.yml
+- scope: scope-1
+  description: required scope for API access
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/optum-ncc-data-acquisition-api-openapi.yml
+  - openapi/optum-optum-real-time-econtent-web-services-openapi.yml

@@ -1,0 +1,53 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Optum API platform
+  version: 1.0.0
+extends: openapi/_original/
+generated: '2026-08-14'
+method: generated
+source: openapi/_original/*.json (59 documents harvested via https://developer.optum.com/.well-known/api-catalog and the ReadMe API registry)
+rationale: >-
+  Two defects are shared by essentially every Optum OpenAPI document as published, and both are
+  fixed here WITHOUT mutating the harvested originals.
+
+  (1) SANDBOX-ONLY servers[]. 57 of the 59 harvested documents declare only
+  https://sandbox-apigw.optum.com in servers[]; the production host https://apigw.optum.com appears
+  in exactly one (Enhanced Eligibility). A consumer generating a client from any other spec gets a
+  client that can never reach production, even though the production host is documented in prose at
+  https://developer.optum.com/eligibilityandclaims/docs/api-urls. This overlay adds the production
+  server entry and labels both.
+
+  (2) NO PROVENANCE. The specs carry no info.contact, no info.termsOfService and no info.license, so
+  a downstream consumer holding the file cannot tell who published it or under what terms. This
+  overlay adds the developer-portal contact and the Optum terms of use.
+
+  Apply with any OpenAPI Overlay 1.0.0 processor against a document in openapi/_original/.
+actions:
+  - target: $.servers
+    description: >-
+      Add the production API gateway host. Optum documents https://apigw.optum.com as the production
+      base for every medical-network, dental and Optum Real API; the published specs point only at
+      the sandbox gateway.
+    update:
+      - url: https://apigw.optum.com
+        description: Production server (live data). Documented at https://developer.optum.com/eligibilityandclaims/docs/api-urls
+  - target: $.info
+    description: Add publisher provenance so the document identifies its owner when it travels away from the portal.
+    update:
+      contact:
+        name: Optum Developer Portal
+        url: https://developer.optum.com/
+      termsOfService: https://www.optum.com/terms-of-use.html
+      x-apievangelist-source: https://developer.optum.com/ (ReadMe API registry, dash.readme.com/api/v1/api-registry)
+      x-apievangelist-harvested: '2026-08-14'
+  - target: $.info
+    description: >-
+      Record the platform-wide runtime semantics captured in this repo, which are documented on the
+      portal but absent from every spec.
+    update:
+      x-apievangelist-conventions: conventions/optum-conventions.yml
+      x-apievangelist-authentication: authentication/optum-authentication.yml
+      x-apievangelist-errors: errors/optum-problem-types.yml
+      x-apievangelist-lifecycle: lifecycle/optum-lifecycle.yml
+      x-apievangelist-rate-limits: rate-limits/optum-rate-limits.yml
+      x-apievangelist-agentic-access: agentic-access/optum-agentic-access.yml

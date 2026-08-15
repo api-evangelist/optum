@@ -1,25 +1,130 @@
-generated: '2026-07-20'
-method: derived
-source: developer.optum.com docs + apis.yml
+generated: '2026-08-14'
+method: searched
+source: >-
+  openapi/_original/*.json (59 harvested OpenAPI documents) + developer.optum.com documentation +
+  https://business.optum.com/en/federal-government/about-optum-serve/certifications-partnerships.html
 standards:
-- id: oauth2
-  conforms: true
-  evidence: OAuth2 client-credentials grant documented for all APIs (security-and-authorization-v2)
-- id: oidc
-  conforms: false
-  evidence: no OpenID Connect discovery documented; client-credentials only
-- id: fhir-r4
-  conforms: true
-  evidence: Data Access and Interoperability APIs expose FHIR R4 resources (Endpoint, Procedure, DocumentReference, ObservationVitalSigns, Immunization)
-- id: hl7-x12-edi
-  conforms: true
-  evidence: eligibility (270/271), claims (837), status (276/277), remittance (835) supported as native X12
-- id: hipaa
-  conforms: true
-  evidence: HIPAA data-use agreements and training required during API onboarding; healthcare transaction platform for covered entities
-- id: rfc9457-problem-details
-  conforms: false
-  evidence: no application/problem+json error envelope documented
-- id: tls12
-  conforms: true
-  evidence: all API connections require TLS 1.2 or higher
+  - id: openapi-3.0
+    conforms: true
+    evidence: >-
+      55 of 59 harvested documents declare openapi 3.0.x (3.0.0/3.0.1/3.0.2/3.0.3); four declare
+      3.1.0. All are published through the ReadMe API registry behind developer.optum.com and are
+      addressable from Optum's own RFC 9727 API catalog.
+  - id: oauth2
+    conforms: true
+    evidence: >-
+      25 oauth2 securitySchemes across the harvested specs, all clientCredentials flow, against
+      /apip/auth/v2/token and /apip/auth/sntl/v1/token. See scopes/optum-scopes.yml.
+  - id: oidc
+    conforms: false
+    evidence: >-
+      No OpenID Connect discovery document. /.well-known/openid-configuration returns 403 on
+      www.optum.com, 404 on developer.optum.com and 400 on apigw.optum.com — see
+      well-known/optum-well-known.yml. Client-credentials only; there is no user-facing
+      authorization-code flow and therefore no SMART-on-FHIR patient authorization surface here.
+  - id: hl7-fhir-r4
+    conforms: true
+    evidence: >-
+      Real Prior Authorization and Real Provider Access are FHIR R4 APIs with published
+      CapabilityStatement endpoints (getPasCapabilityStatement, getDtrCapabilityStatement) and
+      OperationDefinition retrieval (getOperationDefinition).
+  - id: hl7-davinci-pas
+    conforms: true
+    evidence: >-
+      Da Vinci Prior Authorization Support implemented — Claim/$submit (submitClaim),
+      Claim/$inquire (inquireClaim), Claim/$submit-attachment (submitAttachment) and a
+      /pas/metadata CapabilityStatement, in openapi/optum-real-prior-authorization-api-openapi.yml.
+  - id: hl7-davinci-dtr
+    conforms: true
+    evidence: >-
+      Da Vinci Documentation Templates and Rules implemented — Questionnaire/$questionnaire-package
+      (getQuestionnairePackage), Questionnaire/$next-question (getNextQuestion), /dtr/metadata
+      CapabilityStatement.
+  - id: hl7-davinci-crd
+    conforms: true
+    evidence: >-
+      Da Vinci Coverage Requirements Discovery implemented as a CDS Hooks service — GET
+      /cdsHooksServer/{payerId}/{lob}/api/cds-services (getDiscovery) and the crd-order-sign hook
+      (orderSign).
+  - id: cds-hooks
+    conforms: true
+    evidence: CDS Hooks discovery endpoint and an order-sign hook are exposed by the Real Prior Authorization API.
+  - id: hl7-davinci-pdex
+    conforms: true
+    evidence: >-
+      Provider Access / bulk member match implemented — Group/$bulk-member-match (bulkMemberMatch),
+      $bulk-member-match-status, and Group/{groupId}/$davinci-data-export with a download operation,
+      in openapi/optum-real-provider-access-api-openapi.yml.
+  - id: x12-hipaa-edi
+    conforms: true
+    evidence: >-
+      Native X12 supported alongside JSON on dedicated raw-x12 operations across eligibility
+      (270/271), professional and institutional claims (837P/837I), claim status (276/277) and
+      remittance/reports (835, 277CA).
+  - id: cms-9115-f-interoperability
+    conforms: true
+    evidence: >-
+      Optum operates Patient Access, Provider Directory and Payer-to-Payer exchange under the CMS
+      Interoperability and Patient Access final rule; the payer-side developer information is
+      published at https://www.optum.com/en/interoperability-apis.html.
+    note: >-
+      The former developer.optum.com/dataaccessandinteroperability ReadMe project — the Patient
+      Access FHIR docs — no longer resolves (every path returns the portal shell as of 2026-08-14).
+      The CMS obligation is met through per-plan PDF developer packets on optum.com rather than a
+      live developer portal, which is a real regression in machine-readability.
+  - id: hipaa
+    conforms: true
+    evidence: >-
+      HIPAA data-use agreements and training are required during API onboarding; the whole platform
+      is a covered-entity clearinghouse surface. The sandbox explicitly forbids PHI/PII.
+  - id: soc2-type2
+    conforms: true
+    evidence: >-
+      Published for specific Optum product lines (Change Healthcare Stratus Imaging Viewer and
+      Archive are stated as SOC 2 Type 2 compliant). NOT asserted for the developer.optum.com API
+      platform specifically — Optum operates no trust center covering the API gateway.
+  - id: hitrust-csf
+    conforms: true
+    evidence: >-
+      HITRUST CSF certification published for Change Healthcare Stratus imaging products. Same
+      caveat as SOC 2 — product-scoped, not platform-scoped.
+  - id: fedramp
+    conforms: partial
+    evidence: >-
+      Optum Serve (federal business) publishes certifications and industry partnerships at
+      https://business.optum.com/en/federal-government/about-optum-serve/certifications-partnerships.html.
+      Not applicable to the commercial API gateway.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      No application/problem+json anywhere. All 1,057 declared 4xx/5xx responses across the 59
+      specs use application/json with a vendor envelope, and the envelope differs between product
+      lines — `Notification` (164) on the Optum Insight Platform specs, `ErrorResponse` (97) on Medical
+      Network and Optum Real, `ApiErrorResponse` (25) elsewhere.
+  - id: rfc8594-sunset-header
+    conforms: false
+    evidence: No Sunset or Deprecation header support documented; superseded majors are announced only on release-notes pages.
+  - id: rfc9116-security-txt
+    conforms: true
+    evidence: https://www.optum.com/.well-known/security.txt returns 200 with Contact and Policy — see well-known/optum-security.txt.
+  - id: rfc8615-well-known-agent-card
+    conforms: false
+    evidence: >-
+      No A2A agent card. /.well-known/agent-card.json and /.well-known/agent.json return 404 on
+      www.optum.com, 400 on apigw.optum.com, and an HTML SPA shell (rejected) on developer.optum.com.
+  - id: tls12
+    conforms: true
+    evidence: All API connections require TLS 1.2 or higher; probed TLSv1.3 on www, developer and apigw hosts.
+  - id: fapi
+    conforms: false
+    evidence: No FAPI profile claimed or implied; no mTLS, no PAR, no proof-of-possession in any securityScheme.
+  - id: scim
+    conforms: false
+    evidence: No /Users or /Groups SCIM 2.0 surface.
+  - id: json-api
+    conforms: false
+    evidence: No application/vnd.api+json media type.
+  - id: mcp
+    conforms: false
+    evidence: No MCP server — see mcp/optum-mcp.yml.
+compliance_page: https://business.optum.com/en/federal-government/about-optum-serve/certifications-partnerships.html

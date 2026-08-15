@@ -1,0 +1,5352 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Optum Common Facility",
+    "description": "MicroService that contains Optum module-related information",
+    "contact": {
+      "name": "Ken Kracker",
+      "email": "ken.kracker@optum.com"
+    },
+    "version": "v1.0"
+  },
+  "servers": [
+    {
+      "url": "/v1/optumcommonms"
+    }
+  ],
+  "paths": {
+    "/app/optum/facility/claim/update": {
+      "put": {
+        "tags": [
+          "Facility Compliance APIs"
+        ],
+        "summary": "Update the claim",
+        "operationId": "updateClaim",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FacilityClaimUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/app/optum/facility/claim/update-claim-line": {
+      "put": {
+        "tags": [
+          "Facility Compliance APIs"
+        ],
+        "summary": "Update the claim line",
+        "operationId": "updateClaimLine",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FacilityClaimUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/app/optum/facility/claim/update-claim-diagnosis": {
+      "put": {
+        "tags": [
+          "Facility Compliance APIs"
+        ],
+        "summary": "Update the claim diagnosis",
+        "operationId": "updateClaimDiagnosis",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FacilityClaimUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/app/optum/facility/claim/submit/{compliance-type}/{scenario-number}": {
+      "post": {
+        "tags": [
+          "Facility Compliance APIs"
+        ],
+        "summary": "Submit claim",
+        "operationId": "submitClaim",
+        "parameters": [
+          {
+            "name": "compliance-type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "scenario-number",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "moduleId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "106",
+                "105"
+              ]
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FacilityClaimResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/app/optum/facility/claim/reset": {
+      "post": {
+        "tags": [
+          "Facility Compliance APIs"
+        ],
+        "summary": "Reset claim",
+        "operationId": "resetClaim",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FacilityClaim"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/app/optum/facility/claim/create": {
+      "post": {
+        "tags": [
+          "Facility Compliance APIs"
+        ],
+        "summary": "Inserts a new claim",
+        "operationId": "createClaim",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FacilityClaim"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/app/optum/facility/claim/create-claim-line": {
+      "post": {
+        "tags": [
+          "Facility Compliance APIs"
+        ],
+        "summary": "Inserts a new claim line",
+        "operationId": "createClaimLine",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FacilityClaimLine"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/app/optum/facility/claim/create-claim-diagnosis": {
+      "post": {
+        "tags": [
+          "Facility Compliance APIs"
+        ],
+        "summary": "Inserts a new claim diagnosis",
+        "operationId": "createClaimDiagnosis",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FacilityClaimDiag"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/outpatient-claims/": {
+      "post": {
+        "tags": [
+          "APC Calculator APIs"
+        ],
+        "summary": "Fetches the data of APC calculator",
+        "operationId": "outpatientClaims",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApcCalculatorRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "POST: Fetches APC calculator ",
+            "content": {
+              "application/json": {
+                "example": {
+                  "provider": "010001",
+                  "fromDateStr": "2024-06-27",
+                  "thruDateStr": "2024-06-27",
+                  "gender": "M",
+                  "age": "40",
+                  "zipCode": "",
+                  "dxCode": "I10",
+                  "dxCodeType": "icd10",
+                  "tobCode": "0131",
+                  "conditionCode": "",
+                  "claimLineList": [
+                    {
+                      "cptHcpcs": "99213",
+                      "unit": "1",
+                      "revCode": "0278",
+                      "modifiers": "",
+                      "dateStr": "2024-06-27",
+                      "charge": "100"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "timestamp": "2023-07-14T06:37:03.741+00:00",
+                  "status": 404,
+                  "error": "Not Found",
+                  "message": "Not Found",
+                  "path": "/optumcommonms/outpatient-claims"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Interal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-28T06:36:22.518+00:00",
+                  "path": "/optumcommonms/outpatient-claims/",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "requestId": "e36d239e-324"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/federal-reg-add-b-history": {
+      "post": {
+        "tags": [
+          "Federal Register Addendum B History API"
+        ],
+        "summary": "Fetches the data of federal register addendum B history",
+        "operationId": "getFederalRegAddBHistoryList",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (code, -code) are allowed.The default is code",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FederalRegAddBHistoryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "POST: Api for fetching the list of federal register addendum B history",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "0001A",
+                      "description": "Adm sarscov2 30mcg/0.3ml 1st",
+                      "opsiQ1": "E1",
+                      "opsiQ2": "E1",
+                      "opsiQ3": "E1",
+                      "opsiQ4": "E1",
+                      "year": "2024"
+                    },
+                    {
+                      "code": "0011A",
+                      "description": "Adm sarscov2 100mcg/0.5ml1st",
+                      "opsiQ1": "E1",
+                      "opsiQ2": "E1",
+                      "opsiQ3": "E1",
+                      "opsiQ4": "E1",
+                      "year": "2024"
+                    },
+                    {
+                      "code": "0021A",
+                      "description": "Adm sarscov2 5x1010vp/.5ml 1",
+                      "opsiQ1": "E1",
+                      "opsiQ2": "E1",
+                      "opsiQ3": "E1",
+                      "opsiQ4": "E1",
+                      "year": "2024"
+                    },
+                    {
+                      "code": "0031A",
+                      "description": "Adm sarscov2 vac ad26 .5ml",
+                      "opsiQ1": "E1",
+                      "opsiQ2": "E1",
+                      "opsiQ3": "E1",
+                      "opsiQ4": "E1",
+                      "year": "2024"
+                    },
+                    {
+                      "code": "0041A",
+                      "description": "Adm sarscov2 5mcg/0.5ml 1st",
+                      "opsiQ1": "S",
+                      "relWeightQ1": ".4851",
+                      "paymentQ1": "41.52",
+                      "opsiQ2": "S",
+                      "relWeightQ2": ".4851",
+                      "paymentQ2": "41.52",
+                      "opsiQ3": "S",
+                      "relWeightQ3": ".4851",
+                      "paymentQ3": "41.52",
+                      "opsiQ4": "S",
+                      "relWeightQ4": ".4851",
+                      "paymentQ4": "41.52",
+                      "year": "2024"
+                    },
+                    {
+                      "code": "0061A",
+                      "description": "Fee covid-19 vac 7 dose 1",
+                      "opsiQ1": "E1",
+                      "opsiQ2": "D",
+                      "opsiQ3": "D",
+                      "opsiQ4": "D",
+                      "year": "2024"
+                    },
+                    {
+                      "code": "0091A",
+                      "description": "Adm sarscov2 50 mcg/.5 ml1st",
+                      "opsiQ1": "E1",
+                      "opsiQ2": "E1",
+                      "opsiQ3": "E1",
+                      "opsiQ4": "E1",
+                      "year": "2024"
+                    },
+                    {
+                      "code": "0101A",
+                      "description": "Fee covid-19 vac 11 dose 1",
+                      "opsiQ1": "E1",
+                      "opsiQ2": "D",
+                      "opsiQ3": "D",
+                      "opsiQ4": "D",
+                      "year": "2024"
+                    },
+                    {
+                      "code": "0111A",
+                      "description": "Adm sarscov2 25mcg/0.25ml1st",
+                      "opsiQ1": "E1",
+                      "opsiQ2": "E1",
+                      "opsiQ3": "E1",
+                      "opsiQ4": "E1",
+                      "year": "2024"
+                    }
+                  ],
+                  "totalCount": 9
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [code,-code]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "timestamp": "2024-11-18T06:37:03.741+00:00",
+                  "status": 404,
+                  "error": "Not Found",
+                  "message": "Not Found",
+                  "path": "optumcommonms/api/optum/facility/federal-reg-add-b-historyyy"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Interal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2024-11-18T06:36:22.518+00:00",
+                  "path": "optumcommonms/api/optum/facility/federal-reg-add-b-history",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "requestId": "e36d239e-324"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/drg-calculator/": {
+      "post": {
+        "tags": [
+          "DRG Calculator APIs"
+        ],
+        "summary": "Fetches the data of DRG calculator",
+        "operationId": "calculateDrg",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DrgCalculatorRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "POST: Fetch DRG calculator ",
+            "content": {
+              "application/json": {
+                "example": {
+                  "providerId": "010001",
+                  "drgCode": "024",
+                  "admitDate": "2023-01-23",
+                  "disChargeDate": "2023-02-24"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "error": [
+                    "drgCalculatorRequest : Invalid date format. Please use yyyy-MM-dd format."
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "timestamp": "2023-07-14T06:37:03.741+00:00",
+                  "status": 404,
+                  "error": "Not Found",
+                  "message": "Not Found",
+                  "path": "api/optum/facility/drg-calculator"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Interal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-28T06:36:22.518+00:00",
+                  "path": "/api/optum/facility/drg-calculator/",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "requestId": "e36d239e-324"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/physician/compliance/abn-form": {
+      "post": {
+        "tags": [
+          "Compliance APIs"
+        ],
+        "operationId": "getABNForm",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ABNForm"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/cross-coder/list/hcpcs/{code}/i10_cm": {
+      "post": {
+        "tags": [
+          "Cross Coder API"
+        ],
+        "summary": "Fetches cross coder table data",
+        "operationId": "getCrossCoderDataListI10CM",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "K0001"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these (code,-code, description, -description) are allowed values.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrossCodesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Fetch columns for cross coder I10cm tab",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "G43.001",
+                      "rangeCodeType": 0,
+                      "codeType": 0,
+                      "description": "Migraine without aura, not intractable, with status migrainosus",
+                      "baseUnitValue": 0,
+                      "source": "Subject-Matter Expert Assigned",
+                      "associatedCodeLinkList": []
+                    },
+                    {
+                      "code": "G43.009",
+                      "rangeCodeType": 0,
+                      "codeType": 0,
+                      "description": "Migraine without aura, not intractable, without status migrainosus",
+                      "baseUnitValue": 0,
+                      "associatedCodeLinkList": [
+                        {
+                          "value": "A56273",
+                          "href": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=56273&ver=26&bc=0"
+                        }
+                      ]
+                    }
+                  ],
+                  "totalCount": 2,
+                  "ncw": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [code, description]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-27T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.UnsupportedOperationException: Unsupported codetype in Method getFindListQuery.",
+                  "path": "/optumcommonms/api/optum/facility/cross-coder/list"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/cross-coder/list/cpt/{code}/i10_cm": {
+      "post": {
+        "tags": [
+          "Cross Coder API"
+        ],
+        "summary": "Fetches Cross Coder table data",
+        "operationId": "getCrossCoderDataListI10CMFromCPT",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 17000
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these (code,-code, description, -description, primaryVol, -primaryVol, secondaryVol, -secondaryVol, tertiaryVol, -tertiaryVol, associatedCodeLinkList, -associatedCodeLinkList, isSme, -isSme) are allowed values.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrossCodesRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Fetch Columns for Cross Coder I10cm tab",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "G43.001",
+                      "rangeCodeType": 0,
+                      "codeType": 0,
+                      "description": "Migraine without aura, not intractable, with status migrainosus",
+                      "baseUnitValue": 0,
+                      "source": "Subject-Matter Expert Assigned",
+                      "associatedCodeLinkList": []
+                    },
+                    {
+                      "code": "G43.009",
+                      "rangeCodeType": 0,
+                      "codeType": 0,
+                      "description": "Migraine without aura, not intractable, without status migrainosus",
+                      "baseUnitValue": 0,
+                      "associatedCodeLinkList": [
+                        {
+                          "value": "A56273",
+                          "href": "https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=56273&ver=26&bc=0"
+                        }
+                      ]
+                    }
+                  ],
+                  "totalCount": 2,
+                  "ncw": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [code, description]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-27T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.UnsupportedOperationException: Unsupported codetype in Method getFindListQuery.",
+                  "path": "/optumcommonms/api/optum/facility/cross-coder/list"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/app/optum/facility/claim/details/{compliance-type}/{scenario-number}": {
+      "get": {
+        "tags": [
+          "Facility Compliance APIs"
+        ],
+        "summary": "Get claim",
+        "operationId": "getClaim",
+        "parameters": [
+          {
+            "name": "compliance-type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "scenario-number",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "moduleId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "106",
+                "105"
+              ]
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FacilityClaim"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/app/optum/facility/claim/abn/{scenario-number}": {
+      "get": {
+        "tags": [
+          "Facility Compliance APIs"
+        ],
+        "summary": "Get applicable codes for ABN",
+        "operationId": "getAbnCodes",
+        "parameters": [
+          {
+            "name": "scenario-number",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Code"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/{docId}/mdc-optimizing-tips-download": {
+      "get": {
+        "tags": [
+          "MDC Optimizing Tips APIs"
+        ],
+        "summary": "Fetches the file content for MDC optimization tips",
+        "operationId": "getMDCOptimizingTipsDocument",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "path",
+            "description": "MDC Optimization Document ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "example": 492768
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches the file content in the form of byte array, response headers and media type as FileType",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": "access-control-expose-headers: Content-Disposition \ncache-control: no-cache,no-store,max-age=0,must-revalidate \nconnection: keep-alive \ncontent-disposition: attachment; filename=MDC_PRE \ncontent-encoding: gzip \ncontent-type: application/pdf \ndate: Fri,13 Sep 2024 13:02:20 GMT \nexpires: 0 \npragma: no-cache \ntransfer-encoding: chunked \nvary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers \nx-content-type-options: nosniff \nx-frame-options: DENY \nx-xss-protection: 0 \n"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found: Sub terms not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": "{\n    \"timestamp\": \"2023-07-28T06:19:48.666+00:00\",\n    \"status\": 404,\n    \"error\": \"Not Found\",\n    \"message\": \"{\n                    \"error\": [\n                        \"No Data Found.\"\n                    ],\n                    \"warning\": null,\n                    \"info\": null\n                }\",\n    \"path\": \"/optumcommonms/api/optum/facility/13131313/mdc-optimizing-tips-download\"\n}"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-28T06:19:48.666+00:00",
+                  "path": "optumcommonms/api/optum/facility/492768/mdc-optimizing-tips-download",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "requestId": "a4796cc7-1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/{codetype}/cdg": {
+      "get": {
+        "tags": [
+          "Coding Documentation Guideline APIs"
+        ],
+        "summary": "Fetches the list of clinical documentation guidelines",
+        "operationId": "fetchCDGList",
+        "parameters": [
+          {
+            "name": "codetype",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "i9v1",
+                "i9v3",
+                "i10_cm",
+                "i10_pcs",
+                "hcpcs",
+                "cpt"
+              ]
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches the list of clinical documentation guidelines",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "rangeBegCode": "001",
+                    "rangeEndCode": "139.8",
+                    "rangeHeader": "1. Infectious And Parasitic Diseases (001-139)",
+                    "cdgInfoList": [
+                      {
+                        "code": "003.0",
+                        "fullDescription": "Salmonella gastroenteritis",
+                        "cdgAttachmentId": 59275
+                      },
+                      {
+                        "code": "005.0",
+                        "fullDescription": "Staphylococcal food poisoning",
+                        "cdgAttachmentId": 59275
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "timestamp": "2023-07-14T06:37:03.741+00:00",
+                  "status": 404,
+                  "error": "Not Found",
+                  "message": "Not Found",
+                  "path": "/optumcommonms/api/optum/facility/cdeg"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Interal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-28T06:36:22.518+00:00",
+                  "path": "/optumcommonms/api/optum/facility/cdg",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "requestId": "e36d239e-324"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/wage-index": {
+      "get": {
+        "tags": [
+          "Wage Index API"
+        ],
+        "summary": "Fetches wage index list",
+        "operationId": "getWageIndexList",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Filter considers provider number and provider name, The provider number will be start match and provider name will be any match",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches wage index list",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "providerNumber": "010001",
+                      "providerName": "SOUTHEAST HEALTH MEDICAL",
+                      "state": "Alabama",
+                      "wageIndexQ1": "0.8573",
+                      "wageIndexQ2": "0.8573",
+                      "wageIndexQ3": "0.8573",
+                      "wageIndexQ4": "0.8573",
+                      "year": "2024"
+                    },
+                    {
+                      "providerNumber": "010001",
+                      "providerName": "SOUTHEAST HEALTH MEDICAL",
+                      "state": "Alabama",
+                      "wageIndexQ1": "0.8213",
+                      "wageIndexQ2": "0.8213",
+                      "wageIndexQ3": "0.8213",
+                      "year": "2023"
+                    }
+                  ],
+                  "totalCount": 2
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "filter : length must be between 2 and 180"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2024-11-05T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one",
+                  "path": "/optumcommonms/api/optum/facility/wage-index?page=-1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/ub04/{codetype}/list": {
+      "get": {
+        "tags": [
+          "UB04 Code Lists"
+        ],
+        "summary": "Fetches the list of UB04 codes on codetype",
+        "operationId": "getUb04Codes",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "codetype",
+            "in": "path",
+            "description": "UB04 Code Type",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "value-codes",
+                "occurrence-date-codes",
+                "condition-codes",
+                "occurrence-span-codes"
+              ]
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/OptumPageImplCode"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/revenue-procedure-cross-codes/{rev-code}": {
+      "get": {
+        "tags": [
+          "Revenue Codes API"
+        ],
+        "summary": "Fetches procedure codes for corresponding revenue code",
+        "operationId": "getProcCodesForRevenueCode",
+        "parameters": [
+          {
+            "name": "rev-code",
+            "in": "path",
+            "description": "Revenue Code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "0250"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (code,-code) are allowed.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches procedure codes for corresponding revenue code",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "A9270",
+                      "description": "Noncovered item or service",
+                      "tobCode": "012",
+                      "tobDescription": "Hospital Inpatient (Medicare Part B only)",
+                      "note": "For Medicare claims: This code may be used for items and services associated with an ABN that do not have specific HCPCS codes assigned. Report under any appropriate revenue code. Other payers: This code is by definition a noncovered item or service.",
+                      "codeType": "hcpcs"
+                    },
+                    {
+                      "code": "A9270",
+                      "description": "Noncovered item or service",
+                      "tobCode": "013",
+                      "tobDescription": "Hospital Outpatient",
+                      "note": "For Medicare claims: This code may be used for items and services associated with an ABN that do not have specific HCPCS codes assigned. Report under any appropriate revenue code. Other payers: This code is by definition a noncovered item or service.",
+                      "codeType": "hcpcs"
+                    }
+                  ],
+                  "totalCount": 2
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [code, -code]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-27T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one",
+                  "path": "/optumcommonms/api/optum/facility/revenue-procedure-cross-codes/0255?page=-1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/provider-lookup/{careSetting}": {
+      "get": {
+        "tags": [
+          "Provider Lookup APIs"
+        ],
+        "summary": "Fetches outpatient provider lookup table data",
+        "operationId": "getLookupTableData",
+        "parameters": [
+          {
+            "name": "careSetting",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "outpatient",
+                "inpatient"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (providerNumber,-providerNumber) are allowed.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "providerNumber"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch columns for lookup table",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "providerNumber": "010001",
+                      "providerName": "SOUTHEAST HEALTH MEDICAL",
+                      "state": "AL"
+                    },
+                    {
+                      "providerNumber": "010005",
+                      "providerName": "MARSHALL MEDICAL CENTERS",
+                      "state": "AL"
+                    },
+                    {
+                      "providerNumber": "010006",
+                      "providerName": "NORTH ALABAMA MEDICAL CEN",
+                      "state": "AL"
+                    }
+                  ],
+                  "totalCount": 7005
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [providerNumber, -providerNumber]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-27T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one",
+                  "path": "/cmscommonms/api/optum/facility/provider-lookup/outpatient"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/procedure-revenue-codes/{cpt-hcpcs-code}": {
+      "get": {
+        "tags": [
+          "Revenue Codes API"
+        ],
+        "summary": "Fetches revenue codes for corresponding procedure code",
+        "operationId": "getRevenueCodesForProcCode",
+        "parameters": [
+          {
+            "name": "cpt-hcpcs-code",
+            "in": "path",
+            "description": "Cpt or HCPCS Code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99213
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (revenueCode,-revenueCode,tobCode,-tobCode) are allowed.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "revenueCode"
+              ]
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches revenue codes for corresponding procedure code",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "revenueCode": "0456",
+                      "revenueCodeDesc": "Emergency Room-Urgent Care",
+                      "tobCode": "013",
+                      "tobCodeDesc": "Hospital Outpatient",
+                      "note": "Clinic or ED Visit. Paid a separate APC."
+                    },
+                    {
+                      "revenueCode": "0510",
+                      "revenueCodeDesc": "Clinic-General classification",
+                      "tobCode": "013",
+                      "tobCodeDesc": "Hospital Outpatient",
+                      "note": "Clinic or ED Visit. Paid a separate APC."
+                    }
+                  ],
+                  "totalCount": 2
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [revenueCode, -revenueCode, tobCode, -tobCode]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-27T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one",
+                  "path": "/optumcommonms/api/optum/facility/procedure-revenue-codes/99213?page=-1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/opsi-codes": {
+      "get": {
+        "tags": [
+          "OPSI Codes APIs"
+        ],
+        "summary": "Fetches the list of OPSI codes",
+        "operationId": "fetchOpsiCodesList",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (code , -code) are allowed.The default is code",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            },
+            "example": 150
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches the list of OPSI codes",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "A",
+                      "opsiCodeId": "1",
+                      "opsiCodeLink": {
+                        "value": "A",
+                        "href": "/api/optum/facility/opsi-codes/codes-associated-with-opsi/A/1"
+                      },
+                      "description": "DMEPOS Fee Schedule",
+                      "paymentStatus": "DMEPOS Fee Schedule",
+                      "paymentCalculation": "DMEPOS fee schedule for the specific area.",
+                      "tips": "Non-implantable prosthetics, and orthotics can be billed to the fiscal intermediary by hospitals and are paid under the DMEPOS fee schedule."
+                    },
+                    {
+                      "code": "A",
+                      "opsiCodeId": "2",
+                      "opsiCodeLink": {
+                        "value": "A",
+                        "href": "/api/optum/facility/opsi-codes/codes-associated-with-opsi/A/2"
+                      },
+                      "description": "Physical, Occupational and Speech Therapy",
+                      "paymentStatus": "Physician Fee Schedule",
+                      "paymentCalculation": "MAC-specific fee schedule."
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "timestamp": "2023-07-14T06:37:03.741+00:00",
+                  "status": 404,
+                  "error": "Not Found",
+                  "message": "Not Found",
+                  "path": "/optumcommonms/api/optum/facility/opsi-code"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-28T06:36:22.518+00:00",
+                  "path": "/optumcommonms/api/optum/facility/opsi-codes",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "requestId": "e36d239e-324"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/opsi-codes/quarters/{code}": {
+      "get": {
+        "tags": [
+          "OPSI Codes APIs"
+        ],
+        "summary": "Fetches the list of OPSI hac quarters for CPT HCPS code",
+        "operationId": "fetchOpsiCodeQuarterList",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99213
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches the list of OPSI hac quarters for CPT HCPCS code",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "code": "B",
+                    "year": "2025-1"
+                  },
+                  {
+                    "code": "B",
+                    "year": "2024-4"
+                  },
+                  {
+                    "code": "B",
+                    "year": "2024-3"
+                  },
+                  {
+                    "code": "B",
+                    "year": "2024-2"
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "timestamp": "2023-07-14T06:37:03.741+00:00",
+                  "status": 404,
+                  "error": "Not Found",
+                  "message": "Not Found",
+                  "path": "optumcommonms/api/optum/facility/opsi-codes/quarter/99213"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2025-01-10T06:36:22.518+00:00",
+                  "path": "optumcommonms/api/optum/facility/opsi-codes/quarters/99213",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "requestId": "e36d239e-324"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/opsi-codes/codes-associated-with-opsi/{opsi-code}/{opsi-code-id}": {
+      "get": {
+        "tags": [
+          "OPSI Codes APIs"
+        ],
+        "summary": "Fetches the list of cpt or hcpcs code associated with particular OPSI Code",
+        "operationId": "fetchOpsiCodesList_1",
+        "parameters": [
+          {
+            "name": "opsi-code-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 1
+          },
+          {
+            "name": "opsi-code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "A"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (code , -code) are allowed.The default is code",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            },
+            "example": 150
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches the list of cpt or hcpcs code associated with particular OPSI code",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "0001F",
+                      "description": "Heart failure assessed (includes assessment of all the following components) (CAD): Blood pressure measured (2000F) Level of activity assessed (1003F) Clinical symptoms of volume overload (excess) assessed (1004F) Weight, recorded (2001F) Clinical signs of volume overload (excess) assessed (2002F)",
+                      "title": "Non-Covered Items and Services based on Statutory exclusions, Not covered by any Medicare outpatient benefit category, Not reasonable and necessary"
+                    },
+                    {
+                      "code": "0005F",
+                      "description": "Osteoarthritis assessed (OA) Includes assessment of all the following components: Osteoarthritis symptoms and functional status assessed (1006F) Use of anti-inflammatory or over-the-counter (OTC) analgesic medications assessed (1007F) Initial examination of the involved joint(s) (includes visual inspection, palpation, range of motion) (2004F)",
+                      "title": "Non-Covered Items and Services based on Statutory exclusions, Not covered by any Medicare outpatient benefit category, Not reasonable and necessary"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "timestamp": "2023-07-14T06:37:03.741+00:00",
+                  "status": 404,
+                  "error": "Not Found",
+                  "message": "Not Found",
+                  "path": "/optumcommonms/api/optum/facility/opsi-code/codes-associated-with-opsi/A/1/"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Interal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-28T06:36:22.518+00:00",
+                  "path": "/optumcommonms/api/optum/facility/opsi-code/codes-associated-with-opsi/A/1",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "requestId": "e36d239e-324"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/opps-cross-codes": {
+      "get": {
+        "tags": [
+          "Opps Cross Codes API"
+        ],
+        "summary": "Fetches OPPS cross codes table data",
+        "operationId": "getOppsCrossCodesList",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these (code,-code) are allowed values.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch columns for OPPS cross codes",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "0734T",
+                      "description": "Remote real-time, motion capture-based neurorehabilitative therapy ordered by a physician or other qualified health care professional; treatment management services by a physician or other qualified health care professional, per calendar month",
+                      "referenceCodes": "99457-99458",
+                      "effectiveDate": "2022-07-01 00:00:00"
+                    },
+                    {
+                      "code": "52441",
+                      "description": "Cystourethroscopy, with insertion of permanent adjustable transprostatic implant; single implant",
+                      "referenceCodes": "C9739",
+                      "effectiveDate": "2015-01-01 00:00:00"
+                    }
+                  ],
+                  "totalCount": 132
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [code, -code]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-27T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one",
+                  "path": "/optumcommonms/api/optum/facility/opps-cross-codes"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/national-charge-data": {
+      "get": {
+        "tags": [
+          "National Charge Data API"
+        ],
+        "summary": "Fetches national charge data table data",
+        "operationId": "getNationalChargeData",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (code,-code) are allowed.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch columns for national percentage charge data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "0001U",
+                      "description": "Red blood cell antigen typing, DNA, human erythrocyte antigen gene analysis of 35 antigens from 11 blood groups, utilizing whole blood, common RBC alleles reported",
+                      "opsiCode": "A",
+                      "nationalVolume": "152.0",
+                      "percentile10": "751.0",
+                      "percentile25": "887.0",
+                      "median": "1385.0",
+                      "percentile75": "1440.0",
+                      "percentile90": "1440.0",
+                      "calendarYear": "2023"
+                    },
+                    {
+                      "code": "00520",
+                      "description": "Anesthesia for closed chest procedures; (including bronchoscopy) not otherwise specified",
+                      "opsiCode": "N",
+                      "nationalVolume": "23254.0",
+                      "percentile10": "64.0",
+                      "percentile25": "64.0",
+                      "median": "139.0",
+                      "percentile75": "259.0",
+                      "percentile90": "590.0",
+                      "calendarYear": "2023"
+                    }
+                  ],
+                  "totalCount": 7005
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [code, -code]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-27T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one",
+                  "path": "/cmscommonms/api/optum/facility/national-charge-data"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/mdcOptimizingTips": {
+      "get": {
+        "tags": [
+          "MDC Optimizing Tips APIs"
+        ],
+        "summary": "Fetches the MDC optimizing codes tips table data",
+        "operationId": "getMDCOptimizingTips",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (mdcCode, -mdcCode, drgCode , -drgCode ) are allowed.The default is +drgCode",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "drgCode"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            },
+            "example": 150
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch MDC optimizing tips table data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "drgCode": "001",
+                      "drgDescription": "Heart Transplant or Implant of Heart Assist System with MCC",
+                      "optimizingTipsId": "492768",
+                      "mdcDescription": "Pre MDC",
+                      "mdcCode": "PRE"
+                    },
+                    {
+                      "drgCode": "002",
+                      "drgDescription": "Heart Transplant or Implant of Heart Assist System without MCC",
+                      "optimizingTipsId": "492768",
+                      "mdcDescription": "Pre MDC",
+                      "mdcCode": "PRE"
+                    },
+                    {
+                      "drgCode": "003",
+                      "drgDescription": "ECMO or Tracheostomy with Mechanical Ventilation >96 Hours or Principal Diagnosis Except Face, Mouth and Neck with Major O.R. Procedures",
+                      "optimizingTipsId": "492768",
+                      "mdcDescription": "Pre MDC",
+                      "mdcCode": "PRE"
+                    },
+                    {
+                      "drgCode": "004",
+                      "drgDescription": "Tracheostomy with Mechanical Ventilation >96 Hours or Principal Diagnosis Except Face, Mouth and Neck without Major O.R. Procedures",
+                      "optimizingTipsId": "492768",
+                      "mdcDescription": "Pre MDC",
+                      "mdcCode": "PRE"
+                    },
+                    {
+                      "drgCode": "005",
+                      "drgDescription": "Liver Transplant with MCC or Intestinal Transplant",
+                      "optimizingTipsId": "492768",
+                      "mdcDescription": "Pre MDC",
+                      "mdcCode": "PRE"
+                    },
+                    {
+                      "drgCode": "006",
+                      "drgDescription": "Liver Transplant without MCC",
+                      "optimizingTipsId": "492768",
+                      "mdcDescription": "Pre MDC",
+                      "mdcCode": "PRE"
+                    },
+                    {
+                      "drgCode": "007",
+                      "drgDescription": "Lung Transplant",
+                      "optimizingTipsId": "492768",
+                      "mdcDescription": "Pre MDC",
+                      "mdcCode": "PRE"
+                    },
+                    {
+                      "drgCode": "008",
+                      "drgDescription": "Simultaneous Pancreas and Kidney Transplant",
+                      "optimizingTipsId": "492768",
+                      "mdcDescription": "Pre MDC",
+                      "mdcCode": "PRE"
+                    }
+                  ],
+                  "totalCount": 8
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [mdcCode, -mdcCode, drgCode, -drgCode]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2024-07-25T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one",
+                  "path": "/optumcommonms/api/optum/facility/mdcOptimizingTips?sort=drgCode&limit=150&page=-1&filter=18"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/hcpcs-drugs": {
+      "get": {
+        "tags": [
+          "HCPCS Table of Drugs API"
+        ],
+        "summary": "Fetches HCPCS drugs table data",
+        "operationId": "getHCPCSDrugsList",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch HCPCS drugs data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "J7100",
+                      "drugName": "10% LMD",
+                      "unitPerMl": "500 ML",
+                      "route": "IV"
+                    },
+                    {
+                      "code": "S5010",
+                      "drugName": "5% DEXTROSE AND .45% NORMAL SALINE",
+                      "unitPerMl": "1000 ML",
+                      "route": "IV"
+                    }
+                  ],
+                  "totalCount": 3051
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "filter : length must be between 2 and 180"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2024-11-05T22:34:37.080+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one",
+                  "path": "/optumcommonms/api/optum/facility/hcpcs-drugs"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/federal-register-addendum-b": {
+      "get": {
+        "tags": [
+          "Federal Register Addendum B API"
+        ],
+        "summary": "Fetches all federal register addendum B table data",
+        "operationId": "getFederalRegAddBList",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (code,-code,opsiCode,-opsiCode,description,-description,apc,-apc) are allowed.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches all federal register addendum B table data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "0001F",
+                      "opsiCode": "E1",
+                      "description": "HEART FAILURE COMPOSITE",
+                      "relWeight": 0,
+                      "payRate": 0,
+                      "natUnadjCopay": 0,
+                      "minUnadjCopay": 0
+                    },
+                    {
+                      "code": "0001U",
+                      "opsiCode": "A",
+                      "description": "RBC DNA HEA 35 AG 11 BLD GRP",
+                      "relWeight": 0,
+                      "payRate": 0,
+                      "natUnadjCopay": 0,
+                      "minUnadjCopay": 0
+                    }
+                  ],
+                  "totalCount": 18341
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [code, -code]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-27T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one",
+                  "path": "/optumcommonms/api/optum/facility/federal-register-addendum-b?page=-1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/drg-indicators": {
+      "get": {
+        "tags": [
+          "Diagnostic Related Groups (DRG) Indicators APIs"
+        ],
+        "operationId": "getDRGIndicatorList",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (drgCode,-drgCode,mdcCode,-mdcCode) are allowed.The default is drgCode",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "drgCode"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            },
+            "example": 150
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch DRG indicator list",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "drgId": "39806",
+                      "drgCode": "014",
+                      "drgDescription": "Allogeneic Bone Marrow Transplant",
+                      "mdcCode": "PRE",
+                      "mdcDescription": "Pre MDC",
+                      "medSurg": "M",
+                      "gmLos": "25.6",
+                      "amLos": "28.7",
+                      "relativeWeight": "11.4609"
+                    },
+                    {
+                      "drgId": "39757",
+                      "drgCode": "987",
+                      "drgDescription": "Nonextensive O.R. Procedures Unrelated to Principal Diagnosis with MCC",
+                      "mdcCode": "ALL",
+                      "mdcDescription": "All MDC",
+                      "medSurg": "S",
+                      "gmLos": "8.2",
+                      "amLos": "11.4",
+                      "relativeWeight": "3.3767",
+                      "iconIds": "DRG MCC,Special Payment"
+                    }
+                  ],
+                  "totalCount": 2
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2024-08-22T07:29:21.890+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page index must not be less than zero",
+                  "path": "/optumcommonms/api/optum/facility/drg-indicators"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/cpt-hcpcs-required-revenue": {
+      "get": {
+        "tags": [
+          "Revenue Codes API"
+        ],
+        "summary": "Fetches revenue codes requiring CPT HCPCS",
+        "operationId": "getCptHcpcsRequiredRevenueCodes",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (code,-code) are allowed.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches revenue codes requiring CPT HCPCS",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "0278",
+                      "description": "Medical/Surgical Supplies and Devices",
+                      "hasProcedureCodes": true,
+                      "rangeDescription": "Ancillary Services",
+                      "subCategoryAbbr": "SUPPLY/IMPLANTS",
+                      "subCategoryDes": "Other Implants"
+                    },
+                    {
+                      "code": "0291",
+                      "description": "Durable Medical Equipment (Other than renal)",
+                      "hasProcedureCodes": true,
+                      "rangeDescription": "Ancillary Services",
+                      "subCategoryAbbr": "DME-RENTAL",
+                      "subCategoryDes": "Rental"
+                    }
+                  ],
+                  "totalCount": 2
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [code, -code]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-27T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one",
+                  "path": "/optumcommonms/api/optum/facility/cpt-hcpcs-required-revenue?page=-1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/cdg/{code}/document": {
+      "get": {
+        "tags": [
+          "Coding Documentation Guideline APIs"
+        ],
+        "summary": "Fetches the file content for clinical coding guidelines",
+        "operationId": "fetchCDGPDF",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "003.0"
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches the file content in the form of byte array, response headers and media type as FileType",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": "  access-control-expose-headers: Content-Disposition\n  cache-control: no-cache,no-store,max-age=0,must-revalidate\n  connection: keep-alive\n  content-disposition: attachment; filename=cdg22.pdf\n  content-length: 254685\n  content-type: application/pdf\n  date: Thu,16 May 2024 06:49:56 GMT\n  expires: 0\n  pragma: no-cache\n  vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers\n  x-content-type-options: nosniff\n  x-frame-options: DENY\n  x-xss-protection: 0\n"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found: Sub terms not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "timestamp": "2023-07-28T06:19:48.666+00:00",
+                  "status": 404,
+                  "error": "Not Found",
+                  "message": "Not Found",
+                  "path": "/optumcommonms/api/optum/facility/cdg/{code}d"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-28T06:19:48.666+00:00",
+                  "path": "/optumcommonms/api/optum/facility/cdg/{code}/document",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "requestId": "a4796cc7-1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/facility/all-revenue-codes": {
+      "get": {
+        "tags": [
+          "Revenue Codes API"
+        ],
+        "summary": "Fetches all revenue codes table data",
+        "operationId": "getAllRevenueCodes",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (code,-code) are allowed.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches all revenue codes table data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "0000",
+                      "description": "Reserved",
+                      "hasProcedureCodes": false
+                    },
+                    {
+                      "code": "0001",
+                      "description": "Total Charges (reportable on paper claims only)",
+                      "hasProcedureCodes": false
+                    }
+                  ],
+                  "totalCount": 1232
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [code, -code]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-27T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one",
+                  "path": "/optumcommonms/api/optum/facility/all-revenue-codes?page=-1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/{contractor}/medicare-contractors": {
+      "get": {
+        "tags": [
+          "Compliance APIs"
+        ],
+        "summary": "Fetches medicare contractors list for a given contractor Type.",
+        "operationId": "fetchMedicareContractors",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (id, name) are allowed.The default is id",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "id"
+              ]
+            }
+          },
+          {
+            "name": "contractor",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "physician",
+                "facility"
+              ]
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ContractorValue"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/{code}/{modifier-type}/{mod-code}/{prod-code}/modifier-download": {
+      "get": {
+        "tags": [
+          "Modifier CrossWalk API"
+        ],
+        "summary": "Generates the pdf format file with the details of selected modifier code",
+        "operationId": "printModCodesReport",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Cpt OR Hcpcs code ",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99213
+          },
+          {
+            "name": "modifier-type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "MPFS",
+                "DME",
+                "AMBULANCE"
+              ]
+            }
+          },
+          {
+            "name": "mod-code",
+            "in": "path",
+            "description": "modifier code ",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 24
+          },
+          {
+            "name": "prod-code",
+            "in": "path",
+            "description": "Product code C/M i.e Commercial/ Medicare",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "M"
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Generates the PDF and return the content in the format of byte array, response headers and media type as PDF",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": " access-control-expose-headers: Content-Disposition \n cache-control: no-cache,no-store,max-age=0,must-revalidate \n connection: keep-alive \n content-disposition: attachment; filename=PHYSICIAN.pdf \n content-length: 3663 \n content-type: application/pdf \n date: Wed,26 Apr 2023 12:17:11 GMT \n expires: 0 \n pragma: no-cache \n strict-transport-security: max-age=31536000 ; includeSubDomains \n vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers \n x-content-type-options: nosniff \n x-frame-options: DENY \n x-xss-protection: 1; mode=block \n"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found- No Data Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "error": [
+                    "No Data Found."
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-02-08T06:19:48.666+00:00",
+                  "path": "/optumcommonms/api/optum/common/99213/MPFS/24/M/modifier-download",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "requestId": "a4796cc7-1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/{code}/{modifier-type}/modifier-crosswalk": {
+      "get": {
+        "tags": [
+          "Modifier CrossWalk API"
+        ],
+        "summary": "Returns the list of modifierCrosswalk based on the selected cpt or hcpcs code",
+        "operationId": "modifierCrosswalk",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Cpt OR Hcpcs code ",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "A4580"
+          },
+          {
+            "name": "modifier-type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "MPFS",
+                "DME",
+                "AMBULANCE",
+                "ASC"
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            },
+            "example": 150
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "fetch available list of modifier crosswalk for the selected code",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "A4580",
+                      "modifierCodeLink": {
+                        "value": "52",
+                        "href": "/api/coding/code/52/modifier-crosscodes"
+                      },
+                      "description": "Reduced Services",
+                      "usage": "(Modifier 52 is used for surgical procedures and certain diagnostic procedures for whch anesthesia was not planned. Report this modifier when the procedure was discontinued after the patient was prepared and brought to the room where the procedure was to be performed. only.~Modifier is valid for reporting reduced radiology procedures.~When a radiology procedure is reduced, the correct reporting is to assign  the CPT code to the extent of the procedure performed.  This modifier is used only to report a radiology procedure that has been reduced when no other code exists to report what has been done.  Report the intended code with modifier 52.~For example, if the planned procedure is a two-view chest x-ray and only one view of the chest is performed, do not report CPT code 71020-52 (for x-ray chest, two views-reduced service).  Instead, report CPT code 71010 (x-ray chest, single view).  If a barium swallow is not completed because the patient cannot handle the barium, report CPT code 74270-52.)",
+                      "definition": "Under certain circumstances a service or procedure is partially reduced or eliminated at the discretion of the physician or other qualified health care professional. Under these circumstances the service provided can be identified by its usual procedure number and the addition of modifier 52, signifying that the service is reduced. This provides a means of reporting reduced services without disturbing the identification of the basic service. Note: For hospital outpatient reporting of a previously scheduled procedure/service that is partially reduced or cancelled as a result of extenuating circumstances or those that threaten the well-being of the patient prior to or after administration of anesthesia, see modifiers 73 and 74 (see modifiers approved for ASC hospital outpatient use).",
+                      "sourcingRationaleNum": "Sourcing Rationale: 589",
+                      "sourcingRationale": "Current Procedural Terminology (CPT) Level I modifiers and Healthcare Common Procedure Coding System (HCPCS) Level II modifiers are appended to Level I or Level II codes based on information from the Centers for Medicare and Medicaid Services (CMS). The identified modifiers are: the ambulance specific modifiers, 1P, 24, 25, 2P, 3P, 50, 51, 52, 54, 55, 56, 57, 58, 59, 76, 77, 78, 79, 8P, 90, 91, AA, AB, AD, AQ, AR, AT, AU, AV, AW, AX, AY, BA, BP, BR, BU, CD, CE, CF, CH, CI, CJ, CK, CL, CM, CN, CT, EA, EB, EC, EM, EY, G7-G9, GE, GG, GK, GL, GM, GN, GO, GP, GQ, GT, J4, KB, KC, KF, KI, KJ, KM, KN, KZ, LR, NR, NU, PI, PS, PT, Q7-Q9, QA, QB, QE, QF, QG, QK, QR, QS, QW, QX, QY, QZ, RR, UE, UN, UP, UQ, UR, US, VM, XE, XP, XS, XU, ZA, ZB,ZC.   \r\nThe above identified CPT/HCPCS modifier to procedure relationships are supported by CMS information from the Medicare Claims Processing Manual, program transmittals, National Physician Fee Schedule (NPFS), Clinical Laboratory Fee Schedule, DME/PEN fee schedules, Ambulance fee schedule, and claims adjudication policies.\r\nModifiers that are covered by other Medicare rules; therefore are excluded from this rule are:\r\n22, 26, 62, 66, 80-82, AS, and TC.\r\nModifiers that do not have a specific national CMS source or a source that addresses specific codes that these modifiers should be appended to; therefore are excluded from this rule are:\r\n23, 32, 33, 47, 53, 63, 92, 93, 95, 96, 97, 99, A1-A9, AE, AF, AG, AH, AI,AJ, AK, AM, AO,AP, BO, CB, CC, CG, CO, CP, CQ, CR, CS, DA, E1-E4, EJ, EP, ER, EX, F1-FA, FP, FQ, FR, FS, FT, FX, FY, G0,GA, GB, GC, GD, GH, GJ, GR, GU, GV, GX, GW, J1, J2, J3, J5, JA, JB, JC, JD, JE, JG, JK, JL, JW, JZ, K0-K4, KA, KD ,KE,  KG, KH, KK, KL, KO, KP, KQ, KR, KS, KT, KU, KV, KW, KX, KY, LC, LD, LL, LM, LS, LT, LU, M2, MA-MH, MS, N1, N2, N3, NB, P1-P6, PA, PB, PC, PD, PL, PM, PN, PO, Q0-Q1, Q3-Q6, QC, QD, QH, QJ, QL, QP, QQ, QT, RA, RB, RC, RD, RE, RI, RT, SC, SF, SG, SW, SZ, T1-TA, TB, TS, UJ, V1-V9, VP, X1, X2, X3, X4, X5.\r\nModifiers that have a coverage indicator of I, M, or S on the HCPCS file.  These indicators state that they are noncovered or nonpayable by Medicare.  These modifiers are excluded from this rule are:\r\nAZ, FB, GY, GZ, H9, HA-HZ, PA-PC, SA-SB, SD-SE, SH-SN, SQ, SS-SV, SY, TD-TH, TJ-TN, TP-TR, TT-TW, U1-U9, UA-UD, UF-UH and UK.\r\nModifiers that have facility related only national CMS sources; therefore are not included in this professional rule:\r\n27, 73, 74, BL, CA, ED, EE, ET, FC, G1-G6, GF, GS, JG, L1, Q2, QM, and QN.",
+                      "source": "CMS Policy",
+                      "productCode": "M",
+                      "commercialMedicare": "Medicare"
+                    }
+                  ],
+                  "totalCount": 43
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "timestamp": "2023-03-27T12:23:36.422+00:00",
+                  "status": 404,
+                  "error": "Not Found",
+                  "message": "Not Found",
+                  "path": "/optumcommonms/api/optum/common/A4580/test/modifier-crosswalk?limit=150&page=1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/{code}/ndc": {
+      "get": {
+        "tags": [
+          "National Drug Code API"
+        ],
+        "summary": "Fetches the national drug code table data",
+        "operationId": "fetchNationalDrugCodeList",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "J0121"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch national drug code list",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "ndc": "71715000101",
+                      "genericName": "Omadacycline",
+                      "brandName": "NUZYRA",
+                      "mfg": "PARATEK PHARMACEUTICALS INC."
+                    },
+                    {
+                      "ndc": "71715000102",
+                      "genericName": "Omadacycline",
+                      "brandName": "NUZYRA",
+                      "mfg": "PARATEK PHARMACEUTICALS INC."
+                    }
+                  ],
+                  "totalCount": 2
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2024-08-22T07:29:21.890+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.IllegalArgumentException: Page index must not be less than zero",
+                  "path": "/optumcommonms/api/optum/common/ndc/J0121"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/{codetype}/{code}/ccm": {
+      "get": {
+        "tags": [
+          "Consumer Code Manager API"
+        ],
+        "summary": "Fetches the ConsumerInfo based on the codetype and code",
+        "operationId": "consumerInfo",
+        "parameters": [
+          {
+            "name": "codetype",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "cpt",
+                "hcpcs",
+                "i10_cm",
+                "i10_pcs"
+              ]
+            }
+          },
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 99213
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch consumer info for given code and codetype",
+            "content": {
+              "application/json": {
+                "example": {
+                  "ccmFull": "Physician office visit. The amount of time with the physician is determined by a person's condition and treatment needs.",
+                  "ccmShort": "Doctor's office visit",
+                  "ccmSpanish": "Visita al consultorio médico"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request: Some parameters were invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "error": [
+                    "The code provided '992133' in this web service request is not a valid 'cpt' code."
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2022-07-06T07:22:01.017+00:00",
+                  "path": "/api/coding/code/i10_cm/D68.2/ccm",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "requestId": "a4796cc7-1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/source-rationale": {
+      "get": {
+        "tags": [
+          "Compliance APIs"
+        ],
+        "summary": "Get Source Rationale",
+        "operationId": "getSourceRationale",
+        "parameters": [
+          {
+            "name": "ddrId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "mnemonic",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhysicianClaimSourceRationale"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/medicare-carrier-localities": {
+      "get": {
+        "tags": [
+          "Medicare Carrier Localities"
+        ],
+        "summary": "Fetches medicare carrier localities",
+        "operationId": "getMedicareCarrierLocalities",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch medicare carrier localities",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "carrier": "10112",
+                    "locality": "00",
+                    "state": "Alabama"
+                  },
+                  {
+                    "carrier": "02102",
+                    "locality": "01",
+                    "state": "Alaska"
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "timestamp": "2025-01-07T06:37:03.741+00:00",
+                  "status": 404,
+                  "error": "Not Found",
+                  "message": "Not Found",
+                  "path": "/optumcommonms/api/optum/common/medicare-carrier-localities"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Interal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2025-01-07T06:36:22.518+00:00",
+                  "path": "/optumcommonms/api/optum/common/medicare-carrier-localities",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "requestId": "e36d239e-324"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/get-policy-url/{contractror-id}/{policy-id}": {
+      "get": {
+        "tags": [
+          "Compliance APIs"
+        ],
+        "summary": "Get Policy URL",
+        "operationId": "getPolicyURL",
+        "parameters": [
+          {
+            "name": "contractror-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policy-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from-date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to-date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/cross-coder/list/{codetype}/{code}/{tab}": {
+      "get": {
+        "tags": [
+          "Cross Coder API"
+        ],
+        "summary": "Fetches cross coder table data",
+        "operationId": "getCrossCoderDataList",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": 17000
+          },
+          {
+            "name": "codetype",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "cpt",
+                "hcpcs",
+                "i10_pcs",
+                "i10_cm",
+                "i9v1",
+                "i9v3"
+              ]
+            },
+            "example": "cpt"
+          },
+          {
+            "name": "tab",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "cpt",
+                "hcpcs",
+                "anesthesia_codes",
+                "i10_pcs",
+                "medicine_codes",
+                "dental"
+              ]
+            },
+            "example": "hcpcs"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Any of these values (code,-code, description, -description) are allowed.",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "code"
+              ]
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch columns for cross coder",
+            "content": {
+              "application/json": {
+                "example": {
+                  "content": [
+                    {
+                      "code": "A9270",
+                      "rangeCodeType": 0,
+                      "codeType": 0,
+                      "description": "Noncovered item or service",
+                      "baseUnitValue": 0
+                    },
+                    {
+                      "code": "V2632",
+                      "rangeCodeType": 0,
+                      "codeType": 0,
+                      "description": "Posterior chamber intraocular lens",
+                      "baseUnitValue": 0
+                    }
+                  ],
+                  "totalCount": 2,
+                  "ncw": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": [
+                    "sort parameter value should be from list of [code, description]"
+                  ],
+                  "warning": null,
+                  "info": null
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "timestamp": "2023-07-27T08:10:07.573+00:00",
+                  "status": 500,
+                  "error": "Internal Server Error",
+                  "message": "Request processing failed: java.lang.UnsupportedOperationException: Unsupported codetype in Method getFindListQuery.",
+                  "path": "/optumcommonms/api/optum/facility/cross-coder/list"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/compliance/place-of-service-codes": {
+      "get": {
+        "tags": [
+          "Compliance APIs"
+        ],
+        "operationId": "getPlaceOfServiceCodes",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlaceOfServiceValue"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/code-specific-guidelines/{codetype}/article/{code}/{article-id}": {
+      "get": {
+        "tags": [
+          "Code Specific Guidelines APIs"
+        ],
+        "summary": "Fetch current year code specific guidelines article",
+        "operationId": "fetchCodeSpecificArticle",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Term/code search value",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "N17.9"
+          },
+          {
+            "name": "codetype",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "i10_cm",
+                "i10_pcs"
+              ]
+            },
+            "example": "i10_cm"
+          },
+          {
+            "name": "article-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "CGi10440125"
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch current year code specific guidelines article",
+            "content": {
+              "application/json": {
+                "example": "{\n    \"year\": \"2025\",\n    \"title\": \"Diseases of the Genitourinary System\",\n    \"articleId\": \"CGi10440125\",\n    \"article\": \"article details\",\n    \"articleUpdate\": \"article update details\"\n    \"quarter\": 0,\n    \"sourceType\": \"CSG_CM\",\n    \"code\": \"N17.9\",\n    \"codeTypeId\": 16384\n}\n"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "timestamp": "2025-07-11T12:23:36.422+00:00",
+                  "status": 404,
+                  "error": "Not Found",
+                  "message": "Not Found",
+                  "path": "/api/optum/common/code-specific-guidelines/article"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": "{\n  \"timestamp\": \"2025-05-08T07:22:01.017+00:00\",\n  \"path\": \"/api/optum/common/code-specific-guidelines/article/N17.9\",\n  \"status\": 500,\n  \"error\": \"Internal Server Error\",\n}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/optum/common/code-specific-guidelines/{codetype}/article-list/{code}": {
+      "get": {
+        "tags": [
+          "Code Specific Guidelines APIs"
+        ],
+        "summary": "Fetch current year code specific guidelines articles list",
+        "operationId": "fetchCodeSpecificArticlesList",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Term/code search value",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "I10"
+          },
+          {
+            "name": "codetype",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "i10_cm",
+                "i10_pcs"
+              ]
+            },
+            "example": "i10_cm"
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch current year code specific guidelines articles list",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "year": "2025",
+                    "title": "Diseases of the Genitourinary System",
+                    "articleId": "CGi10440125",
+                    "quarter": 0,
+                    "sourceType": "CSG_CM",
+                    "code": "N17.9",
+                    "codeTypeId": 16384
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "Not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notification"
+                },
+                "example": {
+                  "timestamp": "2025-07-11T12:23:36.422+00:00",
+                  "status": 404,
+                  "error": "Not Found",
+                  "message": "Not Found",
+                  "path": "/api/optum/common/code-specific-guidelines/i10_cm/article-list"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": "{\n  \"timestamp\": \"2025-05-08T07:22:01.017+00:00\",\n  \"path\": \"/api/optum/common/code-specific-guidelines/i10_cm/article-list/E11.01\",\n  \"status\": 500,\n  \"error\": \"Internal Server Error\",\n}"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/app/optum/facility/claim/delete/claim-line-edits": {
+      "delete": {
+        "tags": [
+          "Facility Compliance APIs"
+        ],
+        "summary": "Delete claim line edits",
+        "operationId": "deleteClaimLineEdits",
+        "parameters": [
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/app/optum/facility/claim/delete-claim-line/{claim-line-id}": {
+      "delete": {
+        "tags": [
+          "Facility Compliance APIs"
+        ],
+        "summary": "Delete the claim line",
+        "operationId": "deleteClaimLine",
+        "parameters": [
+          {
+            "name": "claim-line-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "yyyy-MM-dd",
+            "in": "header",
+            "description": "Date for which historical data is required",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FacilityClaimUpdate": {
+        "type": "object",
+        "properties": {
+          "claimId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "claimLineId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fieldName": {
+            "type": "string"
+          },
+          "fieldValue": {
+            "type": "string"
+          }
+        }
+      },
+      "FacilityClaimLineEdits": {
+        "type": "object",
+        "properties": {
+          "claimLineId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "editType": {
+            "type": "string"
+          },
+          "mnemonic": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "claimLineNum": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "FacilityClaimResponse": {
+        "type": "object",
+        "properties": {
+          "claimId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "patientUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "claimType": {
+            "type": "string",
+            "enum": [
+              "PHYSICIAN",
+              "FACILITY"
+            ]
+          },
+          "edits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FacilityClaimLineEdits"
+            }
+          }
+        }
+      },
+      "FacilityClaim": {
+        "type": "object",
+        "properties": {
+          "claimId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "currentTimeStamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tabNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "payerType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contractorNum": {
+            "type": "string"
+          },
+          "contractorSort": {
+            "type": "string"
+          },
+          "medicaidState": {
+            "type": "string"
+          },
+          "claimIdentifier": {
+            "type": "string"
+          },
+          "typeOfBill": {
+            "type": "string"
+          },
+          "statStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "statEndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "patientDOB": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "patientGender": {
+            "type": "string"
+          },
+          "patientStatus": {
+            "type": "string"
+          },
+          "pointOfOrigin": {
+            "type": "string"
+          },
+          "admissionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "admissionType": {
+            "type": "string"
+          },
+          "conditionCodes": {
+            "type": "string"
+          },
+          "valueCodes": {
+            "type": "string"
+          },
+          "occurrenceCodes": {
+            "type": "string"
+          },
+          "occurrenceSpanCodes": {
+            "type": "string"
+          },
+          "complianceType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "moduleId": {
+            "type": "string"
+          },
+          "facilityClaimLineList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FacilityClaimLine"
+            }
+          },
+          "claimDiag": {
+            "$ref": "#/components/schemas/FacilityClaimDiag"
+          },
+          "claimLineEditsList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FacilityClaimLineEdits"
+            }
+          },
+          "payer": {
+            "type": "string"
+          }
+        }
+      },
+      "FacilityClaimDiag": {
+        "type": "object",
+        "properties": {
+          "claimId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "principalDx": {
+            "type": "string"
+          },
+          "admitting": {
+            "type": "string"
+          },
+          "others": {
+            "type": "string"
+          },
+          "primary1Px": {
+            "type": "string"
+          },
+          "primary1PxDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "primary2Px": {
+            "type": "string"
+          },
+          "primary2PxDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "other1Px": {
+            "type": "string"
+          },
+          "other1PxDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "other2Px": {
+            "type": "string"
+          },
+          "other2PxDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "other3Px": {
+            "type": "string"
+          },
+          "other3PxDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "other4Px": {
+            "type": "string"
+          },
+          "other4PxDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reasonForVisit": {
+            "type": "string"
+          },
+          "ipAdmitting": {
+            "type": "string"
+          }
+        }
+      },
+      "FacilityClaimLine": {
+        "type": "object",
+        "properties": {
+          "claimLineId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "claimId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "revenueCode": {
+            "type": "string"
+          },
+          "procedureCode": {
+            "type": "string"
+          },
+          "modifier": {
+            "type": "string"
+          },
+          "lineNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "units": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dateOfService": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ndc": {
+            "type": "string"
+          }
+        }
+      },
+      "ApcCalculatorRequest": {
+        "required": [
+          "dxCode",
+          "dxCodeType",
+          "fromDateStr",
+          "gender",
+          "provider",
+          "thruDateStr"
+        ],
+        "type": "object",
+        "properties": {
+          "provider": {
+            "maxLength": 2147483647,
+            "minLength": 1,
+            "type": "string",
+            "description": "Terms to search for"
+          },
+          "fromDateStr": {
+            "type": "string"
+          },
+          "thruDateStr": {
+            "type": "string"
+          },
+          "gender": {
+            "pattern": "^([MFUI])$",
+            "type": "string"
+          },
+          "age": {
+            "pattern": "^\\d{1,3}$",
+            "type": "string"
+          },
+          "zipCode": {
+            "pattern": "^(\\d{1,5}|)$",
+            "type": "string"
+          },
+          "dxCode": {
+            "type": "string"
+          },
+          "dxCodeType": {
+            "pattern": "^(icd9|icd10)$",
+            "type": "string"
+          },
+          "tobCode": {
+            "pattern": "^(.{0,4}|)$",
+            "type": "string"
+          },
+          "conditionCode": {
+            "pattern": "^(.{1,2}|)$",
+            "type": "string"
+          },
+          "claimLineList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClaimLine"
+            }
+          }
+        }
+      },
+      "ClaimLine": {
+        "type": "object",
+        "properties": {
+          "cptHcpcs": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "revCode": {
+            "type": "string"
+          },
+          "modifiers": {
+            "type": "string"
+          },
+          "dateStr": {
+            "type": "string"
+          },
+          "charge": {
+            "type": "string"
+          },
+          "cptHcpcsDesc": {
+            "type": "string"
+          }
+        }
+      },
+      "Notification": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "warning": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "info": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "FederalRegAddBHistoryRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "year": {
+            "type": "string"
+          }
+        }
+      },
+      "DrgCalculatorRequest": {
+        "required": [
+          "admitDate",
+          "disChargeDate",
+          "drgCode",
+          "providerId"
+        ],
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string"
+          },
+          "drgCode": {
+            "type": "string"
+          },
+          "admitDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "disChargeDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ABNForm": {
+        "type": "object",
+        "properties": {
+          "notifierName": {
+            "type": "string"
+          },
+          "notifierAddress": {
+            "type": "string"
+          },
+          "notifierPhone": {
+            "type": "string"
+          },
+          "patientName": {
+            "type": "string"
+          },
+          "patientIdentifier": {
+            "type": "string"
+          },
+          "itemServices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ABNItemService"
+            }
+          },
+          "additionalInfo": {
+            "type": "string"
+          },
+          "isEnglishPDF": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ABNItemService": {
+        "type": "object",
+        "properties": {
+          "codeItemService": {
+            "type": "string"
+          },
+          "estimatedCost": {
+            "type": "string"
+          },
+          "patientAction": {
+            "type": "string"
+          },
+          "medicareNoPayReason": {
+            "type": "string"
+          },
+          "spanishMedicareReason": {
+            "type": "string"
+          }
+        }
+      },
+      "CrossCodesRequest": {
+        "type": "object",
+        "properties": {
+          "isLcdNcdData": {
+            "type": "string"
+          },
+          "isSmeaData": {
+            "type": "string"
+          },
+          "isClaimsData": {
+            "type": "string"
+          },
+          "macType": {
+            "type": "string"
+          },
+          "contractorId": {
+            "type": "string"
+          }
+        }
+      },
+      "Code": {
+        "type": "object",
+        "properties": {
+          "codeValue": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "OptumPageImplCode": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Code"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ContractorValue": {
+        "type": "object",
+        "properties": {
+          "contractorNumber": {
+            "type": "string"
+          },
+          "contractorName": {
+            "type": "string"
+          }
+        }
+      },
+      "PhysicianClaimSourceRationale": {
+        "type": "object",
+        "properties": {
+          "ddrId": {
+            "type": "string"
+          },
+          "mnemonic": {
+            "type": "string"
+          },
+          "editMessage": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "editType": {
+            "type": "string"
+          },
+          "sourceInfo": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "PlaceOfServiceValue": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true
+  }
+}

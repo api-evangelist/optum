@@ -1,0 +1,46 @@
+generated: '2026-08-14'
+method: derived
+source: openapi/_original/*.json (429 responses) + developer.optum.com documentation search
+docs: null
+limit_count: 0
+published_limits: false
+note: >-
+  Optum publishes NO numeric rate limit anywhere on developer.optum.com — no requests-per-second,
+  no per-key quota, no burst allowance, and no throttling policy page. The only rate-limit signal in
+  the entire public surface is a documented 429 response on the Dental Attachment API (10 of its 11
+  operations, including the token endpoint), described verbatim as "The requestor has sent more
+  requests within a given timeframe than allowed." None of the other 37 harvested specs declare a
+  429 at all, and no spec declares a rate-limit response header. An agent therefore cannot budget
+  against this API: it can only discover the ceiling by hitting it, and on most endpoints it will
+  not even get a 429 it was told to expect.
+response_headers:
+  standard_rate_limit_headers: false
+  observed: []
+  note: >-
+    No X-RateLimit-*, RateLimit-* (RFC 9331 draft) or Retry-After header is declared in any
+    harvested OpenAPI response, and none is documented. Retry backoff is undefined.
+exhaustion:
+  status: 429
+  scope_documented: false
+  retry_after: false
+  declared_on:
+    - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/CreateAttachment
+    - openapi/optum-dental-attachment-api-openapi.yml#POST /dentalnetwork/attachments/v1/AddAttachment
+    - openapi/optum-dental-attachment-api-openapi.yml#PUT /dentalnetwork/attachments/v1/{attachmentId}/UpdateAttachmentFile/{attachmentFileId}
+    - openapi/optum-dental-attachment-api-openapi.yml#PATCH /dentalnetwork/attachments/v1/CommitAttachment/{attachmentId}
+    - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAttachmentbyId/{attachmentId}
+    - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAttachmentList/{AttachmentId}
+    - openapi/optum-dental-attachment-api-openapi.yml#DELETE /dentalnetwork/attachments/v1/{attachmentId}/DeleteAttachmentFile/{attachmentFileId}
+    - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/GetAllParticipatingPayers
+    - openapi/optum-dental-attachment-api-openapi.yml#GET /dentalnetwork/attachments/v1/IsParticipatingPayer
+    - openapi/optum-dental-attachment-api-openapi.yml#POST /apip/auth/v2/token
+adjacent_limits:
+  - kind: payload-size
+    signal: 413
+    where: Medical Network Claims Responses and Reports v2
+    note: The ERA/reports API documents a 413 path for large report files and offers a streaming download instead.
+  - kind: sandbox-usage
+    signal: policy
+    where: https://developer.optum.com/eligibilityandclaims/docs/create-a-sandbox-account
+    note: '"DO NOT perform load testing or production data testing in the sandbox environment." — a stated prohibition, not a measured limit.'
+limits: []

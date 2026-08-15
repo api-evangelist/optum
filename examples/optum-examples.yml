@@ -1,0 +1,176 @@
+generated: '2026-08-14'
+method: derived
+source: openapi/_original/*.json (in-spec example objects)
+notes: 'Optum ships examples INSIDE the OpenAPI rather than as a separate example repository or cookbook. This index
+  records where they are so the coverage is legible: 1099 response and request media-type objects across the 59
+  harvested documents carry an `example` or `examples`, and four specs additionally publish reusable named examples
+  under components.examples. The richest are the FHIR Da Vinci surfaces and Enhanced Eligibility, which publish
+  success AND failure examples for the asynchronous coverage-discovery callback. No standalone examples/ directory
+  of files is authored here — the examples belong to the harvested specs and are read from them.'
+example_bearing_specs: 28
+example_objects: 1099
+specs:
+- spec: openapi/optum-optum-real-time-econtent-web-services-openapi.yml
+  title: Optum Real-Time eContent Web services
+  request_examples: 1
+  response_examples: 303
+  named_component_examples: null
+- spec: openapi/optum-cms-common-facility-openapi.yml
+  title: CMS Common Facility
+  request_examples: 1
+  response_examples: 185
+  named_component_examples: null
+- spec: openapi/optum-core-service-openapi.yml
+  title: Core Service
+  request_examples: 1
+  response_examples: 121
+  named_component_examples: null
+- spec: openapi/optum-cms-common-physician-openapi.yml
+  title: CMS Common Physician
+  request_examples: 1
+  response_examples: 118
+  named_component_examples: null
+- spec: openapi/optum-optum-common-facility-openapi.yml
+  title: Optum Common Facility
+  request_examples: 0
+  response_examples: 92
+  named_component_examples: null
+- spec: openapi/optum-real-prior-authorization-api-openapi.yml
+  title: Real Prior Authorization API
+  request_examples: 5
+  response_examples: 55
+  named_component_examples: null
+- spec: openapi/optum-ncc-data-acquisition-api-openapi.yml
+  title: NCC Data Acquisition API
+  request_examples: 2
+  response_examples: 46
+  named_component_examples: null
+- spec: openapi/optum-optum-common-physician-openapi.yml
+  title: Optum Common Physician
+  request_examples: 0
+  response_examples: 39
+  named_component_examples: null
+- spec: openapi/optum-real-provider-access-api-openapi.yml
+  title: Real Provider Access API
+  request_examples: 1
+  response_examples: 22
+  named_component_examples: null
+- spec: openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml
+  title: Cross Community Rest APIs(XC-Rest)
+  request_examples: 2
+  response_examples: 13
+  named_component_examples: null
+- spec: openapi/optum-pes-payer-enrollments-v1-openapi.yml
+  title: PES Payer Enrollments V1
+  request_examples: 0
+  response_examples: 13
+  named_component_examples: null
+- spec: openapi/optum-prior-authorization-v1-openapi.yml
+  title: Prior Authorization v1
+  request_examples: 6
+  response_examples: 6
+  named_component_examples:
+  - UserSubmissionRequestSubscriber
+  - UserSubmissionRequestDependent
+  - UserNoaRequest
+  - X12OrchRequestNoProcedureCodes
+  - X12OrchRequestTwoCodesOneRequired
+  - X12OrchRequestTwoRequiredCodesWithSplit
+  - UserInquiryRequestSubscriber
+  - UserInquiryRequestDependent
+  - UserInquiryResponseDependent
+  - UserInquiryRequestSubscriberWithDetermination
+  - UserInquiryRequestDependentWithDetermination
+  - SimplifiedDeterminationRequest
+- spec: openapi/optum-authorization-auth-only-openapi.yml
+  title: Authorization - Auth Only
+  request_examples: 1
+  response_examples: 6
+  named_component_examples: null
+- spec: openapi/optum-edi-enrollment-v1-openapi.yml
+  title: edi-enrollment-v1
+  request_examples: 1
+  response_examples: 6
+  named_component_examples: null
+- spec: openapi/optum-benefit-check-api-openapi.yml
+  title: Benefit Check API
+  request_examples: 1
+  response_examples: 5
+  named_component_examples: null
+- spec: openapi/optum-auth-referral-submission-api-openapi.yml
+  title: Auth Referral Submission API
+  request_examples: 1
+  response_examples: 4
+  named_component_examples: null
+- spec: openapi/optum-claim-actions-api-openapi.yml
+  title: Claim ACTIONS api
+  request_examples: 1
+  response_examples: 4
+  named_component_examples: null
+- spec: openapi/optum-claim-inquiry-api-openapi.yml
+  title: Claim Inquiry API
+  request_examples: 1
+  response_examples: 4
+  named_component_examples: null
+- spec: openapi/optum-document-search-api-openapi.yml
+  title: Document Search API
+  request_examples: 1
+  response_examples: 4
+  named_component_examples: null
+- spec: openapi/optum-real-dental-attachments-api-openapi.yml
+  title: Real Dental Attachments API
+  request_examples: 1
+  response_examples: 4
+  named_component_examples: null
+- spec: openapi/optum-attachment-openapi.yml
+  title: attachment
+  request_examples: 0
+  response_examples: 4
+  named_component_examples: null
+- spec: openapi/optum-claim-pre-check-api-openapi.yml
+  title: Claim Pre Check  API
+  request_examples: 0
+  response_examples: 4
+  named_component_examples: null
+- spec: openapi/optum-optum-real-pre-service-eligibility-api-openapi.yml
+  title: Optum Real Pre-Service Eligibility API
+  request_examples: 0
+  response_examples: 4
+  named_component_examples: null
+- spec: openapi/optum-real-dental-claim-submission-api-openapi.yml
+  title: Real Dental Claim Submission API
+  request_examples: 1
+  response_examples: 3
+  named_component_examples: null
+- spec: openapi/optum-real-dental-claim-status-api-openapi.yml
+  title: Real Dental Claim Status API
+  request_examples: 1
+  response_examples: 2
+  named_component_examples: null
+- spec: openapi/optum-medical-network-claim-status-v2-openapi.yml
+  title: Medical Network Claim Status V2
+  request_examples: 1
+  response_examples: 0
+  named_component_examples: null
+- spec: openapi/optum-real-dental-pre-care-eligibility-api-openapi.yml
+  title: Real Dental Pre-Care Eligibility API
+  request_examples: 1
+  response_examples: 0
+  named_component_examples: null
+- spec: openapi/optum-enhanced-eligibility-api-openapi.yml
+  title: Enhanced Eligibility API
+  request_examples: 0
+  response_examples: 0
+  named_component_examples:
+  - EligibilityRequestMinimal
+  - EligibilityRequestExpanded
+  - CoverageDiscoveryRequest
+  - RTEEligibilityRequestCoverageDiscoveryCandidate
+  - RTEEligibilityRequestHMOCandidate
+  - RTEEligibilityRequestX12CoverageDiscoveryCandidate
+  - RTEEligibilityRequestX12HMOCandidate
+  - RTEEligibilityResponsePatientUnknown
+  - RTEEligibilityResponseIneligible
+  - RTEEligibilityResponseHMO
+  - CoverageDiscoveryRequestRequestOnly
+  - CoverageDiscoveryRequestHMO

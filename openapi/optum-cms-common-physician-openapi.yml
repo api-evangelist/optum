@@ -1,0 +1,4082 @@
+openapi: 3.0.1
+info:
+  title: CMS Common Physician
+  description: MicroService that contains CMS related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/cmscommonms
+paths:
+  /api/cms/physician/qpp/:
+    post:
+      tags:
+      - QPP MIPS APIs
+      summary: Fetches the data for the quality performance category measures look-up
+      operationId: getTableData
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these values (measureId,-measureId,collectionType,-collectionType,specialtyMeasure,-specialtyMeasure,measureType,-measureType,highPriority,-highPriority)
+          are allowed.The default is code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - measureId
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        description: QPP MIPS Search Request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QPPMipsValue'
+            examples:
+              QPP MIPS Search Request:
+                description: QPP MIPS Search Request
+                value:
+                  code: ''
+                  measureId: ''
+                  collectionType: ''
+                  specialtyMeasure: ''
+                  measureType: ''
+                  highPriority: ''
+        required: true
+      responses:
+        '200':
+          description: 'POST-for-GET: Fetch QPP data '
+          content:
+            application/json:
+              example:
+                content:
+                - measureId: '1'
+                  docId: '599161'
+                  description: Percentage of patients 18-75 years of age with diabetes who had hemoglobin
+                    A1c > 9.0% during the measurement period.
+                  collectionType: Claims
+                  specialtyMeasure: General Practice/Family Medicine
+                  measureType: Intermediate Outcome
+                  highPriority: 'Yes'
+                totalCount: 1
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/qpp/1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/qpp/
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/common/transmittal/:
+    post:
+      tags:
+      - CMS Transmittal APIs
+      summary: Fetches the data for CMS Transmittal
+      operationId: getCMSTransmittal
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these values(publicationType,-publicationType,publicationSubject,-publicationSubject,transmittalNumber,-transmittalNumber,changeRequest,-changeRequest,postDate,-postDate,effectiveDate,-effectiveDate,docImpDate,-docImpDate,rescinded,-rescinded,replacedBy,-replacedBy,relatedDocName,-relatedDocName,retroactiveFlag,-retroactiveFlag,healthCareTypes,-healthCareTypes,specialities,-specialities
+          ) are allowed.The default is -effectiveDate
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CMSTransmittal'
+      responses:
+        '200':
+          description: 'POST-for-GET: Fetch CMS Transmittal '
+          content:
+            application/json:
+              example:
+                content:
+                - docId: 615315
+                  documentSourceId: 4
+                  publicationType: Pub 100-04 Medicare Claims Processing
+                  publicationSubject: Annual Updates to the Prior Authorization/Pre-Claim Review Federal
+                    Holiday Schedule Tables for Generating Reports
+                  transmittalNumber: R12026CP
+                  changeRequest: '13151'
+                  postDate: '2023-05-11 00:00:00'
+                  effectiveDate: '2024-01-01 00:00:00'
+                  docImpDate: '2023-10-02 00:00:00'
+                  healthCareTypes: ALL TYPES
+                  specialities: ALL PROVIDERS
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/transmittalssss
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/transmittal
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/common/policy-lookup/:
+    post:
+      tags:
+      - Policy Lookup APIs
+      summary: Fetches all the policies of a given policy type and given code and/or term
+      operationId: searchPolicyLookup
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these (contractorType,-contractorType,serviceAreas,-serviceAreas) are allowed
+          values, default is -contractorType
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - contractorType
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicySearchRequest'
+      responses:
+        '200':
+          description: 'POST-for-GET - Search Policy Lookup '
+          content:
+            application/json:
+              example:
+                content:
+                - icpContractorId: 176
+                  icpPolicyId: 535110
+                  determinationNum: A59355
+                  contractorType: MA
+                  contractorName: CGS Administrators, LLC
+                  policyType: LCD
+                  cms: A59355
+                  policyTitle: 'Response to Comments: Positron Emission Tomography (PET) for Inflammation
+                    and Infection'
+                  effectiveDate: '2023-06-29'
+                  url: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=59355&ver=6&bc=0
+                  serviceAreas: KY
+                  contractorNum: '15101'
+                  hasArticles: '0'
+                  displayName: 'Response to Comments: Positron Emission Tomography (PET) for Inflammation
+                    and Infection'
+                  scrubbedTitle: 'Response to Comments: Positron Emission Tomography (PET) for Inflammation
+                    and Infection'
+                  contractorServiceAreas: 15101 - CGS Administrators, LLC (KY)
+                  contractorTypeDisplayName: Part A - FI
+                - icpContractorId: 177
+                  icpPolicyId: 535111
+                  determinationNum: A59355
+                  contractorType: MA
+                  contractorName: CGS Administrators, LLC
+                  policyType: LCD
+                  cms: A59355
+                  policyTitle: 'Response to Comments: Positron Emission Tomography (PET) for Inflammation
+                    and Infection'
+                  effectiveDate: '2023-06-29'
+                  url: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=59355&ver=6&bc=0
+                  serviceAreas: OH
+                  contractorNum: '15201'
+                  hasArticles: '0'
+                  displayName: 'Response to Comments: Positron Emission Tomography (PET) for Inflammation
+                    and Infection'
+                  scrubbedTitle: 'Response to Comments: Positron Emission Tomography (PET) for Inflammation
+                    and Infection'
+                  contractorServiceAreas: 15201 - CGS Administrators, LLC (OH)
+                  contractorTypeDisplayName: Part A - FI
+                totalCount: 2
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/policy-lookuppp
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/policy-lookup
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /app/cms/common/policy-lookup/{policy-id}/related-articles:
+    get:
+      tags:
+      - Policy Lookup APIs
+      summary: Fetches LCD related articles of a given LCD policy id
+      operationId: fetchRelatedLCDPolicyByPolicyById
+      parameters:
+      - name: policy-id
+        in: path
+        description: Policy Id
+        required: true
+        schema:
+          type: string
+        example: 497873
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PolicyValue'
+      security:
+      - bearerAuth: []
+  /app/cms/common/cci/modifiers/{code}:
+    get:
+      tags:
+      - CCI Edits APIs
+      summary: Fetches modifiers based on given code
+      operationId: fetchRelatedLCDPolicyByPolicyById_1
+      parameters:
+      - name: code
+        in: path
+        description: Code
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplModifiersPopUpValue'
+      security:
+      - bearerAuth: []
+  /app/cms/common/cci/codeValidator:
+    get:
+      tags:
+      - CCI Edits Code Validator API
+      summary: Returns list of valid codes from a string of comma separated codes
+      operationId: fetchValidCodes
+      parameters:
+      - name: codes
+        in: query
+        description: Takes comma separated codes with minimum of 1 code and maximum of 36 codes
+        required: true
+        schema:
+          type: string
+        example: 99213,99214
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: string
+      security:
+      - bearerAuth: []
+  /api/cms/{mueType}/mue:
+    get:
+      tags:
+      - Medically Unlikely Edits(MUEs) APIs
+      summary: Fetches the Medically Unlikely Edits table data for MUE Physician OR Facility
+      operationId: getMueTableData
+      parameters:
+      - name: mueType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - physician
+          - facility
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these values (code, -code )are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch MUE list
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0001A
+                  unit: '1'
+                  mueAdjIndicator: '2 Date of Service Edit: Policy'
+                  mueRationale: Code Descriptor / CPT Instruction
+                - code: 0001U
+                  unit: '1'
+                  mueAdjIndicator: '2 Date of Service Edit: Policy'
+                  mueRationale: Code Descriptor / CPT Instruction
+                totalCount: 2
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - sort parameter value should be from list of [code]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-12-2T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must
+                  not be less than one'
+                path: /cmscommonms/api/cms/mue
+      security:
+      - bearerAuth: []
+  /api/cms/{iomType}/iom-policy/{codeType}/{code}:
+    get:
+      tags:
+      - CMS IOM's Policy APIs
+      summary: 'Fetches CMS IOM policies '
+      operationId: getCMSIOMSPolicies
+      parameters:
+      - name: codeType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: iomType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - physician
+          - facility
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 90740
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: 'Fetches CMS IOM policies '
+          content:
+            application/json:
+              example:
+                content:
+                - policyId: '11546543'
+                  policyName: 100-04,18,10.2.1
+                  policyText: Healthcare Common Procedure Coding System (HCPCS) and Diagnosis Codes<br>Vaccines
+                    and their administration are reported using separate codes. The following codes are
+                    for reporting the vaccines only.
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-10-20T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/iom-policy/invalid
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-10-20T06:37:03.741+00:00'
+                path: /cmscommonms/api/cms/iom-policy
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/{cmsType}/policy-list/ncd/{contractorPart}/{codetype}/{code}:
+    get:
+      tags:
+      - Medicare Coverage Policy for part A and Part B APIs
+      summary: Fetches NCD Policies for particular Contractor part and Code (procedural or diagnosis)
+      operationId: getNCDPolicyList
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - hcpcs
+          - i9v3
+          - cpt
+          - i9v1
+          - i10_pcs
+          - i10_cm
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: A4575
+      - name: cmsType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - physician
+          - facility
+      - name: contractorPart
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - DME
+          - B
+          - A
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 50
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches NCD policies for particular contractor part and code (procedural or diagnosis)
+          content:
+            application/json:
+              example:
+                content:
+                - icpContractorId: 0
+                  icpPolicyId: 274765
+                  determinationNum: 240.2.1
+                  policyType: NCD
+                  cms: 240.2.1
+                  policyTitle: NCD for Home Use of Oxygen in Approved Clinical Trials (240.2.1)
+                  effectiveDate: '2006-03-20'
+                  url: http://www.cms.gov/medicare-coverage-database/details/ncd-details.aspx?NCDId=312&ncdver=1&DocID=240.2.1&bc=gAAAAAgAAAAAAA%3d%3d&
+                  hasArticles: '0'
+                  displayName: 'Home Use of Oxygen in Approved Clinical Trials '
+                totalCount: 1
+        '400':
+          description: 'Bad request: some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '992133' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/policy-list/NCD/C/HCPCS/A4575
+      security:
+      - bearerAuth: []
+  /api/cms/{cmsType}/policy-list/lcd/{contractorPart}/{codetype}/{code}:
+    get:
+      tags:
+      - Medicare Coverage Policy for part A and Part B APIs
+      summary: Fetches LCD policies for particular contractor Id  , contractor part and code (procedural
+        or diagnosis)
+      operationId: getLCDPolicyList
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - hcpcs
+          - i9v3
+          - cpt
+          - i9v1
+          - i10_pcs
+          - i10_cm
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: A4575
+      - name: cmsType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - physician
+          - facility
+      - name: contractorPart
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - A
+          - B
+          - DME
+      - name: sort
+        in: query
+        description: Any of these (serviceAreas,-serviceAreas) are allowed values, default is serviceAreas
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - serviceAreas
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 50
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: contractor-id
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+        example: 128
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches LCD policies for particular contractor id , contractor part and code (procedural
+            or diagnosis)
+          content:
+            application/json:
+              example:
+                content:
+                - icpContractorId: 128
+                  icpPolicyId: 528715
+                  determinationNum: L37873
+                  contractorType: MA
+                  contractorName: Palmetto GBA
+                  policyType: LCD
+                  cms: L37873
+                  policyTitle: Topical Oxygen Therapy
+                  effectiveDate: '2019-05-06'
+                  url: https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=37873&ver=14&bc=0
+                  serviceAreas: SC
+                  contractorNum: '11201'
+                  hasArticles: '2'
+                totalCount: 1
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/facility/policy-list/LCD/C/HCPCS/A4575?contractor_id=128
+      security:
+      - bearerAuth: []
+  /api/cms/physician/{code}/physician-time:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches Physician time for particular CPT or HCPCS code
+      operationId: getPhysicianTime
+      parameters:
+      - name: code
+        in: path
+        description: CPT or HCPCS code
+        required: true
+        schema:
+          type: string
+        example: 14000
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch Physician Time
+          content:
+            application/json:
+              example:
+                physicianTime: 348
+                unit: minutes
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/14000/physician-time1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/14000/physician-time
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/qpp/{doc-id}/mips-download:
+    get:
+      tags:
+      - QPP MIPS APIs
+      summary: 'Generates the data for the quality performance category '
+      operationId: qppMipsDocument
+      parameters:
+      - name: doc-id
+        in: path
+        description: MIPS Measure ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+        example: 599161
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches the file content in the form of byte array, response headers and media
+            type as fileType
+          content:
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example: " access-control-expose-headers: Content-Disposition \n cache-control: no-cache,no-store,max-age=0,must-revalidate\
+                \ \n connection: keep-alive \n content-disposition: attachment; filename=R12138OTN.pdf\
+                \ \n content-length: 178521 \n content-type: application/pdf \n date: Fri,28 Jul 2023\
+                \ 12:03:02 GMT \n expires: 0 \n pragma: no-cache \n vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers\
+                \ \n x-content-type-options: nosniff \n x-frame-options: DENY \n x-xss-protection: 0 \n"
+        '404':
+          description: 'Not found: Sub terms not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/qpp/{doc-id}mips-download
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                path: /cmscommonms/api/cms/physician/qpp/{doc-id}mips-download
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/cms/physician/qpp/specialty-measures:
+    get:
+      tags:
+      - QPP MIPS APIs
+      summary: Generates the data for the quality performance category speciality-measures
+      operationId: getSpecialtyMeasures
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch specialty measures
+          content:
+            application/json:
+              example:
+              - Allergy/Immunology
+              - Anesthesiology
+              - Cardiology
+              - Dentistry
+              - Dermatology
+              - Diagnostic Radiology
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/qpp/specialty-measures1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/qpp/specialty-measures
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/qpp/measure-types:
+    get:
+      tags:
+      - QPP MIPS APIs
+      summary: Generates the data for the quality performance category for measure types
+      operationId: getMeasureTypes
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch Specialty Measures
+          content:
+            application/json:
+              example:
+              - Efficiency
+              - Intermediate Outcome
+              - Outcome
+              - Patient Engagement/Experience
+              - Patient-Reported Outcome-Based Performance Measure
+              - Process
+              - Structure
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/qpp/measure-types1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/qpp/measure-types
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/mpfs/status-codes:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS Status codes
+      operationId: getStatusCodes
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches MPFS status codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: A
+                  description: Active Code
+                  definition: These codes are paid separately under the physician fee schedule, if covered.  There
+                    will be RVUs for codes with this status.  The presence of an "A" indicator does not
+                    mean that Medicare has made a national coverage determination regarding the service;
+                    carriers remain responsible for coverage decisions in the absence of a national Medicare
+                    policy.
+                totalCount: 17
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-12-06T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/status-codes1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/status-codes
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/mpfs/payment-indicators/{ruletype}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS payment indicators and its definitions for particular medicare rule type
+      operationId: getPaymentIndicatorList
+      parameters:
+      - name: ruletype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - PCTC
+          - MULT_PROC
+          - ASST_SURG
+          - BILAT_SURG
+          - CO_SURG
+          - PHYS_SUP
+          - TEAM_SURG
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: MPFS payment indicators and its definitions for particular medicare rule type
+          content:
+            application/json:
+              example:
+                content:
+                - paymentIndicator: '0'
+                  definition: Team surgeons are not permitted for this procedure.
+                - paymentIndicator: '1'
+                  definition: Team surgeons may be allowed with supporting documentation to establish
+                    medical necessity.
+                - paymentIndicator: '2'
+                  definition: 'Team surgeons permitted, pay by report. '
+                - paymentIndicator: '9'
+                  definition: Team surgery concept does not apply
+                totalCount: 4
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/payment-indicators/AAA
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/payment-indicators/TEAM_SURG
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/mpfs/payment-indicator-status/{code}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches payment indicator and status information for CPT or HCPCS codes
+      operationId: fetchPaymentIndicatorAndStatusFees
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches payment indicator and status information for CPT or HCPCS codes
+          content:
+            application/json:
+              example: "  {{\n       \"Global\": {\n         \"pctc\": 0,\n         \"multProc\": 0,\n\
+                \         \"bilatSurg\": 0,\n         \"asstSurg\": 0,\n         \"coSurg\": 0,\n    \
+                \     \"teamSurg\": 0,\n         \"status\": \"A\",\n         \"physSup\": \"09\",\n \
+                \        \"modifier\": \" \",\n         \"statusDesc\": \"Active Code.  These codes are\
+                \ paid separately under the physician fee schedule, if covered.  There will be RVUs for\
+                \ codes with this status.  The presence of an \\\"A\\\" indicator does not mean that Medicare\
+                \ has made a national coverage determination regarding the service; carriers remain responsible\
+                \ for coverage decisions in the absence of a national Medicare policy.\",\n         \"\
+                pctcDesc\": \"PC/TC Indicator|Physician service codes: This indicator identifies codes\
+                \ that describe physician services\",\n         \"multProcDesc\": \"Multiple Procedures|No\
+                \ payment adjustment rules apply. If the procedure is reported on the same day as another\
+                \ procedure, the procedure is paid at the lower of the actual charge or the fee schedule\
+                \ amount for the procedure\",\n         \"bilatSurgDesc\": null,\n         \"asstSurgDesc\"\
+                : \"Surgical Assistant|Payment restriction for assistants at surgery applies to this procedure\
+                \ unless supporting documentation is submitted to establish medical necessity.\",\n  \
+                \       \"teamSurgDesc\": \"Team Surgery|Team surgeons are not permitted for this procedure.\"\
+                ,\n         \"physSurgDesc\": \"Physician Supervision of Diagnostic Procedures|Concept\
+                \ does not apply\",\n         \"coSurgDesc\": \"Co-surgeons|Co-surgeons are not permitted\
+                \ for this procedure.\"\n       }\n     }\n  }\n"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/payment-indicator-status1/99213
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/payment-indicator-status/99213
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/mpfs/national-physician-relative-file:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS file content particular medicare rule type
+      operationId: getRelativeFile
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches the file content in the form of byte array, response headers and media
+            type as fileType
+          content:
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example: " access-control-expose-headers: Content-Disposition \n cache-control: no-cache,no-store,max-age=0,must-revalidate\
+                \ \n connection: keep-alive \n content-disposition: attachment; filename=RVU3C.pdf \n\
+                \ content-length: 178521 \n content-type: application/pdf \n date: Fri,28 Jul 2023 12:03:02\
+                \ GMT \n expires: 0 \n pragma: no-cache \n vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers\
+                \ \n x-content-type-options: nosniff \n x-frame-options: DENY \n x-xss-protection: 0 \n"
+        '404':
+          description: 'Not found: Sub terms not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/mpfs/national-physician-relative-file
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                path: /cmscommonms/api/cms/mpfs/national-physician-relative-file
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/cms/physician/mpfs/global-days/{code}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS global days for CPT and HCPCS code
+      operationId: getGlobalDays
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches MPFS global days for CPT and HCPCS code
+          content:
+            application/json:
+              example:
+                preop: 0
+                intraop: 0
+                postop: 0
+                globalDays: '000'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - 'code : Invalid CPT or HCPCS value. Length should be 5'
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/global-day/99213
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2024-01-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/global-days/99213
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/mpfs/fee-schedule/{codetype}/{code}/{carrier}/{locality}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS fee schedule
+      operationId: fetchMedicareFees
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - hcpcs
+          - cpt
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: carrier
+        in: path
+        description: Carrier value
+        required: true
+        schema:
+          type: string
+        example: '00000'
+      - name: locality
+        in: path
+        description: Locality value
+        required: true
+        schema:
+          type: string
+        example: '00'
+      - name: cf
+        in: query
+        required: false
+        schema:
+          type: number
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches MPFS fee schedule for cpt codes
+          content:
+            application/json:
+              example:
+                medicareFeeValues:
+                  RVU_FACILITY:
+                    TC_FEE:
+                    - fee: 0
+                      feeLabel: WORK RVU
+                    - fee: 0.7463
+                      feeLabel: PE RVU
+                    - fee: 0.00748
+                      feeLabel: Malpractice RVU
+                    - fee: 0.75378
+                      feeLabel: Total RVU
+                    PROF_FEE:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.07024
+                      feeLabel: PE RVU
+                    - fee: 0.00748
+                      feeLabel: Malpractice RVU
+                    - fee: 0.30772
+                      feeLabel: Total RVU
+                    NATIONAL:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.93
+                      feeLabel: PE RVU
+                    - fee: 0.02
+                      feeLabel: Malpractice RVU
+                    - fee: 1.18
+                      feeLabel: Total RVU
+                    LOCALITY:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.81654
+                      feeLabel: PE RVU
+                    - fee: 0.01496
+                      feeLabel: Malpractice RVU
+                    - fee: 1.0615
+                      feeLabel: Total RVU
+                  RVU_OPPS:
+                    TC_FEE:
+                    - fee: 0
+                      feeLabel: WORK RVU
+                    - fee: 2.73936
+                      feeLabel: PE RVU
+                    - fee: 0.02992
+                      feeLabel: Malpractice RVU
+                    - fee: 2.76928
+                      feeLabel: Total RVU
+                    PROF_FEE:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.07024
+                      feeLabel: PE RVU
+                    - fee: 0.00748
+                      feeLabel: Malpractice RVU
+                    - fee: 0.30772
+                      feeLabel: Total RVU
+                    NATIONAL:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 3.2
+                      feeLabel: PE RVU
+                    - fee: 0.05
+                      feeLabel: Malpractice RVU
+                    - fee: 3.48
+                      feeLabel: Total RVU
+                    LOCALITY:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 2.8096
+                      feeLabel: PE RVU
+                    - fee: 0.0374
+                      feeLabel: Malpractice RVU
+                    - fee: 3.077
+                      feeLabel: Total RVU
+                  RVU_NON_FACILITY:
+                    TC_FEE:
+                    - fee: 0
+                      feeLabel: WORK RVU
+                    - fee: 0.7463
+                      feeLabel: PE RVU
+                    - fee: 0.00748
+                      feeLabel: Malpractice RVU
+                    - fee: 0.75378
+                      feeLabel: Total RVU
+                    PROF_FEE:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.07024
+                      feeLabel: PE RVU
+                    - fee: 0.00748
+                      feeLabel: Malpractice RVU
+                    - fee: 0.30772
+                      feeLabel: Total RVU
+                    NATIONAL:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.93
+                      feeLabel: PE RVU
+                    - fee: 0.02
+                      feeLabel: Malpractice RVU
+                    - fee: 1.18
+                      feeLabel: Total RVU
+                    LOCALITY:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.81654
+                      feeLabel: PE RVU
+                    - fee: 0.01496
+                      feeLabel: Malpractice RVU
+                    - fee: 1.0615
+                      feeLabel: Total RVU
+                  TOTAL_FEES:
+                    TC_FEE:
+                    - fee: 25.543493616
+                      feeLabel: Facility
+                    - fee: 25.543493616
+                      feeLabel: Non-Facility
+                    - fee: 93.843145216
+                      feeLabel: OPPS Global
+                    PROF_FEE:
+                    - fee: 10.427769184
+                      feeLabel: Facility
+                    - fee: 10.427769184
+                      feeLabel: Non-Facility
+                    - fee: 10.427769184
+                      feeLabel: OPPS Global
+                    NATIONAL:
+                    - fee: 39.986896
+                      feeLabel: Facility
+                    - fee: 39.986896
+                      feeLabel: Non-Facility
+                    - fee: 117.927456
+                      feeLabel: OPPS Global
+                    LOCALITY:
+                    - fee: 35.9712628
+                      feeLabel: Facility
+                    - fee: 35.9712628
+                      feeLabel: Non-Facility
+                    - fee: 104.2709144
+                      feeLabel: OPPS Global
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/fee-schedule/i9v1/A4562/10112/00
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/fee-schedule/cpt/72072/10112/00
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/hcpcs/{code}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS reduction groups applicable for particular code
+      operationId: getHcpcsMedicareReductionGroups
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: A4562
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch Medicare Localities
+          content:
+            application/json:
+              example:
+              - reductionLabel: Sequestration
+                mpfsReductionGroupId: 13
+                nonFacTotalAdjFactor: 98.4
+                facTotalAdjFactor: 98.4
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/i9v1/A4562
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/hcpcs/A4562
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/cpt/{code}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS Reduction Groups applicable for particular code
+      operationId: getCptMedicareReductionGroups
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches MPFS Reduction Groups applicable for cpt code
+          content:
+            application/json:
+              example:
+              - reductionLabel: FX Modifier Reduction
+                mpfsReductionGroupId: 21
+                nonFacTotalAdjFactor: 80
+                facTotalAdjFactor: 80
+              - reductionLabel: FY Modifier Reduction
+                mpfsReductionGroupId: 22
+                nonFacTotalAdjFactor: 93
+                facTotalAdjFactor: 93
+              - reductionLabel: Sequestration
+                mpfsReductionGroupId: 13
+                nonFacTotalAdjFactor: 98.4
+                facTotalAdjFactor: 98.4
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/i9v1/A4562
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/hcpcs/A4562
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/cci/{market-type}/print:
+    get:
+      tags:
+      - CCI Edits APIs
+      summary: Physician - Prints CCI Edits for multi code
+      operationId: printCCIResults
+      parameters:
+      - name: market-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - non-facility
+          - facility
+      - name: codes
+        in: query
+        description: Takes comma separated codes with minimum of 2 codes and maximum of 36 codes
+        required: true
+        schema:
+          type: string
+        example: 99213,99214
+      - name: viewType
+        in: query
+        description: Any of these view types (Conflict or Code) are allowed Types, default is Conflict
+          Type
+        required: false
+        schema:
+          type: string
+          enum:
+          - Conflict
+          - Code
+        example: Conflict
+      - name: isMpfs
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+        example: true
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: byte
+      security:
+      - bearerAuth: []
+  /api/cms/physician/cci/{market-type}/conflict-view:
+    get:
+      tags:
+      - CCI Edits APIs
+      summary: Physician - Fecth CCI edits for multi code conflict view
+      operationId: getMultiCodeConflictView
+      parameters:
+      - name: market-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - non-facility
+          - facility
+      - name: codes
+        in: query
+        description: Takes comma separated codes with minimum of 2 codes and maximum of 50 codes
+        required: true
+        schema:
+          type: string
+        example: 99213,99214
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch CCI edits for codeView or conflict view
+          content:
+            application/json:
+              example:
+              - - code: '99214'
+                  description: Office or other outpatient visit for the evaluation and management of an
+                    established patient, which requires a medically appropriate history and/or examination
+                    and moderate level of medical decision making. When using total time on the date of
+                    the encount
+                  reason: Misuse of column two code with column one code
+                  modifier: Allowed
+                  workRVU: 1.92
+                  nfPERVU: 1.79
+                  nfTotalRVU: 3.85
+                  malpracticeRVU: 0.14
+                  nfTotalFee: 126.07
+                  feeType: Non Facility
+                  priSecText: Primary
+                - code: '99213'
+                  description: Office or other outpatient visit for the evaluation and management of an
+                    established patient, which requires a medically appropriate history and/or examination
+                    and low level of medical decision making. When using total time on the date of the
+                    encounter fo
+                  reason: Misuse of column two code with column one code
+                  modifier: Allowed
+                  workRVU: 1.3
+                  nfPERVU: 1.33
+                  nfTotalRVU: 2.73
+                  malpracticeRVU: 0.1
+                  nfTotalFee: 89.39
+                  feeType: Non Facility
+                  priSecText: Secondary
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/cciii
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/cci
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/cci/{market-type}/code-view:
+    get:
+      tags:
+      - CCI Edits APIs
+      summary: Physician - Fecth CCI Edits for multi code Code View
+      operationId: getMultiCodeCodeView
+      parameters:
+      - name: market-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - non-facility
+          - facility
+      - name: codes
+        in: query
+        description: Takes comma separated codes with minimum of 2 codes and maximum of 36 codes
+        required: true
+        schema:
+          type: string
+        example: 99213,99214
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fecth CCI Edits for CodeView
+          content:
+            application/json:
+              example:
+              - code: '99213'
+                cciEditsList:
+                - - code: '13152'
+                    description: Repair, complex, eyelids, nose, ears and/or lips; 2.6 cm to 7.5 cm
+                    reason: CPT Manual or CMS manual coding instructions
+                    modifier: '1'
+                    workRVU: 5.34
+                    faPERVU: 3.95
+                    faTotalRVU: 9.94
+                    malpracticeRVU: 0.65
+                    faTotalFee: 336.84
+                    feeType: Facility
+                    priSecText: Primary
+                  - code: '99213'
+                    description: Office or other outpatient visit for the evaluation and management of
+                      an established patient, which requires a medically appropriate history and/or examination
+                      and low level of medical decision making. When using time for code selection, 20-29
+                      minutes of
+                    reason: CPT Manual or CMS manual coding instructions
+                    modifier: '1'
+                    workRVU: 1.3
+                    faPERVU: 0.55
+                    faTotalRVU: 1.95
+                    malpracticeRVU: 0.1
+                    faTotalFee: 66.08
+                    feeType: Facility
+                    priSecText: Secondary
+                - - code: '99215'
+                    description: Office or other outpatient visit for the evaluation and management of
+                      an established patient, which requires a medically appropriate history and/or examination
+                      and high level of medical decision making. When using time for code selection, 40-54
+                      minutes of
+                    reason: Misuse of column two code with column one code
+                    modifier: '1'
+                    workRVU: 2.8
+                    faPERVU: 1.23
+                    faTotalRVU: 4.23
+                    malpracticeRVU: 0.2
+                    faTotalFee: 143.34
+                    feeType: Facility
+                    priSecText: Primary
+                  - code: '99213'
+                    description: Office or other outpatient visit for the evaluation and management of
+                      an established patient, which requires a medically appropriate history and/or examination
+                      and low level of medical decision making. When using time for code selection, 20-29
+                      minutes of
+                    reason: Misuse of column two code with column one code
+                    modifier: '1'
+                    workRVU: 1.3
+                    faPERVU: 0.55
+                    faTotalRVU: 1.95
+                    malpracticeRVU: 0.1
+                    faTotalFee: 66.08
+                    feeType: Facility
+                    priSecText: Secondary
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/cciii
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/cci
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/cci/{code}/{column-type}:
+    get:
+      tags:
+      - CCI Edits APIs
+      summary: Physician - Fetch CCI Edits for single code
+      operationId: getSingleCodeView
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: column-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - primary
+          - secondary
+      - name: sort
+        in: query
+        description: Any of these (code,-code,reason,-reason,modifier,-modifier) are allowed values, default
+          is -code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch CCI edits for single code
+          content:
+            application/json:
+              example:
+                content:
+                - code: '20560'
+                  description: Needle insertion(s) without injection(s); 1 or 2 muscle(s)
+                  reason: CPT Manual or CMS manual coding instructions
+                  modifier: Allowed
+                  workRVU: 0.32
+                  nfPERVU: 0.44
+                  faPERVU: 0.11
+                  nfTotalRVU: 0.77
+                  faTotalRVU: 0.44
+                  malpracticeRVU: 0.01
+                  nfTotalFee: 26.093144
+                  faTotalFee: 14.910368
+                - code: '20561'
+                  description: Needle insertion(s) without injection(s); 3 or more muscles
+                  reason: CPT Manual or CMS manual coding instructions
+                  modifier: Allowed
+                  workRVU: 0.48
+                  nfPERVU: 0.62
+                  faPERVU: 0.16
+                  nfTotalRVU: 1.12
+                  faTotalRVU: 0.66
+                  malpracticeRVU: 0.02
+                  nfTotalFee: 37.953664
+                  faTotalFee: 22.365552
+                totalCount: 2
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/cciii
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/cci
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/common/transmittal/{doc-id}/{doc-source-id}/transmittal-download:
+    get:
+      tags:
+      - CMS Transmittal APIs
+      summary: Fetches the file content for CMS Transmittal
+      operationId: getCMSTransmittalDocument
+      parameters:
+      - name: doc-id
+        in: path
+        description: Transmittal Document ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+        example: 619114
+      - name: doc-source-id
+        in: path
+        description: 'Transmittal Document Source Id '
+        required: true
+        schema:
+          type: integer
+          format: int32
+        example: 4
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches The file content in the form of byte array, response headers and media
+            type as FileType
+          content:
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example: " access-control-expose-headers: Content-Disposition \n cache-control: no-cache,no-store,max-age=0,must-revalidate\
+                \ \n connection: keep-alive \n content-disposition: attachment; filename=R12138OTN.pdf\
+                \ \n content-length: 178521 \n content-type: application/pdf \n date: Fri,28 Jul 2023\
+                \ 12:03:02 GMT \n expires: 0 \n pragma: no-cache \n vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers\
+                \ \n x-content-type-options: nosniff \n x-frame-options: DENY \n x-xss-protection: 0 \n"
+        '404':
+          description: 'Not found: Sub terms not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/transmittal/{docId}/{docSourceId}transmittal-download
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                path: /cmscommonms/api/cms/common/transmittal/{docId}/{docSourceId}transmittal-download
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/cms/common/transmittal/{code}:
+    get:
+      tags:
+      - CMS Transmittal APIs
+      summary: Fetches the data for the CMS Transmittal for given CPT ,HCPCS code
+      operationId: getCodeDetailCMSTransmittals
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 13152
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches transmittals for the given CPT or HCPCS code
+          content:
+            application/json:
+              example:
+              - docId: 615607
+                documentSourceId: 4
+                transmittalNumber: R12052CP
+                postDate: '2023-05-18 00:00:00'
+                effectiveDate: '2023-07-01 00:00:00'
+                rescinded: Y
+                replacedBy: R12062CP
+                fileName: R12052CP
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-10-18T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/transmittal/{code}/
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-10-18T07:22:01.017+00:00'
+                path: /cmscommonms/api/cms/common/transmittal/{code}/
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/cms/common/release-date/{id}:
+    get:
+      tags:
+      - Release Dates API
+      summary: Fetches release date for particular Id
+      operationId: getReleaseDate
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch Release Date for particular Id
+          content:
+            application/json:
+              example:
+                releaseDate: '2023-01-01 00:00:00'
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                status: 400
+                error: Bad Request
+                message: Bad Request
+                path: /cmscommonms/api/cms/common/release-date/AMB1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/release-date/AMB
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/common/policy-lookup/{policy-type}/{policy-number}:
+    get:
+      tags:
+      - Policy Lookup APIs
+      summary: Fetches all the policies of a given policy type and policy id
+      operationId: fetchPolicyByIdValue
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these (contractorType,-contractorType,serviceAreas,-serviceAreas) are allowed
+          values, default is -contractorType
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - contractorType
+      - name: policy-type
+        in: path
+        description: Policy Number
+        required: true
+        schema:
+          type: string
+          enum:
+          - NCD_PART_A
+          - NCD_PART_B
+          - LCD_DME
+          - NCD_DME
+          - LCD_PART_A
+          - LCD_PART_B
+          - NCD_LAB
+        example: LCD
+      - name: policy-number
+        in: path
+        description: Policy Number
+        required: true
+        schema:
+          type: string
+        example: L39314
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Search Policies by policy Id
+          content:
+            application/json:
+              example:
+                content:
+                - icpContractorId: 222
+                  icpPolicyId: 532655
+                  determinationNum: L39314
+                  contractorType: MB
+                  contractorName: National Government Services, Inc.
+                  policyType: LCD
+                  cms: L39314
+                  policyTitle: Off-Label Use of Intravenous Immune Globulin (IVIG)
+                  effectiveDate: '2022-11-01'
+                  url: https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=39314&ver=7&bc=0
+                  serviceAreas: IL
+                  contractorNum: '06102'
+                  hasArticles: '2'
+                  displayName: Off-Label Use of Intravenous Immune Globulin (IVIG)
+                  scrubbedTitle: Off-Label Use of Intravenous Immune Globulin (IVIG)
+                  contractorServiceAreas: 06102 - National Government Services, Inc. (IL)
+                  contractorTypeDisplayName: Part B
+                - icpContractorId: 223
+                  icpPolicyId: 532656
+                  determinationNum: L39314
+                  contractorType: MB
+                  contractorName: National Government Services, Inc.
+                  policyType: LCD
+                  cms: L39314
+                  policyTitle: Off-Label Use of Intravenous Immune Globulin (IVIG)
+                  effectiveDate: '2022-11-01'
+                  url: https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=39314&ver=7&bc=0
+                  serviceAreas: MN
+                  contractorNum: '06202'
+                  hasArticles: '2'
+                  displayName: Off-Label Use of Intravenous Immune Globulin (IVIG)
+                  scrubbedTitle: Off-Label Use of Intravenous Immune Globulin (IVIG)
+                  contractorServiceAreas: 06202 - National Government Services, Inc. (MN)
+                  contractorTypeDisplayName: Part B
+                totalCount: 22
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/policy-lookupp/L39313
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/policy-lookup
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/common/policy-list/ncd/{contractorPart}:
+    get:
+      tags:
+      - Medicare Coverage Policy for part A and Part B APIs
+      summary: Fetches NCD Policies for particular Contractor part
+      operationId: getMedicareNCDPolicyList
+      parameters:
+      - name: contractorPart
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - DME
+          - B
+          - A
+          - LAB
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 50
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches NCD policies for particular contractor part
+          content:
+            application/json:
+              example:
+                content:
+                - icpContractorId: 0
+                  icpPolicyId: 274765
+                  determinationNum: 240.2.1
+                  policyType: NCD
+                  cms: 240.2.1
+                  policyTitle: NCD for Home Use of Oxygen in Approved Clinical Trials (240.2.1)
+                  effectiveDate: '2006-03-20'
+                  url: http://www.cms.gov/medicare-coverage-database/details/ncd-details.aspx?NCDId=312&ncdver=1&DocID=240.2.1&bc=gAAAAAgAAAAAAA%3d%3d&
+                  hasArticles: '0'
+                  displayName: 'Home Use of Oxygen in Approved Clinical Trials '
+                totalCount: 1
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '992133' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/policy-list/NCD/C/A4575
+      security:
+      - bearerAuth: []
+  /api/cms/common/policy-list/lcd/{contractorPart}:
+    get:
+      tags:
+      - Medicare Coverage Policy for part A and Part B APIs
+      summary: Fetches LCD policies for particular contractor id  , contractor part
+      operationId: getMedicareLCDPolicyList
+      parameters:
+      - name: contractorPart
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - A
+          - B
+          - DME
+      - name: sort
+        in: query
+        description: Any of these (serviceAreas,-serviceAreas) are allowed values, default is serviceAreas
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - serviceAreas
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 50
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: contractor-id
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+        example: 128
+      - name: is-retired-policies
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches LCD policies for particular contractor id , contractor part
+          content:
+            application/json:
+              example:
+                content:
+                - icpContractorId: 128
+                  icpPolicyId: 528715
+                  determinationNum: L37873
+                  contractorType: MA
+                  contractorName: Palmetto GBA
+                  policyType: LCD
+                  cms: L37873
+                  policyTitle: Topical Oxygen Therapy
+                  effectiveDate: '2019-05-06'
+                  url: https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=37873&ver=14&bc=0
+                  serviceAreas: SC
+                  contractorNum: '11201'
+                  hasArticles: '2'
+                totalCount: 1
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/facility/policy-list/LCD/C?contractor_id=128
+      security:
+      - bearerAuth: []
+  /api/cms/common/noc/pricing-list:
+    get:
+      tags:
+      - Not Otherwise Classified (NOC) Drug Pricing APIs
+      summary: Fetches NOC pricing list
+      operationId: getNocDrugPriceList
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these (code,-code,ndc,-ndc,genericName,-genericName,dosage,-dosage,pay,-pay,notes,-notes)
+          are allowed values, default is +code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch NOC pricing list
+          content:
+            application/json:
+              example:
+                content:
+                - code: J3410
+                  ndc: '00641602110'
+                  genericName: Famotidine
+                  dosage: 10 MG
+                  pay: '.417'
+                  notes: null
+                - code: J3490
+                  ndc: '00003256016'
+                  genericName: Aztreonam
+                  dosage: 500 MG
+                  pay: '14.775'
+                  notes: null
+                totalCount: 145
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/noc/pricing-list1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/noc/pricing-list
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/common/medicare-contractors:
+    get:
+      tags:
+      - Policy Lookup APIs
+      summary: Fetches medicare contractors list for a given contractor part.
+      operationId: fetchMedicareContractors
+      parameters:
+      - name: contractor-part
+        in: query
+        description: Any of these contractor parts (A or B or DME) are allowed, default is A.
+        required: false
+        schema:
+          type: string
+          enum:
+          - A
+          - B
+          - DME
+        example: A
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContractorValue'
+      security:
+      - bearerAuth: []
+  /api/cms/common/hcc/{hccType}/{hccCode}/diagnosis-codes:
+    get:
+      tags:
+      - CMS HCC APIs
+      summary: Fetches diagnosis codes on selected hcc type and hcc code
+      operationId: getDiagnosisCodes
+      parameters:
+      - name: hccType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - CMS_HCC
+          - CMS_HCC_ESRD
+          - RX_HCC_V04
+          - HHS_HCC
+      - name: hccCode
+        in: path
+        description: HCC Types
+        required: true
+        schema:
+          type: string
+        example: HCC1
+      - name: sort
+        in: query
+        description: Any of these (diagnosisCode,-diagnosisCode) are allowed values, default is diagnosisCode
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - diagnosisCode
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: 'Fetches diagnosis codes for the given hcc code '
+          content:
+            application/json:
+              example:
+              - diagnosisCode: B20
+                diagnosisCodeDesc: Human immunodeficiency virus [HIV] disease
+              - diagnosisCode: B97.35
+                diagnosisCodeDesc: Human immunodeficiency virus, type 2 [HIV 2] as the cause of diseases
+                  classified elsewhere
+              - diagnosisCode: Z21
+                diagnosisCodeDesc: Asymptomatic human immunodeficiency virus [HIV] infection status
+        '400':
+          description: Bad Request - some parameters were invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - sort parameter value should be from list of [diagnosisCode]
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/hcc/{hccType}/{hccCode}/hcc-diagnosis-
+      security:
+      - bearerAuth: []
+  /api/cms/common/hcc/{hccType}/codes:
+    get:
+      tags:
+      - CMS HCC APIs
+      summary: 'Fetches hcc type specific codes '
+      operationId: getHCCCodes
+      parameters:
+      - name: hccType
+        in: path
+        description: Fetches HCC codes on selected hcc type
+        required: true
+        schema:
+          type: string
+          enum:
+          - CMS_HCC
+          - CMS_HCC_ESRD
+          - RX_HCC_V04
+          - HHS_HCC
+      - name: sort
+        in: query
+        description: Any of these (hccCode,-hccCode) are allowed values, default is hccCode
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - hccCode
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches hcc codes from the selected hcc type
+          content:
+            application/json:
+              example: "[{\n      \"hccCode\": \"HCC1\",\n        \"hccCodeDesc\": \"HIV/AIDS\"\n    \
+                \  },\n      {\n        \"hccCode\": \"HCC2\",\n        \"hccCodeDesc\": \"Septicemia,\
+                \ Sepsis, Systemic Inflammatory Response Syndrome/Shock\"\n      },\n      {\n       \
+                \ \"hccCode\": \"HCC6\",\n        \"hccCodeDesc\": \"Opportunistic Infections\"\n    \
+                \  },]\n"
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - sort parameter value should be from list of [hccCode]
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-08-04T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/hcc/{hccType}/cod
+      security:
+      - bearerAuth: []
+  /api/cms/common/hcc/{codetype}/{code}/code:
+    get:
+      tags:
+      - CMS HCC APIs
+      summary: Fetches hcc codes for the given diagnosis code
+      operationId: getHCCDiagnosisCodes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_cm
+          - i9v1
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: B20
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches hcc codes for the given diagnosis code
+          content:
+            application/json:
+              example:
+                cmsHCC:
+                - hccCode: HCC1
+                  hccCodeDesc: HIV/AIDS
+                cmsHCCESRD:
+                - hccCode: HCC1
+                  hccCodeDesc: HIV/AIDS
+                rxHCC:
+                - hccCode: RXHCC1
+                  hccCodeDesc: HIV/AIDS
+                hhsHCC:
+                - hccCode: HCC1
+                  hccCodeDesc: HIV/AIDS
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '992133' in this web service request is not a valid 'I10_CM' code.
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/hcc/I10_CM/{code}/codes
+      security:
+      - bearerAuth: []
+  /api/cms/common/fee-schedule/{fee-schedule-type}:
+    get:
+      tags:
+      - DME and PEN Fee Schedule APIs
+      summary: Fetches DME or PEN fee schedule for all states
+      operationId: getOutpatientFees
+      parameters:
+      - name: fee-schedule-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - DME
+          - PEN
+      - name: sort
+        in: query
+        description: Any of these (code,-code,modifier,-modifier,modifier2,-modifier2,category,-category,state,-state,nonRuralFee,-nonRuralFee,ruralFee,-ruralFee)
+          are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch DME/PEN fees for all states
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                content:
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: AZ
+                  nonRuralFee: '0.58'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: CA
+                  nonRuralFee: '0.59'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: CO
+                  nonRuralFee: '0.59'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: CT
+                  nonRuralFee: '0.59'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: DC
+                  nonRuralFee: '0.59'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: DE
+                  nonRuralFee: '0.59'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: FL
+                  nonRuralFee: '0.55'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: GA
+                  nonRuralFee: '0.59'
+                  ruralFee: '0.00'
+                totalCount: 2
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-08-14T16:46:24.623+00:00'
+                status: 400
+                error: Bad Request
+                path: /cmscommonms/api/cms/common/fee-schedule/test
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/fee-schedule/DME
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/common/fee-schedule/{fee-schedule-type}/{state}:
+    get:
+      tags:
+      - DME and PEN Fee Schedule APIs
+      summary: Fetches DME OR PEN fee schedule for specific state
+      operationId: getOutpatientFees_1
+      parameters:
+      - name: fee-schedule-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - DME
+          - PEN
+      - name: state
+        in: path
+        description: State
+        required: true
+        schema:
+          type: string
+        example: AL
+      - name: sort
+        in: query
+        description: Any of these (code,-code,modifier,-modifier,modifier2,-modifier2,category,-category,state,-state,nonRuralFee,-nonRuralFee,ruralFee,-ruralFee)
+          are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch DME/PEN Fees for specific state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                content:
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: AL
+                  nonRuralFee: '0.55'
+                  ruralFee: '0.00'
+                - code: A4217
+                  codeDescription: Sterile water/saline, 500 ml
+                  modifier: AU
+                  category: OS
+                  state: AL
+                  nonRuralFee: '3.54'
+                  ruralFee: '0.00'
+                - code: A4217
+                  codeDescription: Sterile water/saline, 500 ml
+                  category: SU
+                  state: AL
+                  nonRuralFee: '3.54'
+                  ruralFee: '0.00'
+                - code: A4221
+                  codeDescription: Supplies for maintenance of noninsulin drug infusion catheter, per
+                    week (list drugs separately)
+                  category: SU
+                  state: AL
+                  nonRuralFee: '25.41'
+                  ruralFee: '26.97'
+                - code: A4222
+                  codeDescription: Infusion supplies for external drug infusion pump, per cassette or
+                    bag (list drugs separately)
+                  category: SU
+                  state: AL
+                  nonRuralFee: '49.45'
+                  ruralFee: '53.68'
+                - code: A4224
+                  codeDescription: Supplies for maintenance of insulin infusion catheter, per week
+                  category: SU
+                  state: AL
+                  nonRuralFee: '25.41'
+                  ruralFee: '26.97'
+                - code: A4225
+                  codeDescription: Supplies for external insulin infusion pump, syringe type cartridge,
+                    sterile, each
+                  category: SU
+                  state: AL
+                  nonRuralFee: '3.28'
+                  ruralFee: '3.36'
+                - code: A4233
+                  codeDescription: Replacement battery, alkaline (other than J cell), for use with medically
+                    necessary home blood glucose monitor owned by patient, each
+                  modifier: NU
+                  category: IN
+                  state: AL
+                  nonRuralFee: '0.51'
+                  ruralFee: '0.00'
+                - code: A4234
+                  codeDescription: Replacement battery, alkaline, J cell, for use with medically necessary
+                    home blood glucose monitor owned by patient, each
+                  modifier: NU
+                  category: IN
+                  state: AL
+                  nonRuralFee: '2.36'
+                  ruralFee: '0.00'
+                - code: A4235
+                  codeDescription: Replacement battery, lithium, for use with medically necessary home
+                    blood glucose monitor owned by patient, each
+                  modifier: NU
+                  category: IN
+                  state: AL
+                  nonRuralFee: '1.00'
+                  ruralFee: '0.00'
+                - code: A4236
+                  codeDescription: Replacement battery, silver oxide, for use with medically necessary
+                    home blood glucose monitor owned by patient, each
+                  modifier: NU
+                  category: IN
+                  state: AL
+                  nonRuralFee: '1.16'
+                  ruralFee: '0.00'
+                - code: A4238
+                  codeDescription: Supply allowance for adjunctive, nonimplanted continuous glucose monitor
+                    (CGM), includes all supplies and accessories, 1 month supply = 1 unit of service
+                  modifier: KF
+                  category: SU
+                  state: AL
+                  nonRuralFee: '261.95'
+                  ruralFee: '0.00'
+                - code: A4239
+                  codeDescription: Supply allowance for nonadjunctive, nonimplanted continuous glucose
+                    monitor (CGM), includes all supplies and accessories, 1 month supply = 1 unit of service
+                  modifier: KF
+                  category: SU
+                  state: AL
+                  nonRuralFee: '296.72'
+                  ruralFee: '0.00'
+                - code: A4239
+                  codeDescription: Supply allowance for nonadjunctive, nonimplanted continuous glucose
+                    monitor (CGM), includes all supplies and accessories, 1 month supply = 1 unit of service
+                  category: SU
+                  state: AL
+                  nonRuralFee: '255.01'
+                  ruralFee: '0.00'
+                - code: A4253
+                  codeDescription: Blood glucose test or reagent strips for home blood glucose monitor,
+                    per 50 strips
+                  modifier: NU
+                  category: IN
+                  state: AL
+                  nonRuralFee: '8.32'
+                  ruralFee: '0.00'
+                - code: A4255
+                  codeDescription: Platforms for home blood glucose monitor, 50 per box
+                  category: SU
+                  state: AL
+                  nonRuralFee: '5.47'
+                  ruralFee: '0.00'
+                - code: A4256
+                  codeDescription: Normal, low, and high calibrator solution/chips
+                  category: SU
+                  state: AL
+                  nonRuralFee: '3.38'
+                  ruralFee: '0.00'
+                - code: A4257
+                  codeDescription: Replacement lens shield cartridge for use with laser skin piercing
+                    device, each
+                  category: SU
+                  state: AL
+                  nonRuralFee: '16.97'
+                  ruralFee: '0.00'
+                totalCount: 3367
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - Invalid state value. Length should be 2
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/fee-schedule/DME/AL
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/common/fee-schedule/zip-code/{state}:
+    get:
+      tags:
+      - DME and PEN Fee Schedule APIs
+      summary: Fetches rural ZIP codes available for given state
+      operationId: getZipCodes
+      parameters:
+      - name: state
+        in: path
+        description: State
+        required: true
+        schema:
+          type: string
+        example: AL
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch DME fees for all states
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                content:
+                - zipCode: '35010'
+                - zipCode: '35011'
+                - zipCode: '35014'
+                - zipCode: '35016'
+                - zipCode: '35019'
+                totalCount: 5
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - 'getZipCodes.filter: length must be between 2 and 30'
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/fee-schedule/zip-codes/AL
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/common/fee-schedule/states/state-list:
+    get:
+      tags:
+      - State List Fee Schedule APIs
+      summary: Fetches state list for fee schedule
+      operationId: getStateList
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches state list for fee schedule
+          content:
+            application/json:
+              example:
+              - AK
+              - AL
+              - AR
+              - AZ
+              - CA
+              - CO
+              - CT
+              - DC
+              - DE
+              - FL
+              - GA
+              - HI
+              - IA
+              - ID
+              - IL
+              - IN
+              - KS
+              - KY
+              - LA
+              - MA
+              - MD
+              - ME
+              - MI
+              - MN
+              - MO
+              - MS
+              - MT
+              - NC
+              - ND
+              - NE
+              - NH
+              - NJ
+              - NM
+              - NV
+              - NY
+              - OH
+              - OK
+              - OR
+              - PA
+              - PR
+              - RI
+              - SC
+              - SD
+              - TN
+              - TX
+              - UT
+              - VA
+              - VI
+              - VT
+              - WA
+              - WI
+              - WV
+              - WY
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/fee-schedule/states/state-list
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/common/clinical-diagnostic:
+    get:
+      tags:
+      - Clinical Diagnostic Laboratory APIs
+      summary: Fetches the clinical diagnostic laboratory table data
+      operationId: getClinicalDiagnostic
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these values (code, -code, payment, -payment,modifier,-modifier)are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch average sales price
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0021U
+                  codeDescription: Oncology (prostate), detection of 8 autoantibodies (ARF 6, NKX3-1,
+                    5'-UTR-BMI1, CEP 164, 3'-UTR-Ropporin, Desmocollin, AURKAIP-1, CSNK2A2), multiplexed
+                    immunoassay and flow cytometry serum, algorithm reported as risk score
+                  payment: '760.00'
+                - code: 0022U
+                  codeDescription: Targeted genomic sequence analysis panel, non-small cell lung neoplasia,
+                    DNA and RNA analysis, 23 genes, interrogation for sequence variants and rearrangements,
+                    reported as presence or absence of variants and associated therapy(ies) to consider
+                  payment: '0.00'
+                - code: 0023U
+                  codeDescription: Oncology (acute myelogenous leukemia), DNA, genotyping of internal
+                    tandem duplication, p.D835, p.I836, using mononuclear cells, reported as detection
+                    or non-detection of FLT3 mutation and indication for or against the use of midostaurin
+                  payment: '248.51'
+                - code: 0024U
+                  codeDescription: Glycosylated acute phase proteins (GlycA), nuclear magnetic resonance
+                    spectroscopy, quantitative
+                  payment: '34.19'
+                - code: 0025U
+                  codeDescription: Tenofovir, by liquid chromatography with tandem mass spectrometry (LC-MS/MS),
+                    urine, quantitative
+                  payment: '85.77'
+                - code: 0026U
+                  codeDescription: Oncology (thyroid), DNA and mRNA of 112 genes, next-generation sequencing,
+                    fine needle aspirate of thyroid nodule, algorithmic analysis reported as a categorical
+                    result ("Positive, high probability of malignancy" or "Negative, low probability of
+                    malignancy")
+                  payment: '3600.00'
+                - code: 0027U
+                  codeDescription: JAK2 (Janus kinase 2) (eg, myeloproliferative disorder) gene analysis,
+                    targeted sequence analysis exons 12-15
+                  payment: '121.91'
+                - code: 0029U
+                  codeDescription: Drug metabolism (adverse drug reactions and drug response), targeted
+                    sequence analysis (ie, CYP1A2, CYP2C19, CYP2C9, CYP2D6, CYP3A4, CYP3A5, CYP4F2, SLCO1B1,
+                    VKORC1 and rs12777823)
+                  payment: '742.27'
+                - code: '80418'
+                  codeDescription: 'Combined rapid anterior pituitary evaluation panel This panel must
+                    include the following: Adrenocorticotropic hormone (ACTH) (82024 x 4) Luteinizing
+                    hormone (LH) (83002 x 4) Follicle stimulating hormone (FSH) (83001 x 4) Prolactin
+                    (84146 x 4) Human growth hormone (HGH) (83003 x 4) Cortisol (82533 x 4) Thyroid stimulating
+                    hormone (TSH) (84443 x 4)'
+                  payment: '579.48'
+                - code: '80426'
+                  codeDescription: 'Gonadotropin releasing hormone stimulation panel This panel must include
+                    the following: Follicle stimulating hormone (FSH) (83001 x 4) Luteinizing hormone
+                    (LH) (83002 x 4)'
+                  payment: '148.41'
+                totalCount: 10
+        '400':
+          description: 'Bad request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - sort parameter value should be from list of [code, modifier, payment]
+                warning: null
+                info: null
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-10-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must
+                  not be less than one'
+                path: /cmscommonms/api/cms/common/clinical-diagnostic
+      security:
+      - bearerAuth: []
+  /api/cms/common/average-sales/sales-price:
+    get:
+      tags:
+      - Average Sales Price APIs
+      summary: Fetches the Average Sales Price Drug table data
+      operationId: getAverageSales
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: sort
+        in: query
+        description: Any of these (code,-code,dosage,-dosage,paymentLimit,-paymentLimit,vaccineAWP,-vaccineAWP,vaccineLimit,-vaccineLimit,bloodAWP,-bloodAWP,bloodLimit,-bloodLimit,notes,-notes)
+          are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch average sales price
+          content:
+            application/json:
+              example:
+                content:
+                - code: '90714'
+                  codeDescription: Td vacc no presv 7 yrs+ im
+                  dosage: 0.5 ML
+                  paymentLimit: '31.045'
+                - code: J0134
+                  codeDescription: Inj acetaminophen -fresenius
+                  dosage: 10 MG
+                  paymentLimit: '0.069'
+                - code: J0612
+                  codeDescription: Calcium glucon (fresenius)
+                  dosage: 10 MG
+                  paymentLimit: '0.055'
+                - code: J1611
+                  codeDescription: Inj glucagon hcl, fresenius
+                  dosage: 1 MG
+                  paymentLimit: '101.412'
+                  notes: AMP-based payment limit
+                - code: J2272
+                  codeDescription: Inj, morphine (fresenius)
+                  dosage: 10 MG
+                  paymentLimit: '6.929'
+                - code: J2281
+                  codeDescription: Inj moxifloxacin (fres kabi)
+                  dosage: 100 MG
+                  paymentLimit: '4.495'
+                  notes: AMP-based payment limit
+                - code: J2597
+                  codeDescription: Inj desmopressin acetate
+                  dosage: 1 MCG
+                  paymentLimit: '7.271'
+                - code: J2598
+                  codeDescription: Inj, vasopressin, 1 unit
+                  dosage: 1 UNIT
+                  paymentLimit: '2.919'
+                  notes: Added July 2023
+                - code: J2599
+                  codeDescription: Inj vasopressin (am reg) 1 u
+                  dosage: 1 UNIT
+                  paymentLimit: '2.098'
+                  notes: Added July 2023
+                - code: J2786
+                  codeDescription: Injection, reslizumab, 1mg
+                  dosage: 1 MG
+                  paymentLimit: '10.198'
+                - code: J9394
+                  codeDescription: Inj, fulvestrant (fresenius)
+                  dosage: 25 MG
+                  paymentLimit: '1.653'
+                totalCount: 11
+        '400':
+          description: 'Bad request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - sort parameter value should be from list of [code, dosage, paymentLimit, vaccineAWP,
+                  vaccineLimit, bloodAWP, bloodLimit, notes]
+                warning: null
+                info: null
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must
+                  not be less than one'
+                path: /cmscommonms/api/cms/common/average-sales/sales-price
+      security:
+      - bearerAuth: []
+  /api/cms/common/ambulance/medicare-localities:
+    get:
+      tags:
+      - Ambulance Fee Schedule APIs
+      summary: Fetches medicare localities
+      operationId: getMedicareCarrierLocalities
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch medicare localities
+          content:
+            application/json:
+              example:
+              - carrier: '10112'
+                locality: '00'
+                state: Alabama
+              - carrier: '02102'
+                locality: '01'
+                state: Alaska
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/ambulance/medicare-localities1
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/ambulance/medicare-localities
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/common/ambulance/ambulance-fee-schedule/{carrier}/{locality}:
+    get:
+      tags:
+      - Ambulance Fee Schedule APIs
+      summary: Fetches Ambulance Fees
+      operationId: getAmbulanceFees
+      parameters:
+      - name: carrier
+        in: path
+        description: Carrier value
+        required: true
+        schema:
+          type: string
+        example: 10112
+      - name: locality
+        in: path
+        description: Locality value
+        required: true
+        schema:
+          type: string
+        example: '00'
+      - name: sort
+        in: query
+        description: Any of these (code,-code) are allowed values, default is +code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch ambulance fees
+          content:
+            application/json:
+              example:
+                content:
+                - code: A0425
+                  codeDescription: Ground mileage, per statute mile
+                  baseRateUrbanMiles: '8.71'
+                  ruralBaseRateMileage: '8.80'
+                  ruralBaseRateLowestQ: null
+                  ruralBaseMiles117: '13.20'
+                - code: A0426
+                  codeDescription: Ambulance service, advanced life support, nonemergency transport, level
+                    1 (ALS 1)
+                  baseRateUrbanMiles: '297.26'
+                  ruralBaseRateMileage: '300.18'
+                  ruralBaseRateLowestQ: '368.02'
+                  ruralBaseMiles117: null
+                totalCount: 2
+        '400':
+          description: 'Bad request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - Not a valid medicareLocality
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/ambulance/ambulance-fee-schedule/10112/00
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    QPPMipsValue:
+      type: object
+      properties:
+        measureId:
+          type: string
+        docId:
+          type: string
+        description:
+          type: string
+        collectionType:
+          type: string
+        specialtyMeasure:
+          type: string
+        measureType:
+          type: string
+        highPriority:
+          type: string
+        message:
+          type: string
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+    SupportingDocument:
+      type: object
+      properties:
+        docId:
+          type: integer
+          format: int32
+        publicationType:
+          type: string
+        fileName:
+          type: string
+        publicationSubject:
+          type: string
+        postDate:
+          type: string
+        effectiveDate:
+          type: string
+    CMSTransmittal:
+      type: object
+      properties:
+        docId:
+          type: integer
+          format: int32
+        documentSourceId:
+          type: integer
+          format: int32
+        publicationType:
+          type: string
+        publicationSubject:
+          type: string
+        transmittalNumber:
+          type: string
+        changeRequest:
+          type: string
+        postDate:
+          type: string
+        effectiveDate:
+          type: string
+        docImpDate:
+          type: string
+        rescinded:
+          type: string
+        replacedBy:
+          type: string
+        relatedDocName:
+          type: string
+        retroactiveFlag:
+          type: string
+        healthCareTypes:
+          type: string
+        specialities:
+          type: string
+        ascFlag:
+          type: string
+        fileName:
+          type: string
+        code:
+          type: string
+    DiagnosisCode:
+      type: object
+      properties:
+        code:
+          type: string
+        codeType:
+          type: string
+    Lcd:
+      type: object
+      properties:
+        carrierId:
+          type: integer
+          format: int32
+        fiId:
+          type: integer
+          format: int32
+        dmeId:
+          type: integer
+          format: int32
+        retiredPolicies:
+          type: boolean
+    PolicySearchRequest:
+      type: object
+      properties:
+        policyType:
+          type: string
+          enum:
+          - NCD_PART_A
+          - NCD_PART_B
+          - LCD_DME
+          - NCD_DME
+          - LCD_PART_A
+          - LCD_PART_B
+          - NCD_LAB
+        searchType:
+          type: string
+        procedureCode:
+          type: string
+        termSearch:
+          $ref: '#/components/schemas/TermSearch'
+        diagnosisCode:
+          $ref: '#/components/schemas/DiagnosisCode'
+        effectiveDate:
+          type: string
+          format: date-time
+        lcd:
+          $ref: '#/components/schemas/Lcd'
+    TermSearch:
+      type: object
+      properties:
+        keyword:
+          type: string
+        searchBy:
+          type: string
+        searchLogic:
+          type: string
+    PolicyValue:
+      type: object
+      properties:
+        icpContractorId:
+          type: integer
+          format: int64
+        icpPolicyId:
+          type: integer
+          format: int64
+        determinationNum:
+          type: string
+        contractorType:
+          type: string
+        contractorName:
+          type: string
+        policyType:
+          type: string
+        cms:
+          type: string
+        policyTitle:
+          type: string
+        effectiveDate:
+          type: string
+          format: date-time
+        expirationDate:
+          type: string
+          format: date-time
+        url:
+          type: string
+        contractorURL:
+          type: string
+        activeRetiredStatus:
+          type: string
+        serviceAreas:
+          type: string
+        contractorNum:
+          type: string
+        hasArticles:
+          type: string
+        titleShort:
+          type: string
+        userDefinedEffectiveDate:
+          type: string
+        scrubbedTitle:
+          type: string
+        displayName:
+          type: string
+        contractorServiceAreas:
+          type: string
+        contractorTypeDisplayName:
+          type: string
+    ModifiersPopUpValue:
+      type: object
+      properties:
+        modifier:
+          type: string
+        description:
+          type: string
+    OptumPageImplModifiersPopUpValue:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModifiersPopUpValue'
+        totalCount:
+          type: integer
+          format: int64
+    ContractorValue:
+      type: object
+      properties:
+        contractorNum:
+          type: string
+        stateAbbr:
+          type: string
+        contractorName:
+          type: string
+        regionCode:
+          type: string
+        contractorType:
+          type: string
+        url:
+          type: string
+        contractorEid:
+          type: string
+        icpContractorId:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

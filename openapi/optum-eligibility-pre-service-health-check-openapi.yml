@@ -1,0 +1,44 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  description: Eligibility Pre Service Health Check
+  title: Eligibility Pre Service health check
+servers:
+- url: https://sandbox-apigw.optum.com
+paths:
+  /oihub/eligibility/v1/healthcheck:
+    get:
+      summary: Health Check
+      description: Performs a health check to validate the availability and operational status of the  Eligibility
+        Pre Service.
+      operationId: healthCheck
+      security:
+      - oAuth:
+        - read_healthcheck
+      tags:
+      - HealthCheck
+      responses:
+        '200':
+          description: Service is healthy - If the API engine is working correctly and if the entry points
+            are accessible, the API operating status response shows "OK".
+        '500':
+          description: 'Service is unhealthy
+
+            - **Note:** If you receive a response other than 200 OK, the health check failed. Please submit
+            a ticket with Optum.
+
+            '
+components:
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/sntl/v1/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system

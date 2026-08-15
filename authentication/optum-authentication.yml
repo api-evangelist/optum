@@ -1,27 +1,68 @@
-generated: '2026-07-20'
+generated: '2026-08-14'
 method: searched
 source: https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
-docs: https://developer.optum.com/eligibilityandclaims/docs/optum-security-and-authorization
+docs:
+  - https://developer.optum.com/eligibilityandclaims/docs/optum-security-and-authorization
+  - https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
+  - https://developer.optum.com/apitools/reference/security-and-authorization-v3-overview
+derived_from: openapi/_original/*.json (25 oauth2 securitySchemes across 59 harvested documents)
 summary:
-  types:
-  - oauth2
-  oauth2_flows:
-  - clientCredentials
+  types: [oauth2]
+  oauth2_flows: [clientCredentials]
+  api_key_in: []
   transport_security: TLS 1.2+
+  scheme_count_in_specs: 50
+  scopes: [create_txn, read_txn, create_coveragediscovery, read_coveragediscovery, read_healthcheck]
+  note: >-
+    One mechanism, two generations. Every Optum API is protected by an OAuth2 client-credentials
+    bearer token; the only variation is which token endpoint issues it. A handful of the Optum Insight Platform
+    specs additionally declare a bare `http bearer` or `apiKey` scheme, but they resolve to the same
+    gateway token. There is no user-delegated authorization-code flow, no
+    mTLS and no basic auth anywhere in the public surface — which also means there is no
+    SMART-on-FHIR patient-authorization path on these endpoints.
 schemes:
-- name: OptumOAuth2
-  type: oauth2
-  scheme: bearer
-  bearer_format: JWT
-  flows:
-  - flow: clientCredentials
-    token_url_production: https://apigw.optum.com/apip/auth/v2/token
-    token_url_sandbox: https://sandbox-apigw.optum.com/apip/auth/v2/token
-  token_lifetime_seconds: 3600
-  request_header: 'Authorization: Bearer <access_token>'
-  credentials: client_id + client_secret provisioned during onboarding / sandbox access
-  notes: >-
-    Access is controlled via OAuth2 client-credentials grant. Consumers exchange a
-    client_id and client_secret for a short-lived (1 hour) JWT access_token, returned
-    with token_type "bearer" and expires_in 3600, then send it as a Bearer token on
-    subsequent requests over TLS 1.2+.
+  - name: OptumOAuth2 (Security and Authorization v2)
+    type: oauth2
+    scheme: bearer
+    bearer_format: JWT
+    flows:
+      - flow: clientCredentials
+        token_url_production: https://apigw.optum.com/apip/auth/v2/token
+        token_url_sandbox: https://sandbox-apigw.optum.com/apip/auth/v2/token
+    token_lifetime_seconds: 3600
+    request_header: 'Authorization: Bearer <access_token>'
+    credentials: client_id + client_secret provisioned during onboarding / sandbox access
+    spec: openapi/optum-security-and-authorization-v2-openapi.yml
+    used_by:
+      - Medical Network eligibility / claims / claim status / reports / attachments
+      - Dental Attachment API
+      - Enhanced Eligibility
+      - Real Prior Authorization, Real Provider Access
+    notes: >-
+      Consumers exchange client_id and client_secret for a short-lived (1 hour) JWT access_token
+      returned with token_type "bearer" and expires_in 3600, then send it as a Bearer token over
+      TLS 1.2+.
+  - name: OptumOAuth2 (Security and Authorization v3 / sentinel)
+    type: oauth2
+    scheme: bearer
+    bearer_format: JWT
+    flows:
+      - flow: clientCredentials
+        token_url_production: https://apigw.optum.com/apip/auth/sntl/v1/token
+        token_url_sandbox: https://sandbox-apigw.optum.com/apip/auth/sntl/v1/token
+    request_header: 'Authorization: Bearer <access_token>'
+    spec: openapi/optum-security-and-authorization-v3-openapi.yml
+    used_by:
+      - Optum Real oihub APIs (claim actions, claim inquiry, document search, benefit check, auth referral, pre-service eligibility)
+      - Real Dental pre-care eligibility and claim status
+    notes: >-
+      The newer "sentinel" token endpoint. Both generations are live at the same time and the docs
+      do not state a migration date, so a consumer must read the individual API's spec to know which
+      token endpoint applies. That ambiguity is the single most consequential documentation gap on
+      the platform.
+scopes_ref: scopes/optum-scopes.yml
+onboarding:
+  sandbox: https://marketplace.optum.com/apiservices/api-sandbox-access
+  production: 'Negotiated with an Optum representative; HIPAA data-use agreement and training required.'
+mfa_or_signing: none
+key_rotation_documented: false

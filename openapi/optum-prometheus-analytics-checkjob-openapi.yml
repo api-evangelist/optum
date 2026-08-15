@@ -1,0 +1,136 @@
+openapi: 3.0.1
+info:
+  title: PROMETHEUS Analytics® CheckJob
+  description: The CheckJob API is responsible for checking and providing the current status of a job.
+    Status could be ”Processing”, “Finished” or “Failed”. This API also provides additional details such
+    as process completion and data purging date.
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com/
+tags:
+- name: HQX_PrometheusAPI 1.0
+  description: This API analyze claims data to create an episode of care that can be used for value-based
+    payment models and performance evaluation in order to improve the quality of care and patient outcomes.
+- name: CheckJob
+  description: Returns the current status of a job and additional details such as job process completion
+    date and data purging date
+- name: JobId
+  description: Unique Id used to identify the Job; Numeric value returned by JobSubmission API
+paths:
+  /prometheus/checkjob/v1:
+    post:
+      summary: Checks and returns the current status of a job and additional details such as job process
+        completion date and data purging date
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'null'
+        required: true
+        schema: {}
+      requestBody:
+        description: Checks and returns the current status of a job and additional details such as job
+          process completion date and data purging date.
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CheckJob_Request'
+        required: true
+      responses:
+        '200':
+          description: Successful CheckJob Response
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CheckJob_Response_Success'
+        '400':
+          description: The request was not properly formatted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CheckJob_Response_Failure_400'
+        '500':
+          description: The request has encountered an Internal Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CheckJob_Response_Failure_500'
+      x-codegen-request-body-name: CheckJob_Request
+components:
+  schemas:
+    CheckJob_Request_header:
+      type: object
+      properties:
+        Bearer:
+          type: string
+          example: eyJraWQiOiIxIi...
+    CheckJob_Request:
+      type: object
+      properties:
+        JobId:
+          type: string
+          example: '729'
+    CheckJob_Response_Success:
+      type: object
+      properties:
+        JobId:
+          type: string
+          description: Field that provides the unique id used to identyify this job
+          example: '729'
+        BatchName:
+          type: string
+          description: Field that returns the name of the batch for this job
+          example: HQXclaims0421
+        APIStatus:
+          type: string
+          description: Field that provides the current status of this job. This field may return "Processing",
+            "Finished" or "Failed"
+          example: Finished
+        ControlFileName:
+          type: string
+          description: Field that provides the inbound control file name for this job
+          example: controlfile.tsv.gz
+        StartDate:
+          type: string
+          description: Field that provides the actual processing date and time for this job
+          example: 03/23/2021 13:34:54
+        EndDate:
+          type: string
+          description: Field that provides the actual processing end/ completion date for this job
+          example: 03/23/2021 142823
+        DateToPurge:
+          type: string
+          description: Field that provides the anticipated date of purge for this job
+          example: 03/27/2021 133454
+        PurgeDate:
+          type: string
+          description: Field that provides the actual purging date for this job
+          example: 04/27/2021 135567
+        Message:
+          type: string
+          description: Field that provides successful or non-error messages
+          example: 'Current batch status: Finished'
+    CheckJob_Response_Failure_500:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Short description of the error encountered
+          example: Internal error occurred
+        error_description:
+          type: string
+          description: Long description of the error that further explains why the request was unsuccessful
+          example: Internal error occurred. Support has been notified.
+    CheckJob_Response_Failure_400:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Short description of the error encountered
+          example: Invalid Request
+        error_description:
+          type: string
+          description: Long description of the error that further explains why the request was unsuccessful
+          example: The request was not properly formatted.
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

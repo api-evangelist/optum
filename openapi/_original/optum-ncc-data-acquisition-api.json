@@ -1,0 +1,2718 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "NCC Data Acquisition API",
+    "version": "1.0.0",
+    "description": "The National Clinical Clearing(NCC) Data Acquisition API provides users with a REST-based solution for requesting and receiving clinical data from the chosen data vendor through the NCC platform. Authentication: All API's requires JWT based authentication."
+  },
+  "servers": [
+    {
+      "url": "https://gateway-nonprod.optuminsightplatform.com/odxcloudapigatewaypreprod/ncc",
+      "variables": {},
+      "description": "Pre Prod"
+    },
+    {
+      "url": "https://gateway.optuminsightplatform.com/odxcloudapigateway/ncc",
+      "variables": {},
+      "description": "Prod"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Order Management"
+    },
+    {
+      "name": "Roster Management"
+    },
+    {
+      "name": "Provider Participation List"
+    }
+  ],
+  "paths": {
+    "/om/placeOrder": {
+      "post": {
+        "summary": "Legacy API to Place an order to NCC",
+        "description": "To place a new order to NCC, please use /placeOrder legacy API. This API  would need         to have the pre-defined order components from the pre-requisite set up         and the uploaded roster file to the defined ECG location.",
+        "operationId": "placeOrder",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "placeOrderRequest: Reques objct for the placeOrder api, please see schema for details",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaceOrderRequest"
+              },
+              "examples": {
+                "placeOrderRequest": {
+                  "value": {
+                    "clientOrgId": "2301320",
+                    "tenantId": "2300980",
+                    "clientOrderName": "Test Order Name 001",
+                    "serviceStartDate": "2023-06-01T08:06:39.307",
+                    "serviceEndDate": "2023-06-10T08:06:39.307",
+                    "vendors": [
+                      {
+                        "vendorName": "Athena",
+                        "vendorOrgId": "2301025",
+                        "interfaces": [
+                          "2.16.840.1.113883.3.2966.1000.1005.152.3.95"
+                        ]
+                      }
+                    ],
+                    "campaignId": 1084,
+                    "campaignName": "2021 PRO-1QWERTY-11",
+                    "requestingPartyId": 1074,
+                    "requestingPartyName": "Optum",
+                    "rosterFilePath": "quarantine/original-roster-20211215-203035-cleanroster-int123334567.csv"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Place Order Success Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponsePlaceOrderResponse"
+                },
+                "examples": {
+                  "placeOrderResponse": {
+                    "value": {
+                      "status": 200,
+                      "statusMessage": "SUCCESS",
+                      "result": {
+                        "clientOrderId": 3000,
+                        "orderStatus": "ORDER_PLACED"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "badRequest": {
+                    "value": {
+                      "status": 400,
+                      "statusMessage": "Bad Request",
+                      "error": {
+                        "status": "BAD_REQUEST",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"API_ERROR_BAD_REQUEST\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is unauthorized to access Place order API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "authError": {
+                    "value": {
+                      "error": "Token is expired",
+                      "status": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Application failed to place order in NCC, internal server error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "internalError": {
+                    "value": {
+                      "status": 500,
+                      "statusMessage": "Internal Server Error",
+                      "error": {
+                        "status": "INTERNAL_SERVER_ERROR",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"INTERNAL_SERVER_ERROR\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Order Management"
+        ]
+      }
+    },
+    "/om/clientOrderDetails": {
+      "get": {
+        "summary": "Legacy API to fetch Client Order Details in NCC",
+        "description": "To fetch client order details in NCC, please use /clientOrderDetails legacy API.",
+        "operationId": "getClientOrderDetails",
+        "parameters": [
+          {
+            "name": "clientOrderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientOrgId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch Client Order Details Success Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseClientOrderDetailsResponse"
+                },
+                "examples": {
+                  "clientOrderDetailsResponse": {
+                    "value": {
+                      "status": 200,
+                      "statusMessage": "SUCCESS",
+                      "result": {
+                        "clientOrderId": 6601,
+                        "clientOrderSubmittedDate": "2023-06-30T05:12:20.653",
+                        "clientOrderStatus": "In Progress",
+                        "clientOrderStatusDetail": "EIMP_MATCHING_COMPLETE",
+                        "vendorOrders": [
+                          {
+                            "vendorOrgId": 2002000,
+                            "vendorOrgName": "EPP",
+                            "vendorOrderId": 6000,
+                            "vendorOrderStatus": "Complete",
+                            "vendorOrderStatusDetail": "ALL_REQUESTS_SUBMITTED_FOR_OUTBOUND",
+                            "orderResult": {
+                              "cleanMetric": {
+                                "count": 1655,
+                                "downloadUrl": "https://odxcentralusakspreprod.blob.core.windows.net/data-acquisition-roster-management-preprod/rosters%2F2023%2F06%2F30%2F6601%2Fgood%2FV2_1K_with_POU_6601_Clean.csv?sv=2021-12-02&st=2023-07-07T07%3A45%3A15Z&se=2023-07-07T07%3A50%3A15Z&sr=b&sp=r&sig=NTHOBdfMU%2FQhdaY6fPpd5sAzda1JtkaxR%2FNBkLrKo1U%3D"
+                              },
+                              "errorMetric": {
+                                "count": 2,
+                                "downloadUrl": "https://odxcentralusakspreprod.blob.core.windows.net/data-acquisition-roster-management-preprod/rosters%2F2023%2F06%2F30%2F6601%2Fbad%2FV2_1K_with_POU_6601_Errors.csv?sv=2021-12-02&st=2023-07-07T07%3A45%3A15Z&se=2023-07-07T07%3A50%3A15Z&sr=b&sp=r&sig=IF%2F5KGsx3NeI4TzZQqUkvyTiqMTn6vMMXUZ5hA7Tgm8%3D"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "badRequest": {
+                    "value": {
+                      "status": 400,
+                      "statusMessage": "Bad Request",
+                      "error": {
+                        "status": "BAD_REQUEST",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"API_ERROR_BAD_REQUEST\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is unauthorized to access client order details API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "authError": {
+                    "value": {
+                      "error": "Token is expired",
+                      "status": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Application failed to retrieve given client order details, internal server error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "internalError": {
+                    "value": {
+                      "status": 500,
+                      "statusMessage": "Internal Server Error",
+                      "error": {
+                        "status": "INTERNAL_SERVER_ERROR",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"INTERNAL_SERVER_ERROR\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Order Management"
+        ]
+      }
+    },
+    "/om/clientOrderStatus": {
+      "get": {
+        "summary": "Legacy API to fetch Client order status in NCC",
+        "description": "To fetch client order status in  NCC, please use /clientOrderStatus legacy API.",
+        "operationId": "getClientOrderStatus",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "clientOrderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientOrgId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch Client Order Status Success Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseClientOrderStatusResponse"
+                },
+                "examples": {
+                  "clientOrderStatusResponse": {
+                    "value": {
+                      "status": 200,
+                      "statusMessage": "SUCCESS",
+                      "result": {
+                        "clientOrderId": 6601,
+                        "clientOrderStatus": "In Progress",
+                        "clientOrderStatusDetail": "EIMP_MATCHING_COMPLETE"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, Please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "badRequest": {
+                    "value": {
+                      "status": 400,
+                      "statusMessage": "Bad Request",
+                      "error": {
+                        "status": "BAD_REQUEST",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"API_ERROR_BAD_REQUEST\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is unauthorized to access client order status API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "authError": {
+                    "value": {
+                      "error": "Token is expired",
+                      "status": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Application failed to retrieve given client order status , Internal server error occured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "internalError": {
+                    "value": {
+                      "status": 500,
+                      "statusMessage": "Internal Server Error",
+                      "error": {
+                        "status": "INTERNAL_SERVER_ERROR",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"INTERNAL_SERVER_ERROR\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Order Management"
+        ]
+      }
+    },
+    "/om/vendorOrderDetails": {
+      "get": {
+        "summary": "Legacy API to fetch Vendor Order Details in NCC",
+        "description": "To fetch vendor order details in NCC, please use /vendorOrderDetails legacy API.",
+        "operationId": "getVendorOrderDetails",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientOrgId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientOrderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "vendorOrderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch Vendor Order Details Success Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVendorOrderDetailsResponse"
+                },
+                "examples": {
+                  "vendorOrderDetailsResponse": {
+                    "value": {
+                      "status": 200,
+                      "statusMessage": "SUCCESS",
+                      "result": {
+                        "clientOrderId": 3000,
+                        "vendorOrderId": 4000,
+                        "vendorOrgId": 2301320,
+                        "vendorOrgName": "Athena",
+                        "vendorOrderStatus": "Complete",
+                        "vendorOrderStatusDetail": "ALL_REQUESTS_SUBMITTED_FOR_OUTBOUND",
+                        "submissionDate": "2023-07-06T08:06:39.307",
+                        "vendorOrderExpDate": "2023-07-06T18:06:39.307",
+                        "newExpirationDate": "2023-07-06T28:06:39.307"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "badRequest": {
+                    "value": {
+                      "status": 400,
+                      "statusMessage": "Bad Request",
+                      "error": {
+                        "status": "BAD_REQUEST",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"API_ERROR_BAD_REQUEST\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is unauthorized to access vendor order details API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "authError": {
+                    "value": {
+                      "error": "Token is expired",
+                      "status": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Application failed to retrieve given vendor order details, internal server error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "internalError": {
+                    "value": {
+                      "status": 500,
+                      "statusMessage": "Internal Server Error",
+                      "error": {
+                        "status": "INTERNAL_SERVER_ERROR",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"INTERNAL_SERVER_ERROR\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Order Management"
+        ]
+      }
+    },
+    "/om/vendorOrderStatus": {
+      "get": {
+        "summary": "Legacy API to fetch Vendor order status in NCC",
+        "description": "To fetch vendor order status in NCC, please use /vendorOrderStatus legacy API.",
+        "operationId": "getVendorOrderStatus",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientOrgId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientOrderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "vendorOrderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch Vendor Order Status Success Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVendorOrderStatusResponse"
+                },
+                "examples": {
+                  "vendorOrderStatusResponse": {
+                    "value": {
+                      "status": 200,
+                      "statusMessage": "SUCCESS",
+                      "result": {
+                        "clientOrderId": 6601,
+                        "vendorOrderId": 8064,
+                        "vendorOrderStatus": "Complete",
+                        "vendorOrderStatusDetail": "ALL_REQUESTS_SUBMITTED_FOR_OUTBOUND"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, Please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "badRequest": {
+                    "value": {
+                      "status": 400,
+                      "statusMessage": "Bad Request",
+                      "error": {
+                        "status": "BAD_REQUEST",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"API_ERROR_BAD_REQUEST\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is unauthorized to access vendor order status API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "authError": {
+                    "value": {
+                      "error": "Token is expired",
+                      "status": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Application failed to retrieve given vendor order status , Internal server error occured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "internalError": {
+                    "value": {
+                      "status": 500,
+                      "statusMessage": "Internal Server Error",
+                      "error": {
+                        "status": "INTERNAL_SERVER_ERROR",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"INTERNAL_SERVER_ERROR\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Order Management"
+        ]
+      }
+    },
+    "/rm/package-transaction": {
+      "get": {
+        "tags": [
+          "Roster Management"
+        ],
+        "summary": "Track a Data Package",
+        "description": "Track a Data Package using the Vendor Request UUID and the Vendor Package ID",
+        "operationId": "trackPackage",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "vendorPackageId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Unique ID identifying a package. See vendor specific details [URL]."
+          },
+          {
+            "in": "query",
+            "name": "vendorRequestUuid",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Vendor Request UUID to which the package is associated. **Required if *vendorOrderId* not present.**"
+          },
+          {
+            "in": "query",
+            "name": "vendorOrderId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Vendor Order ID to which the package is associated. **Required if *vendorRequestUuid* not present.**"
+          },
+          {
+            "in": "header",
+            "name": "tenantId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "clientOrgId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation. Package Found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackageInfo"
+                },
+                "examples": {
+                  "packageInfo": {
+                    "value": {
+                      "status": 200,
+                      "statusMessage": "SUCCESS",
+                      "result": {
+                        "vendorRequestUuid": "48692046-d403-4da9-a14b-f234b5f63f33",
+                        "vendorPackageId": "486113551_48692046-d403-4da9-a14b-f234b5f63f33_3313f8f8-6f5b-41da-9c70-0bb233a3100f",
+                        "uniqueMemberId": 486113551,
+                        "vendorName": "Athena",
+                        "clientMemberTrackerIds": {
+                          "clientTrackingId1": "id1",
+                          "clientTrackingId2": "id2",
+                          "clientTrackingId3": "id3"
+                        },
+                        "vendorPackage": {
+                          "fileName": "athena_52075876128_89712.xml",
+                          "receivedDateTime": "2023-10-01T12:00:00Z",
+                          "status": "ACCEPTED",
+                          "statusDetails": "ACCEPTED"
+                        },
+                        "nccPackage": {
+                          "fileName": "NCC_Athena_48692046-d403-4da9-a14b-f234b5f63f33_733256_20230824101735.zip",
+                          "sentDateTime": "2023-10-01T12:05:00Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing required query parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "Missing Vendor Package ID": {
+                    "value": {
+                      "status": 400,
+                      "statusMessage": "Bad Request",
+                      "error": {
+                        "status": "FAILED",
+                        "detail": {
+                          "code": "Bad Request",
+                          "message": "Required String parameter 'vendorPackageId' is not present"
+                        }
+                      }
+                    }
+                  },
+                  "Missing Vendor Request UUID and Vendor Order ID": {
+                    "value": {
+                      "status": "FAILED",
+                      "error": {
+                        "code": "API_ERROR_INVALID_REQUEST",
+                        "message": "Request param 'vendorRequestUuid' or 'vendorOrderId' needs to be present"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Package not found with the provided input details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "Not Found": {
+                    "value": {
+                      "status": "FAILED",
+                      "error": {
+                        "code": "API_ERROR_NOT_FOUND",
+                        "message": "Package not found with provided detail"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something failed while searching for the package.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "Internal Server Error": {
+                    "value": {
+                      "status": "FAILED",
+                      "error": {
+                        "code": "API_ERROR_OPERATION_FAILED",
+                        "message": "Something failed during the search of your package. Please try again."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/om/v1/client-orders": {
+      "post": {
+        "summary": "API to Place an order for internal and external vendors to NCC",
+        "description": "To place a new order to NCC, please use /v1/client-orders API. This API would need to have the pre-defined order components from the pre-requisite set up and the uploaded roster file to the defined ECG location.",
+        "operationId": "v1CreateClientOrder",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "ClientOrderRequest: Request object for the client-orders api, please see schema for details",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/clientOrderRequest"
+              },
+              "examples": {
+                "clientOrderRequest-external": {
+                  "value": {
+                    "vendorType": "external",
+                    "clientOrgId": "2301320",
+                    "tenantId": "2300980",
+                    "clientOrderName": "Test Order Name 001",
+                    "serviceStartDate": "2023-06-01",
+                    "serviceEndDate": "2023-06-11",
+                    "vendors": [
+                      {
+                        "vendorName": "Athena",
+                        "vendorOrgId": "2301025",
+                        "interfaces": [
+                          "2.16.840.1.113883.3.2966.1000.1005.152.3.95"
+                        ]
+                      }
+                    ],
+                    "campaignId": 1084,
+                    "campaignName": "2021 PRO-1QWERTY-11",
+                    "requestingPartyId": 1074,
+                    "requestingPartyName": "Optum",
+                    "rosterFilePath": "quarantine/original-roster-20211215-203035-cleanroster-int123334567.csv"
+                  }
+                },
+                "clientOrderRequest-internal": {
+                  "value": {
+                    "vendorType": "internal",
+                    "clientOrgId": "2301320",
+                    "tenantId": "2300980",
+                    "clientOrderName": "Test Order Name 001",
+                    "serviceStartDate": "2023-06-01",
+                    "serviceEndDate": "2023-06-10",
+                    "vendors": [
+                      {
+                        "vendorOrgId": "201307",
+                        "vendorName": "Ecdh",
+                        "interfaces": [
+                          "2.16.840.1.113883.3.2966.1000.1005.152.1.806"
+                        ],
+                        "subVendorNames": [
+                          "Athena",
+                          "Veradigm"
+                        ]
+                      }
+                    ],
+                    "campaignId": 1084,
+                    "campaignName": "2021 PRO-1QWERTY-11",
+                    "requestingPartyId": 1074,
+                    "requestingPartyName": "Optum",
+                    "rosterFilePath": "quarantine/original-roster-20211215-203035-cleanroster-int123334567.csv"
+                  }
+                },
+                "clientOrderRequest-internalForAllSubVendors": {
+                  "value": {
+                    "vendorType": "internal",
+                    "clientOrgId": "2301320",
+                    "tenantId": "2300980",
+                    "clientOrderName": "Test Order Name 001",
+                    "serviceStartDate": "2023-06-01",
+                    "serviceEndDate": "2023-06-10",
+                    "vendors": [
+                      {
+                        "vendorOrgId": "201307",
+                        "vendorName": "Ecdh",
+                        "interfaces": [
+                          "2.16.840.1.113883.3.2966.1000.1005.152.1.806"
+                        ]
+                      }
+                    ],
+                    "campaignId": 1084,
+                    "campaignName": "2021 PRO-1QWERTY-11",
+                    "requestingPartyId": 1074,
+                    "requestingPartyName": "Optum",
+                    "rosterFilePath": "quarantine/original-roster-20211215-203035-cleanroster-int123334567.csv"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Place Client Order Success Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseClientOrderResponse"
+                },
+                "examples": {
+                  "clientOrderResponse": {
+                    "value": {
+                      "status": 200,
+                      "result": {
+                        "clientOrderId": 3000,
+                        "clientOrderStatus": "ORDER_ACCEPTED",
+                        "statusMessage": "CLIENT_ORDER_CREATED"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Some issue in the properties supplied to the API. For example Invalid vendor details, special chars in client order name, invalid vendor type, roster file not present in ABS etc.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "badRequest-fileNotPresent": {
+                    "value": {
+                      "status": 400,
+                      "statusMessage": "Bad Request",
+                      "error": {
+                        "status": "FAILED",
+                        "detail": {
+                          "code": "API_ERROR_INVALID_REQUEST",
+                          "message": "Error validating request: [The specified file quarantine/EiMP_members_Roster_Test_V2.csv is not present in blob storage. Hence the request will be rejected.]"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is unauthorized to access Place client order API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "value": {
+                      "status": 401,
+                      "statusMessage": "Unauthorized",
+                      "error": {
+                        "status": "FAILED",
+                        "detail": {
+                          "code": "AUTHENTICATION",
+                          "message": "Jwt expired at 2023-12-06T19:23:03Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Application failed to place order in NCC, internal server error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "internalServerError": {
+                    "value": {
+                      "status": 500,
+                      "statusMessage": "Internal Server Error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Order Management"
+        ]
+      }
+    },
+    "/om/v1/client-orders/{orderId}": {
+      "get": {
+        "summary": "API to fetch Client Order Details in NCC",
+        "description": "To fetch client order details in NCC, please use /client-orders/{orderId} API.",
+        "operationId": "v1GetClientOrderDetails",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientOrgId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch Client Order Details Success Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseClientOrderDetailsResponse"
+                },
+                "examples": {
+                  "clientOrderDetailsResponse": {
+                    "value": {
+                      "status": 200,
+                      "statusMessage": "SUCCESS",
+                      "result": {
+                        "clientOrderId": 6601,
+                        "clientOrderSubmittedDate": "2023-06-30T05:12:20.653",
+                        "clientOrderStatus": "In Progress",
+                        "clientOrderStatusDetail": "EIMP_MATCHING_COMPLETE",
+                        "vendorOrders": [
+                          {
+                            "vendorOrgId": 2002000,
+                            "vendorOrgName": "EPP",
+                            "vendorOrderId": 6000,
+                            "vendorOrderStatus": "Complete",
+                            "vendorOrderStatusDetail": "ALL_REQUESTS_SUBMITTED_FOR_OUTBOUND",
+                            "orderResult": {
+                              "cleanMetric": {
+                                "count": 1655,
+                                "downloadUrl": "https://odxcentralusakspreprod.blob.core.windows.net/data-acquisition-roster-management-preprod/rosters%2F2023%2F06%2F30%2F6601%2Fgood%2FV2_1K_with_POU_6601_Clean.csv?sv=2021-12-02&st=2023-07-07T07%3A45%3A15Z&se=2023-07-07T07%3A50%3A15Z&sr=b&sp=r&sig=NTHOBdfMU%2FQhdaY6fPpd5sAzda1JtkaxR%2FNBkLrKo1U%3D"
+                              },
+                              "errorMetric": {
+                                "count": 2,
+                                "downloadUrl": "https://odxcentralusakspreprod.blob.core.windows.net/data-acquisition-roster-management-preprod/rosters%2F2023%2F06%2F30%2F6601%2Fbad%2FV2_1K_with_POU_6601_Errors.csv?sv=2021-12-02&st=2023-07-07T07%3A45%3A15Z&se=2023-07-07T07%3A50%3A15Z&sr=b&sp=r&sig=IF%2F5KGsx3NeI4TzZQqUkvyTiqMTn6vMMXUZ5hA7Tgm8%3D"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "badRequest": {
+                    "value": {
+                      "status": 400,
+                      "statusMessage": "Bad Request",
+                      "error": {
+                        "status": "BAD_REQUEST",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"API_ERROR_BAD_REQUEST\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is unauthorized to access client order details API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "authError": {
+                    "value": {
+                      "error": "Token is expired",
+                      "status": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Application failed to retrieve given client order details, internal server error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "internalError": {
+                    "value": {
+                      "status": 500,
+                      "statusMessage": "Internal Server Error",
+                      "error": {
+                        "status": "INTERNAL_SERVER_ERROR",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"INTERNAL_SERVER_ERROR\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Order Management"
+        ]
+      }
+    },
+    "/om/v1/client-orders/{orderId}/status": {
+      "get": {
+        "summary": "API to fetch Client order status in NCC",
+        "description": "To fetch client order status in  NCC, please use /client-orders/{orderId}/status API.",
+        "operationId": "v1GetClientOrderStatus",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientOrgId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch Client Order Status Success Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseClientOrderStatusResponse"
+                },
+                "examples": {
+                  "clientOrderStatusResponse": {
+                    "value": {
+                      "status": 200,
+                      "statusMessage": "SUCCESS",
+                      "result": {
+                        "clientOrderId": 6601,
+                        "clientOrderStatus": "In Progress",
+                        "clientOrderStatusDetail": "EIMP_MATCHING_COMPLETE"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, Please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "badRequest": {
+                    "value": {
+                      "status": 400,
+                      "statusMessage": "Bad Request",
+                      "error": {
+                        "status": "BAD_REQUEST",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"API_ERROR_BAD_REQUEST\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is unauthorized to access client order status API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "authError": {
+                    "value": {
+                      "error": "Token is expired",
+                      "status": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Application failed to retrieve given client order status , Internal server error occured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "internalError": {
+                    "value": {
+                      "status": 500,
+                      "statusMessage": "Internal Server Error",
+                      "error": {
+                        "status": "INTERNAL_SERVER_ERROR",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"INTERNAL_SERVER_ERROR\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Order Management"
+        ]
+      }
+    },
+    "/om/v1/vendor-orders/{vendorOrderId}": {
+      "get": {
+        "summary": "API to fetch Vendor Order Details in NCC",
+        "description": "To fetch vendor order details in NCC, please use /vendor-orders/{vendorOrderId} API.",
+        "operationId": "v1GetVendorOrderDetails",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientOrgId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientOrderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "vendorOrderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch Vendor Order Details Success Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVendorOrderDetailsResponse"
+                },
+                "examples": {
+                  "vendorOrderDetailsResponse": {
+                    "value": {
+                      "status": 200,
+                      "statusMessage": "SUCCESS",
+                      "result": {
+                        "clientOrderId": 3000,
+                        "vendorOrderId": 4000,
+                        "vendorOrgId": 2301320,
+                        "vendorOrgName": "Athena",
+                        "vendorOrderStatus": "Complete",
+                        "vendorOrderStatusDetail": "ALL_REQUESTS_SUBMITTED_FOR_OUTBOUND",
+                        "submissionDate": "2023-07-06T08:06:39.307",
+                        "vendorOrderExpDate": "2023-07-06T18:06:39.307",
+                        "newExpirationDate": "2023-07-06T28:06:39.307"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "badRequest": {
+                    "value": {
+                      "status": 400,
+                      "statusMessage": "Bad Request",
+                      "error": {
+                        "status": "BAD_REQUEST",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"API_ERROR_BAD_REQUEST\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is unauthorized to access vendor order details API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "authError": {
+                    "value": {
+                      "error": "Token is expired",
+                      "status": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Application failed to retrieve given vendor order details, internal server error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "internalError": {
+                    "value": {
+                      "status": 500,
+                      "statusMessage": "Internal Server Error",
+                      "error": {
+                        "status": "INTERNAL_SERVER_ERROR",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"INTERNAL_SERVER_ERROR\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Order Management"
+        ]
+      }
+    },
+    "/om/v1/vendor-orders/{vendorOrderId}/status": {
+      "get": {
+        "summary": "API to fetch Vendor order status in NCC",
+        "description": "To fetch vendor order status in NCC, please use /vendor-orders/{vendorOrderId}/status API.",
+        "operationId": "v1GetVendorOrderStatus",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientOrgId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "clientOrderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "vendorOrderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch Vendor Order Status Success Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseVendorOrderStatusResponse"
+                },
+                "examples": {
+                  "vendorOrderStatusResponse": {
+                    "value": {
+                      "status": 200,
+                      "statusMessage": "SUCCESS",
+                      "result": {
+                        "clientOrderId": 6601,
+                        "vendorOrderId": 8064,
+                        "vendorOrderStatus": "Complete",
+                        "vendorOrderStatusDetail": "ALL_REQUESTS_SUBMITTED_FOR_OUTBOUND"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request, Please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "badRequest": {
+                    "value": {
+                      "status": 400,
+                      "statusMessage": "Bad Request",
+                      "error": {
+                        "status": "BAD_REQUEST",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"API_ERROR_BAD_REQUEST\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is unauthorized to access vendor order status API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "authError": {
+                    "value": {
+                      "error": "Token is expired",
+                      "status": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Application failed to retrieve given vendor order status , Internal server error occured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "internalError": {
+                    "value": {
+                      "status": 500,
+                      "statusMessage": "Internal Server Error",
+                      "error": {
+                        "status": "INTERNAL_SERVER_ERROR",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"INTERNAL_SERVER_ERROR\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Order Management"
+        ]
+      }
+    },
+    "/v1/vendors/providerparticipation": {
+      "get": {
+        "summary": "NCC Provider participation list API",
+        "description": "To fetch provider details in NCC, please use /findProviders legacy API. Either TIN or NPI is required.",
+        "operationId": "findProviders",
+        "parameters": [
+          {
+            "name": "tin",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "npi",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "requestType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "OR",
+                "AND",
+                "AND/OR"
+              ]
+            }
+          },
+          {
+            "name": "pageNo",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "tenantId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "clientOrgId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "acceptEncoding",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "gzip"
+            }
+          }
+        ],
+        "security": [
+          {
+            "ncc_auth": [
+              "scope-1"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseProviderParticipationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User is unauthorized to access vendor order status API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "format": "int64"
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "authError": {
+                    "value": {
+                      "error": "Token is expired",
+                      "status": 401
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Application failed to retrieve provider details , Internal server error occured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                },
+                "examples": {
+                  "internalError": {
+                    "value": {
+                      "status": 500,
+                      "statusMessage": "Internal Server Error",
+                      "error": {
+                        "status": "INTERNAL_SERVER_ERROR",
+                        "detail": {
+                          "message": "{\"status\":\"FAILED\",\"error\":{\"code\":\"INTERNAL_SERVER_ERROR\"}}"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Provider Participation List"
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "ncc_auth": {
+        "type": "oauth2",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://idx.linkhealth.com/auth",
+            "tokenUrl": "https://idx.linkhealth.com/auth/token",
+            "scopes": {
+              "scope-1": "required scope for API access"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "PlaceOrderRequest": {
+        "type": "object",
+        "required": [
+          "tenantId",
+          "clientOrgId",
+          "campaignId",
+          "requestingPartyId",
+          "rosterFilePath",
+          "clientOrderName",
+          "serviceStartDate",
+          "serviceEndDate",
+          "vendors"
+        ],
+        "properties": {
+          "tenantId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "clientOrgId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "campaignId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Campaign ID to place order. Either one of campaignId or campaignName is required"
+          },
+          "campaignName": {
+            "type": "string",
+            "description": "Campaign name to place order. Either one of campaignId or campaignName is required"
+          },
+          "requestingPartyId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Requesting party ID to place order. Either one of requestingPartyId or requestingPartyName is required"
+          },
+          "requestingPartyName": {
+            "type": "string",
+            "description": "Requesting party name to place order. Either one of requestingPartyId or requestingPartyName is required"
+          },
+          "rosterFilePath": {
+            "type": "string"
+          },
+          "clientOrderName": {
+            "type": "string"
+          },
+          "serviceStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "serviceEndDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "vendors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Vendor"
+            }
+          }
+        }
+      },
+      "clientOrderRequest": {
+        "type": "object",
+        "required": [
+          "vendorType",
+          "tenantId",
+          "clientOrgId",
+          "campaignId",
+          "requestingPartyId",
+          "rosterFilePath",
+          "clientOrderName",
+          "serviceStartDate",
+          "serviceEndDate",
+          "vendors"
+        ],
+        "properties": {
+          "vendorType": {
+            "type": "string",
+            "description": "Type of the vendor for which the order is placed. It can be either external or internal and should not have any other value."
+          },
+          "tenantId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "NCC tenant ID for which the order is to be placed."
+          },
+          "clientOrgId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "NCC Client org ID for which the order is to be placed."
+          },
+          "campaignId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Campaign ID to place order. Either one of campaignId or campaignName is required. If both are present, then preference will be given to campaign ID."
+          },
+          "campaignName": {
+            "type": "string",
+            "description": "Campaign name to place order. Either one of campaignId or campaignName is required. If both are present, then preference will be given to campaign ID."
+          },
+          "requestingPartyId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Requesting party ID to place order. Either one of requestingPartyId or requestingPartyName is required. If both are present, then preference will be given to requestingPartyId."
+          },
+          "requestingPartyName": {
+            "type": "string",
+            "description": "Requesting party name to place order. Either one of requestingPartyId or requestingPartyName is required. If both are present, then preference will be given to requestingPartyId."
+          },
+          "rosterFilePath": {
+            "type": "string",
+            "description": "The file path of ABS where the roster file is present. Roster file should be available at this location before placing the request."
+          },
+          "clientOrderName": {
+            "type": "string",
+            "description": "Unique name of the client order to be created."
+          },
+          "serviceStartDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Service start date."
+          },
+          "serviceEndDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Service end date."
+          },
+          "vendors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Vendor"
+            }
+          }
+        }
+      },
+      "Vendor": {
+        "type": "object",
+        "required": [
+          "vendorOrgId",
+          "interfaces"
+        ],
+        "properties": {
+          "vendorOrgId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Data vendor org ID."
+          },
+          "vendorName": {
+            "type": "string",
+            "description": "Data vendor name."
+          },
+          "interfaces": {
+            "type": "array",
+            "description": "List of MODXI interfaces to process order.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "subVendorNames": {
+            "type": "array",
+            "description": "List of internal vendor emr names for placing an order for internal vendor. There should not be any sub vendor names specified for external vendor.",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PlaceOrderResult": {
+        "type": "object",
+        "properties": {
+          "clientOrderId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Client order identifier for reference"
+          },
+          "statusMessage": {
+            "type": "string",
+            "description": "status message for client order."
+          },
+          "clientOrderStatus": {
+            "type": "string",
+            "enum": [
+              "ORDER_ACCEPTED",
+              "VALIDATION_ERRORS",
+              "AUTHORIZATION_FAILURE"
+            ]
+          }
+        }
+      },
+      "clientOrderResult": {
+        "type": "object",
+        "properties": {
+          "clientOrderId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Client order identifier for reference"
+          },
+          "statusMessage": {
+            "type": "string",
+            "description": "status message for client order."
+          },
+          "clientOrderStatus": {
+            "type": "string",
+            "enum": [
+              "ORDER_ACCEPTED",
+              "VALIDATION_ERRORS",
+              "AUTHORIZATION_FAILURE"
+            ]
+          }
+        }
+      },
+      "ApiResponseClientOrderDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusMessage": {
+            "type": "string"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ApiErrorResponse"
+          },
+          "result": {
+            "$ref": "#/components/schemas/ClientOrderDetailsResponse"
+          }
+        }
+      },
+      "ClientOrderDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "clientOrderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "clientOrderSubmittedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "clientOrderStatus": {
+            "type": "string"
+          },
+          "clientOrderStatusDetail": {
+            "type": "string"
+          },
+          "vendorOrders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VendorOrder"
+            }
+          }
+        }
+      },
+      "OrderMetric": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "downloadUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "OrderResult": {
+        "type": "object",
+        "properties": {
+          "cleanMetric": {
+            "$ref": "#/components/schemas/OrderMetric"
+          },
+          "errorMetric": {
+            "$ref": "#/components/schemas/OrderMetric"
+          },
+          "duplicateMetric": {
+            "$ref": "#/components/schemas/OrderMetric"
+          }
+        }
+      },
+      "VendorOrder": {
+        "type": "object",
+        "properties": {
+          "vendorOrgId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "vendorOrgName": {
+            "type": "string"
+          },
+          "vendorOrderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "vendorOrderStatus": {
+            "type": "string"
+          },
+          "vendorOrderStatusDetail": {
+            "type": "string"
+          },
+          "orderResult": {
+            "$ref": "#/components/schemas/OrderResult"
+          }
+        }
+      },
+      "ApiResponseVendorOrderDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusMessage": {
+            "type": "string"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ApiErrorResponse"
+          },
+          "result": {
+            "$ref": "#/components/schemas/VendorOrderDetailsResponse"
+          }
+        }
+      },
+      "VendorOrderDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "clientOrderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "vendorOrderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "vendorOrgId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "vendorOrgName": {
+            "type": "string"
+          },
+          "vendorOrderStatus": {
+            "type": "string"
+          },
+          "vendorOrderStatusDetail": {
+            "type": "string"
+          },
+          "submissionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "vendorOrderExpDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "newExpirationDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ApiResponseClientOrderStatusResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusMessage": {
+            "type": "string"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ApiErrorResponse"
+          },
+          "result": {
+            "$ref": "#/components/schemas/ClientOrderStatusResponse"
+          }
+        }
+      },
+      "ClientOrderStatusResponse": {
+        "type": "object",
+        "properties": {
+          "clientOrderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "clientOrderStatus": {
+            "type": "string"
+          },
+          "clientOrderStatusDetail": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResponseVendorOrderStatusResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusMessage": {
+            "type": "string"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ApiErrorResponse"
+          },
+          "result": {
+            "$ref": "#/components/schemas/VendorOrderStatusResponse"
+          }
+        }
+      },
+      "VendorOrderStatusResponse": {
+        "type": "object",
+        "properties": {
+          "clientOrderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "vendorOrderId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "vendorOrderStatus": {
+            "type": "string"
+          },
+          "vendorOrderStatusDetail": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiResponsePlaceOrderResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusMessage": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/PlaceOrderResult"
+          }
+        }
+      },
+      "ApiResponseClientOrderResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusMessage": {
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/clientOrderResult"
+          }
+        }
+      },
+      "ErrorDetail": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "detail": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          }
+        }
+      },
+      "ApiErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusMessage": {
+            "type": "string"
+          },
+          "error": {
+            "$ref": "#/components/schemas/Error"
+          }
+        }
+      },
+      "PackageInfo": {
+        "type": "object",
+        "properties": {
+          "vendorRequestUuid": {
+            "type": "string",
+            "format": "uuid",
+            "example": "48692046-d403-4da9-a14b-f234b5f63f33"
+          },
+          "vendorPackageId": {
+            "type": "string",
+            "example": "486113551_48692046-d403-4da9-a14b-f234b5f63f33_3313f8f8-6f5b-41da-9c70-0bb233a3100f"
+          },
+          "uniqueMemberId": {
+            "type": "string",
+            "example": "486113551"
+          },
+          "vendorName": {
+            "type": "string",
+            "example": "Athena"
+          },
+          "clientMemberTrackerIds": {
+            "type": "object",
+            "properties": {
+              "clientTrackingId1": {
+                "type": "string",
+                "example": "2667278"
+              },
+              "clientTrackingId2": {
+                "type": "string",
+                "example": ""
+              },
+              "clientTrackingId3": {
+                "type": "string",
+                "example": ""
+              }
+            }
+          },
+          "vendorPackage": {
+            "type": "object",
+            "properties": {
+              "fileName": {
+                "type": "string",
+                "example": "athena_52075876128_89712.xml"
+              },
+              "receivedDateTime": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2023-08-24T10:17:19"
+              },
+              "status": {
+                "type": "string",
+                "example": "ACCEPTED"
+              },
+              "statusDetails": {
+                "type": "string",
+                "example": "ACCEPTED"
+              }
+            }
+          },
+          "nccPackage": {
+            "type": "object",
+            "properties": {
+              "fileName": {
+                "type": "string",
+                "example": "NCC_Athena_48692046-d403-4da9-a14b-f234b5f63f33_733256_20230824101735.zip"
+              },
+              "sentDateTime": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2023-08-24T10:17:19"
+              }
+            }
+          }
+        }
+      },
+      "ApiResponseProviderParticipationResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "totalNoOfRecords": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Total number of records available"
+              },
+              "pageSize": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Maximum number of records per page"
+              },
+              "pageNumber": {
+                "type": "integer",
+                "format": "int32",
+                "description": "Current page number"
+              },
+              "providerParticipation": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ProviderParticipation"
+                }
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "HTTP Response Status",
+            "example": "success"
+          },
+          "message": {
+            "type": "string",
+            "description": "Returns 'VENDOR MATCHED' message if records are found, otherwise 'NO VENDOR MATCHED'",
+            "enum": [
+              "VENDOR MATCHED",
+              "NO VENDOR MATCHED"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/ApiErrorResponse"
+          }
+        }
+      },
+      "ProviderParticipation": {
+        "type": "object",
+        "properties": {
+          "vendor_orgId": {
+            "type": "string"
+          },
+          "vendorName": {
+            "type": "string",
+            "description": "Vendor name. Possible values are Athena, Veradigm, Moxe, EPP etc."
+          },
+          "emrInternalOrgs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "emr_id": {
+                  "type": "string"
+                },
+                "emr": {
+                  "type": "string"
+                },
+                "providerInfo": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProviderInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ProviderInfo": {
+        "type": "object",
+        "properties": {
+          "provider_infoId": {
+            "type": "string"
+          },
+          "provider_tin": {
+            "type": "string"
+          },
+          "provider_npi": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "provider_orgName": {
+            "type": "string"
+          },
+          "provider_orgState": {
+            "type": "string"
+          },
+          "provider_orgZip": {
+            "type": "string"
+          },
+          "facility_name": {
+            "type": "string"
+          },
+          "facility_npi": {
+            "type": "string"
+          },
+          "facility_tin": {
+            "type": "string"
+          },
+          "facility_state": {
+            "type": "string"
+          },
+          "facility_zip": {
+            "type": "string"
+          },
+          "creationDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "activeStartDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "activeEndDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "lastOptOutDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "optInStartDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "optInEndDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    }
+  },
+  "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true
+  }
+}

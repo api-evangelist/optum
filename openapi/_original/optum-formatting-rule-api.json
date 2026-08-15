@@ -1,0 +1,819 @@
+{
+  "components": {
+    "schemas": {
+      "ClaimFormat": {
+        "properties": {
+          "acceptedClaimResponse": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "compoundNDCRequired": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "deactivate": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "errorCode": {
+            "type": "string"
+          },
+          "lastUpdated": {
+            "type": "string"
+          },
+          "mode": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "priceGt9999": {
+            "type": "boolean"
+          },
+          "printPlanName": {
+            "type": "boolean"
+          },
+          "qtyGt9999": {
+            "type": "boolean"
+          },
+          "sendFirstNameIn": {
+            "type": "boolean"
+          },
+          "state": {
+            "type": "string"
+          },
+          "transmission": {
+            "items": {
+              "$ref": "#/components/schemas/Transmission"
+            },
+            "type": "array"
+          },
+          "txsPerCall": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "FieldGroup": {
+        "properties": {
+          "allFields": {
+            "items": {
+              "$ref": "#/components/schemas/SegmentField"
+            },
+            "type": "array"
+          },
+          "field": {
+            "$ref": "#/components/schemas/SegmentField",
+            "writeOnly": true
+          },
+          "fieldGroup": {
+            "$ref": "#/components/schemas/FieldGroup",
+            "writeOnly": true
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/SegmentField"
+            },
+            "type": "array"
+          },
+          "id": {
+            "type": "string"
+          },
+          "included": {
+            "type": "boolean"
+          },
+          "mandatory": {
+            "type": "boolean"
+          },
+          "sendIfNull": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "GetClaimFormatRequest": {
+        "properties": {
+          "billingSequence": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 2,
+            "example": "S1"
+          },
+          "bin": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 6,
+            "example": "A99"
+          },
+          "chainID": {
+            "type": "string",
+            "pattern": "^[0-9]*$",
+            "maxLength": 38
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 3,
+            "example": "DG6"
+          },
+          "customer": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 128,
+            "example": "customerName"
+          },
+          "externalMessageId": {
+            "type": "string",
+            "pattern": "^[0-9]*$"
+          },
+          "groupCode": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 15,
+            "example": "D0"
+          },
+          "pcn": {
+            "type": "string",
+            "maxLength": 10,
+            "format": "ncpdp-alphanumeric",
+            "example": "A987"
+          },
+          "rems": {
+            "type": "string",
+            "maxLength": 1,
+            "example": "N",
+            "enum": [
+              "y",
+              "n",
+              "Y",
+              "N",
+              null
+            ]
+          },
+          "siteCode": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 80,
+            "example": "epsxx92qax1e2cz"
+          },
+          "sourceSystemId": {
+            "type": "string",
+            "pattern": "^[0-9]*$"
+          },
+          "transactionCode": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "GetClaimFormatResponse": {
+        "properties": {
+          "claimFormat": {
+            "$ref": "#/components/schemas/JsonClaimFormat"
+          }
+        },
+        "type": "object"
+      },
+      "JsonClaimFormat": {
+        "properties": {
+          "billingSequence": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 2,
+            "example": "S1"
+          },
+          "bin": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 6,
+            "example": "A99"
+          },
+          "chainID": {
+            "type": "string",
+            "pattern": "^[0-9]*$",
+            "maxLength": 38
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 3,
+            "example": "DG6"
+          },
+          "customer": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 128,
+            "example": "customerName"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 250,
+            "format": "ncpdp-alphanumeric",
+            "example": "NCPDP D.0 Claim"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "rxn-date",
+            "example": "2025-01-01"
+          },
+          "expirationDate": {
+            "type": "string",
+            "format": "rxn-date",
+            "example": "2030-01-01"
+          },
+          "externalMessageId": {
+            "type": "string",
+            "pattern": "^[0-9]*$"
+          },
+          "groupCode": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 15,
+            "example": "D0"
+          },
+          "pcn": {
+            "type": "string",
+            "maxLength": 10,
+            "format": "ncpdp-alphanumeric",
+            "example": "A987"
+          },
+          "rems": {
+            "type": "string",
+            "maxLength": 1,
+            "example": "N",
+            "enum": [
+              "y",
+              "n",
+              "Y",
+              "N",
+              null
+            ]
+          },
+          "siteCode": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 80,
+            "example": "epsxx92qax1e2cz"
+          },
+          "sourceSystemId": {
+            "type": "string",
+            "pattern": "^[0-9]*$"
+          },
+          "transmissions": {
+            "items": {
+              "$ref": "#/components/schemas/JsonTransmission"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "JsonClaimFormatWrapper": {
+        "properties": {
+          "claimFormats": {
+            "items": {
+              "$ref": "#/components/schemas/JsonClaimFormat"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "JsonFieldGroup": {
+        "properties": {
+          "fieldGroupId": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "fieldIdentifier": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 3,
+            "example": "123"
+          },
+          "fieldNumber": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 4,
+            "example": "A1"
+          },
+          "groupCode": {
+            "type": "string"
+          },
+          "maximumCount": {
+            "type": "string",
+            "example": "10"
+          }
+        },
+        "type": "object"
+      },
+      "JsonSegment": {
+        "properties": {
+          "segmentFields": {
+            "items": {
+              "$ref": "#/components/schemas/JsonSegmentField"
+            },
+            "type": "array"
+          },
+          "segmentIdentifier": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 32,
+            "example": "HEADER"
+          },
+          "sequence": {
+            "format": "int32",
+            "type": "integer",
+            "example": "2"
+          },
+          "usageCode": {
+            "type": "string",
+            "maxLength": 10,
+            "format": "ncpdp-alphanumeric",
+            "example": "M"
+          }
+        },
+        "type": "object"
+      },
+      "JsonSegmentField": {
+        "properties": {
+          "customName": {
+            "type": "string",
+            "maxLength": 250,
+            "format": "ncpdp-alphanumeric",
+            "example": "custom field name"
+          },
+          "customProcessingCode": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 10,
+            "example": "A1"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 250,
+            "format": "ncpdp-alphanumeric",
+            "example": "field description"
+          },
+          "fieldDataType": {
+            "type": "string",
+            "maxLength": 250,
+            "format": "ncpdp-alphanumeric",
+            "example": "Integer"
+          },
+          "fieldDataTypeId": {
+            "format": "int64",
+            "type": "integer",
+            "example": "1"
+          },
+          "fieldGroups": {
+            "items": {
+              "$ref": "#/components/schemas/JsonFieldGroup"
+            },
+            "type": "array",
+            "example": []
+          },
+          "fieldIdentifier": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 3,
+            "example": "A1"
+          },
+          "fieldNumber": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 4,
+            "example": "101"
+          },
+          "fieldType": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 1,
+            "example": "I"
+          },
+          "includeIfNull": {
+            "type": "boolean",
+            "example": "true"
+          },
+          "mantissaSize": {
+            "format": "int32",
+            "type": "integer",
+            "example": "1"
+          },
+          "maximumLength": {
+            "format": "int32",
+            "type": "integer",
+            "example": "10"
+          },
+          "segmentFieldQualifiers": {
+            "items": {
+              "$ref": "#/components/schemas/JsonSegmentFieldQualifier"
+            },
+            "type": "array",
+            "example": []
+          },
+          "sequence": {
+            "format": "int32",
+            "type": "integer",
+            "example": "1"
+          },
+          "usageCode": {
+            "type": "string",
+            "maxLength": 10,
+            "format": "ncpdp-alphanumeric",
+            "example": "M"
+          },
+          "useIfNull": {
+            "type": "string",
+            "maxLength": 250,
+            "format": "ncpdp-alphanumeric",
+            "example": "   "
+          }
+        },
+        "type": "object"
+      },
+      "JsonSegmentFieldQualifier": {
+        "properties": {
+          "qualifierCode": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 10
+          },
+          "qualifierDescription": {
+            "type": "string",
+            "maxLength": 250
+          },
+          "sequence": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "JsonTransmission": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 10,
+            "example": "B1"
+          },
+          "segments": {
+            "items": {
+              "$ref": "#/components/schemas/JsonSegment"
+            },
+            "type": "array"
+          },
+          "standard": {
+            "type": "string",
+            "maxLength": 2,
+            "example": "D0",
+            "enum": [
+              "D0",
+              ""
+            ]
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9]*$",
+            "maxLength": 50,
+            "example": "request"
+          }
+        },
+        "type": "object"
+      },
+      "N1": {
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "selected": {
+            "type": "boolean"
+          },
+          "subId": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "Prereq": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Prereqs": {
+        "properties": {
+          "prereq": {
+            "$ref": "#/components/schemas/Prereq"
+          }
+        },
+        "type": "object"
+      },
+      "SaveClaimFormatRequest": {
+        "properties": {
+          "claimFormat": {
+            "$ref": "#/components/schemas/JsonClaimFormat"
+          }
+        },
+        "type": "object"
+      },
+      "Segment": {
+        "properties": {
+          "allFields": {
+            "items": {
+              "$ref": "#/components/schemas/SegmentField"
+            },
+            "type": "array"
+          },
+          "field": {
+            "$ref": "#/components/schemas/SegmentField",
+            "writeOnly": true
+          },
+          "fieldGroup": {
+            "$ref": "#/components/schemas/FieldGroup",
+            "writeOnly": true
+          },
+          "fieldGroups": {
+            "items": {
+              "$ref": "#/components/schemas/FieldGroup"
+            },
+            "type": "array"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/SegmentField"
+            },
+            "type": "array"
+          },
+          "id": {
+            "type": "string"
+          },
+          "mandatory": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "SegmentField": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "included": {
+            "type": "boolean"
+          },
+          "mandatory": {
+            "type": "boolean"
+          },
+          "n1List": {
+            "items": {
+              "$ref": "#/components/schemas/N1"
+            },
+            "type": "array"
+          },
+          "prereqs": {
+            "$ref": "#/components/schemas/Prereqs"
+          },
+          "sendIfNull": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "SegmentGroup": {
+        "properties": {
+          "mandatory": {
+            "type": "boolean"
+          },
+          "segment": {
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "Transmission": {
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "segment": {
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            },
+            "type": "array"
+          },
+          "segmentGroup": {
+            "$ref": "#/components/schemas/SegmentGroup"
+          },
+          "type": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateClaimFormatRequest": {
+        "properties": {
+          "claimFormat": {
+            "$ref": "#/components/schemas/JsonClaimFormat"
+          }
+        },
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "oauth2_security": {
+        "flows": {
+          "clientCredentials": {
+            "scopes": {},
+            "tokenUrl": "https://idx-stage.linkhealth.com/auth/realms/developer-platform/protocol/openid-connect/token"
+          }
+        },
+        "type": "oauth2"
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Resource Docs",
+    "url": "https://springdoc.org/"
+  },
+  "info": {
+    "description": "API for Formatting Rule",
+    "title": "Formatting Rule API",
+    "version": "v1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/standards-based-messaging/services/payer-sheet-service/telecomFormat/fetch": {
+      "post": {
+        "description": "This endpoint is used to retrieve existing telecom claim formats based on provided criteria (e.g., payer ID, format ID, etc.). It returns the matching claim format(s) from the system for viewing or further processing.",
+        "operationId": "getClaimFormat",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "getClaimFormatRequest": {
+                    "$ref": "#/components/schemas/GetClaimFormatRequest"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "properties": {
+                    "getClaimFormatResponse": {
+                      "$ref": "#/components/schemas/GetClaimFormatResponse"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Fetch Claim Format",
+        "tags": [
+          "Payersheet"
+        ]
+      }
+    },
+    "/v1/standards-based-messaging/services/payer-sheet-service/telecomFormat/save": {
+      "post": {
+        "description": "This endpoint is used to save a new telecom claim format. It accepts a payload containing the details of the claim format and persists it in the system. Typically used when creating a new configuration for telecom-based payer sheets.",
+        "operationId": "saveClaimFormat",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "request",
+            "required": true,
+            "schema": {
+              "properties": {
+                "saveClaimFormatRequest": {
+                  "$ref": "#/components/schemas/SaveClaimFormatRequest"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Save Claim Format",
+        "tags": [
+          "Payersheet"
+        ]
+      }
+    },
+    "/v1/standards-based-messaging/services/payer-sheet-service/telecomFormat/update": {
+      "patch": {
+        "description": "This endpoint is used to update an existing telecom claim format. It requires the updated format data, including the identifier of the format to be modified. Useful for maintaining or correcting claim format configurations.",
+        "operationId": "updateClaimFormat",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "request",
+            "required": true,
+            "schema": {
+              "properties": {
+                "updateClaimFormatRequest": {
+                  "$ref": "#/components/schemas/UpdateClaimFormatRequest"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Update Claim Format",
+        "tags": [
+          "Payersheet"
+        ]
+      }
+    },
+    "/health/formatting-rules": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Health check endpoint for the formatting rule engine",
+        "tags": [
+          "HealthCheck"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "oauth2_security": []
+    }
+  ],
+  "servers": [
+    {
+      "description": "Generated server url",
+      "url": "https://sandbox-apigw.optum.com/rxn/formattingrules"
+    }
+  ],
+  "tags": [
+    {
+      "description": "API to process Payersheet information",
+      "name": "Payersheet"
+    }
+  ],
+  "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true
+  }
+}

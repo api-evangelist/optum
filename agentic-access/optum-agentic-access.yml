@@ -1,0 +1,5655 @@
+generated: '2026-08-14'
+method: generated
+source: openapi/optum-abm-care-decision-support-api-openapi.yml, openapi/optum-abm-pre-pay-lab-api-1-0-0-openapi.yml,
+  openapi/optum-abm-prepay-dme-claim-api-1-0-0-openapi.yml, openapi/optum-abm-priorauth-api-1-0-0-openapi.yml,
+  openapi/optum-attachment-openapi.yml, openapi/optum-auth-referral-submission-api-openapi.yml,
+  openapi/optum-auth-referral-submission-health-check-openapi.yml, openapi/optum-authorization-auth-only-openapi.yml,
+  openapi/optum-benefit-check-api-openapi.yml, openapi/optum-claim-actions-api-openapi.yml,
+  openapi/optum-claim-actions-health-check-openapi.yml, openapi/optum-claim-inquiry-api-openapi.yml,
+  openapi/optum-claim-inquiry-health-check-openapi.yml, openapi/optum-claim-pre-check-api-openapi.yml,
+  openapi/optum-cms-common-facility-openapi.yml, openapi/optum-cms-common-physician-openapi.yml,
+  openapi/optum-core-service-openapi.yml, openapi/optum-cross-community-rest-apis-xc-rest-openapi.yml,
+  openapi/optum-dental-attachment-api-openapi.yml, openapi/optum-dental-pre-care-estimate-api-openapi.yml,
+  openapi/optum-document-search-api-openapi.yml, openapi/optum-document-search-health-check-openapi.yml,
+  openapi/optum-edi-enrollment-v1-openapi.yml, openapi/optum-eligibility-pre-service-health-check-openapi.yml,
+  openapi/optum-enhanced-eligibility-api-openapi.yml, openapi/optum-file-and-document-tracking-api-v1-openapi.yml,
+  openapi/optum-formatting-rule-api-openapi.yml, openapi/optum-medical-network-attachment-retrieval-v1-openapi.yml,
+  openapi/optum-medical-network-attachment-status-v1-openapi.yml, openapi/optum-medical-network-attachments-submission-v1-openapi.yml,
+  openapi/optum-medical-network-claim-status-v2-openapi.yml, openapi/optum-medical-network-claims-responses-and-reports-v2-openapi.yml,
+  openapi/optum-medical-network-eligibility-v3-openapi.yml, openapi/optum-medical-network-institutional-claims-v1-openapi.yml,
+  openapi/optum-medical-network-professional-claims-v3-openapi.yml, openapi/optum-ncc-data-acquisition-api-openapi.yml,
+  openapi/optum-odx-v3-xdr-ingestion-service-api-openapi.yml, openapi/optum-optum-common-facility-openapi.yml,
+  openapi/optum-optum-common-physician-openapi.yml, openapi/optum-optum-real-health-check-api-openapi.yml,
+  openapi/optum-optum-real-pre-service-eligibility-api-openapi.yml, openapi/optum-optum-real-time-econtent-web-services-openapi.yml,
+  openapi/optum-patient-benefit-check-health-check-openapi.yml, openapi/optum-payer-list-api-v1-openapi.yml,
+  openapi/optum-pes-payer-enrollments-v1-openapi.yml, openapi/optum-prior-authorization-v1-openapi.yml,
+  openapi/optum-prometheus-analytics-api-job-submission-openapi.yml, openapi/optum-prometheus-analytics-checkjob-openapi.yml,
+  openapi/optum-real-dental-attachments-api-openapi.yml, openapi/optum-real-dental-claim-status-api-openapi.yml,
+  openapi/optum-real-dental-claim-submission-api-openapi.yml, openapi/optum-real-dental-pre-care-eligibility-api-openapi.yml,
+  openapi/optum-real-dental-pre-care-eligibility-intelligence-api-openapi.yml, openapi/optum-real-prior-authorization-api-openapi.yml,
+  openapi/optum-real-provider-access-api-openapi.yml, openapi/optum-security-and-authorization-v2-openapi.yml,
+  openapi/optum-security-and-authorization-v3-openapi.yml, openapi/optum-submitter-api-openapi.yml,
+  openapi/optum-telecom-formatter-api-openapi.yml
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 483
+  by_action_class:
+    acting: 122
+    connected: 361
+  by_consequence:
+    write: 115
+    read: 361
+    physical: 4
+    safety-critical: 3
+  human_in_the_loop_required: 3
+operations:
+- path: /abm/dsrservice/v1
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /abm/dsrservicesearch/v1/{decisionSupportNumber}
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /abm/dsrservicesearch/v1/{decisionSupportNumber}
+  method: delete
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /abm/dsrservicehc/v1
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /abm/dsrservicesearch/v1/
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /abm/prepaylab/v1
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /abm/prepaydme/v1
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /abm/priorauth/v1
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/claim/actions/v1
+  method: post
+  operationId: claimActions
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/patient/auth/referral/v1
+  method: post
+  operationId: authReferralSubmission
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/patient/auth/referral/v1/healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /apip/auth/sntl/v1/token
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/patient/benefit/check/v1
+  method: post
+  operationId: benefitCheck
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/claim/actions/v1
+  method: post
+  operationId: claimActions
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/claim/actions/v1/healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/claim/inquiry/v1
+  method: post
+  operationId: claimInquiry
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/claim/inquiry/v1/healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /pre-service/v1/claim/precheck
+  method: post
+  operationId: claimPreCheck
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/cms/facility/supporting-documents/
+  method: post
+  operationId: getSupportingDocumentationDetails
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/cms/common/transmittal/
+  method: post
+  operationId: getCMSTransmittal
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/cms/common/policy-lookup/
+  method: post
+  operationId: searchPolicyLookup
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/cms/common/policy-lookup/{policy-id}/related-articles
+  method: get
+  operationId: fetchRelatedLCDPolicyByPolicyById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /app/cms/common/cci/modifiers/{code}
+  method: get
+  operationId: fetchRelatedLCDPolicyByPolicyById_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /app/cms/common/cci/codeValidator
+  method: get
+  operationId: fetchValidCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/{mueType}/mue
+  method: get
+  operationId: getMueTableData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/{iomType}/iom-policy/{codeType}/{code}
+  method: get
+  operationId: getCMSIOMSPolicies
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/{cmsType}/policy-list/ncd/{contractorPart}/{codetype}/{code}
+  method: get
+  operationId: getNCDPolicyList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/{cmsType}/policy-list/lcd/{contractorPart}/{codetype}/{code}
+  method: get
+  operationId: getLCDPolicyList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/{procedure-device-type}
+  method: get
+  operationId: getProcedureToDeviceToProcedureCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/{procedure-device-type}/{device-or-procedure-code}
+  method: get
+  operationId: getProcedureToDeviceToProcedureCodeSpecific
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/{device-type}
+  method: get
+  operationId: fetchDeviceCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/{codetype}/mce-edits
+  method: get
+  operationId: fetchMCEEdits
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/{codetype}/{code}/drgs
+  method: get
+  operationId: drgCodesForIcdCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/{codetype}/{code}/{conditiontype}/cc-mcc
+  method: get
+  operationId: getCCMCCCodeExcludesList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/{codetype}/cc-mcc/code-list
+  method: get
+  operationId: getCCMCCCodeList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/{codeType}/diagnosis/{code}/ioce-edits
+  method: get
+  operationId: getIOCEAssociatedForICD10CmI9V1Code
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/{codeType}/procedure/{code}/ioce-edits
+  method: get
+  operationId: getIOCEAssociatedForCptHcpcsCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/{apctype}
+  method: get
+  operationId: fetchAPCCrossCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/{apctype}/{code}
+  method: get
+  operationId: fetchCodeSpecificAPCCrossCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/{apcCode}/apc-cross-codes
+  method: get
+  operationId: fetchAPCCrossCodeDetail
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/tob-oce
+  method: get
+  operationId: getTobOce
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/tob-oce/{code}
+  method: get
+  operationId: getTobOceByCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/supporting-documents/{doc-id}/document-download
+  method: get
+  operationId: getSupportingDocumentPDF
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/remittance-advice-remark-codes/
+  method: get
+  operationId: getRemittanceAdviceCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/mpfs/payment/{carrier}/{locality}
+  method: get
+  operationId: getMPFSFacilityPayment
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/mdc/{codetype}/{mdccode}/drg
+  method: get
+  operationId: fetchDRGCodeListForMDC
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/mdc/{codetype}/all
+  method: get
+  operationId: fetchMCEEdits_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/mce/associated-icd9/{id}
+  method: get
+  operationId: getMCEAssociatedICD9Codes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/mce-associated-icd10/parent/{mce_code}
+  method: get
+  operationId: getMCEAssociatedICD10ParentCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/mce-associated-icd10/dropdown/{id}
+  method: get
+  operationId: getDropdownValues
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/mce-associated-icd10/child/{conditionalId}
+  method: get
+  operationId: getMCEAssociatedICD10ChildCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/ioce-edits
+  method: get
+  operationId: getIOCEEdits
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/ioce-edits/codes-associated-with-edit/{edit-number}
+  method: get
+  operationId: getCodesAssociatedForEdit
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/icd9/{code}/mce-edits
+  method: get
+  operationId: getMCEEditsICD9
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/icd10/{icd10Code}/mce-edits
+  method: get
+  operationId: fetchMCEEditsICD10
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/health-care-reason-codes
+  method: get
+  operationId: getHealthCareReasonCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/drg/{drg-code}/icd9/cross-codes
+  method: get
+  operationId: getI9CodesForDrgCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/drg/{drg-code}/icd10/cross-codes
+  method: get
+  operationId: getI10CodesForDrgCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/drg/{codetype}/all
+  method: get
+  operationId: drgCodesAll
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/device-offset-code-pairs
+  method: get
+  operationId: getDeviceOffsetCodePairs
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/claim-status-codes
+  method: get
+  operationId: getClaimStatusCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/claim-status-category-codes
+  method: get
+  operationId: getClaimStatusCategoryCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/cci/{code}/{column-type}
+  method: get
+  operationId: getSingleCodeView_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/cci/print
+  method: get
+  operationId: printCCIResults_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/cci/effective-date-version
+  method: get
+  operationId: getCCIEffectiveDateAndVersionDesc
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/cci/conflict-view
+  method: get
+  operationId: getMultiCodeCodeView_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/cci/cci-edits-list/{list-type}
+  method: get
+  operationId: getCCIEditsList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/facility/carc
+  method: get
+  operationId: fetchCARCList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/transmittal/{doc-id}/{doc-source-id}/transmittal-download
+  method: get
+  operationId: getCMSTransmittalDocument
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/transmittal/{code}
+  method: get
+  operationId: getCodeDetailCMSTransmittals
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/release-date/{id}
+  method: get
+  operationId: getReleaseDate
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/policy-lookup/{policy-type}/{policy-number}
+  method: get
+  operationId: fetchPolicyByIdValue
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/policy-list/ncd/{contractorPart}
+  method: get
+  operationId: getMedicareNCDPolicyList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/policy-list/lcd/{contractorPart}
+  method: get
+  operationId: getMedicareLCDPolicyList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/noc/pricing-list
+  method: get
+  operationId: getNocDrugPriceList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/medicare-contractors
+  method: get
+  operationId: fetchMedicareContractors
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/hcc/{hccType}/{hccCode}/diagnosis-codes
+  method: get
+  operationId: getDiagnosisCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/hcc/{hccType}/codes
+  method: get
+  operationId: getHCCCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/hcc/{codetype}/{code}/code
+  method: get
+  operationId: getHCCDiagnosisCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/fee-schedule/{fee-schedule-type}
+  method: get
+  operationId: getOutpatientFees
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/fee-schedule/{fee-schedule-type}/{state}
+  method: get
+  operationId: getOutpatientFees_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/fee-schedule/zip-code/{state}
+  method: get
+  operationId: getZipCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/fee-schedule/states/state-list
+  method: get
+  operationId: getStateList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/clinical-diagnostic
+  method: get
+  operationId: getClinicalDiagnostic
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/average-sales/sales-price
+  method: get
+  operationId: getAverageSales
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/ambulance/medicare-localities
+  method: get
+  operationId: getMedicareCarrierLocalities
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/ambulance/ambulance-fee-schedule/{carrier}/{locality}
+  method: get
+  operationId: getAmbulanceFees
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/qpp/
+  method: post
+  operationId: getTableData
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/cms/common/transmittal/
+  method: post
+  operationId: getCMSTransmittal
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/cms/common/policy-lookup/
+  method: post
+  operationId: searchPolicyLookup
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/cms/common/policy-lookup/{policy-id}/related-articles
+  method: get
+  operationId: fetchRelatedLCDPolicyByPolicyById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /app/cms/common/cci/modifiers/{code}
+  method: get
+  operationId: fetchRelatedLCDPolicyByPolicyById_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /app/cms/common/cci/codeValidator
+  method: get
+  operationId: fetchValidCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/{mueType}/mue
+  method: get
+  operationId: getMueTableData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/{iomType}/iom-policy/{codeType}/{code}
+  method: get
+  operationId: getCMSIOMSPolicies
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/{cmsType}/policy-list/ncd/{contractorPart}/{codetype}/{code}
+  method: get
+  operationId: getNCDPolicyList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/{cmsType}/policy-list/lcd/{contractorPart}/{codetype}/{code}
+  method: get
+  operationId: getLCDPolicyList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/{code}/physician-time
+  method: get
+  operationId: getPhysicianTime
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/qpp/{doc-id}/mips-download
+  method: get
+  operationId: qppMipsDocument
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/qpp/specialty-measures
+  method: get
+  operationId: getSpecialtyMeasures
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/qpp/measure-types
+  method: get
+  operationId: getMeasureTypes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/mpfs/status-codes
+  method: get
+  operationId: getStatusCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/mpfs/payment-indicators/{ruletype}
+  method: get
+  operationId: getPaymentIndicatorList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/mpfs/payment-indicator-status/{code}
+  method: get
+  operationId: fetchPaymentIndicatorAndStatusFees
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/mpfs/national-physician-relative-file
+  method: get
+  operationId: getRelativeFile
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/mpfs/global-days/{code}
+  method: get
+  operationId: getGlobalDays
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/mpfs/fee-schedule/{codetype}/{code}/{carrier}/{locality}
+  method: get
+  operationId: fetchMedicareFees
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/hcpcs/{code}
+  method: get
+  operationId: getHcpcsMedicareReductionGroups
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/cpt/{code}
+  method: get
+  operationId: getCptMedicareReductionGroups
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/cci/{market-type}/print
+  method: get
+  operationId: printCCIResults
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/cci/{market-type}/conflict-view
+  method: get
+  operationId: getMultiCodeConflictView
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/cci/{market-type}/code-view
+  method: get
+  operationId: getMultiCodeCodeView
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/physician/cci/{code}/{column-type}
+  method: get
+  operationId: getSingleCodeView
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/transmittal/{doc-id}/{doc-source-id}/transmittal-download
+  method: get
+  operationId: getCMSTransmittalDocument
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/transmittal/{code}
+  method: get
+  operationId: getCodeDetailCMSTransmittals
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/release-date/{id}
+  method: get
+  operationId: getReleaseDate
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/policy-lookup/{policy-type}/{policy-number}
+  method: get
+  operationId: fetchPolicyByIdValue
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/policy-list/ncd/{contractorPart}
+  method: get
+  operationId: getMedicareNCDPolicyList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/policy-list/lcd/{contractorPart}
+  method: get
+  operationId: getMedicareLCDPolicyList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/noc/pricing-list
+  method: get
+  operationId: getNocDrugPriceList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/medicare-contractors
+  method: get
+  operationId: fetchMedicareContractors
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/hcc/{hccType}/{hccCode}/diagnosis-codes
+  method: get
+  operationId: getDiagnosisCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/hcc/{hccType}/codes
+  method: get
+  operationId: getHCCCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/hcc/{codetype}/{code}/code
+  method: get
+  operationId: getHCCDiagnosisCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/fee-schedule/{fee-schedule-type}
+  method: get
+  operationId: getOutpatientFees
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/fee-schedule/{fee-schedule-type}/{state}
+  method: get
+  operationId: getOutpatientFees_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/fee-schedule/zip-code/{state}
+  method: get
+  operationId: getZipCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/fee-schedule/states/state-list
+  method: get
+  operationId: getStateList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/clinical-diagnostic
+  method: get
+  operationId: getClinicalDiagnostic
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/average-sales/sales-price
+  method: get
+  operationId: getAverageSales
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/ambulance/medicare-localities
+  method: get
+  operationId: getMedicareCarrierLocalities
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/cms/common/ambulance/ambulance-fee-schedule/{carrier}/{locality}
+  method: get
+  operationId: getAmbulanceFees
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{print-type}/print
+  method: post
+  operationId: printCodeSummary
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/coding/code/codetype
+  method: post
+  operationId: codeType
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/coding/i10_pcs/builder/{code}
+  method: get
+  operationId: searchCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/i10_pcs/builder/{code}/autocomplete
+  method: get
+  operationId: autoSuggest
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/i10_pcs/builder/
+  method: get
+  operationId: fetchTabularList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/filter-dictionary-terms
+  method: get
+  operationId: dictTerms
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{modifier}/modifier-crosscodes
+  method: get
+  operationId: allModifierCodeList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{code}/{modifier-type}/{mod-code}/{prod-code}/modifier-download
+  method: get
+  operationId: printModCodesReport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{code}/{modifier-type}/modifier-crosswalk
+  method: get
+  operationId: modifierCrosswalk
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{code}/validate
+  method: get
+  operationId: validateCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{code}/ama-section-guidelines-doc
+  method: get
+  operationId: fetchSectionGuidelinesPDF
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/mapping/i10_pcs
+  method: get
+  operationId: i9v3Toi10pcsMapping
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/mapping/i10_cm
+  method: get
+  operationId: i9v1Toi10cmMapping
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/color-codes/sex
+  method: get
+  operationId: fetchI9SexCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/image
+  method: get
+  operationId: imageLinkResource
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/history
+  method: get
+  operationId: codeHistory
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/detail
+  method: get
+  operationId: codeDetail
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/range
+  method: get
+  operationId: range
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{term}/root-operation-definition-term
+  method: get
+  operationId: rootOperationDefinitionTerm
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/root-operation-definition
+  method: get
+  operationId: rootOperationDefinition
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/mapping/i9v3
+  method: get
+  operationId: i10pcsToi9v3Mapping
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/mapping/i9v1
+  method: get
+  operationId: i10cmToi9v1Mapping
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/chapter-notes
+  method: get
+  operationId: chapterNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/color-codes/sex/{sex-code-type}
+  method: get
+  operationId: getSexColorCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/color-codes/post-acute-care/{pac-icon-type}
+  method: get
+  operationId: getPacColorCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/color-codes/other-color-codes/{other-color-code-type}
+  method: get
+  operationId: getOtherColorCodeType
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/color-codes/manifestation/{manifestation-type}
+  method: get
+  operationId: fetchManifestationCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/color-codes/age/{age-code-type}
+  method: get
+  operationId: getColorCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/code-notes
+  method: get
+  operationId: codeNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/range-notes
+  method: get
+  operationId: rangeNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{modifier}/modifier-crosscodes
+  method: get
+  operationId: modifierCodeList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/modifiers
+  method: get
+  operationId: modifiers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/color-codes/reinstated
+  method: get
+  operationId: fetchReinstatedColorCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/lay-description
+  method: get
+  operationId: layDescription
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/{code}/section-notes
+  method: get
+  operationId: sectionNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/future-code/{futureCodeType}
+  method: get
+  operationId: getFutureCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codetype}/color-codes/{color-code-type}
+  method: get
+  operationId: fetchColorCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/{codeOrTerm}/image-search
+  method: get
+  operationId: searchImages
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/multi-codes/{code}
+  method: get
+  operationId: fetchMultiCodeDetails
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/modifier/{modifier}/validate
+  method: get
+  operationId: modifierValid
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/merck-manual/{code}
+  method: get
+  operationId: getMerckManuals
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/merck-manual/document/{doc-id}
+  method: get
+  operationId: getMerckManualPDF
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/image/{file}
+  method: get
+  operationId: imageResource
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/i9v3/color-codes/or-color-codes
+  method: get
+  operationId: fetchI9V3ORCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/i9v3/color-codes/coverage-color-codes
+  method: get
+  operationId: fetchI9V3MedicareCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/i9v1/color-codes/post-acute-care/{pac-icon-type}
+  method: get
+  operationId: getPacColorCodes_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/i9v1/color-codes/manifestation
+  method: get
+  operationId: fetchManifestationCodes_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/i9v1/color-codes/cc
+  method: get
+  operationId: fetchI9V1CCCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/i9v1/color-codes/age
+  method: get
+  operationId: fetchI9V1AgeCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/i10_pcs/{code}/range
+  method: get
+  operationId: rangePcs
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/i10_pcs/color-codes/{color-code-type}
+  method: get
+  operationId: fetchI10SepecificCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/i10_pcs/color-codes/sex/{color-code-type}
+  method: get
+  operationId: fetchI10PCSSexCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/hcpcs/color-codes/quantity
+  method: get
+  operationId: fetchQuantityColorCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/cpt/{code}/subsection-notes
+  method: get
+  operationId: getSubSectionNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/cpt/color-codes/unlisted
+  method: get
+  operationId: fetchUnlistedColorCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/cpt/color-codes/resequenced
+  method: get
+  operationId: fetchResequencedColorCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/cpt/color-codes/modifier-80
+  method: get
+  operationId: fetchModifier80ColorCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/cpt/color-codes/add-on
+  method: get
+  operationId: fetchCptSpecificColorCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/cpt/color-codes/51-exempt
+  method: get
+  operationId: fetch51ExemptColorCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/cpt/color-codes/50-exempt
+  method: get
+  operationId: fetch50ExemptColorCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/book/{codeType}
+  method: get
+  operationId: fetchCodeBook
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/coding/code/book/i10_pcs
+  method: get
+  operationId: fetchPcsCodeBook
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/xc/v1/clinical/documents/search
+  method: post
+  operationId: documentSearch
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/xc/v1/clinical/document/retrieve
+  method: post
+  operationId: documentRetrieve
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /dentalnetwork/attachments/v1/CreateAttachment
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /dentalnetwork/attachments/v1/AddAttachment
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /dentalnetwork/attachments/v1/{attachmentId}/UpdateAttachmentFile/{attachmentFileId}
+  method: put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /dentalnetwork/attachments/v1/CommitAttachment/{attachmentId}
+  method: patch
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /dentalnetwork/attachments/v1/GetAttachmentbyId/{attachmentId}
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /dentalnetwork/attachments/v1/GetAttachmentList/{AttachmentId}
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /dentalnetwork/attachments/v1/{attachmentId}/DeleteAttachmentFile/{attachmentFileId}
+  method: delete
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /dentalnetwork/attachments/v1/GetAllParticipatingPayers
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /dentalnetwork/attachments/v1/IsParticipatingPayer
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /dentalnetwork/attachments/v1/GetPayerBusinessRules/me
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /apip/auth/v2/token
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /claim/precare/v1
+  method: post
+  operationId: dentalClaimPrecheck
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /claim/precare/v1/healthcheck
+  method: get
+  operationId: dentalClaimPrecheckHealth
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/document/search/v1
+  method: post
+  operationId: documentSearch
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/document/search/v1/healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /era/enrollment-submission
+  method: post
+  operationId: submitEraEnrollment
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /era/results/{payloadId}
+  method: get
+  operationId: getResults
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/eligibility/v1/healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rcm/eligibility/v1
+  method: post
+  operationId: postEligibility
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - create_txn
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /rcm/eligibility/v1/real-time/x12
+  method: post
+  operationId: postEligibilityX12
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - create_txn
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /rcm/eligibility/v1/transactions
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_txn
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rcm/eligibility/v1/transactions/{id}
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_txn
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rcm/eligibility/v1/coverage-discovery
+  method: post
+  operationId: postDiscovery
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - create_coveragediscovery
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /rcm/eligibility/v1/coverage-discovery
+  method: get
+  operationId: getAllDiscoveries
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_coveragediscovery
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rcm/eligibility/v1/coverage-discovery/x12
+  method: post
+  operationId: postDiscoveryX12
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - create_coveragediscovery
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /rcm/eligibility/v1/coverage-discovery/{id}
+  method: get
+  operationId: getDiscoveryById
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_coveragediscovery
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rcm/eligibility/v1/healthcheck
+  method: get
+  operationId: healthcheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /getFileStatus/{contextID}/{fileName}
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /getListOfFileStatus/{contextID}
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /getDocumentStatus/{contextID}/{fileName}/{claimNumber}/{claimType}/{recipientType}
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /getListofDocStatus/{contextID}/{recipientType}
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /getDocCounts/{contextID}
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/standards-based-messaging/services/payer-sheet-service/telecomFormat/fetch
+  method: post
+  operationId: getClaimFormat
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/standards-based-messaging/services/payer-sheet-service/telecomFormat/save
+  method: post
+  operationId: saveClaimFormat
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/standards-based-messaging/services/payer-sheet-service/telecomFormat/update
+  method: patch
+  operationId: updateClaimFormat
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /health/formatting-rules
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /search
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{documentId}
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{traceId}
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /metadata
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /uploads
+  method: post
+  operationId: upload
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /claimstatus/v2/raw-x12/enhanced
+  method: post
+  operationId: rawX12Enhanced
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /medicalnetwork/claimstatus/v2/
+  method: post
+  operationId: claimstatus
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /medicalnetwork/claimstatus/v2/healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /medicalnetwork/claimstatus/v2/raw-x12
+  method: post
+  operationId: rawX12
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /
+  method: get
+  operationId: list_reports_v2_reports_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /healthcheck
+  method: get
+  operationId: health_check_v2_reports_healthcheck_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{filename}
+  method: get
+  operationId: get_single_report_v2_reports__filename__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{filename}
+  method: delete
+  operationId: delete_single_report_v2_reports__filename__delete
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /{filename}/277
+  method: get
+  operationId: convert_report_277_v2_reports__filename__277_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{filename}/835
+  method: get
+  operationId: convert_report_835_v2_reports__filename__835_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /medicalnetwork/eligibility/v3/
+  method: post
+  operationId: medicalEligibility
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /medicalnetwork/eligibility/v3/healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /medicalnetwork/eligibility/v3/raw-x12
+  method: post
+  operationId: rawX12
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /medicalnetwork/institutionalclaims/v1/validation
+  method: post
+  operationId: validateClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /medicalnetwork/institutionalclaims/v1/submission
+  method: post
+  operationId: processClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /medicalnetwork/institutionalclaims/v1/healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /medicalnetwork/institutionalclaims/v1/raw-x12-submission
+  method: post
+  operationId: processClaim_1
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /medicalnetwork/institutionalclaims/v1/raw-x12-validation
+  method: post
+  operationId: validateRawX12
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /medicalnetwork/professionalclaims/v3/validation
+  method: post
+  operationId: validateClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /medicalnetwork/professionalclaims/v3/submission
+  method: post
+  operationId: processClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /medicalnetwork/professionalclaims/v3/healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /medicalnetwork/professionalclaims/v3/raw-x12-submission
+  method: post
+  operationId: rawX12Submission
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /medicalnetwork/professionalclaims/v3/raw-x12-validation
+  method: post
+  operationId: rawX12Validation
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /om/placeOrder
+  method: post
+  operationId: placeOrder
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /om/clientOrderDetails
+  method: get
+  operationId: getClientOrderDetails
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /om/clientOrderStatus
+  method: get
+  operationId: getClientOrderStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /om/vendorOrderDetails
+  method: get
+  operationId: getVendorOrderDetails
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /om/vendorOrderStatus
+  method: get
+  operationId: getVendorOrderStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rm/package-transaction
+  method: get
+  operationId: trackPackage
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /om/v1/client-orders
+  method: post
+  operationId: v1CreateClientOrder
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /om/v1/client-orders/{orderId}
+  method: get
+  operationId: v1GetClientOrderDetails
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /om/v1/client-orders/{orderId}/status
+  method: get
+  operationId: v1GetClientOrderStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /om/v1/vendor-orders/{vendorOrderId}
+  method: get
+  operationId: v1GetVendorOrderDetails
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /om/v1/vendor-orders/{vendorOrderId}/status
+  method: get
+  operationId: v1GetVendorOrderStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/vendors/providerparticipation
+  method: get
+  operationId: findProviders
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - scope-1
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v3/ingest
+  method: post
+  operationId: ingestV3Payload
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/update
+  method: put
+  operationId: updateClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/update-claim-line
+  method: put
+  operationId: updateClaimLine
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/update-claim-diagnosis
+  method: put
+  operationId: updateClaimDiagnosis
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/submit/{compliance-type}/{scenario-number}
+  method: post
+  operationId: submitClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/reset
+  method: post
+  operationId: resetClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /app/optum/facility/claim/create
+  method: post
+  operationId: createClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/create-claim-line
+  method: post
+  operationId: createClaimLine
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/create-claim-diagnosis
+  method: post
+  operationId: createClaimDiagnosis
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/optum/facility/outpatient-claims/
+  method: post
+  operationId: outpatientClaims
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/optum/facility/federal-reg-add-b-history
+  method: post
+  operationId: getFederalRegAddBHistoryList
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/optum/facility/drg-calculator/
+  method: post
+  operationId: calculateDrg
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/optum/common/physician/compliance/abn-form
+  method: post
+  operationId: getABNForm
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/optum/common/cross-coder/list/hcpcs/{code}/i10_cm
+  method: post
+  operationId: getCrossCoderDataListI10CM
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/optum/common/cross-coder/list/cpt/{code}/i10_cm
+  method: post
+  operationId: getCrossCoderDataListI10CMFromCPT
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/details/{compliance-type}/{scenario-number}
+  method: get
+  operationId: getClaim
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /app/optum/facility/claim/abn/{scenario-number}
+  method: get
+  operationId: getAbnCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/{docId}/mdc-optimizing-tips-download
+  method: get
+  operationId: getMDCOptimizingTipsDocument
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/{codetype}/cdg
+  method: get
+  operationId: fetchCDGList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/wage-index
+  method: get
+  operationId: getWageIndexList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/ub04/{codetype}/list
+  method: get
+  operationId: getUb04Codes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/revenue-procedure-cross-codes/{rev-code}
+  method: get
+  operationId: getProcCodesForRevenueCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/provider-lookup/{careSetting}
+  method: get
+  operationId: getLookupTableData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/procedure-revenue-codes/{cpt-hcpcs-code}
+  method: get
+  operationId: getRevenueCodesForProcCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/opsi-codes
+  method: get
+  operationId: fetchOpsiCodesList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/opsi-codes/quarters/{code}
+  method: get
+  operationId: fetchOpsiCodeQuarterList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/opsi-codes/codes-associated-with-opsi/{opsi-code}/{opsi-code-id}
+  method: get
+  operationId: fetchOpsiCodesList_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/opps-cross-codes
+  method: get
+  operationId: getOppsCrossCodesList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/national-charge-data
+  method: get
+  operationId: getNationalChargeData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/mdcOptimizingTips
+  method: get
+  operationId: getMDCOptimizingTips
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/hcpcs-drugs
+  method: get
+  operationId: getHCPCSDrugsList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/federal-register-addendum-b
+  method: get
+  operationId: getFederalRegAddBList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/drg-indicators
+  method: get
+  operationId: getDRGIndicatorList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/cpt-hcpcs-required-revenue
+  method: get
+  operationId: getCptHcpcsRequiredRevenueCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/cdg/{code}/document
+  method: get
+  operationId: fetchCDGPDF
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/facility/all-revenue-codes
+  method: get
+  operationId: getAllRevenueCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/{contractor}/medicare-contractors
+  method: get
+  operationId: fetchMedicareContractors
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/{code}/{modifier-type}/{mod-code}/{prod-code}/modifier-download
+  method: get
+  operationId: printModCodesReport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/{code}/{modifier-type}/modifier-crosswalk
+  method: get
+  operationId: modifierCrosswalk
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/{code}/ndc
+  method: get
+  operationId: fetchNationalDrugCodeList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/{codetype}/{code}/ccm
+  method: get
+  operationId: consumerInfo
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/source-rationale
+  method: get
+  operationId: getSourceRationale
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/medicare-carrier-localities
+  method: get
+  operationId: getMedicareCarrierLocalities
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/get-policy-url/{contractror-id}/{policy-id}
+  method: get
+  operationId: getPolicyURL
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/cross-coder/list/{codetype}/{code}/{tab}
+  method: get
+  operationId: getCrossCoderDataList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/compliance/place-of-service-codes
+  method: get
+  operationId: getPlaceOfServiceCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/code-specific-guidelines/{codetype}/article/{code}/{article-id}
+  method: get
+  operationId: fetchCodeSpecificArticle
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/code-specific-guidelines/{codetype}/article-list/{code}
+  method: get
+  operationId: fetchCodeSpecificArticlesList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /app/optum/facility/claim/delete/claim-line-edits
+  method: delete
+  operationId: deleteClaimLineEdits
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/delete-claim-line/{claim-line-id}
+  method: delete
+  operationId: deleteClaimLine
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/update
+  method: put
+  operationId: updateClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/update-claim-line
+  method: put
+  operationId: updateClaimLine
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/update-claim-diagnosis
+  method: put
+  operationId: updateClaimDiagnosis
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/submit/{compliance-type}/{scenario-number}
+  method: post
+  operationId: submitClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/reset
+  method: post
+  operationId: resetClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /app/optum/facility/claim/create
+  method: post
+  operationId: createClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/create-claim-line
+  method: post
+  operationId: createClaimLine
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/create-claim-diagnosis
+  method: post
+  operationId: createClaimDiagnosis
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/optum/common/physician/compliance/abn-form
+  method: post
+  operationId: getABNForm
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/optum/common/cross-coder/list/hcpcs/{code}/i10_cm
+  method: post
+  operationId: getCrossCoderDataListI10CM
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/optum/common/cross-coder/list/cpt/{code}/i10_cm
+  method: post
+  operationId: getCrossCoderDataListI10CMFromCPT
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/details/{compliance-type}/{scenario-number}
+  method: get
+  operationId: getClaim
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /app/optum/facility/claim/abn/{scenario-number}
+  method: get
+  operationId: getAbnCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/physician/{code}/coding-tips
+  method: get
+  operationId: getCodingTips
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/physician/{code}/annotations
+  method: get
+  operationId: getAnnotations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/physician/mpfs/locality-fee/{codetype}/{code}/{carrier}/{locality}
+  method: get
+  operationId: fetchMedicareLocalityFees
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/physician/anesthesia-fee/{codetype}/{code}
+  method: get
+  operationId: fetchAnesthesiaFee
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/{contractor}/medicare-contractors
+  method: get
+  operationId: fetchMedicareContractors
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/{code}/{modifier-type}/{mod-code}/{prod-code}/modifier-download
+  method: get
+  operationId: printModCodesReport
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/{code}/{modifier-type}/modifier-crosswalk
+  method: get
+  operationId: modifierCrosswalk
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/{code}/ndc
+  method: get
+  operationId: fetchNationalDrugCodeList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/{codetype}/{code}/ccm
+  method: get
+  operationId: consumerInfo
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/source-rationale
+  method: get
+  operationId: getSourceRationale
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/medicare-carrier-localities
+  method: get
+  operationId: getMedicareCarrierLocalities
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/get-policy-url/{contractror-id}/{policy-id}
+  method: get
+  operationId: getPolicyURL
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/cross-coder/list/{codetype}/{code}/{tab}
+  method: get
+  operationId: getCrossCoderDataList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/compliance/place-of-service-codes
+  method: get
+  operationId: getPlaceOfServiceCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/code-specific-guidelines/{codetype}/article/{code}/{article-id}
+  method: get
+  operationId: fetchCodeSpecificArticle
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/optum/common/code-specific-guidelines/{codetype}/article-list/{code}
+  method: get
+  operationId: fetchCodeSpecificArticlesList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /app/optum/facility/claim/delete/claim-line-edits
+  method: delete
+  operationId: deleteClaimLineEdits
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /app/optum/facility/claim/delete-claim-line/{claim-line-id}
+  method: delete
+  operationId: deleteClaimLine
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /pre-service/v1/healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /eligibility/v1/pre-service/member
+  method: post
+  operationId: checkEligibility
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /codetype/{codetype}/{code}/anesbaseunit
+  method: get
+  operationId: getAnesBaseUnit
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/{facNonFac}
+  method: get
+  operationId: getColumnCci
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/cdi
+  method: get
+  operationId: getCDICodeLinks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /documents/{docId}
+  method: get
+  operationId: getCDIPDF
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /icd10physdoc/{docId}
+  method: get
+  operationId: getCDIPDF_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /claims5x
+  method: get
+  operationId: getClaims
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /claims5x
+  method: post
+  operationId: process
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /codetype/{codetype}/{code}/codehistory
+  method: get
+  operationId: getCodehistory
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/properties
+  method: get
+  operationId: getProperty
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/cpt/{code}/color-codes
+  method: get
+  operationId: getColorCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/{crosscodetype}
+  method: get
+  operationId: getOPPSCrossCode
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/hcpcs/{code}/color-codes
+  method: get
+  operationId: getColorCodes_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/icd10cm/{code}/color-codes
+  method: get
+  operationId: getColorCodes_2
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/icd10pcs/{code}/color-codes
+  method: get
+  operationId: getColorCodes_3
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/icd9v1/{code}/color-codes
+  method: get
+  operationId: getColorCodes_4
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/images
+  method: get
+  operationId: getCodeImageLinks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/images/{filename}
+  method: get
+  operationId: getImage
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/icd10cm/{code}/code-specific-guidelines
+  method: get
+  operationId: getCodeSpecificGuidelines
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/icd10pcs/{code}/code-specific-guidelines
+  method: get
+  operationId: getCodeSpecificGuidelines_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}
+  method: get
+  operationId: getProperties
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}
+  method: get
+  operationId: getCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype
+  method: get
+  operationId: getCodeTypes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/indexsearch/{terms}
+  method: get
+  operationId: indexSearchResults
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/range
+  method: get
+  operationId: findRange
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/termsearch/{terms}
+  method: get
+  operationId: termSearch
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/termsearchgroups/{terms}
+  method: get
+  operationId: termSearchGroups
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/coding-support
+  method: get
+  operationId: getDocuments
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /contractors
+  method: get
+  operationId: getContractors
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /contractors/{contractorNum}/policies
+  method: get
+  operationId: getPolicies
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /contractors/{contractorNum}/policy/{cmspolicyid}
+  method: get
+  operationId: getPolicyDetails
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /contractors/regions
+  method: get
+  operationId: getRegions
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datafile/list
+  method: get
+  operationId: getDatafileList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /datafile/file/{fileReqName}
+  method: get
+  operationId: getFile
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /dictionary/coders/{startswith}
+  method: get
+  operationId: searchStedmans
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/all
+  method: get
+  operationId: getReveunueCodesList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/drg/{code}/properties
+  method: get
+  operationId: getProperty_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /hcctype/{hccType}/{hccCode}
+  method: get
+  operationId: getDiagList
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/hcc
+  method: get
+  operationId: getI9I10HccData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /hcctype/{hccType}
+  method: get
+  operationId: getHccData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /hcctype
+  method: get
+  operationId: getHCCTypes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/instructional-notes
+  method: get
+  operationId: getInstructions
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/instructions
+  method: get
+  operationId: getInstructions_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/icd10mapping
+  method: get
+  operationId: getI10Mapping
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/icd9mapping
+  method: get
+  operationId: getI9Mapping
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/medicarepolicy/{policytype}{contractortype}
+  method: get
+  operationId: getContractorLinks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/medicarepolicy/{policytype}/{contractortype}/{contractornum}
+  method: get
+  operationId: getPolicies_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/medicarepolicy
+  method: get
+  operationId: getPolicyLinks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/allmodifiers
+  method: get
+  operationId: getModifiers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /modifier-51-exempt
+  method: get
+  operationId: getOptumAmaMod51Exempt
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/modifier/{modifier}
+  method: get
+  operationId: getProperty_2
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/modifier/{code}/properties
+  method: get
+  operationId: getProperty_3
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/modifiers
+  method: get
+  operationId: getModifiers_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/mpfs
+  method: get
+  operationId: getCarriers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/mpfs/{carrier-locality}/non-facility
+  method: get
+  operationId: getFee
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/mpfs/global-info
+  method: get
+  operationId: getGlobal
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/mpfs/{locality}
+  method: get
+  operationId: getMpfsLinks
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /cci-check/{facNonFac}/{codes}
+  method: get
+  operationId: getMultiCCIData
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/annotations
+  method: get
+  operationId: getAnnotations
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/includesexcludesnotes
+  method: get
+  operationId: getIncludesExcludesNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/sectionnotes
+  method: get
+  operationId: getSectionNotes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/optum-specialty-articles
+  method: get
+  operationId: getCodes_1
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/physician-docs
+  method: get
+  operationId: getPhysicianDocs
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/revenue/{code}/properties
+  method: get
+  operationId: getProperty_4
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/revenuecodes
+  method: get
+  operationId: getRevenueCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /codetype/{codetype}/{code}/{xwalkcodetype}
+  method: get
+  operationId: getprocCodes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /application.wadl/{path}
+  method: get
+  operationId: getExternalGrammar
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /application.wadl
+  method: get
+  operationId: getWadl
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/patient/benefit/check/v1/healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /medicalnetwork/payerlist/v1/healthcheck
+  method: get
+  operationId: getPayerListHealthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /medicalnetwork/payerlist/v1/payers
+  method: get
+  operationId: getPayers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /medicalnetwork/payerlist/v1/fields
+  method: get
+  operationId: getPayerListFields
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /medicalnetwork/payerlist/v1/payers/export
+  method: get
+  operationId: exportPayers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /medicalnetwork/payerlist/v1/outages
+  method: get
+  operationId: getOutages
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /payments/pes-payer-enrollments/v1
+  method: get
+  operationId: get-pes-enrollments
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /payments/pes-payer-enrollments/v1
+  method: patch
+  operationId: patch-pes-payer-enrollments-v1
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /payments/pes-payer-enrollments/v1/enrollment-status
+  method: get
+  operationId: get-pes-enrollments-enrollment-status
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /determination/x12
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /determination
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /inquiry/x12
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /inquiry
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /submission/x12
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /submission
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /noa/x12
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /noa
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /authorization/x12
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /authorization
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /healthcheck
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /prometheus/jobsubmission/v1
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /prometheus/checkjob/v1
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /attachments/documents
+  method: post
+  operationId: createAttachments
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /attachments/documents/search
+  method: post
+  operationId: searchAttachments
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /attachments/documents/image-intelligence
+  method: post
+  operationId: createAttachmentsImageIntel
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/dental/claim/inquiry/v1
+  method: post
+  operationId: claimStatus
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/dental/claim/inquiry/v1/healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /py/oihub/claim/dnt/submit/v1/graphql
+  method: post
+  operationId: dntClaimActions
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /py/oihub/claim/dnt/submit/v1/health-check
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/dental/eligibility/preservice/v1
+  method: post
+  operationId: checkEligibility
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/dental/eligibility/preservice/v1/healthcheck
+  method: get
+  operationId: get_oihub_dental_eligibility_preservice_v1_healthcheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/dnt/enh/eligibility/preservice/v1/healthcheck
+  method: get
+  operationId: healthCheckEnhancedDentalEligibility
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/dnt/enh/eligibility/preservice/v1
+  method: post
+  operationId: checkEnhancedEligibility
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/fhirpriorauth/v1/health-check
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/Questionnaire/$next-question
+  method: post
+  operationId: getNextQuestion
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/Claim/$submit-attachment
+  method: post
+  operationId: submitAttachment
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/document-reference
+  method: get
+  operationId: getDocumentReference
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/Claim/$inquire
+  method: post
+  operationId: inquireClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/Questionnaire/$questionnaire-package
+  method: post
+  operationId: getQuestionnairePackage
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/fhirpriorauth/v1/cdsHooksServer/{payerId}/{lob}/api/cds-services/crd-order-sign
+  method: post
+  operationId: orderSign
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/Claim/$submit
+  method: post
+  operationId: submitClaim
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/fhirpriorauth/v1/cdsHooksServer/{payerId}/{lob}/api/cds-services
+  method: get
+  operationId: getDiscovery
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/operation-definition/{operation}
+  method: get
+  operationId: getOperationDefinition
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/pas/metadata
+  method: get
+  operationId: getPasCapabilityStatement
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/dtr/metadata
+  method: get
+  operationId: getDtrCapabilityStatement
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/fhirprovideraccess/v1/R4/{payerId}/{lob}/Group/$bulk-member-match
+  method: post
+  operationId: bulkMemberMatch
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/fhirprovideraccess/v1/R4/{payerId}/{lob}/Group/{groupId}/$davinci-data-export
+  method: post
+  operationId: davinciDataExport
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /oihub/fhirprovideraccess/v1/R4/{payerId}/{lob}/$bulk-member-match-status/{jobId}
+  method: get
+  operationId: bulkMemberMatchStatus
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/fhirprovideraccess/v1/R4/{payerId}/{lob}/download/Group/{fileName}/$davinci-data-export
+  method: get
+  operationId: downloadDaVinciExportFile
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /oihub/fhirprovideraccess/v1/health-check
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    scope:
+    - read_healthcheck
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /apip/auth/v2/token
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /apip/auth/sntl/v1/token
+  method: post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /healthcheck
+  method: get
+  operationId: healthCheck
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /pharmacy-claims
+  method: post
+  operationId: sendMessage
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    scope:
+    - read_healthcheck
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /health/telecom-formatter
+  method: get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /v1/formatDetails
+  method: post
+  operationId: formatDetails
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /v1/telecomFormatResponse
+  method: post
+  operationId: formatIncomingData
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required

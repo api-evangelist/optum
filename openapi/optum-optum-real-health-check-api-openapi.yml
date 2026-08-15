@@ -1,0 +1,45 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  description: API for OI Content Orchestration
+  title: Optum Real Health Check API
+servers:
+- url: https://sandbox-apigw.optum.com/oihub
+paths:
+  /pre-service/v1/healthcheck:
+    get:
+      summary: Health Check
+      description: API Health Check - The health check endpoint checks the operating status of our APIs.
+        It is a ping for the APIs entry point to ensure the entry points are accessible. This is the first
+        thing you can do if something goes wrong.
+      operationId: healthCheck
+      security:
+      - oAuth:
+        - read_healthcheck
+      tags:
+      - HealthCheck
+      responses:
+        '200':
+          description: Service is healthy - If the API engine is working correctly and if the entry points
+            are accessible, the API operating status response shows "OK".
+        '500':
+          description: 'Service is unhealthy
+
+            - **Note:** If you receive a response other than 200 OK, the health check failed. Please submit
+            a ticket with Optum.
+
+            '
+components:
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
