@@ -308,6 +308,9 @@ apis:
   baseURL: https://apigw.optum.com/apip/auth/
   tags:
   - Authentication
+  - Tokens
+  tags_raw:
+  - Authentication
   - OAuth2
   - Tokens
   properties:
