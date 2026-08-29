@@ -1,0 +1,598 @@
+slug: optum
+provider: Optum
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Healthcare Providers
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 59
+edges:
+- tag: Coverage Discovery
+  spec_file: optum-coverage-discovery-api-openapi.yml
+  capability_id: BC-2800.30
+  capability_id_l1: BC-2800
+  capability_name: Eligibility & Benefits Verification
+  confidence: 0.95
+  evidence: Enhanced Eligibility provides real-time eligibility verification for medical benefit inquiries
+    and optional Coverage Discovery workflows when additional coverage needs to be researched
+  reason: Operations submit and retrieve coverage discovery tasks against payers/clearinghouse — insurance
+    coverage and benefits verification prior to/around service.
+- tag: Eligibility
+  spec_file: optum-eligibility-api-openapi.yml
+  capability_id: BC-2800.30
+  capability_id_l1: BC-2800
+  capability_name: Eligibility & Benefits Verification
+  confidence: 0.95
+  evidence: POST /medicalnetwork/eligibility/v3/  medicalEligibility  "Check Eligibility"; "Pre-Care Eligibility
+    Check"
+  reason: Operations perform real-time insurance eligibility and benefit verification against payers before
+    service, which is exactly eligibility and benefits verification in patient access.
+- tag: Eligibility Requests
+  spec_file: optum-eligibility-requests-api-openapi.yml
+  capability_id: BC-2800.30
+  capability_id_l1: BC-2800
+  capability_name: Eligibility & Benefits Verification
+  confidence: 0.95
+  evidence: '"Submit a new X12 270 eligibility request"; "provides real-time eligibility verification
+    for medical benefit inquiries"'
+  reason: X12 270 eligibility submission and coverage discovery is unambiguously pre-service verification
+    of insurance coverage and benefits.
+- tag: Institutional Claims
+  spec_file: optum-institutional-claims-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.95
+  evidence: POST /medicalnetwork/institutionalclaims/v1/submission  processClaim  Claim Submission — "837
+    Institutional Claim"
+  reason: Validation and submission of 837 institutional claims to payers is unambiguously claim production
+    and submission in the provider revenue cycle.
+- tag: Professional Claims
+  spec_file: optum-professional-claims-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.95
+  evidence: POST /medicalnetwork/professionalclaims/v3/submission processClaim "Claim Submission"; POST
+    .../validation "Claim Validation"; schemas ClaimInformation, ServiceLine, Submitter
+  reason: Operations validate and submit professional (X12 837/835) claims to payers — squarely claim
+    production, scrubbing and submission within healthcare revenue cycle.
+- tag: Check Enhanced Dental Eligibility
+  spec_file: optum-check-enhanced-dental-eligibility-api-openapi.yml
+  capability_id: BC-2800.30
+  capability_id_l1: BC-2800
+  capability_name: Eligibility & Benefits Verification
+  confidence: 0.93
+  evidence: POST /oihub/dnt/enh/eligibility/preservice/v1 — "Check Enhanced Dental Eligibility"; schemas
+    InsuranceInfo, BenefitSummary, BenefitUtilization
+  reason: Pre-service insurance eligibility and benefit utilisation verification for a dental member is
+    unambiguously eligibility and benefits verification.
+- tag: Benefit Check
+  spec_file: optum-benefit-check-api-openapi.yml
+  capability_id: BC-2800.30
+  capability_id_l1: BC-2800
+  capability_name: Eligibility & Benefits Verification
+  confidence: 0.9
+  evidence: '"Pre-service Benefit Check API: Prior Auth, Benefit Coverages, and Referral Inquiry for member
+    services"; schemas BenefitCategory, BenefitDetail, MatchedPriorAuths'
+  reason: Operation checks coverage, benefit detail and prior-authorisation status before service delivery,
+    which is exactly eligibility and benefits verification in patient access.
+- tag: Dental Claim Actions
+  spec_file: optum-dental-claim-actions-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.9
+  evidence: 'API for RTS Payer Dental Claim Actions ... POST /py/oihub/claim/dnt/submit/v1/graphql  dntClaimActions;
+    schemas: ClaimSubmissionResponse, ClaimSubmissionInput'
+  reason: Dental claim submission operations with ClaimSubmissionInput/Response schemas — claim production
+    and submission to payers.
+- tag: APC Calculator APIs
+  spec_file: optum-apc-calculator-apis-api-openapi.yml
+  capability_id: BC-2870
+  capability_id_l1: BC-2870
+  capability_name: Healthcare Revenue Cycle Management
+  confidence: 0.85
+  evidence: 'POST /api/optum/facility/outpatient-claims/  outpatientClaims  Fetches the data of APC calculator;
+    schemas: ApcCalculatorRequest, ClaimLine'
+  reason: Ambulatory Payment Classification calculation over submitted outpatient claim lines determines
+    facility reimbursement — squarely provider revenue cycle. L2 left null because the surface straddles
+    coding/grouping, claim production and expected-reimbursement modelling.
+- tag: Auth Referral Submission
+  spec_file: optum-auth-referral-submission-api-openapi.yml
+  capability_id: BC-2820.10
+  capability_id_l1: BC-2820
+  capability_name: Referral Management
+  confidence: 0.85
+  evidence: '''allows users to search for providers, submit referrals, search referrals, and search prior
+    authorizations''; schemas ReferralSubmitResponse, ProviderSearchResponse'
+  reason: Referral order submission, specialist/provider search and tracking plus prior-authorisation
+    lookup — referral management within care coordination.
+- tag: Claim
+  spec_file: optum-claim-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.85
+  evidence: '"This API validates a claim before submission by running a `Claims Pre-Check` against payer
+    rules, X12 formatting, eligibility, and adjudication logic"'
+  reason: Pre-submission claim validation/scrubbing against payer rules and X12 formatting is claim production
+    and submission within provider revenue cycle; the second operation is only a health check.
+- tag: Claim Status API
+  spec_file: optum-claim-status-api-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.85
+  evidence: '''276 Claim Status''; POST /medicalnetwork/claimstatus/v2/ ''Check Claim Status''; schemas
+    Subscriber, Payer, ClaimStatus'
+  reason: X12 276/277 claim status checking to payers is squarely claim production, submission and status
+    tracking.
+- tag: Determination
+  spec_file: optum-determination-api-openapi.yml
+  capability_id: BC-2800.30
+  capability_id_l1: BC-2800
+  capability_name: Eligibility & Benefits Verification
+  confidence: 0.85
+  evidence: '278x215 Prior Authorization Determination; schemas: AuthorizationJSONResponse, InquiryJSONRequestWithDetermination'
+  reason: X12 278 prior authorization determination — verification of authorisation requirements/coverage
+    approval before service delivery.
+- tag: Eligibility Transactions
+  spec_file: optum-eligibility-transactions-api-openapi.yml
+  capability_id: BC-2800.30
+  capability_id_l1: BC-2800
+  capability_name: Eligibility & Benefits Verification
+  confidence: 0.85
+  evidence: GET /rcm/eligibility/v1/transactions  "Find all eligibility transactions"
+  reason: Retrieval and tracking of eligibility verification transactions is part of the same eligibility
+    and benefits verification capability; slightly lower confidence as these are read/status operations
+    over prior inquiries.
+- tag: Report
+  spec_file: optum-report-api-openapi.yml
+  capability_id: BC-2870
+  capability_id_l1: BC-2870
+  capability_name: Healthcare Revenue Cycle Management
+  confidence: 0.85
+  evidence: 'openapi description: "Claims Responses And Reports"; operations "Convert Report 277" and
+    "Convert Report 835"; schemas ClaimStatusResponse, ClaimPaymentAdviceResponse'
+  reason: 'Clearinghouse retrieval of payer response files: 277 claim status and 835 claim payment advice.
+    This is provider revenue cycle, but it spans both claim status tracking and remittance posting, so
+    no single L2 is named.'
+- tag: documentRetrieve
+  spec_file: optum-documentretrieve-api-openapi.yml
+  capability_id: BC-2900.60
+  capability_id_l1: BC-2900
+  capability_name: Healthcare Interoperability Operations
+  confidence: 0.85
+  evidence: '"Cross Community API to query and retrieve patient data"; POST /api/xc/v1/clinical/document/retrieve
+    "Retrieve patient document"'
+  reason: Cross-community (XCA-style) retrieval of clinical documents from external organisations is operation
+    of health information exchange connections — healthcare interoperability operations.
+- tag: documentSearch
+  spec_file: optum-documentsearch-api-openapi.yml
+  capability_id: BC-2900.60
+  capability_id_l1: BC-2900
+  capability_name: Healthcare Interoperability Operations
+  confidence: 0.85
+  evidence: '"Search patient document" with schemas DocumentSearchRequest, PatientDemographics, DocumentMetadataList'
+  reason: Cross-community patient and document query across external repositories is health information
+    exchange operation, not internal record management.
+- tag: Authorization (Orchestration)
+  spec_file: optum-authorization-orchestration-api-openapi.yml
+  capability_id: BC-2800.30
+  capability_id_l1: BC-2800
+  capability_name: Eligibility & Benefits Verification
+  confidence: 0.8
+  evidence: POST /authorization/x12 '278x215 Prior Authorization Orchestration'; schema InquiryJSONRequestWithDetermination
+  reason: X12 278 prior-authorisation request/response orchestration with payer determinations — pre-service
+    authorisation requirement verification, not OAuth despite the tag word 'Authorization'.
+- tag: Claim Actions
+  spec_file: optum-claim-actions-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.8
+  evidence: POST /oihub/claim/actions/v1 claimActions 'Call Claim Actions API'; schemas ClaimSubmissionInput,
+    ClaimSubmissionResponse, ClaimTicketInput
+  reason: Operations submit claims and manage claim tickets/line detail to payers, which is claim production
+    and submission within provider revenue cycle.
+- tag: Claim Inquiry
+  spec_file: optum-claim-inquiry-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.8
+  evidence: '''allows users to retrieve claim information and status using GraphQL queries ... getting
+    claim summary, claim detail, claim Acknowledgement'''
+  reason: Claim status/acknowledgement retrieval against payers is claim submission and status tracking.
+- tag: Claim Status
+  spec_file: optum-claim-status-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.8
+  evidence: POST /oihub/dental/claim/inquiry/v1 claimStatus 'Claim Status'; schemas GraphQLClaimStatusRequest,
+    Search277CAInput
+  reason: Dental claim status inquiry (277CA) is payer claim status tracking within revenue cycle claim
+    submission.
+- tag: Create Attachments
+  spec_file: optum-create-attachments-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.8
+  evidence: Real Dental Attachments ... Services requests for Dental Attachments for both Provider and
+    Payer users; POST /attachments/documents createAttachments
+  reason: Claim attachment upload supporting dental claim submission to payers; part of claim production/submission
+    rather than generic file upload, given the dental attachments product context.
+- tag: Cross Coder API
+  spec_file: optum-cross-coder-api-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.8
+  evidence: POST /api/optum/common/cross-coder/list/hcpcs/{code}/i10_cm  getCrossCoderDataListI10CM  Fetches
+    cross coder table data
+  reason: Cross-walks HCPCS/CPT to ICD-10-CM codes — medical coding reference content used in coding production
+    and compliance.
+- tag: DRG Calculator APIs
+  spec_file: optum-drg-calculator-apis-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.8
+  evidence: POST /api/optum/facility/drg-calculator/  calculateDrg  Fetches the data of DRG calculator
+  reason: DRG grouping/calculation is core inpatient facility coding and reimbursement grouping work within
+    revenue cycle coding.
+- tag: DRG Information APIs
+  spec_file: optum-drg-information-apis-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.8
+  evidence: GET /api/cms/facility/{codetype}/{code}/drgs  drgCodesForIcdCode  Fetches the DRG codes for
+    given icd code
+  reason: ICD-to-DRG and MDC code mapping content, directly supporting inpatient facility medical coding.
+- tag: I10PCS Code Builder APIs
+  spec_file: optum-i10pcs-code-builder-apis-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.8
+  evidence: Returns body system, section , options , code description and other tabular fields like Body
+    Part, Approach, Device and Qualifier available for the I10 PCS code
+  reason: Builds and searches ICD-10-PCS procedure codes — directly supports inpatient procedure coding
+    production, i.e. medical coding management.
+- tag: ICD10 Mapping
+  spec_file: optum-icd10-mapping-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.8
+  evidence: Return ICD-10 Mapping for the given ICD-9-V1 or ICD-9-V3 {code}
+  reason: Diagnosis code crosswalk service supporting assignment and translation of ICD codes — medical
+    coding management for provider billing/documentation.
+- tag: Revenue Code
+  spec_file: optum-revenue-code-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.8
+  evidence: getRevenueCodes  Return CPT/HCPCS to Revenue code crosswalk for the given cpt/hcpcs {code};
+    "on-demand medical coding data"
+  reason: Serves medical coding reference content — revenue code properties and CPT/HCPCS-to-revenue-code
+    crosswalks used by coders and billers, mapping to Medical Coding Management. Some overlap with chargemaster
+    stewardship keeps this below 0.9.
+- tag: Revenue Codes API
+  spec_file: optum-revenue-codes-api-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.8
+  evidence: getProcCodesForRevenueCode  Fetches procedure codes for corresponding revenue code; getCptHcpcsRequiredRevenueCodes  Fetches
+    revenue codes requiring CPT HCPCS
+  reason: Facility revenue-code and procedure-code crosswalk lookups supporting institutional coding and
+    billing edits, i.e. medical coding management within provider revenue cycle.
+- tag: V3 Ingestion
+  spec_file: optum-v3-ingestion-api-openapi.yml
+  capability_id: BC-2900.60
+  capability_id_l1: BC-2900
+  capability_name: Healthcare Interoperability Operations
+  confidence: 0.8
+  evidence: '"REST API for ingesting XDR Request in Provide and Register format (P&R) with HL7 V3 payloads"'
+  reason: IHE XDR Provide-and-Register ingestion of HL7 V3 clinical documents is health information exchange
+    plumbing between provider organisations — healthcare interoperability operations.
+- tag: CCI Edits APIs
+  spec_file: optum-cci-edits-apis-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.78
+  evidence: '"Facility - Fetch CCI Edits for single code"; "Physician - Fecth CCI edits for multi code
+    conflict view"; "Fetches modifiers based on given code"'
+  reason: National Correct Coding Initiative edits, code-pair conflict views and modifier lookups are
+    the core reference logic of procedural coding compliance, i.e. medical coding management for provider
+    billing.
+- tag: Facility Compliance APIs
+  spec_file: optum-facility-compliance-apis-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.78
+  evidence: POST /app/optum/facility/claim/submit/{compliance-type}/{scenario-number}  submitClaim  Submit
+    claim; DELETE .../delete/claim-line-edits  deleteClaimLineEdits; schemas FacilityClaim, FacilityClaimLine,
+    FacilityClaimLineEdits
+  reason: Operations create, edit, compliance-check and submit facility claims with claim lines and diagnoses
+    — provider-side claim production, scrubbing and submission. Some chance the intended emphasis is coding
+    compliance (BC-2870.20), hence not maximal confidence.
+- tag: ICD9 Mapping
+  spec_file: optum-icd9-mapping-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.78
+  evidence: Backward Mapping to ICD-9-CM Vol-1 or ICD-9-CM Vol-3 Codes
+  reason: Reverse ICD code mapping service used by coding tools; realises medical coding management rather
+    than clinical care or documentation.
+- tag: Attachment Submission
+  spec_file: optum-attachment-submission-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.75
+  evidence: openapi description '275 Attachments Transaction'; POST /uploads 'Attachment Submission'
+  reason: X12 275 attachment transaction submission to payers supporting claims — claim production and
+    submission in provider revenue cycle.
+- tag: Code Information
+  spec_file: optum-code-information-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.75
+  evidence: '''Return Code History for the given cpt/hcpcs/icd9v1/icd10cm/icd10pcs {code}'' and ''access
+    to both ondemand medical coding data and Optum coding tool logic'''
+  reason: Explicitly medical coding reference data (CPT, HCPCS, ICD-9/10, CCI edits, coders dictionary)
+    consumed by coding applications, realising medical coding production and compliance.
+- tag: Code Information APIs
+  spec_file: optum-code-information-apis-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.75
+  evidence: '''Validate if the given code is valid or deleted or invalid'', ''Fetches the LayDescription
+    based on the codetype and code'', ''Returns the complete pcs code range'''
+  reason: Validation, detail lookup and ranges over ICD-10-PCS/CM and CPT-type code sets — core medical
+    coding support content, not generic reference data.
+- tag: DRG Codes
+  spec_file: optum-drg-codes-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.75
+  evidence: Optum Real-Time eContent web services provides access to both ondemand medical coding data
+    ... GET /codetype/drg/{code}/properties
+  reason: On-demand medical coding content lookup for DRG codes — supports medical coding production.
+- tag: APC Cross Codes APIs
+  spec_file: optum-apc-cross-codes-apis-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.72
+  evidence: GET /api/cms/facility/{apctype}/{code} 'Facility - Fetches CPT/HCPCS Code Specific APC Cross
+    Codes'
+  reason: CMS Ambulatory Payment Classification cross-walks between CPT/HCPCS codes and APC groups — reference
+    content used for facility outpatient coding and reimbursement grouping, i.e. medical coding within
+    revenue cycle.
+- tag: Coding Support
+  spec_file: optum-coding-support-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.72
+  evidence: '''Show E&M Coding Assitant or Auditors Desk Reference documents'''
+  reason: E&M coding assistant and auditor reference documents are directly coder- and coding-auditor-facing
+    content, matching medical coding production and compliance auditing.
+- tag: Coding Tips API
+  spec_file: optum-coding-tips-api-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.72
+  evidence: '''Fetches the list of codingTips for CPT or HCPCS codes'''
+  reason: CPT/HCPCS coding tips and annotations for physician coding — reference content that supports
+    accurate professional-fee code assignment.
+- tag: I-OCE Edits APIs
+  spec_file: optum-i-oce-edits-apis-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.72
+  evidence: Facility - Fetch I-OCE associated with specified cpt hcpcs code
+  reason: Integrated Outpatient Code Editor edits tied to diagnosis and CPT/HCPCS codes are coding-compliance
+    rules used when producing outpatient facility claims; closest fit is medical coding management within
+    revenue cycle.
+- tag: Modifier CrossWalk API
+  spec_file: optum-modifier-crosswalk-api-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.72
+  evidence: '"Returns the list of modifierCrosswalk based on the selected cpt or hcpcs code"'
+  reason: Operations serve CPT/HCPCS modifier crosswalk reference content used by medical coders to assign
+    correct billing modifiers — coding production support within provider revenue cycle. Some ambiguity
+    between BC-2870.20 (Medical Coding Management) and BC-2900.20 (Coding Operations).
+- tag: Modifiers
+  spec_file: optum-modifiers-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.72
+  evidence: '"Return all the Modifiers for the supplied {codeype}"; "Returns the list of Optum/AMA Modifier
+    -51 Exempt codes"'
+  reason: On-demand medical coding data (CPT/HCPCS modifiers, AMA modifier-51 exempt lists) that supports
+    coding production and compliance; a coding-content service rather than generic reference data.
+- tag: Modifiers APIs
+  spec_file: optum-modifiers-apis-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.72
+  evidence: '"Returns the list of codes associated with a modifier"; "/api/coding/code/modifier/{modifier}/validate"'
+  reason: Code search service returning and validating billing modifiers against code types — direct support
+    for medical coding assignment and compliance checking.
+- tag: Attachment
+  spec_file: optum-attachment-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.7
+  evidence: POST /dentalnetwork/attachments/v1/CreateAttachment 'Create attachment container'; 'Get participating
+    payers'; 'Get payer business rule'
+  reason: Dental claim attachment submission to payers, with participating-payer and payer business-rule
+    lookups — supporting documentation accompanying claim submission in the provider revenue cycle.
+- tag: CDI Information
+  spec_file: optum-cdi-information-api-openapi.yml
+  capability_id: BC-2830.50
+  capability_id_l1: BC-2830
+  capability_name: Clinical Documentation Improvement
+  confidence: 0.7
+  evidence: '"Return the list of CDI documents for the given code"; "Return the ICD10 Physician CDI PDF
+    Document"'
+  reason: CDI here means clinical documentation improvement content keyed to diagnosis codes, delivered
+    to support physician documentation completeness — the CDI sub-capability rather than coding production.
+- tag: Code Specific Guidelines
+  spec_file: optum-code-specific-guidelines-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.7
+  evidence: '''Show Code Specific Guidelines for the given ICD10PCS code''; schemas Icd10pcsCodeSpecificGuidelines,
+    Icd10CmColorCodes'
+  reason: ICD-10-CM/PCS coding guidelines delivered to coding applications; supports correct code assignment
+    and coding compliance.
+- tag: Code Specific Guidelines APIs
+  spec_file: optum-code-specific-guidelines-apis-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.7
+  evidence: '''Fetch current year code specific guidelines article'' at /api/optum/common/code-specific-guidelines/{codetype}/article/{code}/{article-id}'
+  reason: Delivers current-year coding guideline articles keyed by codetype and code for facility and
+    physician coding — medical coding reference and compliance support.
+- tag: Color codes APIs
+  spec_file: optum-color-codes-apis-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.7
+  evidence: '''Fetches new , revised or deleted color codes'', ''Fetches I9v3 Coverage color codes'',
+    ''Fetches the I10CM for the requested PAC code type'''
+  reason: Age/sex/manifestation/Medicare-coverage edit indicators over ICD and CPT code sets — medical
+    coding edit reference supporting correct coding and payer edits.
+- tag: HCPCS Table of Drugs API
+  spec_file: optum-hcpcs-table-of-drugs-api-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.7
+  evidence: GET /api/optum/facility/hcpcs-drugs  getHCPCSDrugsList  Fetches HCPCS drugs table data
+  reason: Serves HCPCS (Healthcare Common Procedure Coding System) Table of Drugs reference content, which
+    is coding reference data used to assign billing codes for drugs — supporting medical coding within
+    the provider revenue cycle. Reference-data-only nature keeps confidence moderate.
+- tag: Medicare Fee Schedule APIs
+  spec_file: optum-medicare-fee-schedule-apis-api-openapi.yml
+  capability_id: BC-2870
+  capability_id_l1: BC-2870
+  capability_name: Healthcare Revenue Cycle Management
+  confidence: 0.7
+  evidence: '"fetchMedicareFees  Fetches MPFS fee schedule" and "getGlobalDays  Fetches MPFS global days
+    for CPT and HCPCS code"'
+  reason: Medicare Physician Fee Schedule fees, payment indicators, global days and reduction groups are
+    reimbursement reference data consumed in provider revenue cycle pricing and expected-payment determination.
+    Sub-capability ambiguous between fee/contract modelling and charge pricing.
+- tag: NextQuestion
+  spec_file: optum-nextquestion-api-openapi.yml
+  capability_id: BC-2800.30
+  capability_id_l1: BC-2800
+  capability_name: Eligibility & Benefits Verification
+  confidence: 0.7
+  evidence: '"FHIR Prior Authorization APIs (CDS, DTR, PAS)"; POST "/Questionnaire/$next-question"'
+  reason: Documentation Templates and Rules questionnaire flow for payer prior authorization — pre-service
+    determination of authorisation requirements/coverage, which maps to Eligibility & Benefits Verification
+    (authorisation requirements before service delivery).
+- tag: Notes Information APIs
+  spec_file: optum-notes-information-apis-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.7
+  evidence: '"Fetches CPT or I10CM notes"; "Fetches I10CM chapter notes"'
+  reason: Code search service exposing CPT/ICD-10-CM chapter, section and code notes — coding guidance
+    content supporting medical coding assignment and compliance.
+- tag: Payersheet
+  spec_file: optum-payersheet-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.7
+  evidence: POST .../payer-sheet-service/telecomFormat/fetch  getClaimFormat  Fetch Claim Format
+  reason: Payer-sheet service manages per-payer claim transmission formats (JsonClaimFormat, JsonTransmission,
+    JsonSegmentField), which governs production and scrubbing of claims for submission to payers.
+- tag: ProviderAccessDaVinciExport
+  spec_file: optum-provideraccessdavinciexport-api-openapi.yml
+  capability_id: BC-2900.60
+  capability_id_l1: BC-2900
+  capability_name: Healthcare Interoperability Operations
+  confidence: 0.7
+  evidence: POST .../Group/{groupId}/$davinci-data-export davinciDataExport; "FHIR Provider Access APIs"
+  reason: Da Vinci Provider Access bulk data export is operation of FHIR endpoints for provider-payer
+    health information exchange.
+- tag: Reference Code
+  spec_file: optum-reference-code-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.7
+  evidence: '"provides access to both ondemand medical coding data and Optum coding tool logic"; getAnnotations
+    "Return Annotations for the given hcpcs/icd9v1 {code}"'
+  reason: Delivers ICD/HCPCS code sets, ranges, annotations and includes/excludes notes used by coders,
+    supporting medical coding production and compliance; it is reference content rather than coding workflow,
+    so not fully certain of the sub-capability.
+- tag: Reports
+  spec_file: optum-reports-api-openapi.yml
+  capability_id: BC-2870
+  capability_id_l1: BC-2870
+  capability_name: Healthcare Revenue Cycle Management
+  confidence: 0.7
+  evidence: 'openapi description: "Claims Responses And Reports"; list_reports_v2_reports_get  List Reports'
+  reason: Listing of claim response/report files returned by the medical network clearinghouse — revenue
+    cycle claims correspondence. Only a list operation is exposed, so confidence is moderate and no L2
+    is asserted.
+- tag: Submission
+  spec_file: optum-submission-api-openapi.yml
+  capability_id: BC-2800.30
+  capability_id_l1: BC-2800
+  capability_name: Eligibility & Benefits Verification
+  confidence: 0.7
+  evidence: POST /submission/x12  278x217 Prior Authorization Submission; schemas AuthorizationSubmissionJSON,
+    SubmissionX12Request
+  reason: X12 278 prior authorization request submission, i.e. obtaining payer authorisation before service
+    delivery, which the Eligibility & Benefits Verification sub-capability explicitly covers ("authorisation
+    requirements before service delivery"). Some ambiguity versus utilisation management keeps this at
+    0.7.
+- tag: Telecom Format
+  spec_file: optum-telecom-format-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.7
+  evidence: '"NCPDP Format Request Data" with schemas ClaimV1, PharmacyV1, InsuranceV1, NCPDPRequestConverterV1Response'
+  reason: Formats pharmacy claim request/response data into the NCPDP Telecommunication standard — i.e.
+    production and formatting of claims for submission to payers, part of healthcare revenue cycle claim
+    production. Some ambiguity as it is a pure format converter.
