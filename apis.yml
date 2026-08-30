@@ -571,7 +571,8 @@ apis:
     code and excludes list for i10cm and i9v1 apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
-  tags:
+  tags: []
+  tags_raw:
   - CC/MCC Code and Excludes List for I10CM and I9V1 APIs
   properties:
   - type: OpenAPI
@@ -2160,7 +2161,8 @@ apis:
   description: The documentRetrieve API from Optum — 1 operation(s) for documentretrieve.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
-  tags:
+  tags: []
+  tags_raw:
   - documentRetrieve
   properties:
   - type: OpenAPI
@@ -2195,6 +2197,8 @@ apis:
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
+  - Document Search
+  tags_raw:
   - documentSearch
   properties:
   - type: OpenAPI
@@ -2508,6 +2512,8 @@ apis:
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
+  - Export
+  tags_raw:
   - Exports
   properties:
   - type: OpenAPI
@@ -3060,6 +3066,8 @@ apis:
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
+  - Health Check
+  tags_raw:
   - HealthCheck
   properties:
   - type: OpenAPI
@@ -3613,7 +3621,8 @@ apis:
     coverage policy for part a and part b apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
-  tags:
+  tags: []
+  tags_raw:
   - Medicare Coverage Policy for part A and Part B APIs
   properties:
   - type: OpenAPI
@@ -4027,7 +4036,8 @@ apis:
     classified (noc) drug pricing apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
-  tags:
+  tags: []
+  tags_raw:
   - Not Otherwise Classified (NOC) Drug Pricing APIs
   properties:
   - type: OpenAPI
