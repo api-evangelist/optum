@@ -1,0 +1,145 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services Optum Specialty Articles API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: Optum Specialty Articles
+paths:
+  /codetype/{codetype}/{code}/optum-specialty-articles:
+    get:
+      tags:
+      - Optum Specialty Articles
+      summary: Show Articles for Optum Specialty
+      operationId: getCodes_1
+      parameters:
+      - name: code
+        in: path
+        description: The code value
+        required: true
+        schema:
+          type: string
+        example: 13100
+      - name: codetype
+        in: path
+        description: The code value
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd10cm
+          - icd10pcs
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptumSpecialtyArticles'
+              example: " {\n            \"code\": \"99213\",\n            \"year\": \"2024\",\n            \"issue\": \"January\",\n            \"source\": \"1995 and 1997 Documentation Guidelines www.cms.gov and the Marshfield E/M Scoring tool used by Novitas-Solutions (http://www.novitas-solutions.com/webcenter/portal/MedicareJH/pagebyd?_afrLoop=142131956577316&_adf.ctrl-state=qolq8oej1_63&contentId=00004968#)\",\n            \"article_title\": \"What Is the Risk In Medical Decision-Making Scoring?\",\n            \"date\": \"\t02/23/2024\",\n            \"abstract\": \"Medical decision-making is another key component used to document an E/M level of service. This component includes three areas of which two must be met to satisfy the appropriate level of service, One of which is the level of risk.\",\n            \"article_text\": \"<P>The third key component of an evaluation and management (E/M) service is medical decision-making (MDM). This is often the information found in the assessment and plan portion of a SOAP note (Subjective, Objective, Assessment, and Plan). The SOAP format is familiar to physicians as this is how they will often format their notes when documenting their patient visits. .</P> \",\n        } "
+        '400':
+          description: Bad data parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptumSpecialtyArticles'
+              example:
+                error:
+                - Bad data parameter 'bad'
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: No Optum Specialty Article Codes were found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptumSpecialtyArticles'
+              example:
+                error: []
+                warning: []
+                info:
+                - No Optum Specialty Article Codes were found.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    OptumSpecialtyArticles:
+      type: object
+      properties:
+        optumSpecialtyArticle:
+          type: array
+          items:
+            $ref: '#/components/schemas/OptumSpecialtyArticle'
+      xml:
+        name: optumSpecialtyArticles
+    OptumSpecialtyArticle:
+      required:
+      - articleText
+      - articleTitle
+      - code
+      - date
+      - issue
+      - source
+      - year
+      type: object
+      properties:
+        code:
+          type: string
+        year:
+          type: string
+        issue:
+          type: string
+        source:
+          type: string
+        articleTitle:
+          type: string
+          xml:
+            name: article-title
+        date:
+          type: string
+        articleText:
+          type: string
+          xml:
+            name: article-text
+        abstract:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,100 @@
+openapi: 3.2.0
+info:
+  title: CMS Common Facility Health Care Decision Reason API
+  description: MicroService that contains CMS related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: Health Care Decision Reason API
+paths:
+  /api/cms/facility/health-care-reason-codes:
+    get:
+      tags:
+      - Health Care Decision Reason API
+      summary: Fetches the healthCare reason codes table data
+      operationId: getHealthCareReasonCodes
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these values (code,-code) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch Code and Description
+          content:
+            application/json:
+              example:
+                content:
+                - code: '01'
+                  codeDescription: Price Authorization Expired
+                - code: '02'
+                  codeDescription: Price authorization no longer required
+                - code: '03'
+                  codeDescription: Product not on the price authorization
+                totalCount: 73
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [code, -code]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one'
+                path: /cmscommonms/api/cms/health-care-reason-codes
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,222 @@
+openapi: 3.2.0
+info:
+  title: Real Prior Authorization Document Reference API
+  description: FHIR Prior Authorization APIs (CDS, DTR, PAS)
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: DocumentReference
+paths:
+  /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/document-reference:
+    get:
+      operationId: getDocumentReference
+      tags:
+      - DocumentReference
+      security:
+      - oAuth:
+        - read_healthcheck
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ph
+      - name: queryContext
+        in: query
+        schema:
+          type: string
+          example: 5a6rra55-e00a-45y8-5tya-123454037c7c
+      - name: _query
+        in: query
+        schema:
+          type: string
+          example: notes
+      - name: noteType
+        in: query
+        schema:
+          type: string
+          example: COMMENT_NOTE
+      - name: reference
+        in: query
+        schema:
+          type: string
+          example: '5'
+      - name: questionnaire
+        in: query
+        schema:
+          type: string
+          example: '12345'
+      - name: x-optum-consumer-correlation-id
+        in: header
+        schema:
+          type: string
+          example: uuid-123
+      - name: environment
+        in: header
+        schema:
+          type: string
+          example: sandbox
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentReferenceResponse'
+              example:
+                resourceType: Bundle
+                id: 35c45r6y-123e-4fgh-b1c3-b949rt46r67y
+                meta:
+                  lastUpdated: '2025-11-12T02:18:46.123-06:00'
+                type: searchset
+                total: 1
+                entry:
+                - resource:
+                    resourceType: DocumentReference
+                    id: '1'
+                    status: current
+                    category:
+                    - coding:
+                      - code: QUESTION_NOTE
+                        display: QuestionNote
+                    content:
+                    - attachment:
+                        contentType: text/html
+                        data: Base64encodedstring
+                        title: QuestionNote
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: UnAuthorized
+          content:
+            application/json:
+              example:
+                message: UnAuthorized
+                statusCode: 401
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+components:
+  schemas:
+    Content:
+      type: object
+      properties:
+        attachment:
+          $ref: '#/components/schemas/Attachment'
+    DocumentEntry:
+      type: object
+      description: Bundle entry containing DocumentReference
+      properties:
+        resource:
+          $ref: '#/components/schemas/DocumentReference'
+    Attachment:
+      type: object
+      description: Attachment content details
+      properties:
+        contentType:
+          type: string
+          example: application/pdf
+        creation:
+          type: string
+          example: '2025-11-05T10:25:00-05:00'
+        data:
+          type: string
+          example: PHN0c
+        url:
+          type: string
+          example: attachment_url
+        title:
+          type: string
+          example: History and Physical data
+    DocumentReferenceResponse:
+      type: object
+      description: FHIR Bundle containing DocumentReference search results
+      properties:
+        resourceType:
+          type: string
+          example: Bundle
+        id:
+          type: string
+          example: 35c45r6y-123e-4fgh-b1c3-b949rt46r67y
+        meta:
+          $ref: '#/components/schemas/Meta'
+        type:
+          type: string
+          example: searchset
+        total:
+          type: integer
+          example: 1
+        entry:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentEntry'
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    DocumentReference:
+      type: object
+      description: FHIR DocumentReference used inside attachment
+      properties:
+        resourceType:
+          type: string
+          example: DocumentReference
+        id:
+          type: string
+          example: docref-hp-002
+        status:
+          type: string
+          example: current
+        date:
+          type: string
+          example: '2025-11-05T10:30:00-05:00'
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Content'
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

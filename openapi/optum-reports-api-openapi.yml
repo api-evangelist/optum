@@ -1,0 +1,57 @@
+openapi: 3.2.0
+info:
+  title: Medical Network Claims Responses And v2 Reports API
+  description: Claims Responses And Reports
+  version: v2
+servers:
+- url: https://sandbox-apigw.optum.com/medicalnetwork/reports/v2
+  description: Optum
+tags:
+- name: Reports
+paths:
+  /:
+    get:
+      tags:
+      - Reports
+      summary: List Reports
+      operationId: list_reports_v2_reports_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reports'
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'Bearer Your-Access-Token<br/>Example: <b>Bearer eyJraWQiOiIxIiwid…</b>'
+        required: true
+        schema:
+          type: string
+components:
+  schemas:
+    Meta:
+      title: Meta
+      type: object
+      properties:
+        applicationMode:
+          type: string
+        senderId:
+          type: string
+        traceId:
+          type: string
+    Reports:
+      title: Reports
+      required:
+      - meta
+      type: object
+      properties:
+        reports:
+          title: Reports
+          type: array
+          items:
+            type: string
+          default: []
+        meta:
+          $ref: '#/components/schemas/Meta'

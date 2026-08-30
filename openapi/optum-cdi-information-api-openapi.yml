@@ -1,0 +1,190 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services CDI Information API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: CDI Information
+paths:
+  /codetype/{codetype}/{code}/cdi:
+    get:
+      tags:
+      - CDI Information
+      summary: Return the list of CDI documents for the given code
+      operationId: getCDICodeLinks
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd9v3
+          - icd10cm
+          - icd10pcs
+      - name: code
+        in: path
+        description: The code value
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: data
+        in: query
+        description: <b>associatedcodes</b> indicates will include a comma separated list of Codes associated to CDI.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cdi'
+              example:
+                cdiDoc:
+                - url: /documents/550392
+                  pdftitle: 'Lower Extremity Endovascular Revascularization:'
+                  sourcetitle: Facility Documentation Improvement Instructions
+                - url: /documents/59046
+                  pdftitle: Percutaneous Coronary Interventions (PTCA and Atherectomy, with or without Stent Placement)
+                  sourcetitle: Facility Documentation Improvement Instructions
+        '400':
+          description: Wrong CodeType
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cdi'
+              example:
+                error:
+                - The code provided ('0019T') in this web service request is not a valid 'hcpcs' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: CDI Document not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cdi'
+              example:
+                error: []
+                warning: []
+                info:
+                - CDI Document not found for the code entered.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /icd10physdoc/{docId}:
+    get:
+      tags:
+      - CDI Information
+      summary: Return the ICD10 Physician CDI PDF Document
+      operationId: getCDIPDF_1
+      parameters:
+      - name: docId
+        in: path
+        description: The Document Id (max 3 chars)
+        required: true
+        schema:
+          type: integer
+          format: int32
+        example: 638
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/pdf:
+              schema:
+                type: string
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: CDI Document not found
+          content:
+            application/pdf:
+              schema:
+                type: string
+              example: CDI Document not found
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    CdiDoc:
+      type: object
+      properties:
+        url:
+          type: string
+        pdftitle:
+          type: string
+        sourcetitle:
+          type: string
+        associatedcodes:
+          type: string
+    Cdi:
+      required:
+      - cdiDoc
+      type: object
+      properties:
+        cdiDoc:
+          type: array
+          xml:
+            name: cdi-doc
+          items:
+            $ref: '#/components/schemas/CdiDoc'
+      xml:
+        name: cdi
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

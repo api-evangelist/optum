@@ -1,0 +1,101 @@
+openapi: 3.2.0
+info:
+  title: ABM Care Decision Support Decision Support Record Service API
+  version: 1.7.0
+servers:
+- url: https://sandbox-apigw.optum.com
+  description: ABM Care Decision Support API server
+tags:
+- name: DecisionSupportRecordService
+paths:
+  /abm/dsrservice/v1:
+    post:
+      tags:
+      - DecisionSupportRecordService
+      summary: Create a new Decision Support Record (POST /abm/dsrservice/v1)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionSupportRecord'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/DecisionSupportRecord'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/DecisionSupportRecord'
+      responses:
+        '200':
+          description: OK
+  /abm/dsrservicesearch/v1/{decisionSupportNumber}:
+    get:
+      tags:
+      - DecisionSupportRecordService
+      summary: Retrieve a Decision Support Record by decisionSupportNumber (GET /abm/dsrservicesearch/v1/{decisionSupportNumber})
+      parameters:
+      - name: decisionSupportNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+    delete:
+      tags:
+      - DecisionSupportRecordService
+      summary: Delete a Decision Support Record by decisionSupportNumber (DELETE /abm/dsrservicesearch/v1/{decisionSupportNumber})
+      parameters:
+      - name: decisionSupportNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    DecisionSupportRecord:
+      required:
+      - decisionSupportNumber
+      - orderDate
+      - organizationId
+      - procedureCode
+      - procedureDescription
+      - score
+      type: object
+      properties:
+        organizationId:
+          maximum: 2147483647
+          minimum: 1
+          type: integer
+          format: int32
+        decisionSupportNumber:
+          minLength: 1
+          type: string
+        score:
+          type: integer
+          format: int32
+        procedureCode:
+          minLength: 1
+          type: string
+        procedureDescription:
+          minLength: 1
+          type: string
+        orderDate:
+          type: string
+          format: date-time
+        indicationId:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        indicationDescription:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

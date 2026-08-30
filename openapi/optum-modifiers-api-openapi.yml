@@ -1,0 +1,558 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services Modifiers API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: Modifiers
+paths:
+  /codetype/{codetype}/allmodifiers:
+    get:
+      tags:
+      - Modifiers
+      summary: Return all the Modifiers for the supplied {codeype}
+      operationId: getModifiers
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+              example:
+              - href: /ws/codetype/cpt/modifier/1P?types=all&data=all
+                value: 1P
+              - href: /ws/codetype/cpt/modifier/22?types=all&data=all
+                value: '22'
+        '400':
+          description: Invalid parameter passed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+              example:
+                error:
+                - The code provided ('ALLMODIFIERS=CMS2') in this web service request is not a valid 'hcpcs' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /modifier-51-exempt:
+    get:
+      tags:
+      - Modifiers
+      summary: Returns the list of Optum/AMA Modifier -51 Exempt codes
+      operationId: getOptumAmaMod51Exempt
+      parameters:
+      - name: types
+        in: query
+        description: 'Comma seperated list of<UL> <LI>optum : Optum -51 Exempt Modifiers </LI><LI>ama : AMA -51 Exempt Modifiers </LI></UL>'
+        schema:
+          type: string
+          default: optum,ama
+        example: optum,ama
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifier51Exempt'
+              example:
+                optum360:
+                - code: '90281'
+                  description: Immune globulin (Ig), human, for intramuscular use
+                - code: '90283'
+                  description: Immune globulin (IgIV), human, for intravenous use
+        '400':
+          description: Bad Types Parameter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Modifier51Exempt'
+              example:
+                error:
+                - Bad types parameter 'bad'
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/modifier/{modifier}:
+    get:
+      tags:
+      - Modifiers
+      summary: Return codes and properties for the supplied {modifier} and {codetype}
+      operationId: getProperty_2
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: modifier
+        in: path
+        description: The modifier for a particular code
+        required: true
+        schema:
+          type: string
+        example: 24
+      - name: data
+        in: query
+        description: 'Comma seperated list of<UL><LI>desc : e.g. SDHD (hereditary paraganglioma)</LI><LI>usage : eg. (Genetic testing code modifier. First digit is the disease category and the second is the gene type. Report only when required by the payer. Genetic code modifiers may be reported with CPT codes 83890-83916, 88230-88299 or other molecular and cytogenic studies.)</LI><LI>def : eg. The unavailability of a qualified resident surgeon is a prerequisite for use of modifier 82 appended to the usual procedure code number(s).</LI><LI>source : eg. CMS Policy</LI><LI>sourcing_rationale : eg. Sourcing Rationale: 589 Current Procedural Terminology (CPT) Level I Modifiers and Healthcare Common Procedure Coding System (HCPCS) Level II modifiers are appended to Level I or Level II Codes based on information from the Centers.... (can be long)</LI><LI>all : All of the above data.</LI></UL>'
+        schema:
+          type: string
+          default: desc
+        example: desc,usage
+      - name: types
+        in: query
+        description: 'comma seperated list of<UL> <LI>physician : Physician modifiers</LI><LI>facility : Facility modifiers</LI><LI>opps : Facility modifiers with OPPS</LI><LI>asc : ASC Payment modifiers</LI><LI>mpfs : MPFS/Medicare modifiers</LI><LI>ambulance: CMS Ambulatory modifiers</LI><LI>dme: CMS Durable Medical Equipment modifiers</LI><LI>all: all modifiers</LI></UL>'
+        schema:
+          type: string
+          default: physician
+        example: physician,facility
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModifierProperty'
+              example:
+                description: Unrelated Evaluation and Management Service by the Same Physician or Other Qualified Health Care Professional During a Postoperative Period
+                physician:
+                  link:
+                  - href: /ws/codetype/cpt/92002
+                    value: '92002'
+                  - href: /ws/codetype/cpt/92004
+                    value: '92004'
+        '400':
+          description: Unknown Type Element
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModifierProperty'
+              example:
+                error:
+                - 'Unknown types element : faccility'
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code not found for modifier entered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModifierProperty'
+              example:
+                error: []
+                warning: []
+                info:
+                - Code not found for the modifier entered.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/modifier/{code}/properties:
+    get:
+      tags:
+      - Modifiers
+      summary: Show properties for modifier Code
+      operationId: getProperty_3
+      parameters:
+      - name: code
+        in: path
+        description: The modifier code to search
+        required: true
+        schema:
+          type: string
+        example: 22
+      - name: data
+        in: query
+        description: 'desc-full : full description'
+        schema:
+          type: string
+          default: desc-full
+        example: desc-full
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModifierDesc'
+              example:
+                descFull: Increased Procedural Services
+        '400':
+          description: Bad data parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModifierDesc'
+              example:
+                error:
+                - Bad data parameter 'bad'
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: No modifier code description found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModifierDesc'
+              example:
+                error: []
+                warning: []
+                info:
+                - No modifier code description found for the given modifier code you entered.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/modifiers:
+    get:
+      tags:
+      - Modifiers
+      summary: Return Modifiers for the supplied {code}. If you want additional information please supply additional query parameters
+      operationId: getModifiers_1
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 93886
+      - name: types
+        in: query
+        description: 'Comma seperated list of<UL> <LI>physician : Physician modifiers (default)<LI>facility : Facility modifiers</LI><LI>opps : Facility modifiers with OPPS</LI><LI>mpfs : MPFS/Medicare modifiers</LI><LI>asc: ASC Payment modifiers</LI><LI>ambulance: CMS Ambulatory modifiers</LI><LI>dme: CMS Durable Medical Equipment modifiers</LI><LI>all: all modifiers</LI></UL>'
+        schema:
+          type: string
+          default: physician
+        example: physician
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                physician:
+                  link:
+                  - href: /ws/codetype/cpt/modifier/93886
+                    value: '22'
+                  - href: /ws/codetype/cpt/modifier/93886
+                    value: '23'
+        '400':
+          description: Bad data parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                error:
+                - 'Unknown data element : faccility'
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Modifiers not found for the code entered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                error: []
+                warning: []
+                info:
+                - Modifiers not found for the code entered.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    ModifierProperty:
+      required:
+      - sources
+      type: object
+      properties:
+        description:
+          type: string
+        definition:
+          type: string
+        usage:
+          type: string
+        sources:
+          $ref: '#/components/schemas/Sources'
+        physician:
+          $ref: '#/components/schemas/Links'
+        facility:
+          $ref: '#/components/schemas/Links'
+        opps:
+          $ref: '#/components/schemas/Links'
+        asc:
+          $ref: '#/components/schemas/Links'
+        ambulance:
+          $ref: '#/components/schemas/Links'
+        dme:
+          $ref: '#/components/schemas/Links'
+        mpfs:
+          $ref: '#/components/schemas/Links'
+      xml:
+        name: modifier-property
+    ModifierDesc:
+      type: object
+      properties:
+        descFull:
+          type: string
+          xml:
+            name: desc-full
+        usage:
+          type: string
+        definition:
+          type: string
+      xml:
+        name: code-properties
+    SourceRationale:
+      type: object
+      properties:
+        value:
+          type: string
+        type:
+          type: string
+          xml:
+            attribute: true
+    Links:
+      type: object
+      properties:
+        link:
+          type: array
+          xml:
+            name: Link
+          items:
+            $ref: '#/components/schemas/Link'
+    Ama:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    Modifier51Exempt:
+      required:
+      - ama
+      - optum360
+      type: object
+      properties:
+        optum360:
+          type: array
+          items:
+            $ref: '#/components/schemas/Optum360'
+        ama:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ama'
+      xml:
+        name: modifier-51-exempt
+    Sources:
+      required:
+      - source
+      - sourceRationale
+      type: object
+      properties:
+        source:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+        sourceRationale:
+          type: array
+          xml:
+            name: source_rationale
+          items:
+            $ref: '#/components/schemas/SourceRationale'
+    Source:
+      type: object
+      properties:
+        value:
+          type: string
+        type:
+          type: string
+          xml:
+            attribute: true
+    Optum360:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    Modifiers:
+      type: object
+      properties:
+        physician:
+          $ref: '#/components/schemas/Links'
+        facility:
+          $ref: '#/components/schemas/Links'
+        opps:
+          $ref: '#/components/schemas/Links'
+        mpfs:
+          $ref: '#/components/schemas/Links'
+        asc:
+          $ref: '#/components/schemas/Links'
+        ambulance:
+          $ref: '#/components/schemas/Links'
+        dme:
+          $ref: '#/components/schemas/Links'
+      xml:
+        name: modifiers
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

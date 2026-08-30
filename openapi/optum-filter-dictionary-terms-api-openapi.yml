@@ -1,0 +1,82 @@
+openapi: 3.2.0
+info:
+  title: Core Service Filter Dictionary Terms API
+  description: Code Search Service provides the APIs for searching codes related information.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/codesearchms
+tags:
+- name: Filter Dictionary Terms
+  description: Filter dictionary terms from a given string
+paths:
+  /api/coding/filter-dictionary-terms:
+    get:
+      tags:
+      - Filter Dictionary Terms
+      operationId: dictTerms
+      parameters:
+      - name: value
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Successfully retrieved dictionary terms. This response returns a list of terms extracted from the provided value.
+          content:
+            application/json:
+              schema:
+                type: string
+              example: '["Debridement","skin"]'
+        '400':
+          description: 'Bad request: Invalid parameters provided'
+          content:
+            application/json:
+              example:
+                timestamp: '2025-07-10T08:10:07.573+00:00'
+                status: 400
+                error: Bad Request
+                message: Invalid search term provided
+                path: codesearchms/api/coding/filter-dictionary-terms
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example: Jwt is expired or invalid
+        '404':
+          description: Not Found - the endpoint was not found
+        '405':
+          description: Method Not Allowed - Request method not supported
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: codesearchms/api/coding/filter-dictionary-terms
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+        '503':
+          description: Service Unavailable
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

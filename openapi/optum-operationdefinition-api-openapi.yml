@@ -1,0 +1,167 @@
+openapi: 3.2.0
+info:
+  title: Real Prior Authorization Operation Definition API
+  description: FHIR Prior Authorization APIs (CDS, DTR, PAS)
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: OperationDefinition
+paths:
+  /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/operation-definition/{operation}:
+    get:
+      operationId: getOperationDefinition
+      tags:
+      - OperationDefinition
+      security:
+      - oAuth:
+        - read_healthcheck
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ph
+      - name: operation
+        in: path
+        required: true
+        schema:
+          type: string
+          example: next-question
+      - name: x-optum-consumer-correlation-id
+        in: header
+        schema:
+          type: string
+          example: uuid-123
+      - name: environment
+        in: header
+        schema:
+          type: string
+          example: sandbox
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationDefinitionResponse'
+              example:
+                resourceType: OperationDefinition
+                text:
+                  status: generated
+                  div: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
+                url: https://apimarketplace-stg.uhc.com/PriorAuth/v1/OperationDefinition/next-question
+                name: Next-question
+                status: active
+                kind: operation
+                affectsState: true
+                code: next-question
+                resource:
+                - Questionnaire
+                system: false
+                type: true
+                instance: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: UnAuthorized
+          content:
+            application/json:
+              example:
+                message: UnAuthorized
+                statusCode: 401
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+components:
+  schemas:
+    OperationDefinitionResponse:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: OperationDefinition
+        text:
+          $ref: '#/components/schemas/Narrative'
+        url:
+          type: string
+          format: uri
+          example: https://https://sandbox-apigw.optum.com//oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/Questionnaire/$next-question
+        name:
+          type: string
+          example: Next-question
+        status:
+          type: string
+          example: active
+        kind:
+          type: string
+          example: operation
+        affectsState:
+          type: boolean
+          example: true
+        code:
+          type: string
+          example: next-question
+        resource:
+          type: array
+          items:
+            type: string
+          example:
+          - Questionnaire
+        system:
+          type: boolean
+          example: false
+        type:
+          type: boolean
+          example: true
+        instance:
+          type: boolean
+          example: false
+    Narrative:
+      type: object
+      properties:
+        status:
+          type: string
+          example: generated
+        div:
+          type: string
+          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

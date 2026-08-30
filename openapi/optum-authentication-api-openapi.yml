@@ -1,0 +1,164 @@
+openapi: 3.2.0
+info:
+  title: Authorization - Auth Authentication API
+  description: Generate Bearer Token for accessing Optum Real APIs
+  version: 1.0.1
+servers:
+- url: https://sandbox-apigw.optum.com
+  description: Sandbox
+tags:
+- name: Authentication
+paths:
+  /apip/auth/sntl/v1/token:
+    post:
+      summary: Generate Bearer Token for accessing Optum Real APIs
+      description: 'Given the client ID and client secret, retrieves a bearer token to be used for accessing this API.
+
+        '
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+              - grant_type
+              - client_id
+              - client_secret
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - client_credentials
+                  description: OAuth2 grant type; must be `client_credentials`.
+                client_id:
+                  type: string
+                  description: Client identifier issued by Optum.
+                client_secret:
+                  type: string
+                  description: Client secret issued by Optum.
+            examples:
+              clientCredentials:
+                summary: Client Credentials Grant (form-urlencoded)
+                value:
+                  grant_type: client_credentials
+                  client_id: your-client-id
+                  client_secret: your-client-secret
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                    enum:
+                    - bearer
+                  expires_in:
+                    type: number
+                  scope:
+                    type: string
+              examples:
+                success:
+                  summary: Successful token response
+                  value:
+                    access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                    token_type: bearer
+                    refresh_expires_in: 0
+                    expires_in: 7200
+                    not-before-policy: 0
+                    scope: broker-read-token idp openid email profile
+        '400':
+          description: Bad Request. The request body is malformed or missing required information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+              examples:
+                missingGrantType:
+                  summary: Missing grant_type
+                  value:
+                    status: '400'
+                    failureReason: ValidationError
+                    Errors:
+                    - Field 'grant_type' is required and must be 'client_credentials'.
+        '401':
+          description: Unauthorized. No or invalid authentication details are provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+              examples:
+                invalidClientSecret:
+                  summary: Invalid client credentials
+                  value:
+                    status: '401'
+                    failureReason: InvalidClient
+                    Errors:
+                    - 'Client authentication failed: invalid client_secret.'
+        '403':
+          description: Forbidden. Authentication succeeded but authenticated client doesn't have access to the resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+              examples:
+                scopeNotAllowed:
+                  summary: Scope not allowed
+                  value:
+                    status: '403'
+                    failureReason: InsufficientScope
+                    Errors:
+                    - Requested scope 'Optum Real.write' is not permitted for this client.
+        '415':
+          description: Unsupported Media Type. Only application/x-www-form-urlencoded is supported for requests.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+              examples:
+                wrongContentType:
+                  summary: Wrong Content-Type
+                  value:
+                    status: '415'
+                    failureReason: UnsupportedMediaType
+                    Errors:
+                    - Content-Type 'application/json' is not supported. Use 'application/x-www-form-urlencoded'.
+        '500':
+          description: Internal Server Error. An unexpected error has occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+              examples:
+                unexpected:
+                  summary: Unexpected error
+                  value:
+                    status: '500'
+                    failureReason: ServerError
+                    Errors:
+                    - An unexpected error occurred while generating the token. Please retry.
+components:
+  schemas:
+    Errors:
+      type: object
+      properties:
+        Errors:
+          type: array
+          items:
+            type: string
+          example: This is an example error string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

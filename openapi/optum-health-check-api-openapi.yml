@@ -1,0 +1,353 @@
+openapi: 3.2.0
+info:
+  title: Optum Health Check API
+  x-refined-note:
+  - x-shortDescription differs across the merged source definitions and was not carried
+  version: '1.0'
+  description: 'Operations tagged Health Check across 13 of this provider''s published API definitions: optum-medical-network-attachment-retrieval-v1-openapi.yml, optum-medical-network-attachment-status-v1-openapi.yml, optum-medical-network-attachments-submission-v1-openapi.yml, optum-medical-network-claims-responses-and-reports-v2-openapi.yml, optum-medical-network-eligibility-v3-openapi.yml, optum-medical-network-institutional-claims-v1-openapi.yml, optum-medical-network-professional-claims-v3-openapi.yml, optum-payer-list-api-v1-openapi.yml, optum-prior-authorization-v1-openapi.yml, optum-real-dental-attachments-api-openapi.yml, optum-real-dental-claim-status-api-openapi.yml, optum-real-dental-pre-care-eligibility-intelligence-api-openapi.yml, optum-submitter-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://sandbox-apigw.optum.com/medicalnetwork/attachments/retrieval/v1
+- url: https://sandbox-apigw.optum.com/medicalnetwork/attachments/status/v1
+- url: https://sandbox-apigw.optum.com/medicalnetwork/attachments/submission/v1/
+  description: Optum
+- url: https://sandbox-apigw.optum.com/medicalnetwork/reports/v2
+  description: Optum
+- url: https://sandbox-apigw.optum.com
+  description: ''
+- url: https://sandbox-apigw.optum.com/rcm/prior-authorization/v1/
+- url: /processor
+- url: https://sandbox-apigw.optum.com/dental/attachments/v1
+  description: ''
+- url: https://sandbox-apigw.optum.com/pharmacynetwork/submitter/v1
+  description: Generated server url
+tags:
+- name: Health Check
+paths:
+  /healthcheck:
+    get:
+      operationId: healthCheck
+      summary: Health Check
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+          description: OK
+      tags:
+      - Health Check
+      security:
+      - bearerToken: []
+    servers:
+    - url: https://sandbox-apigw.optum.com/medicalnetwork/attachments/retrieval/v1
+  /medicalnetwork/eligibility/v3/healthcheck:
+    get:
+      tags:
+      - Health Check
+      summary: Health Check
+      operationId: healthCheck
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'Bearer Your-Access-Token<br/> Example: <b>Bearer eyJraWQiOiIxIiwid…</b>'
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/HealthCheck_2'
+    servers:
+    - url: https://sandbox-apigw.optum.com
+      description: ''
+  /medicalnetwork/institutionalclaims/v1/healthcheck:
+    get:
+      tags:
+      - Health Check
+      summary: Health Check
+      operationId: healthCheck
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'Bearer Your-Access-Token<br/>Example: <b>Bearer eyJraWQiOiIxIiwid…</b>'
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+    servers:
+    - url: https://sandbox-apigw.optum.com
+      description: Optum
+  /medicalnetwork/professionalclaims/v3/healthcheck:
+    get:
+      tags:
+      - Health Check
+      summary: Health Check
+      operationId: healthCheck
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'Bearer Your-Access-Token<br/>Example: <b>Bearer eyJraWQiOiIxIiwid…</b>'
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+    servers:
+    - url: https://sandbox-apigw.optum.com
+      description: Optum
+  /medicalnetwork/payerlist/v1/healthcheck:
+    get:
+      tags:
+      - Health Check
+      summary: Health Check
+      operationId: getPayerListHealthCheck
+      responses:
+        '200':
+          description: Successful health check response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: https://sandbox-apigw.optum.com
+      description: Sandbox
+  /oihub/dental/claim/inquiry/v1/healthcheck:
+    get:
+      tags:
+      - Health Check
+      summary: Health Check
+      description: Returns API health status.
+      operationId: healthCheck
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: API is available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheckResponse_2'
+              example:
+                status: UP
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+    servers:
+    - url: https://sandbox-apigw.optum.com
+  /oihub/dnt/enh/eligibility/preservice/v1/healthcheck:
+    get:
+      summary: Health Check
+      description: Returns the health status for the Check Enhanced Dental Eligibility API.
+      operationId: healthCheckEnhancedDentalEligibility
+      tags:
+      - Health Check
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Health check successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: UP
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+    servers:
+    - url: https://sandbox-apigw.optum.com
+components:
+  schemas:
+    HealthCheck:
+      title: HealthCheck
+      required:
+      - version
+      type: object
+      properties:
+        version:
+          type: string
+        status:
+          type: string
+          description: NM101 60 char, required
+    HealthCheck_2:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Health Status
+        version:
+          type: string
+          description: API version
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
+    HealthCheckResponse:
+      type: object
+      additionalProperties: true
+      description: Health check response. Exact schema was not provided in the source collection.
+    ErrorResponse_2:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+          default: about/blank
+          example: https://api-stg.uhg.com/errors/attachment-type-detection
+          description: The problem type URI. Defaults to `about:blank`.
+        title:
+          type: string
+          example: Invalid Attachment Format
+          description: A short, human-readable summary of the problem.
+        detail:
+          type: string
+          example: The provided attachment format is not supported.
+          description: A detailed explanation of the problem.
+        status:
+          type: integer
+          format: int32
+          example: 400
+          maximum: 599
+          minimum: 100
+          description: The HTTP status code for the problem.
+        instance:
+          type: string
+          format: uri
+          example: https://api-stg.uhg.com/errors/attachment-type-detection/12345
+          description: A URI reference that identifies the specific occurrence of the problem.
+        properties:
+          type: object
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: DENTATT_113
+                    description: A code that can be correlated to this error.
+                  field:
+                    type: string
+                    example: DataService.attachments.find.notFound
+                    description: The field in a request that is related to this error, if applicable.
+                  message:
+                    type: string
+                    example: Attachment not found.
+                    description: A human readable message that describes the error.
+              description: A collection that gives specifics about the errors that occurred.
+          description: A map of additional, non-standard properties.
+      description: Representation for an RFC 9457 problem detail.
+    HealthCheckResponse_2:
+      type: object
+      properties:
+        status:
+          type: string
+          example: UP
+    HealthCheck_3:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Health Status
+        version:
+          type: string
+          description: API version
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    bearerToken:
+      type: apiKey
+      name: Authorization
+      in: header
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/sntl/v1/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-refined-from:
+- optum-medical-network-attachment-retrieval-v1-openapi.yml
+- optum-medical-network-attachment-status-v1-openapi.yml
+- optum-medical-network-attachments-submission-v1-openapi.yml
+- optum-medical-network-claims-responses-and-reports-v2-openapi.yml
+- optum-medical-network-eligibility-v3-openapi.yml
+- optum-medical-network-institutional-claims-v1-openapi.yml
+- optum-medical-network-professional-claims-v3-openapi.yml
+- optum-payer-list-api-v1-openapi.yml
+- optum-prior-authorization-v1-openapi.yml
+- optum-real-dental-attachments-api-openapi.yml
+- optum-real-dental-claim-status-api-openapi.yml
+- optum-real-dental-pre-care-eligibility-intelligence-api-openapi.yml
+- optum-submitter-api-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

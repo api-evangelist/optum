@@ -1,0 +1,418 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services Medicare Policy API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: Medicare Policy
+paths:
+  /codetype/{codetype}/{code}/medicarepolicy/{policytype}{contractortype}:
+    get:
+      tags:
+      - Medicare Policy
+      summary: Get Medicare contractors info
+      operationId: getContractorLinks
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd10cm
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: policytype
+        in: path
+        description: Type of policy
+        required: true
+        schema:
+          type: string
+          enum:
+          - lcd
+          - ncd
+      - name: contractortype
+        in: path
+        description: '<DL><DT>LCD policy contractor types: </DT><DD> ''fi'' - Part A Contractors (e.g. Fiscal Intermediary)</DD> <DD> ''ca'' - Part B Contractors (e.g. Carrier)</DD> <DD> ''all'' - list of all contractors </DD><DT>NCD policy contractor types:  </DT><DD> ''na'' - part A</DD> <DD> ''nb'' - part B</DD> <DD> ''all'' - includes part A and part B </DD></DL>'
+        required: true
+        schema:
+          pattern: (/([all|fi|ca|nb|na],*)+)?
+          type: string
+          default: all
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contractors'
+              example:
+                type:
+                  link:
+                  - href: /ws/codetype/cpt/99213/medicarepolicy/lcd/all
+                    value: ALL
+                  - href: /ws/codetype/cpt/99213/medicarepolicy/lcd/ca
+                    value: CA
+                  - href: /ws/codetype/cpt/99213/medicarepolicy/lcd/fi
+                    value: FI
+        '400':
+          description: Code does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contractors'
+              example:
+                error:
+                - Code '99999' does not exist
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: 'Wrong codetype '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contractors'
+              example:
+                error:
+                - The code provided ('250.01') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/medicarepolicy/{policytype}/{contractortype}/{contractornum}:
+    get:
+      tags:
+      - Medicare Policy
+      summary: Medicare Policies Data
+      operationId: getPolicies_1
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd10cm
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 83550
+      - name: policytype
+        in: path
+        description: Type of policy
+        required: true
+        schema:
+          type: string
+          enum:
+          - ncd
+          - lcd
+      - name: contractornum
+        in: path
+        description: A Valid 5 digit contractor number for LCD contractors or '0' for NCD contractors
+        required: true
+        schema:
+          type: string
+        example: 0
+      - name: contractortype
+        in: path
+        description: 'Local Coverage Determination(LCD)<UL><LI>''ca''  : MAC Part B/Part B Carrier</LI><LI>''da''  : Durable Medical Equipment(DME) Contractor</LI><LI>''fi''  : MAC Part A/Part A Fiscal Intermediary</LI></UL>National Coverage Determination(NCD)<UL><LI>''na''  : Medicare Part A</LI><LI>''nb''  : Medicare Part B</LI><LI>''nd''  : Durable Medical Equipment(DME)</LI></UL>'
+        required: true
+        schema:
+          pattern: fi|ca|da|nb|na|nd
+          type: string
+          default: nb
+      - name: data
+        in: query
+        description: 'One of <UL><LI>''active'' : Retrieve only active policies </LI><LI>''includeretired'' :  Retrieve active and retired policies</LI></UL>'
+        schema:
+          type: string
+          default: active
+      - name: start
+        in: query
+        description: The index to start with
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: maxresults
+        in: query
+        description: The maximum number od results to be returned
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Policies'
+              example:
+                type:
+                  link:
+                  - href: /ws/codetype/cpt/99213/medicarepolicy/lcd/all
+                    value: ALL
+                  - href: /ws/codetype/cpt/99213/medicarepolicy/lcd/ca
+                    value: CA
+                  - href: /ws/codetype/cpt/99213/medicarepolicy/lcd/fi
+                    value: FI
+        '400':
+          description: '''Start'' value is negative'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Policies'
+              example:
+                error:
+                - '''start'' value is negative.'
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Policies'
+              example:
+                error:
+                - Code '99999' does not exist
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/medicarepolicy:
+    get:
+      tags:
+      - Medicare Policy
+      summary: Medicare Policies
+      operationId: getPolicyLinks
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd10cm
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 99213
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+              example:
+              - href: /ws/codetype/cpt/99213/medicarepolicy/lcd/all
+                value: All LCD contractors
+              - href: /ws/codetype/cpt/99213/medicarepolicy/lcd/fi
+                value: FI (part A)
+        '400':
+          description: Wrong codetype
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+              example:
+                error:
+                - The code provided ('250.00') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code does not exist
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+              example:
+                error:
+                - Code '99999' does not exist
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    Contractors:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/Links'
+        fi:
+          $ref: '#/components/schemas/Links'
+        ca:
+          $ref: '#/components/schemas/Links'
+        na:
+          $ref: '#/components/schemas/Links'
+        nb:
+          $ref: '#/components/schemas/Links'
+      xml:
+        name: Contractors
+    Policy:
+      type: object
+      properties:
+        status:
+          type: string
+        effectiveDate:
+          type: string
+          xml:
+            name: effective_date
+        endDate:
+          type: string
+          xml:
+            name: end_date
+        title:
+          type: string
+        url:
+          type: string
+        code:
+          type: string
+        cmsId:
+          type: string
+          xml:
+            attribute: true
+    Links:
+      type: object
+      properties:
+        link:
+          type: array
+          xml:
+            name: Link
+          items:
+            $ref: '#/components/schemas/Link'
+    Policies:
+      type: object
+      properties:
+        code:
+          type: array
+          items:
+            $ref: '#/components/schemas/Code'
+        link:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+      xml:
+        name: policies
+    Code:
+      type: object
+      properties:
+        policy:
+          type: array
+          items:
+            $ref: '#/components/schemas/Policy'
+        value:
+          type: string
+          xml:
+            attribute: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,276 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Facility OPSI Codes APIs API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: OPSI Codes APIs
+paths:
+  /api/optum/facility/opsi-codes:
+    get:
+      tags:
+      - OPSI Codes APIs
+      summary: Fetches the list of OPSI codes
+      operationId: fetchOpsiCodesList
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these values (code , -code) are allowed.The default is code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches the list of OPSI codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: A
+                  opsiCodeId: '1'
+                  opsiCodeLink:
+                    value: A
+                    href: /api/optum/facility/opsi-codes/codes-associated-with-opsi/A/1
+                  description: DMEPOS Fee Schedule
+                  paymentStatus: DMEPOS Fee Schedule
+                  paymentCalculation: DMEPOS fee schedule for the specific area.
+                  tips: Non-implantable prosthetics, and orthotics can be billed to the fiscal intermediary by hospitals and are paid under the DMEPOS fee schedule.
+                - code: A
+                  opsiCodeId: '2'
+                  opsiCodeLink:
+                    value: A
+                    href: /api/optum/facility/opsi-codes/codes-associated-with-opsi/A/2
+                  description: Physical, Occupational and Speech Therapy
+                  paymentStatus: Physician Fee Schedule
+                  paymentCalculation: MAC-specific fee schedule.
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /optumcommonms/api/optum/facility/opsi-code
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /optumcommonms/api/optum/facility/opsi-codes
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/optum/facility/opsi-codes/quarters/{code}:
+    get:
+      tags:
+      - OPSI Codes APIs
+      summary: Fetches the list of OPSI hac quarters for CPT HCPS code
+      operationId: fetchOpsiCodeQuarterList
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches the list of OPSI hac quarters for CPT HCPCS code
+          content:
+            application/json:
+              example:
+              - code: B
+                year: 2025-1
+              - code: B
+                year: 2024-4
+              - code: B
+                year: 2024-3
+              - code: B
+                year: 2024-2
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: optumcommonms/api/optum/facility/opsi-codes/quarter/99213
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2025-01-10T06:36:22.518+00:00'
+                path: optumcommonms/api/optum/facility/opsi-codes/quarters/99213
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/optum/facility/opsi-codes/codes-associated-with-opsi/{opsi-code}/{opsi-code-id}:
+    get:
+      tags:
+      - OPSI Codes APIs
+      summary: Fetches the list of cpt or hcpcs code associated with particular OPSI Code
+      operationId: fetchOpsiCodesList_1
+      parameters:
+      - name: opsi-code-id
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 1
+      - name: opsi-code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: A
+      - name: sort
+        in: query
+        description: Any of these values (code , -code) are allowed.The default is code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches the list of cpt or hcpcs code associated with particular OPSI code
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0001F
+                  description: 'Heart failure assessed (includes assessment of all the following components) (CAD): Blood pressure measured (2000F) Level of activity assessed (1003F) Clinical symptoms of volume overload (excess) assessed (1004F) Weight, recorded (2001F) Clinical signs of volume overload (excess) assessed (2002F)'
+                  title: Non-Covered Items and Services based on Statutory exclusions, Not covered by any Medicare outpatient benefit category, Not reasonable and necessary
+                - code: 0005F
+                  description: 'Osteoarthritis assessed (OA) Includes assessment of all the following components: Osteoarthritis symptoms and functional status assessed (1006F) Use of anti-inflammatory or over-the-counter (OTC) analgesic medications assessed (1007F) Initial examination of the involved joint(s) (includes visual inspection, palpation, range of motion) (2004F)'
+                  title: Non-Covered Items and Services based on Statutory exclusions, Not covered by any Medicare outpatient benefit category, Not reasonable and necessary
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /optumcommonms/api/optum/facility/opsi-code/codes-associated-with-opsi/A/1/
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /optumcommonms/api/optum/facility/opsi-code/codes-associated-with-opsi/A/1
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

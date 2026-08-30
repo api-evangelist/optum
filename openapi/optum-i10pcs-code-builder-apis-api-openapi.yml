@@ -1,0 +1,511 @@
+openapi: 3.2.0
+info:
+  title: Core Service I10PCS Code Builder APIs API
+  description: Code Search Service provides the APIs for searching codes related information.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/codesearchms
+tags:
+- name: I10PCS Code Builder APIs
+paths:
+  /api/coding/i10_pcs/builder/{code}:
+    get:
+      tags:
+      - I10PCS Code Builder APIs
+      summary: Returns body system, section , options , code description and other tabular fields like Body Part, Approach, Device and Qualifier available for the I10 PCS code type
+      operationId: searchCode
+      parameters:
+      - name: code
+        in: path
+        description: 'i10_pcs code '
+        required: true
+        schema:
+          type: string
+        example: 0W02
+      - name: direction
+        in: query
+        description: 'i10_pcs next or prev code '
+        required: false
+        schema:
+          type: string
+        example: nextCode
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetching section, body system, options, code description and other tabular fields like Body Part, Approach, Device and Qualifier
+          content:
+            application/json:
+              example:
+                tabCode: 0W02
+                sections:
+                - ^0 Medical and Surgical
+                - 1 Obstetrics
+                - 2 Placement
+                - 3 Administration
+                - 4 Measurement and Monitoring
+                - 5 Extracorporeal or Systemic Assistance and Performance
+                - 6 Extracorporeal or Systemic Therapies
+                - 7 Osteopathic
+                - 8 Other Procedures
+                - 9 Chiropractic
+                - B Imaging
+                - C Nuclear Medicine
+                - D Radiation Therapy
+                - F Physical Rehabilitation and Diagnostic Audiology
+                - G Mental Health
+                - H Substance Abuse Treatment
+                - X New Technology
+                bodySystems:
+                - 0 Central Nervous System and Cranial Nerves
+                - 1 Peripheral Nervous System
+                - 2 Heart and Great Vessels
+                - 3 Upper Arteries
+                - 4 Lower Arteries
+                - 5 Upper Veins
+                - 6 Lower Veins
+                - 7 Lymphatic and Hemic Systems
+                - 8 Eye
+                - 9 Ear, Nose, Sinus
+                - B Respiratory System
+                - C Mouth and Throat
+                - D Gastrointestinal System
+                - F Hepatobiliary System and Pancreas
+                - G Endocrine System
+                - H Skin and Breast
+                - J Subcutaneous Tissue and Fascia
+                - K Muscles
+                - L Tendons
+                - M Bursae and Ligaments
+                - N Head and Facial Bones
+                - P Upper Bones
+                - Q Lower Bones
+                - R Upper Joints
+                - S Lower Joints
+                - T Urinary System
+                - U Female Reproductive System
+                - V Male Reproductive System
+                - ^W Anatomical Regions, General
+                - X Anatomical Regions, Upper Extremities
+                - Y Anatomical Regions, Lower Extremities
+                operations:
+                - ^0 Alteration
+                - 1 Bypass
+                - 2 Change
+                - 3 Control
+                - 4 Creation
+                - 8 Division
+                - 9 Drainage
+                - B Excision
+                - C Extirpation
+                - F Fragmentation
+                - H Insertion
+                - J Inspection
+                - M Reattachment
+                - P Removal
+                - Q Repair
+                - U Supplement
+                - W Revision
+                - Y Transplantation
+                description: Alteration / Face
+                prevNextCode: 5
+                enableRangeButt: true
+                enableDetailButt: false
+                pcsTableRows:
+                - tableRowId: 21770
+                  tableHeaderId: 136114
+                  char3Code: 0W0
+                  rowNumber: 1
+                  bodyPart:
+                  - 0 Head
+                  - ^2 Face
+                  - 4 Upper Jaw
+                  - 5 Lower Jaw
+                  - 6 Neck
+                  - 8 Chest Wall
+                  - F Abdominal Wall
+                  - K Upper Back
+                  - L Lower Back
+                  - M Perineum, Male
+                  - N Perineum, Female
+                  approach:
+                  - 0 Open
+                  - 3 Percutaneous
+                  - 4 Percutaneous Endoscopic
+                  device:
+                  - 7 Autologous Tissue Substitute
+                  - J Synthetic Substitute
+                  - K Nonautologous Tissue Substitute
+                  - Z No Device
+                  qualifier:
+                  - Z No Qualifier
+                bodyPart: 2 Face
+                approach: ''
+                device: ''
+                qualifier: ''
+                tabFullCode: 0W02
+                builtCode: 0W02
+        '400':
+          description: 'Bad request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - 'searchCode.searchCode: length must be between 3 and 7'
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-01-01T07:22:01.017+00:00'
+                path: /api/coding/i10_pcs/builder/0W02
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/i10_pcs/builder/{code}/autocomplete:
+    get:
+      tags:
+      - I10PCS Code Builder APIs
+      summary: Returns I10 PCS codes that are started with searched code
+      operationId: autoSuggest
+      parameters:
+      - name: code
+        in: path
+        description: 'i10_pcs code '
+        required: true
+        schema:
+          type: string
+        example: 0W
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetching I10 PCS codes that are started with searched code
+          content:
+            application/json:
+              example:
+              - 0W0
+              - 0W1
+              - 0W2
+              - 0W3
+              - 0W4
+              - 0W8
+              - 0W9
+              - 0WB
+              - 0WC
+              - 0WF
+              - 0WH
+              - 0WJ
+              - 0WM
+              - 0WP
+              - 0WQ
+              - 0WU
+              - 0WW
+              - 0WY
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-01-01T07:22:01.017+00:00'
+                path: /api/coding/i10_pcs/builder/0W/autocomplete
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/i10_pcs/builder/:
+    get:
+      tags:
+      - I10PCS Code Builder APIs
+      summary: Returns body system, section and options available for the I10 PCS code type
+      operationId: fetchTabularList
+      parameters:
+      - name: body-system
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: section
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: operation
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: 'Fetching section, body system and options '
+          content:
+            application/json:
+              example:
+                sections:
+                - 0 Medical and Surgical
+                - 1 Obstetrics
+                - 2 Placement
+                - 3 Administration
+                - 4 Measurement and Monitoring
+                - 5 Extracorporeal or Systemic Assistance and Performance
+                - 6 Extracorporeal or Systemic Therapies
+                - 7 Osteopathic
+                - 8 Other Procedures
+                - 9 Chiropractic
+                - B Imaging
+                - C Nuclear Medicine
+                - D Radiation Therapy
+                - F Physical Rehabilitation and Diagnostic Audiology
+                - G Mental Health
+                - H Substance Abuse Treatment
+                - X New Technology
+                bodySystems:
+                - 0 Central and Peripheral Nervous System
+                - 0 Central Nervous System
+                - 0 Central Nervous System and Cranial Nerves
+                - 0 Circulatory
+                - 0 Pregnancy
+                - 0 Rehabilitation
+                - 1 Diagnostic Audiology
+                - 1 Peripheral Nervous System
+                - 2 Cardiovascular System
+                - 2 Heart
+                - 2 Heart and Great Vessels
+                - 3 Upper Arteries
+                - 4 Lower Arteries
+                - 5 Upper Veins
+                - 5 Veins
+                - 6 Lower Veins
+                - 7 Lymphatic and Hematologic System
+                - 7 Lymphatic and Hemic Systems
+                - 7 Lymphatic System
+                - 8 Eye
+                - 9 Ear, Nose, Mouth and Throat
+                - 9 Ear, Nose, Sinus
+                - A Physiological Systems
+                - B Physiological Devices
+                - B Respiratory System
+                - C Indwelling Device
+                - C Mouth and Throat
+                - D Gastrointestinal System
+                - E Physiological Systems and Anatomical Regions
+                - F Hepatobiliary System and Pancreas
+                - G Endocrine System
+                - H Skin
+                - H Skin and Breast
+                - H Skin, Subcutaneous Tissue and Breast
+                - H Skin, Subcutaneous Tissue, Fascia and Breast
+                - J Subcutaneous Tissue and Fascia
+                - K Muscles
+                - K Muscles, Tendons, Bursae and Ligaments
+                - L Connective Tissue
+                - L Tendons
+                - M Breast
+                - M Bursae and Ligaments
+                - N Bones
+                - N Head and Facial Bones
+                - N Skull and Facial Bones
+                - P Musculoskeletal System
+                - P Non-Axial Upper Bones
+                - P Upper Bones
+                - Q Lower Bones
+                - Q Non-Axial Lower Bones
+                - R Axial Skeleton, Except Skull and Facial Bones
+                - R Joints
+                - R Upper Joints
+                - S Lower Joints
+                - T Urinary System
+                - U Female Reproductive System
+                - V Male Reproductive System
+                - W Anatomical Regions
+                - W Anatomical Regions, General
+                - X Anatomical Regions, Upper Extremities
+                - X Physiological Systems
+                - Y Anatomical Orifices
+                - Y Anatomical Regions, Lower Extremities
+                - Y Extracorporeal
+                - Y Fetus and Obstetrical
+                - Z None
+                operations:
+                - 0 Alteration
+                - 0 Assistance
+                - 0 Atmospheric Control
+                - 0 Beam Radiation
+                - 0 Change
+                - 0 Introduction
+                - 0 Measurement
+                - 0 Other Procedures
+                - 0 Plain Radiography
+                - 0 Speech Assessment
+                - 0 Treatment
+                - 1 Brachytherapy
+                - 1 Bypass
+                - 1 Compression
+                - 1 Decompression
+                - 1 Fluoroscopy
+                - 1 Irrigation
+                - 1 Monitoring
+                - 1 Motor and/or Nerve Function Assessment
+                - 1 Performance
+                - 1 Planar Nuclear Medicine Imaging
+                - 1 Psychological Tests
+                - 1 Transfusion
+                - 2 Activities of Daily Living Assessment
+                - 2 Change
+                - 2 Computerized Tomography (CT Scan)
+                - 2 Crisis Intervention
+                - 2 Detoxification Services
+                - 2 Dressing
+                - 2 Electromagnetic Therapy
+                - 2 Monitoring
+                - 2 Restoration
+                - 2 Stereotactic Radiosurgery
+                - 2 Tomographic (Tomo) Nuclear Medicine Imaging
+                - 2 Transfusion
+                - 3 Control
+                - 3 Hearing Assessment
+                - 3 Hyperthermia
+                - 3 Immobilization
+                - 3 Individual Counseling
+                - 3 Magnetic Resonance Imaging (MRI)
+                - 3 Medication Management
+                - 3 Positron Emission Tomographic (PET) Imaging
+                - 4 Creation
+                - 4 Group Counseling
+                - 4 Hearing Aid Assessment
+                - 4 Hypothermia
+                - 4 Nonimaging Nuclear Medicine Uptake
+                - 4 Packing
+                - 4 Ultrasonography
+                - 5 Destruction
+                - 5 Individual Psychotherapy
+                - 5 Nonimaging Nuclear Medicine Probe
+                - 5 Other Imaging
+                - 5 Pheresis
+                - 5 Removal
+                - 5 Vestibular Assessment
+                - 6 Counseling
+                - 6 Detachment
+                - 6 Family Counseling
+                - 6 Nonimaging Nuclear Medicine Assay
+                - 6 Phototherapy
+                - 6 Speech Treatment
+                - 6 Traction
+                - 7 Dilation
+                - 7 Family Psychotherapy
+                - 7 Motor Treatment
+                - 7 Systemic Nuclear Medicine Therapy
+                - 7 Ultrasound Therapy
+                - 8 Activities of Daily Living Treatment
+                - 8 Division
+                - 8 Medication Management
+                - 8 Ultraviolet Light Therapy
+                - 9 Drainage
+                - 9 Hearing Treatment
+                - 9 Pharmacotherapy
+                - 9 Shock Wave Therapy
+                - A Abortion
+                - A Assistance
+                - B Cochlear Implant Treatment
+                - B Electroconvulsive Therapy
+                - B Excision
+                - B Manipulation
+                - B Perfusion
+                - C Biofeedback
+                - C Extirpation
+                - C Vestibular Treatment
+                - D Device Fitting
+                - D Extraction
+                - E Delivery
+                - E Measurement
+                - F Caregiver Training
+                - F Fragmentation
+                - F Hypnosis
+                - G Fusion
+                - G Narcosynthesis
+                - H Group Psychotherapy
+                - H Insertion
+                - J Inspection
+                - J Light Therapy
+                - K Map
+                - L Occlusion
+                - M Reattachment
+                - N Release
+                - P Removal
+                - Q Repair
+                - R Replacement
+                - S Reposition
+                - T Resection
+                - U Supplement
+                - V Restriction
+                - W Revision
+                - X Transfer
+                - Y Other Radiation
+                - Y Transplantation
+                prevNextCode: 0
+                enableRangeButt: false
+                enableDetailButt: false
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-01-01T07:22:01.017+00:00'
+                path: /api/coding/i10_pcs/builder
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

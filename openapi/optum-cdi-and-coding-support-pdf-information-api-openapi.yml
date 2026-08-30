@@ -1,0 +1,78 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services CDI and Coding Support PDF Information API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: CDI and Coding Support PDF Information
+paths:
+  /documents/{docId}:
+    get:
+      tags:
+      - CDI and Coding Support PDF Information
+      summary: Return the CDI and Coding Support PDF Document
+      operationId: getCDIPDF
+      parameters:
+      - name: docId
+        in: path
+        description: The Document Id (max 6 chars)
+        required: true
+        schema:
+          type: integer
+          format: int32
+        example: 470866
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/pdf:
+              schema:
+                type: string
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: CDI or Coding Support PDF Document not found
+          content:
+            application/pdf:
+              schema:
+                type: string
+              example: CDI or Coding Support PDF Document not found
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

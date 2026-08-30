@@ -1,0 +1,1394 @@
+openapi: 3.2.0
+info:
+  title: Prior Authorization v1 Determination API
+  description: ''
+  version: 1.1.0
+  contact:
+    email: ''
+servers:
+- url: https://sandbox-apigw.optum.com/rcm/prior-authorization/v1/
+- url: /processor
+security:
+- bearerAuth: []
+tags:
+- name: Determination
+paths:
+  /determination/x12:
+    post:
+      summary: 278x215 Prior Authorization Determination
+      description: Prior authorization determination using 278x215 requests
+      tags:
+      - Determination
+      parameters:
+      - $ref: '#/components/parameters/x-optum-tenant-id'
+      - $ref: '#/components/parameters/x-optum-correlation-id'
+      requestBody:
+        description: Authorization request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeterminationX12Request'
+      responses:
+        '200':
+          description: Success
+          headers:
+            x-amzn-trace-id:
+              $ref: '#/components/headers/x-amzn-trace-id'
+            transaction-id:
+              $ref: '#/components/headers/transaction-id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeterminationResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+  /determination:
+    post:
+      summary: JSON Prior Authorization Determination
+      description: Prior authorization determination using JSON requests
+      tags:
+      - Determination
+      parameters:
+      - $ref: '#/components/parameters/x-optum-tenant-id'
+      - $ref: '#/components/parameters/x-optum-correlation-id'
+      requestBody:
+        description: Determination request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InquiryJSONRequestWithDetermination'
+            examples:
+              subscriber:
+                $ref: '#/components/examples/UserInquiryRequestSubscriberWithDetermination'
+              dependent:
+                $ref: '#/components/examples/UserInquiryRequestDependentWithDetermination'
+      responses:
+        '200':
+          description: Success
+          headers:
+            x-amzn-trace-id:
+              $ref: '#/components/headers/x-amzn-trace-id'
+            transaction-id:
+              $ref: '#/components/headers/transaction-id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeterminationResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  headers:
+    transaction-id:
+      description: Transaction Id of the request
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: c9476bc2-b563-4555-9527-4afe9dccaf9a
+    x-amzn-trace-id:
+      description: Generated traceId of the request
+      required: true
+      example: Root=1-61d7441a-56e4c77350687b5230e5707
+      schema:
+        type: string
+  schemas:
+    InquiryJSONRequestWithDetermination:
+      allOf:
+      - $ref: '#/components/schemas/InquiryJSONRequest'
+      - type: object
+        properties:
+          rhPayerId:
+            type: string
+            description: Global payer identifier used for determination
+            example: UHCDEMODV1
+          planId:
+            type: string
+            description: Payer plan identifier used for determination
+            example: '41'
+    AuthorizationJSONResponse:
+      type: object
+      properties:
+        requestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        submitterTransactionIdentifier:
+          type: string
+        payerId:
+          type: string
+        payerName:
+          type: string
+        umClearingHouseId:
+          type: string
+        contactName:
+          type: string
+        contactElectronicMail:
+          type: string
+        contactFacsimile:
+          type: string
+        contactTelephone:
+          type: string
+        contactTelephoneExtension:
+          type: string
+        contactUrl:
+          type: string
+        umRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        requester:
+          $ref: '#/components/schemas/AuthorizationJSONResponseRequester'
+        subscriber:
+          $ref: '#/components/schemas/AuthorizationJSONResponseSubscriber'
+        dependent:
+          $ref: '#/components/schemas/AuthorizationJSONResponseDependent'
+        patientEventDetail:
+          $ref: '#/components/schemas/AuthorizationJSONResponsePatientEventDetail'
+    AuthorizationJSONResponsePatientEventDetail:
+      type: object
+      properties:
+        dependentRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        requestCategoryCode:
+          type: string
+        certificationTypeCode:
+          type: string
+        serviceTypeCode:
+          type: string
+        facilityTypeCode:
+          type: string
+        facilityCodeQualifier:
+          type: string
+        certificationActionCode:
+          type: string
+        reviewIdentificationNumber:
+          type: string
+        reviewDecisionReasonCode:
+          type: string
+        secondSurgicalOpinionIndicator:
+          type: string
+        previousReviewAuthorizationNumber:
+          type: string
+        previousAdministrativeReferenceNumber:
+          type: string
+        eventDateBegin:
+          type: string
+        eventDateEnd:
+          type: string
+        admissionDateBegin:
+          type: string
+        admissionDateEnd:
+          type: string
+        dischargeDate:
+          type: string
+        certificationIssueDate:
+          type: string
+        certificationExpirationDate:
+          type: string
+        certificationEffectiveDateBegin:
+          type: string
+        certificationEffectiveDateEnd:
+          type: string
+        healthCareServicesReviewRequestDateBegin:
+          type: string
+        healthCareServicesReviewRequestDateEnd:
+          type: string
+        diagnosisTypeCode:
+          type: string
+        diagnosisCode:
+          type: string
+        quantityQualifier:
+          type: string
+        serviceUnitCount:
+          type: string
+        unitOrBasisForMeasurementCode:
+          type: string
+        sampleSelectionModulus:
+          type: string
+        timePeriodQualifier:
+          type: string
+        periodCount:
+          type: string
+        deliveryFrequencyCode:
+          type: string
+        deliveryPatternTimeCode:
+          type: string
+        institutionalAdmissionTypeCode:
+          type: string
+        institutionalAdmissionSourceCode:
+          type: string
+        institutionalPatientStatusCode:
+          type: string
+        ambulanceTransportCode:
+          type: string
+        ambulanceUnitOrBasisForMeasurementCode:
+          type: string
+        ambulanceTransportDistance:
+          type: string
+        spinalManipulationTreatmentSeriesNumber:
+          type: string
+        spinalManipulationTreatmentCount:
+          type: string
+        spinalManipulationSubluxationLevelCode:
+          type: string
+        spinalManipulationSubluxationLevelCode2:
+          type: string
+        oxygenEquipmentTypeCode:
+          type: string
+        oxygenEquipmentTypeCode2:
+          type: string
+        oxygenFlowRate:
+          type: string
+        dailyOxygenUseCount:
+          type: string
+        oxygenUsePeriodHourCount:
+          type: string
+        respiratoryTherapistOrderText:
+          type: string
+        portableOxygenSystemFlowRate:
+          type: string
+        oxygenDeliverySystemCode:
+          type: string
+        oxygenSystemTypeCode:
+          type: string
+        homeHealthPrognosisCode:
+          type: string
+        homeHealthStartDate:
+          type: string
+        homeHealthCertificationPeriod:
+          type: string
+        homeHealthMedicareCoverageIndicator:
+          type: string
+        homeHealthCertificationTypeCode:
+          type: string
+        freeFormMessageText:
+          type: string
+        patientEventProviderName:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponsePatientEventProviderName'
+        patientEventTransportInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponsePatientEventTransportInformation'
+        serviceLevel:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseServiceLevel'
+    AuthorizationJSONResponsePatientEventTransportInformation:
+      type: object
+      properties:
+        entityIdentifierCode:
+          type: string
+        organizationName:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+    AuthorizationJSONResponseRequestValidation:
+      type: object
+      properties:
+        responseCode:
+          type: string
+        rejectReasonCode:
+          type: string
+        followupActionCode:
+          type: string
+    AuthorizationJSONResponseIonalService:
+      type: object
+      properties:
+        serviceLineRevenueCode:
+          type: string
+        productOrServiceIDQualifier:
+          type: string
+        procedureCode:
+          type: string
+        procedureModifier:
+          type: string
+        procedureModifier2:
+          type: string
+        procedureModifier3:
+          type: string
+        procedureModifier4:
+          type: string
+        procedureCodeDescription:
+          type: string
+        procedureCode2:
+          type: string
+        serviceLineAmount:
+          type: string
+        unitOrBasisForMeasurementCode:
+          type: string
+        serviceUnitCount:
+          type: string
+        serviceLineRate:
+          type: string
+        epsdtIndicator:
+          type: string
+    AuthorizationJSONResponsePatientEventProviderName:
+      type: object
+      properties:
+        patientEventProviderRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        entityIdentifierCode:
+          type: string
+        organizationName:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        namePrefix:
+          type: string
+        nameSuffix:
+          type: string
+        identificationCodeQualifier:
+          type: string
+        identifier:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        countryCode:
+          type: string
+        countrySubDivisionCode:
+          type: string
+        providerSupplementalInformation:
+          $ref: '#/components/schemas/AuthorizationJSONResponseProviderSupplementalInformation'
+        contactName:
+          type: string
+        contactElectronicMail:
+          type: string
+        contactFacsimile:
+          type: string
+        contactTelephone:
+          type: string
+        contactTelephoneExtension:
+          type: string
+        contactUrl:
+          type: string
+        providerCode:
+          type: string
+        providerTaxonomyCode:
+          type: string
+    AuthorizationJSONResponseDependent:
+      type: object
+      properties:
+        dependentRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        lastName:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        suffix:
+          type: string
+        dateOfBirth:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        countryCode:
+          type: string
+        countrySubDivisionCode:
+          type: string
+        supplementalIdentification:
+          $ref: '#/components/schemas/AuthorizationJSONResponseDependentSupplementalIdentification'
+    InquiryJSONRequest:
+      type: object
+      properties:
+        senderId:
+          type: string
+        submitterTransactionIdentifier:
+          type: string
+        payerId:
+          type: string
+        payerName:
+          type: string
+        umClearingHouseId:
+          type: string
+        requester:
+          type: object
+          properties:
+            requesterType:
+              type: string
+            organizationName:
+              type: string
+            lastName:
+              type: string
+            firstName:
+              type: string
+            requesterIdentification:
+              type: object
+              properties:
+                providerUpinNumber:
+                  type: string
+                facilityIdNumber:
+                  type: string
+                employerIdentificationNumber:
+                  type: string
+                providerSiteNumber:
+                  type: string
+                providerPlanNetworkIdNumber:
+                  type: string
+                facilityNetworkIdNumber:
+                  type: string
+                socialSecurityNumber:
+                  type: string
+                federalTaxpayerIdentificationNumber:
+                  type: string
+                carrierAssignedReferenceNumber:
+                  type: string
+            address1:
+              type: string
+            address2:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            postalCode:
+              type: string
+            countryCode:
+              type: string
+            countrySubDivisionCode:
+              type: string
+            npi:
+              type: string
+            payorId:
+              type: string
+            ssn:
+              type: string
+            servicesPlanID:
+              type: string
+            employersId:
+              type: string
+            etin:
+              type: string
+            contactName:
+              type: string
+            contactElectronicMail:
+              type: string
+            contactFacsimile:
+              type: string
+            contactTelephone:
+              type: string
+            contactTelephoneExtension:
+              type: string
+            providerCode:
+              type: string
+            referenceIdentification:
+              type: string
+        subscriber:
+          type: object
+          properties:
+            lastName:
+              type: string
+            firstName:
+              type: string
+            middleName:
+              type: string
+            suffix:
+              type: string
+            memberId:
+              type: string
+            dateOfBirth:
+              type: string
+            supplementalIdentification:
+              type: object
+              properties:
+                policyNumber:
+                  type: string
+                branchIdentifier:
+                  type: string
+                groupNumber:
+                  type: string
+                departmentNumber:
+                  type: string
+                patientAccountNumber:
+                  type: string
+                healthInsuranceClaimNumber:
+                  type: string
+                idCard:
+                  type: string
+                insurancePolicyNumber:
+                  type: string
+                planNetworkIdentificationNumber:
+                  type: string
+                medicaidRecipientIdentificationNumber:
+                  type: string
+                ssn:
+                  type: string
+        dependent:
+          type: object
+          properties:
+            lastName:
+              type: string
+            firstName:
+              type: string
+            middleName:
+              type: string
+            suffix:
+              type: string
+            dateOfBirth:
+              type: string
+            supplementalIdentification:
+              type: object
+              properties:
+                employeeIdentificationNumber:
+                  type: string
+                patientAccountNumber:
+                  type: string
+                ssn:
+                  type: string
+        patientEventDetail:
+          type: object
+          properties:
+            requestCategoryCode:
+              type: string
+            certificationTypeCode:
+              type: string
+            serviceTypeCode:
+              type: string
+            facilityTypeCode:
+              type: string
+            facilityCodeQualifier:
+              type: string
+            certificationActionCode:
+              type: string
+            previousReviewAuthorizationNumber:
+              type: string
+            previousAdministrativeReferenceNumber:
+              type: string
+            accidentDate:
+              type: string
+            eventDateBegin:
+              type: string
+            eventDateEnd:
+              type: string
+            admissionDateBegin:
+              type: string
+            admissionDateEnd:
+              type: string
+            dischargeDate:
+              type: string
+            certificationIssueDateBegin:
+              type: string
+            certificationIssueDateEnd:
+              type: string
+            certificationExpirationDateBegin:
+              type: string
+            certificationExpirationDateEnd:
+              type: string
+            certificationEffectiveDateBegin:
+              type: string
+            certificationEffectiveDateEnd:
+              type: string
+            healthCareServicesReviewRequestDate:
+              type: string
+            diagnosisTypeCode:
+              type: string
+            diagnosisCode:
+              type: string
+            patientEventProviderName:
+              type: array
+              items:
+                type: object
+                properties:
+                  entityIdentifierCode:
+                    type: string
+                  organizationName:
+                    type: string
+                  lastName:
+                    type: string
+                  firstName:
+                    type: string
+                  middleName:
+                    type: string
+                  namePrefix:
+                    type: string
+                  nameSuffix:
+                    type: string
+                  identificationCodeQualifier:
+                    type: string
+                  identifier:
+                    type: string
+                  address1:
+                    type: string
+                  address2:
+                    type: string
+                  city:
+                    type: string
+                  state:
+                    type: string
+                  postalCode:
+                    type: string
+                  countryCode:
+                    type: string
+                  countrySubDivisionCode:
+                    type: string
+                  providerSupplementalInformation:
+                    type: object
+                    properties:
+                      stateLicenseNumber:
+                        type: string
+                      licenseNumberStateCode:
+                        type: string
+                      providerUpinNumber:
+                        type: string
+                      facilityIdNumber:
+                        type: string
+                      employersIdentificationNumber:
+                        type: string
+                      providerPlanNetworkIdentificationNumber:
+                        type: string
+                      facilityNetworkIdentificationNumber:
+                        type: string
+                      ssn:
+                        type: string
+                      carrierAssignedReferenceNumber:
+                        type: string
+                  providerCode:
+                    type: string
+                  providerTaxonomyCode:
+                    type: string
+            serviceLevel:
+              type: array
+              items:
+                type: object
+                properties:
+                  requestCategoryCode:
+                    type: string
+                  certificationTypeCode:
+                    type: string
+                  serviceTypeCode:
+                    type: string
+                  facilityTypeCode:
+                    type: string
+                  facilityCodeQualifier:
+                    type: string
+                  certificationActionCode:
+                    type: string
+                  previousReviewAuthorizationNumber:
+                    type: string
+                  previousAdministrativeReferenceNumber:
+                    type: string
+                  serviceDateBegin:
+                    type: string
+                  serviceDateEnd:
+                    type: string
+                  certificationIssueDateBegin:
+                    type: string
+                  certificationIssueDateEnd:
+                    type: string
+                  certificationExpirationDateBegin:
+                    type: string
+                  certificationExpirationDateEnd:
+                    type: string
+                  certificationEffectiveDateBegin:
+                    type: string
+                  certificationEffectiveDateEnd:
+                    type: string
+                  professionalService:
+                    type: object
+                    properties:
+                      productOrServiceIDQualifier:
+                        type: string
+                      procedureCode:
+                        type: string
+                      procedureCode2:
+                        type: string
+                      unitOrBasisForMeasurementCode:
+                        type: string
+                      serviceUnitCount:
+                        type: string
+                  institutionalService:
+                    type: object
+                    properties:
+                      serviceLineRevenueCode:
+                        type: string
+                      productOrServiceIDQualifier:
+                        type: string
+                      procedureCode:
+                        type: string
+                      procedureCode2:
+                        type: string
+                      unitOrBasisForMeasurementCode:
+                        type: string
+                      serviceUnitCount:
+                        type: string
+                  dentalService:
+                    type: object
+                    properties:
+                      procedureCode:
+                        type: string
+                      procedureCode2:
+                        type: string
+                      americanDentalAssociationCodes:
+                        type: string
+                      prosthesisCrownOrInlayCode:
+                        type: string
+                      serviceUnitCount:
+                        type: string
+                  toothInformation:
+                    type: object
+                    properties:
+                      toothCode:
+                        type: string
+                      toothSurfaceCode:
+                        type: string
+                  serviceProviderName:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        entityIdentifierCode:
+                          type: string
+                        organizationName:
+                          type: string
+                        lastName:
+                          type: string
+                        firstName:
+                          type: string
+                        middleName:
+                          type: string
+                        namePrefix:
+                          type: string
+                        nameSuffix:
+                          type: string
+                        identificationCodeQualifier:
+                          type: string
+                        identifier:
+                          type: string
+                        address1:
+                          type: string
+                        address2:
+                          type: string
+                        city:
+                          type: string
+                        state:
+                          type: string
+                        postalCode:
+                          type: string
+                        countryCode:
+                          type: string
+                        countrySubDivisionCode:
+                          type: string
+                        providerSupplementalInformation:
+                          type: object
+                          properties:
+                            stateLicenseNumber:
+                              type: string
+                            licenseNumberStateCode:
+                              type: string
+                            providerUpinNumber:
+                              type: string
+                            facilityIdNumber:
+                              type: string
+                            employersIdentificationNumber:
+                              type: string
+                            providerSiteNumber:
+                              type: string
+                            providerPlanNetworkIdentificationNumber:
+                              type: string
+                            facilityNetworkIdentificationNumber:
+                              type: string
+                            ssn:
+                              type: string
+                            carrierAssignedReferenceNumber:
+                              type: string
+                        providerCode:
+                          type: string
+                        providerTaxonomyCode:
+                          type: string
+    AuthorizationJSONResponseDependentSupplementalIdentification:
+      type: object
+      additionalProperties: false
+      properties:
+        employeeIdentificationNumber:
+          type: string
+        patientAccountNumber:
+          type: string
+        ssn:
+          type: string
+    AuthorizationJSONResponseServiceLevel:
+      type: object
+      properties:
+        serviceRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        requestCategoryCode:
+          type: string
+        certificationTypeCode:
+          type: string
+        serviceTypeCode:
+          type: string
+        facilityTypeCode:
+          type: string
+        facilityCodeQualifier:
+          type: string
+        certificationActionCode:
+          type: string
+        reviewIdentificationNumber:
+          type: string
+        reviewDecisionReasonCode:
+          type: string
+        secondSurgicalOpinionIndicator:
+          type: string
+        previousReviewAuthorizationNumber:
+          type: string
+        previousAdministrativeReferenceNumber:
+          type: string
+        serviceDateBegin:
+          type: string
+        serviceDateEnd:
+          type: string
+        certificationIssueDate:
+          type: string
+        certificationExpirationDate:
+          type: string
+        certificationEffectiveDateBegin:
+          type: string
+        certificationEffectiveDateEnd:
+          type: string
+        professionalService:
+          $ref: '#/components/schemas/AuthorizationJSONResponseIonalService'
+        institutionalService:
+          $ref: '#/components/schemas/AuthorizationJSONResponseIonalService'
+        dentalService:
+          $ref: '#/components/schemas/AuthorizationJSONResponseDentalService'
+        toothInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseToothInformation'
+        quantityQualifier:
+          type: string
+        serviceUnitCount:
+          type: string
+        unitOrBasisForMeasurementCode:
+          type: string
+        sampleSelectionModulus:
+          type: string
+        timePeriodQualifier:
+          type: string
+        periodCount:
+          type: string
+        deliveryFrequencyCode:
+          type: string
+        deliveryPatternTimeCode:
+          type: string
+        freeFormMessageText:
+          type: string
+        serviceProviderName:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseServiceProviderName'
+    AuthorizationJSONResponseRequesterIdentification:
+      type: object
+      properties:
+        providerUpinNumber:
+          type: string
+        facilityIdNumber:
+          type: string
+        employerIdentificationNumber:
+          type: string
+        providerSiteNumber:
+          type: string
+        providerPlanNetworkIdNumber:
+          type: string
+        facilityNetworkIdNumber:
+          type: string
+        socialSecurityNumber:
+          type: string
+        carrierAssignedReferenceNumber:
+          type: string
+    AuthorizationJSONResponseRequester:
+      type: object
+      properties:
+        requesterRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        requesterType:
+          type: string
+        organizationName:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        requesterIdentification:
+          $ref: '#/components/schemas/AuthorizationJSONResponseRequesterIdentification'
+        npi:
+          type: string
+        payorId:
+          type: string
+        ssn:
+          type: string
+        servicesPlanID:
+          type: string
+        employersId:
+          type: string
+        etin:
+          type: string
+        providerCode:
+          type: string
+        referenceIdentification:
+          type: string
+    DeterminationResponse:
+      type: object
+      properties:
+        determination:
+          type: object
+          properties:
+            x12:
+              type: string
+            json:
+              $ref: '#/components/schemas/AuthorizationJSONResponse'
+    AuthorizationJSONResponseProviderSupplementalInformation:
+      type: object
+      properties:
+        stateLicenseNumber:
+          type: string
+        licenseNumberStateCode:
+          type: string
+        providerUpinNumber:
+          type: string
+        facilityIdNumber:
+          type: string
+        employersIdentificationNumber:
+          type: string
+        providerPlanNetworkIdentificationNumber:
+          type: string
+        facilityNetworkIdentificationNumber:
+          type: string
+        ssn:
+          type: string
+        carrierAssignedReferenceNumber:
+          type: string
+        providerSiteNumber:
+          type: string
+    AuthorizationJSONResponseDentalService:
+      type: object
+      properties:
+        procedureCode:
+          type: string
+        procedureModifier:
+          type: string
+        procedureModifier2:
+          type: string
+        procedureModifier3:
+          type: string
+        procedureModifier4:
+          type: string
+        procedureCodeDescription:
+          type: string
+        procedureCode2:
+          type: string
+        serviceLineAmount:
+          type: string
+        americanDentalAssociationCodes:
+          type: string
+        americanDentalAssociationCodes2:
+          type: string
+        americanDentalAssociationCodes3:
+          type: string
+        americanDentalAssociationCodes4:
+          type: string
+        americanDentalAssociationCodes5:
+          type: string
+        prosthesisCrownOrInlayCode:
+          type: string
+        serviceUnitCount:
+          type: string
+    Errors:
+      type: array
+      items:
+        type: string
+        example: This is an example error string
+    AuthorizationJSONResponseSubscriberSupplementalIdentification:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+        branchIdentifier:
+          type: string
+        groupNumber:
+          type: string
+        departmentNumber:
+          type: string
+        patientAccountNumber:
+          type: string
+        healthInsuranceClaimNumber:
+          type: string
+        idCard:
+          type: string
+        insurancePolicyNumber:
+          type: string
+        planNetworkIdentificationNumber:
+          type: string
+        medicaidRecipientIdentificationNumber:
+          type: string
+        ssn:
+          type: string
+    AuthorizationJSONResponseToothInformation:
+      type: object
+      properties:
+        toothCode:
+          type: string
+        toothSurfaceCode:
+          type: string
+        toothSurfaceCode2:
+          type: string
+        toothSurfaceCode3:
+          type: string
+        toothSurfaceCode4:
+          type: string
+        toothSurfaceCode5:
+          type: string
+    AuthorizationJSONResponseServiceProviderName:
+      type: object
+      properties:
+        serviceProviderRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        entityIdentifierCode:
+          type: string
+        organizationName:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        namePrefix:
+          type: string
+        nameSuffix:
+          type: string
+        identificationCodeQualifier:
+          type: string
+        identifier:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        countryCode:
+          type: string
+        countrySubDivisionCode:
+          type: string
+        providerSupplementalInformation:
+          $ref: '#/components/schemas/AuthorizationJSONResponseProviderSupplementalInformation'
+        contactName:
+          type: string
+        contactElectronicMail:
+          type: string
+        contactFacsimile:
+          type: string
+        contactTelephone:
+          type: string
+        contactTelephoneExtension:
+          type: string
+        contactUrl:
+          type: string
+        providerCode:
+          type: string
+        providerTaxonomyCode:
+          type: string
+    AuthorizationJSONResponseSubscriber:
+      type: object
+      properties:
+        subscriberRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        lastName:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        suffix:
+          type: string
+        memberId:
+          type: string
+        dateOfBirth:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        countryCode:
+          type: string
+        countrySubDivisionCode:
+          type: string
+        supplementalIdentification:
+          $ref: '#/components/schemas/AuthorizationJSONResponseSubscriberSupplementalIdentification'
+    DeterminationX12Request:
+      type: object
+      properties:
+        rhPayerId:
+          type: string
+          description: Global payer identifier used for determination
+          example: UHCDEMODV1
+        planId:
+          type: string
+          description: Payer plan identifier used for determination
+          example: 41
+        x12:
+          type: string
+          example: ISA*00*          *00*          *ZZ*943207296      *ZZ*INQDEMO        *230810*1021*^*00501*916040697*0*P*:~GS*HI*943207296*INQDEMO*20230810*102137*3294199*X*005010X215~ST*278*0001*005010X215~BHT*0007*28*1402448037*20230810*102137~HL*1**20*1~NM1*PR*2*INQDEMO*****PI*INQDEMO~HL*2*1*21*1~NM1*1P*2*Demo Hospital*****XX*1234567890~REF*EI*123456789~N4*Nashville*TN*12345~PER*IC**TE*1112223333*FX*2223334444~HL*3*2*22*1~NM1*IL*1*DOE*JOE****MI*TST1~REF*6P*00000000~DMG*D8*19010101~HL*4*3*EV*1~UM*HS*I*1*11:B~DTP*AAH*D8*20230802~HI*ABK:C34.32~NM1*SJ*2*Demo Hospital*****XX*1234567890~NM1*DN*2*Demo Hospital*****XX*1234567890~REF*ZH*123456789~HL*5*4*SS*0~DTP*472*D8*20160615~SV1*HC:70488~SE*24*0001~GE*1*3294199~IEA*1*916040697~
+  responses:
+    '403':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Forbidden. Authentication succeeded but authenticated user doesn't have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '401':
+      description: Unauthorized. No or invalid authentication details are provided
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '400':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Bad Request. The request body is malformed or missing required information.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '500':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Internal Server Error. An unexpected error has occurred.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+  parameters:
+    x-optum-tenant-id:
+      description: The unique ID of the tenant that the invoking user belongs to.
+      in: header
+      name: x-optum-tenant-id
+      schema:
+        type: string
+        format: uuid
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      required: true
+    x-optum-correlation-id:
+      description: A unique identifier assigned to each request.
+      in: header
+      name: x-optum-correlation-id
+      schema:
+        type: string
+        format: uuid
+        example: c9476bc2-b563-4555-9527-4afe9dccaf9a
+  examples:
+    UserInquiryRequestDependentWithDetermination:
+      summary: Inquiry Request with Dependent
+      value:
+        senderId: 201985AAS
+        submitterTransactionIdentifier: '1234567890'
+        payerId: BCBSSC
+        payerName: South Carolina Blue Cross Blue
+        rhPayerId: UHCDEMODV1
+        planId: '41'
+        umClearingHouseId: '000000000000001'
+        requester:
+          requesterType: 1P
+          organizationName: Regional Medical Center
+          lastName: Regional Medical Center
+          requesterIdentification:
+            employerIdentificationNumber: '123456789'
+          city: Orangeburg
+          state: SC
+          postalCode: '12345'
+          npi: '1234567890'
+          contactTelephone: '8033952200'
+        subscriber:
+          lastName: TEST
+          firstName: BRITTANY
+          memberId: TST1
+          dateOfBirth: '19701231'
+          supplementalIdentification:
+            groupNumber: '123456789'
+            ssn: '111223333'
+        dependent:
+          lastName: TEST
+          firstName: MARY
+          dateOfBirth: '201001231'
+          supplementalIdentification:
+            ssn: '444556666'
+        patientEventDetail:
+          requestCategoryCode: HS
+          certificationTypeCode: I
+          serviceTypeCode: '1'
+          facilityTypeCode: '11'
+          facilityCodeQualifier: B
+          eventDateBegin: '20231017'
+          eventDateEnd: '20231017'
+          patientEventProviderName:
+          - entityIdentifierCode: SJ
+            lastName: TEST
+            firstName: STEVEN
+            identificationCodeQualifier: XX
+            identifier: '1234567890'
+          - entityIdentifierCode: DN
+            lastName: TEST
+            firstName: STEVEN
+            identificationCodeQualifier: XX
+            identifier: '1234567890'
+          serviceLevel:
+          - requestCategoryCode: HS
+            facilityTypeCode: '11'
+            facilityCodeQualifier: B
+            serviceDateBegin: '20231017'
+            serviceDateEnd: '20231017'
+            professionalService:
+              productOrServiceIDQualifier: HC
+              procedureCode: '71260'
+          - requestCategoryCode: HS
+            facilityTypeCode: '11'
+            facilityCodeQualifier: B
+            serviceDateBegin: '20231017'
+            serviceDateEnd: '20231017'
+            professionalService:
+              productOrServiceIDQualifier: HC
+              procedureCode: 0200T
+    UserInquiryRequestSubscriberWithDetermination:
+      summary: Inquiry Request Subscriber Only
+      value:
+        senderId: 201985AAS
+        submitterTransactionIdentifier: '1234567890'
+        payerId: BCBSSC
+        payerName: South Carolina Blue Cross Blue
+        rhPayerId: UHCDEMODV1
+        planId: '41'
+        umClearingHouseId: '000000000000001'
+        requester:
+          requesterType: 1P
+          organizationName: Regional Medical Center
+          lastName: Regional Medical Center
+          requesterIdentification:
+            employerIdentificationNumber: '123456789'
+          city: Orangeburg
+          state: SC
+          postalCode: '12345'
+          npi: '1234567890'
+          contactTelephone: '8033952200'
+        subscriber:
+          lastName: TEST
+          firstName: BRITTANY
+          memberId: TST1
+          dateOfBirth: '19701231'
+          supplementalIdentification:
+            groupNumber: '123456789'
+            ssn: '111223333'
+        patientEventDetail:
+          requestCategoryCode: HS
+          certificationTypeCode: I
+          serviceTypeCode: '1'
+          facilityTypeCode: '11'
+          facilityCodeQualifier: B
+          eventDateBegin: '20231017'
+          eventDateEnd: '20231017'
+          patientEventProviderName:
+          - entityIdentifierCode: SJ
+            lastName: TEST
+            firstName: STEVEN
+            identificationCodeQualifier: XX
+            identifier: '1234567890'
+          - entityIdentifierCode: DN
+            lastName: TEST
+            firstName: STEVEN
+            identificationCodeQualifier: XX
+            identifier: '1234567890'
+          serviceLevel:
+          - requestCategoryCode: HS
+            facilityTypeCode: '11'
+            facilityCodeQualifier: B
+            serviceDateBegin: '20231017'
+            serviceDateEnd: '20231017'
+            professionalService:
+              productOrServiceIDQualifier: HC
+              procedureCode: '71260'
+          - requestCategoryCode: HS
+            facilityTypeCode: '11'
+            facilityCodeQualifier: B
+            serviceDateBegin: '20231017'
+            serviceDateEnd: '20231017'
+            professionalService:
+              productOrServiceIDQualifier: HC
+              procedureCode: 0200T
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

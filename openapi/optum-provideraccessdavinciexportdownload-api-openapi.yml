@@ -1,0 +1,195 @@
+openapi: 3.2.0
+info:
+  title: Real Provider Access Provider Access Da Vinci Export Download API
+  description: FHIR Provider Access APIs
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: ProviderAccessDaVinciExportDownload
+paths:
+  /oihub/fhirprovideraccess/v1/R4/{payerId}/{lob}/download/Group/{fileName}/$davinci-data-export:
+    get:
+      operationId: downloadDaVinciExportFile
+      tags:
+      - ProviderAccessDaVinciExportDownload
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: bh
+      - name: fileName
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 6875735d-61dc-4703-84c9-bc7f48356225_Coverage_file.ndjson
+      - name: x-optum-consumer-correlation-id
+        in: header
+        schema:
+          type: string
+          example: uuid-123
+      - name: environment
+        in: header
+        schema:
+          type: string
+          example: sandbox
+      security:
+      - oAuth:
+        - read_healthcheck
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/fhir+ndjson:
+              schema:
+                type: string
+                description: FHIR NDJSON stream (newline-delimited JSON resources)
+              examples:
+                patientExample:
+                  summary: Sample Patient NDJSON line
+                  value: '{"resourceType":"Patient","id":"5c41cecf-cf81-434f-9da7-e24e5a99dbc2","name":[{"given":["givenName"],"family":["familyName"]}],"gender":"female","birthDate":"1956-10-14T00:00:00.000Z"}'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+              example:
+                id: 5c41cecf-cf81-434f-9da7-e24e5a99dbc2
+                name:
+                - given:
+                  - givenName
+                  family:
+                  - familyName
+                gender: female
+                birthDate: '1956-10-14T00:00:00.000Z'
+                resourceType: Patient
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                message: Unauthorized
+                statusCode: 401
+        '404':
+          description: File not found
+          content:
+            application/json:
+              example:
+                message: File not found
+                statusCode: 404
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+components:
+  schemas:
+    Patient:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: Patient
+        id:
+          type: string
+        text:
+          $ref: '#/components/schemas/Narrative'
+        identifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentifierWithType'
+        name:
+          type: array
+          items:
+            $ref: '#/components/schemas/HumanName'
+        gender:
+          type: string
+        birthDate:
+          type: string
+    CodeableConcept:
+      type: object
+      properties:
+        coding:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coding'
+    HumanName:
+      type: object
+      properties:
+        use:
+          type: string
+        family:
+          type: string
+        given:
+          type: array
+          items:
+            type: string
+    Narrative:
+      type: object
+      properties:
+        status:
+          type: string
+        div:
+          type: string
+    IdentifierWithType:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/CodeableConcept'
+        system:
+          type: string
+        value:
+          type: string
+        assigner:
+          type: object
+          properties:
+            display:
+              type: string
+    Coding:
+      type: object
+      properties:
+        system:
+          type: string
+        code:
+          type: string
+        display:
+          type: string
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

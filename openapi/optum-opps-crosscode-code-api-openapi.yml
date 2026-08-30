@@ -1,0 +1,131 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services OPPS CrossCode Code API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: OPPS CrossCode Code
+paths:
+  /codetype/{codetype}/{code}/{crosscodetype}:
+    get:
+      tags:
+      - OPPS CrossCode Code
+      summary: Show OPPS CrossCode for the Code
+      operationId: getOPPSCrossCode
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: code
+        in: path
+        description: The code for which you want OPPS crosscode
+        required: true
+        schema:
+          type: string
+      - name: crosscodetype
+        in: path
+        description: The cross-code for the given codetype
+        required: true
+        schema:
+          type: string
+        example: icd9v1
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OPPSCrossCode'
+              example: "{\n    \"oppscrosscode\": [\n        {\n    \"Code\": 27096,\n            \"Description\": \"Injection procedure for sacroiliac joint, anesthetic/steroid, with image guidance (fluoroscopy or CT) including arthrography when performed,\"\n            \"Reference Cross Code\": G0259,G0260,\n            \"Effective Date\": \"/01/2000\"\n        }\n    ]\n}"
+        '400':
+          description: Bad data parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OPPSCrossCode'
+              example:
+                error:
+                - Bad data parameter 'bad'
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: OPPS crosscode was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OPPSCrossCode'
+              example:
+                error: []
+                warning: []
+                info:
+                - OPPS crosscode was not found.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    OPPSCrossCode:
+      required:
+      - code
+      - description
+      - effectiveDate
+      - referenceCrossCode
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+        referenceCrossCode:
+          type: string
+          xml:
+            name: reference-cross-code
+        effectiveDate:
+          type: string
+          xml:
+            name: effective-date
+      xml:
+        name: opps-cross-code
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

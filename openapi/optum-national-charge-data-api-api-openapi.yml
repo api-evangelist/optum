@@ -1,0 +1,114 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Facility National Charge Data API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: National Charge Data API
+paths:
+  /api/optum/facility/national-charge-data:
+    get:
+      tags:
+      - National Charge Data API
+      summary: Fetches national charge data table data
+      operationId: getNationalChargeData
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these values (code,-code) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch columns for national percentage charge data
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0001U
+                  description: Red blood cell antigen typing, DNA, human erythrocyte antigen gene analysis of 35 antigens from 11 blood groups, utilizing whole blood, common RBC alleles reported
+                  opsiCode: A
+                  nationalVolume: '152.0'
+                  percentile10: '751.0'
+                  percentile25: '887.0'
+                  median: '1385.0'
+                  percentile75: '1440.0'
+                  percentile90: '1440.0'
+                  calendarYear: '2023'
+                - code: '00520'
+                  description: Anesthesia for closed chest procedures; (including bronchoscopy) not otherwise specified
+                  opsiCode: N
+                  nationalVolume: '23254.0'
+                  percentile10: '64.0'
+                  percentile25: '64.0'
+                  median: '139.0'
+                  percentile75: '259.0'
+                  percentile90: '590.0'
+                  calendarYear: '2023'
+                totalCount: 7005
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [code, -code]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one'
+                path: /cmscommonms/api/optum/facility/national-charge-data
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

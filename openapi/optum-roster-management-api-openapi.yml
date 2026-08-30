@@ -1,0 +1,222 @@
+openapi: 3.2.0
+info:
+  title: NCC Data Acquisition Roster Management API
+  version: 1.0.0
+  description: 'The National Clinical Clearing(NCC) Data Acquisition API provides users with a REST-based solution for requesting and receiving clinical data from the chosen data vendor through the NCC platform. Authentication: All API''s requires JWT based authentication.'
+servers:
+- url: https://gateway-nonprod.optuminsightplatform.com/odxcloudapigatewaypreprod/ncc
+  variables: {}
+  description: Pre Prod
+- url: https://gateway.optuminsightplatform.com/odxcloudapigateway/ncc
+  variables: {}
+  description: Prod
+tags:
+- name: Roster Management
+paths:
+  /rm/package-transaction:
+    get:
+      tags:
+      - Roster Management
+      summary: Track a Data Package
+      description: Track a Data Package using the Vendor Request UUID and the Vendor Package ID
+      operationId: trackPackage
+      parameters:
+      - in: query
+        name: vendorPackageId
+        required: true
+        schema:
+          type: string
+        description: Unique ID identifying a package. See vendor specific details [URL].
+      - in: query
+        name: vendorRequestUuid
+        schema:
+          type: string
+        description: Vendor Request UUID to which the package is associated. **Required if *vendorOrderId* not present.**
+      - in: query
+        name: vendorOrderId
+        schema:
+          type: string
+        description: Vendor Order ID to which the package is associated. **Required if *vendorRequestUuid* not present.**
+      - in: header
+        name: tenantId
+        required: true
+        schema:
+          type: string
+      - in: header
+        name: clientOrgId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation. Package Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PackageInfo'
+              examples:
+                packageInfo:
+                  value:
+                    status: 200
+                    statusMessage: SUCCESS
+                    result:
+                      vendorRequestUuid: 48692046-d403-4da9-a14b-f234b5f63f33
+                      vendorPackageId: 486113551_48692046-d403-4da9-a14b-f234b5f63f33_3313f8f8-6f5b-41da-9c70-0bb233a3100f
+                      uniqueMemberId: 486113551
+                      vendorName: Athena
+                      clientMemberTrackerIds:
+                        clientTrackingId1: id1
+                        clientTrackingId2: id2
+                        clientTrackingId3: id3
+                      vendorPackage:
+                        fileName: athena_52075876128_89712.xml
+                        receivedDateTime: '2023-10-01T12:00:00Z'
+                        status: ACCEPTED
+                        statusDetails: ACCEPTED
+                      nccPackage:
+                        fileName: NCC_Athena_48692046-d403-4da9-a14b-f234b5f63f33_733256_20230824101735.zip
+                        sentDateTime: '2023-10-01T12:05:00Z'
+        '400':
+          description: Missing required query parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Missing Vendor Package ID:
+                  value:
+                    status: 400
+                    statusMessage: Bad Request
+                    error:
+                      status: FAILED
+                      detail:
+                        code: Bad Request
+                        message: Required String parameter 'vendorPackageId' is not present
+                Missing Vendor Request UUID and Vendor Order ID:
+                  value:
+                    status: FAILED
+                    error:
+                      code: API_ERROR_INVALID_REQUEST
+                      message: Request param 'vendorRequestUuid' or 'vendorOrderId' needs to be present
+        '404':
+          description: Package not found with the provided input details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Not Found:
+                  value:
+                    status: FAILED
+                    error:
+                      code: API_ERROR_NOT_FOUND
+                      message: Package not found with provided detail
+        '500':
+          description: Something failed while searching for the package.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Internal Server Error:
+                  value:
+                    status: FAILED
+                    error:
+                      code: API_ERROR_OPERATION_FAILED
+                      message: Something failed during the search of your package. Please try again.
+components:
+  schemas:
+    PackageInfo:
+      type: object
+      properties:
+        vendorRequestUuid:
+          type: string
+          format: uuid
+          example: 48692046-d403-4da9-a14b-f234b5f63f33
+        vendorPackageId:
+          type: string
+          example: 486113551_48692046-d403-4da9-a14b-f234b5f63f33_3313f8f8-6f5b-41da-9c70-0bb233a3100f
+        uniqueMemberId:
+          type: string
+          example: '486113551'
+        vendorName:
+          type: string
+          example: Athena
+        clientMemberTrackerIds:
+          type: object
+          properties:
+            clientTrackingId1:
+              type: string
+              example: '2667278'
+            clientTrackingId2:
+              type: string
+              example: ''
+            clientTrackingId3:
+              type: string
+              example: ''
+        vendorPackage:
+          type: object
+          properties:
+            fileName:
+              type: string
+              example: athena_52075876128_89712.xml
+            receivedDateTime:
+              type: string
+              format: date-time
+              example: '2023-08-24T10:17:19'
+            status:
+              type: string
+              example: ACCEPTED
+            statusDetails:
+              type: string
+              example: ACCEPTED
+        nccPackage:
+          type: object
+          properties:
+            fileName:
+              type: string
+              example: NCC_Athena_48692046-d403-4da9-a14b-f234b5f63f33_733256_20230824101735.zip
+            sentDateTime:
+              type: string
+              format: date-time
+              example: '2023-08-24T10:17:19'
+    ApiErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        statusMessage:
+          type: string
+        error:
+          $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        detail:
+          $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ncc_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

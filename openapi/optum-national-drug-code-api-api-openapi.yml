@@ -1,0 +1,89 @@
+openapi: 3.2.0
+info:
+  title: Optum National Drug Code API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged National Drug Code API across 2 of this provider''s published API definitions: optum-optum-common-facility-openapi.yml, optum-optum-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: National Drug Code API
+paths:
+  /api/optum/common/{code}/ndc:
+    get:
+      tags:
+      - National Drug Code API
+      summary: Fetches the national drug code table data
+      operationId: fetchNationalDrugCodeList
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: J0121
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch national drug code list
+          content:
+            application/json:
+              example:
+                content:
+                - ndc: '71715000101'
+                  genericName: Omadacycline
+                  brandName: NUZYRA
+                  mfg: PARATEK PHARMACEUTICALS INC.
+                - ndc: '71715000102'
+                  genericName: Omadacycline
+                  brandName: NUZYRA
+                  mfg: PARATEK PHARMACEUTICALS INC.
+                totalCount: 2
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2024-08-22T07:29:21.890+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page index must not be less than zero'
+                path: /optumcommonms/api/optum/common/ndc/J0121
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-optum-common-facility-openapi.yml
+- optum-optum-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

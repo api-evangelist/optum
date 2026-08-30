@@ -1,0 +1,332 @@
+openapi: 3.2.0
+info:
+  title: Real Prior Authorization Questionnaire Package API
+  description: FHIR Prior Authorization APIs (CDS, DTR, PAS)
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: QuestionnairePackage
+paths:
+  /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/Questionnaire/$questionnaire-package:
+    post:
+      operationId: getQuestionnairePackage
+      tags:
+      - QuestionnairePackage
+      security:
+      - oAuth:
+        - read_healthcheck
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: bh
+      - name: x-optum-consumer-correlation-id
+        in: header
+        schema:
+          type: string
+          example: uuid-123
+          description: Unique transaction identifier
+      - name: environment
+        in: header
+        schema:
+          type: string
+          example: sandbox
+          description: Environment name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionnairePackageRequest'
+            example:
+              resourceType: Parameters
+              parameter:
+              - name: coverage
+                resource:
+                  resourceType: Coverage
+                  id: CoverageExample
+                  status: active
+              - name: context
+                valueString: 251110121553-uuid
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuestionnairePackageResponse'
+              example:
+                resourceType: Parameters
+                parameter:
+                - name: PackageBundle
+                  resource:
+                    resourceType: Bundle
+                    type: collection
+                    entry:
+                    - resource:
+                        resourceType: Questionnaire
+                        id: '12345'
+                        meta:
+                          profile:
+                          - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-adapt
+                        extension:
+                        - url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-questionnaireAdaptive
+                          valueBoolean: true
+                        name: Questionnaire name
+                        title: Questionnaire title
+                        status: active
+                        date: '2025-07-03T00:00:00-05:00'
+                        description: Questionnaire description
+                    - fullUrl: urn:uuid:dgh18567-f45b-4f7y-1234-f1475567a161
+                      resource:
+                        resourceType: QuestionnaireResponse
+                        id: dgh18567-f45b-4f7y-1234-f1475567a161
+                        meta:
+                          profile:
+                          - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+                        contained:
+                        - resourceType: Questionnaire
+                          id: '12345'
+                          meta:
+                            profile:
+                            - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-adapt
+                          extension:
+                          - url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-questionnaireAdaptive
+                            valueBoolean: true
+                          name: Questionnaire name
+                          title: Questionnaire title
+                          status: active
+                          date: '2025-07-03T00:00:00-05:00'
+                          description: Questionnaire description
+                        extension:
+                        - url: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
+                          valueReference:
+                            reference: Coverage/CoverageExample
+                        questionnaire: '#12345'
+                        status: in-progress
+                        subject:
+                          reference: Patient/anonymous
+                        authored: '2025-11-11T19:49:42.5034+00:00'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: UnAuthorized
+          content:
+            application/json:
+              example:
+                message: UnAuthorized
+                statusCode: 401
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+components:
+  schemas:
+    QuestionnairePackageRequest:
+      type: object
+      description: FHIR Parameters request for Questionnaire Package
+      properties:
+        resourceType:
+          type: string
+          description: FHIR resource type
+          example: Parameters
+        parameter:
+          type: array
+          description: List of parameters
+          items:
+            $ref: '#/components/schemas/RequestParameter'
+    Entry:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Claim'
+    CareTeam:
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/Reference'
+        responsible:
+          type: boolean
+          example: true
+    QuestionnairePackageResponse:
+      type: object
+      description: FHIR Parameters response containing Questionnaire package bundle
+      properties:
+        resourceType:
+          type: string
+          example: Parameters
+        parameter:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseParameter'
+    CodeableConcept:
+      type: object
+      description: FHIR CodeableConcept
+      properties:
+        coding:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coding'
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    Bundle:
+      type: object
+      description: FHIR Bundle resource
+      properties:
+        resourceType:
+          type: string
+          example: Bundle
+        type:
+          type: string
+          example: collection
+        entry:
+          type: array
+          description: Bundle entries
+          items:
+            $ref: '#/components/schemas/Entry'
+    Claim:
+      type: object
+      description: FHIR Claim Inquiry Request
+      properties:
+        resourceType:
+          type: string
+          example: Claim
+        id:
+          type: string
+        meta:
+          $ref: '#/components/schemas/Meta'
+        identifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identifier'
+        status:
+          type: string
+          example: active
+        type:
+          $ref: '#/components/schemas/CodeableConcept'
+        use:
+          type: string
+          example: preauthorization
+        created:
+          type: string
+          example: '2023-10-05T08:30:00Z'
+        patient:
+          $ref: '#/components/schemas/Reference'
+        provider:
+          $ref: '#/components/schemas/Reference'
+        careTeam:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareTeam'
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
+    Coding:
+      type: object
+      description: Coding structure for answers
+      properties:
+        code:
+          type: string
+          example: '1'
+        display:
+          type: string
+          example: Age ≥ 50
+    Reference:
+      type: object
+      description: FHIR Reference
+      properties:
+        reference:
+          type: string
+          example: Patient/anonymous
+    Coverage:
+      type: object
+      description: FHIR Coverage resource
+      properties:
+        resourceType:
+          type: string
+          example: Coverage
+        id:
+          type: string
+          example: CoverageExample
+        status:
+          type: string
+          description: Coverage status
+          example: active
+    RequestParameter:
+      type: object
+      description: Request parameter entry
+      properties:
+        name:
+          type: string
+          description: Parameter name
+          example: coverage
+        resource:
+          $ref: '#/components/schemas/Coverage'
+        valueString:
+          type: string
+          description: Context correlation ID
+          example: 251110121553-uuid
+    ResponseParameter:
+      type: object
+      description: Response parameter entry
+      properties:
+        name:
+          type: string
+          description: Parameter name containing bundle
+          example: PackageBundle
+        resource:
+          $ref: '#/components/schemas/Bundle'
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,97 @@
+openapi: 3.2.0
+info:
+  title: File and Document Tracking API v1 Get Doc Counts API
+  description: The File and Document Tracking API, a healthcare API for customers using Communication and Payment Services solutions from Optus, provides payers with real-time processing status at the file and document levels.
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com/api/ptapi/v1
+tags:
+- name: GetDocCounts
+paths:
+  /getDocCounts/{contextID}:
+    get:
+      tags:
+      - GetDocCounts
+      parameters:
+      - name: contextID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: fileName
+        in: query
+        schema:
+          type: string
+      - name: claimNumber
+        in: query
+        schema:
+          type: string
+      - name: importStartDate
+        in: query
+        description: MM/DD/YYYY
+        schema:
+          type: string
+      - name: importEndDate
+        in: query
+        description: MM/DD/YYYY
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentCountRespObj'
+components:
+  schemas:
+    documentCountObj:
+      type: object
+      properties:
+        fileName:
+          type: string
+          example: 123402820210316OR.TXT
+        errorCount:
+          type: integer
+          example: 1
+        heldCount:
+          type: integer
+          example: 0
+        confirmedCount:
+          type: integer
+          example: 1
+        InProductionCount:
+          type: integer
+          example: 3
+        completedCount:
+          type: integer
+          example: 4
+        webCount:
+          type: integer
+          example: 1
+        importCount:
+          type: integer
+          example: 1
+        importDate:
+          type: string
+          example: 02/15/2022 06:41:38 am
+        enotesCount:
+          type: integer
+          example: 1
+        clientKey:
+          type: string
+          example: '1234028'
+    documentCountRespObj:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/documentCountObj'
+        rowCount:
+          type: integer
+          example: 1
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-enabled: true

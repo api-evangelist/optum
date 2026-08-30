@@ -1,0 +1,393 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services Code Fee API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: Code Fee
+paths:
+  /codetype/{codetype}/{code}/mpfs:
+    get:
+      tags:
+      - Code Fee
+      summary: List of Medicare Localities and links to them. This can be used to get MPFS data
+      operationId: getCarriers
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 13100
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+              - href: /ws/codetype/cpt/13100/mpfs/global-info
+                value: Medicare Global Information
+              - href: /ws/codetype/cpt/13100/mpfs/00000-00
+                value: NATIONAL
+        '400':
+          description: Wrong codetype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                error:
+                - The code provided ('250.02') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Modifiers not found for the code entered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                error:
+                - Code '13104' does not exist
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/mpfs/{carrier-locality}/non-facility:
+    get:
+      tags:
+      - Code Fee
+      summary: Return all Medicare Physician non facility Fees
+      operationId: getFee
+      parameters:
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 13100
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: carrier-locality
+        in: path
+        description: The carrier-localty value
+        required: true
+        schema:
+          type: string
+        example: 00000-00
+      - name: types
+        in: query
+        description: 'Comma seperated list of<UL> <LI>fee : Medicare Physican fees (default)</LI><LI>rvu : Medicare Physician RVUs</LI></UL>'
+        schema:
+          type: string
+          default: fee
+        example: fee,rvu
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                mpfsFee:
+                  global: '352.98'
+                mpfsRvu:
+                  global:
+                    totalRvu: '10.2000'
+                    workRvu: '3.0000'
+                    peRvu: '6.8500'
+                    mpRvu: '0.3500'
+        '400':
+          description: Wrong codetype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                error:
+                - The code provided ('250.02') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Carrier/Locality length is incorrect
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                error: []
+                warning: []
+                info:
+                - Carrier/Locality length is incorrect. Please use the Carriers web service to check your entry.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/mpfs/global-info:
+    get:
+      tags:
+      - Code Fee
+      summary: Return all Medicare Global information for the supplied {code}
+      operationId: getGlobal
+      parameters:
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: G0168
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - hcpcs
+          - cpt
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                preoperative: '0.10'
+                intraoperative: '0.80'
+                postoperative: '0.10'
+                global: '010'
+        '400':
+          description: Wrong codetype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                error:
+                - The code provided ('250.02') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: The requested resource does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/mpfs/{locality}:
+    get:
+      tags:
+      - Code Fee
+      summary: Links to data available for the locality
+      operationId: getMpfsLinks
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 13100
+      - name: locality
+        in: path
+        description: The value for locality
+        required: true
+        schema:
+          pattern: '[0-9][0-9][0-9][0-9][0-9]-[0-9][0-9]'
+          type: string
+        example: 10102-00
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+              - href: /ws/codetype/cpt/13100/mpfs/10102-00/non-facility
+                value: Medicare Physician Fees/RVUs
+        '400':
+          description: Wrong codetype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                error:
+                - The code provided ('250.02') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code {code} does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Modifiers'
+              example:
+                error:
+                - Code '13104' does not exist
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    Links:
+      type: object
+      properties:
+        link:
+          type: array
+          xml:
+            name: Link
+          items:
+            $ref: '#/components/schemas/Link'
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    Modifiers:
+      type: object
+      properties:
+        physician:
+          $ref: '#/components/schemas/Links'
+        facility:
+          $ref: '#/components/schemas/Links'
+        opps:
+          $ref: '#/components/schemas/Links'
+        mpfs:
+          $ref: '#/components/schemas/Links'
+        asc:
+          $ref: '#/components/schemas/Links'
+        ambulance:
+          $ref: '#/components/schemas/Links'
+        dme:
+          $ref: '#/components/schemas/Links'
+      xml:
+        name: modifiers
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

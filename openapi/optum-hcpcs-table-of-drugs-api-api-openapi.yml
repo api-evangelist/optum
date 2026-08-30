@@ -1,0 +1,92 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Facility HCPCS Table of Drugs API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: HCPCS Table of Drugs API
+paths:
+  /api/optum/facility/hcpcs-drugs:
+    get:
+      tags:
+      - HCPCS Table of Drugs API
+      summary: Fetches HCPCS drugs table data
+      operationId: getHCPCSDrugsList
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch HCPCS drugs data
+          content:
+            application/json:
+              example:
+                content:
+                - code: J7100
+                  drugName: 10% LMD
+                  unitPerMl: 500 ML
+                  route: IV
+                - code: S5010
+                  drugName: 5% DEXTROSE AND .45% NORMAL SALINE
+                  unitPerMl: 1000 ML
+                  route: IV
+                totalCount: 3051
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                - 'filter : length must be between 2 and 180'
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2024-11-05T22:34:37.080+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one'
+                path: /optumcommonms/api/optum/facility/hcpcs-drugs
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

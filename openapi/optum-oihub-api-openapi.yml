@@ -1,0 +1,36 @@
+openapi: 3.2.0
+info:
+  title: Real Dental Pre-Care Eligibility Oihub API
+  description: 'API to perform pre-service eligibility checks for dental/medical coverage. This endpoint accepts a GraphQL-style request payload over HTTP POST.
+
+    '
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+security:
+- bearerAuth: []
+tags:
+- name: Oihub
+paths:
+  /oihub/dental/eligibility/preservice/v1/healthcheck:
+    get:
+      summary: Health check
+      description: Returns API health status.
+      responses:
+        '200':
+          description: Service is healthy
+      operationId: get_oihub_dental_eligibility_preservice_v1_healthcheck
+      security:
+      - bearerAuth: []
+      tags:
+      - Oihub
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Enter a Bearer access token. The API Explorer applies the Bearer scheme.
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

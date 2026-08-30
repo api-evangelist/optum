@@ -1,0 +1,134 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services Coding Support API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: Coding Support
+paths:
+  /codetype/{codetype}/{code}/coding-support:
+    get:
+      tags:
+      - Coding Support
+      summary: Show E&M Coding Assitant or Auditors Desk Reference documents
+      operationId: getDocuments
+      parameters:
+      - name: code
+        in: path
+        description: The code value
+        required: true
+        schema:
+          type: string
+        example: 13100
+      - name: codetype
+        in: path
+        description: The code value
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodingSupportResources'
+              example: "{\n\n            \"code\": \"99213\",\n\n            \"referenced_document_type\": \"Evaluation and Management Coding Assistant\",\n\n            \"title\": \"Chapter 6: Office or Other Outpatient Services\",\n\n            \"referenced_content_example\": \"Medically appropriate 10 min. 99213 Low Medically appropriate Medically appropriate 20 min. 99214 Moderate Optum360, LLC CPT &copy; 2023 American Medical Association. All Rights Reserved. 75 99213 DOCUMENTATION Medical Association. All Rights Reserved. Sample Documentation-99213 S: A 59-year-old male to Low MDM and code 99213. &bull; Final E/M Level of Service: CPT code 99213 is assigned. Level III\",\n\n            \"document\": \"documents/506800\",\n\n}"
+        '400':
+          description: Bad data parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodingSupportResources'
+              example:
+                error:
+                - Bad data parameter 'bad'
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: No E&M or auditor desk reference doucuments were found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodingSupportResources'
+              example:
+                error: []
+                warning: []
+                info:
+                - No E&M or auditor desk reference doucuments were found.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    CodingSupportResource:
+      required:
+      - code
+      - document
+      - referencedContentExample
+      - referencedDocumentType
+      - title
+      type: object
+      properties:
+        code:
+          type: string
+        referencedDocumentType:
+          type: string
+          xml:
+            name: referenced-document-type
+        title:
+          type: string
+        referencedContentExample:
+          type: string
+          xml:
+            name: referenced-content-example
+        document:
+          type: string
+    CodingSupportResources:
+      type: object
+      properties:
+        codingSupportResource:
+          type: array
+          items:
+            $ref: '#/components/schemas/CodingSupportResource'
+      xml:
+        name: codingSupportResources
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

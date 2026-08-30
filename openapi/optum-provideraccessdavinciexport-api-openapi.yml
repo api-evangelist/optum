@@ -1,0 +1,148 @@
+openapi: 3.2.0
+info:
+  title: Real Provider Access Provider Access Da Vinci Export API
+  description: FHIR Provider Access APIs
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: ProviderAccessDaVinciExport
+paths:
+  /oihub/fhirprovideraccess/v1/R4/{payerId}/{lob}/Group/{groupId}/$davinci-data-export:
+    post:
+      operationId: davinciDataExport
+      tags:
+      - ProviderAccessDaVinciExport
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: bh
+      - name: groupId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '12345'
+      - name: patient
+        in: query
+        schema:
+          type: string
+          example: patient-123,patient-456
+      - name: exportType
+        in: query
+        schema:
+          type: string
+      - name: x-optum-consumer-correlation-id
+        in: header
+        schema:
+          type: string
+          description: Unique transaction identifier
+          example: uuid-123
+      - name: environment
+        in: header
+        schema:
+          type: string
+          description: Environment name
+          example: sandbox
+      security:
+      - oAuth:
+        - read_healthcheck
+      responses:
+        '200':
+          description: Export request created successfully. Use Content-Location to poll status.
+          headers:
+            Content-Location:
+              description: Polling URL for export status
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationOutcome'
+              example:
+                resourceType: OperationOutcome
+                issue:
+                - severity: information
+                  code: informational
+                  diagnostics: The request has been created successfully. Polling Location is present in the 'Content-Location' header.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: UnAuthorized
+          content:
+            application/json:
+              example:
+                message: UnAuthorized
+                statusCode: 401
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+components:
+  schemas:
+    OperationOutcome:
+      type: object
+      description: FHIR OperationOutcome resource
+      properties:
+        resourceType:
+          type: string
+          example: OperationOutcome
+        issue:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationOutcomeIssue'
+    OperationOutcomeIssue:
+      type: object
+      properties:
+        severity:
+          type: string
+          enum:
+          - fatal
+          - error
+          - warning
+          - information
+        code:
+          type: string
+          example: informational
+        diagnostics:
+          type: string
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

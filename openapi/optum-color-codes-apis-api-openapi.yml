@@ -1,0 +1,1715 @@
+openapi: 3.2.0
+info:
+  title: Core Service Color codes APIs API
+  description: Code Search Service provides the APIs for searching codes related information.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/codesearchms
+tags:
+- name: Color codes APIs
+paths:
+  /api/coding/code/{codetype}/color-codes/sex:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches I9v1 or I9v3 sex color codes
+      operationId: fetchI9SexCodes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i9v1
+          - i9v3
+      - name: sort
+        in: query
+        description: Any of these (code,-code) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/color-codes/sex/{sex-code-type}:
+    get:
+      tags:
+      - Color codes APIs
+      summary: 'Fetches the I10CM for the requested SEX code type '
+      operationId: getSexColorCodes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_cm
+      - name: sex-code-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - GENDER_FEMALE_PHYSICIAN
+          - GENDER_MALE_PHYSICIAN
+          - GENDER_FEMALE_FACILITY
+          - GENDER_MALE_FACILITY
+      - name: sort
+        in: query
+        description: Any of these (code,-code,fullDescription,-fullDescription) are allowed values, default is +code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 250
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/color-codes/post-acute-care/{pac-icon-type}:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches the I10CM for the requested PAC code type
+      operationId: getPacColorCodes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_cm
+      - name: pac-icon-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - IRF_COMORBID_CONDITION
+          - HOME_HEALTH_COMORBIDITY_HIGH
+          - HOME_HEALTH_COMORBIDITY_LOW
+          - NON_THERAPY_ANCILLARY
+          - NONCANCER_DX
+          - IRF_ETIOLOGIC_DIAGNOSIS
+          - RETURN_TO_PROVIDER_HOME_HEALTH
+          - RETURN_TO_PROVIDER_SNF
+          - SPEECH_LANGUAGE_PATHOLOGY
+          - Z_CODE_AS_PRIMARY_DIAGNOSIS_PHYSICIAN_BILLING_ONLY
+      - name: sort
+        in: query
+        description: Any of these (code,-code,fullDescription,-fullDescription) are allowed values, default is +code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 250
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/color-codes/other-color-codes/{other-color-code-type}:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches the I10CM for the requested other color code type
+      operationId: getOtherColorCodeType
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_cm
+      - name: other-color-code-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - FOURTH_CHARACTER_REQUIRED
+          - FIFTH_CHARACTER_REQUIRED
+          - SIXTH_CHARACTER_REQUIRED
+          - SEVENTH_CHARACTER_REQUIRED
+          - COMORBIDITY_OR_COMPLICATION_INPATIENT_ONLY
+          - HIV_RELATED_DX_INPATIENT_ONLY
+          - NEW_CODE_MID_YEAR
+          - OTHER_SPECIFIED_CODE
+          - PHYSICIAN_DOCUMENTATION
+          - QUESTIONABLE_PDX_INPATIENT_ONLY
+          - REVISED_CODE_MID_YEAR
+          - UNACCEPTABLE_PRINCIPAL_DX_INPATIENT_ONLY
+          - UNACCEPTABLE_PRINCIPAL_DX_OUTPATIENT_ONLY
+          - UNSPECIFIED_DIAGNOSIS
+          - UNSPECIFIED_SITE
+          - WRONG_SURGERY_INPATIENT_ONLY
+          - X7TH_CHARACTER_REQUIRED
+          - MENTAL_HEALTH_DIAGNOSIS
+          - Z_CODE_INDICATOR
+          - CONDITIONAL_HOSPITAL_ACQUIRED_CONDITION_FACILITY
+          - HOSPITAL_ACQUIRED_CONDITION_FACILITY
+          - MCC_MAJOR_COMPLICATION_INPATIENT_ONLY
+          - MCC_IF_DISCHARGE_ALIVE
+          - NON_COVERED_BY_MEDICARE
+          - CODE_EXEMPT_FROM_PRESENT_ON_ADMISSION_POA
+          - UNACCEPTABLE_PDX_UNLESS_SEC_DX_IS_PRESENT
+      - name: sort
+        in: query
+        description: Any of these (code,-code,fullDescription,-fullDescription) are allowed values, default is +code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 250
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/color-codes/manifestation/{manifestation-type}:
+    get:
+      tags:
+      - Color codes APIs
+      summary: 'Fetches manifestation color codes of  facility and physician '
+      operationId: fetchManifestationCodes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_cm
+      - name: manifestation-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - MANIFESTATION_PHYSICIAN
+          - MANIFESTATION_FACILITY
+      - name: sort
+        in: query
+        description: Any of these (code,-code,effectiveDate,-effectiveDate) are allowed values, default is +code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/color-codes/age/{age-code-type}:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches I10CM AGE color codes
+      operationId: getColorCodes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_cm
+      - name: age-code-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - AGE_PEDIATRIC_PHYSICIAN
+          - AGE_NEWBORN_PHYSICIAN
+          - AGE_MATERNITY_PHYSICIAN
+          - AGE_ADULT_PHYSICIAN
+          - AGE_PEDIATRIC_FACILITY
+          - AGE_NEWBORN_FACILITY
+          - AGE_MATERNITY_FACILITY
+          - AGE_ADULT_FACILITY
+      - name: sort
+        in: query
+        description: Any of these (code,-code,fullDescription,-fullDescription) are allowed values, default is +code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 250
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/color-codes/reinstated:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches CPT or HCPCS reinstated color codes
+      operationId: fetchReinstatedColorCodes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: sort
+        in: query
+        description: Any of these (code,-code,effectiveDate,-effectiveDate) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/color-codes/{color-code-type}:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches new , revised or deleted color codes
+      operationId: fetchColorCodes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - i10_cm
+          - i10_pcs
+      - name: color-code-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - new
+          - revised
+          - deleted
+      - name: sort
+        in: query
+        description: Any of these (code,-code,effectiveDate,-effectiveDate) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - -effectiveDate
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch new CPT color codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0364U
+                  fullDescription: Oncology (hematolymphoid neoplasm), genomic sequence analysis using multiplex (pcr) and next-generation sequencing with algorithm, quantification of dominant clonal sequence(s), reported as presence or absence of minimal residual disease (mrd) with quantitation of disease burden, when appropriate
+                  effectiveDate: '2023-04-01 00:00:00'
+                - code: 0365U
+                  fullDescription: Oncology (bladder), analysis of 10 protein biomarkers (a1at, ang, apoe, ca9, il8, mmp9, mmp10, pai1, sdc1 and vegfa) by immunoassays, urine, algorithm reported as a probability of bladder cancer
+                  effectiveDate: '2023-04-01 00:00:00'
+                - code: 0366U
+                  fullDescription: Oncology (bladder), analysis of 10 protein biomarkers (a1at, ang, apoe, ca9, il8, mmp9, mmp10, pai1, sdc1 and vegfa) by immunoassays, urine, algorithm reported as a probability of recurrent bladder cancer
+                  effectiveDate: '2023-04-01 00:00:00'
+                - code: 0367U
+                  fullDescription: Oncology (bladder), analysis of 10 protein biomarkers (a1at, ang, apoe, ca9, il8, mmp9, mmp10, pai1, sdc1 and vegfa) by immunoassays, urine, diagnostic algorithm reported as a risk score for probability of rapid recurrence of recurrent or persistent cancer following transurethral resection
+                  effectiveDate: '2023-04-01 00:00:00'
+                - code: 0368U
+                  fullDescription: Oncology (colorectal cancer), evaluation for mutations of apc, braf, ctnnb1, kras, nras, pik3ca, smad4, and tp53, and methylation markers (myo1g, kcnq5, c9orf50, fli1, clip4, znf132 and twist1), multiplex quantitative polymerase chain reaction (qpcr), circulating cell-free dna (cfdna), plasma, report of risk score for advanced adenoma or colorectal cancer
+                  effectiveDate: '2023-04-01 00:00:00'
+                totalCount: 277
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/color-codes/new
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/i9v3/color-codes/or-color-codes:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches I9v3 OR color codes
+      operationId: fetchI9V3ORCodes
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these (code,-code) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/i9v3/color-codes/coverage-color-codes:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches I9v3 Coverage color codes
+      operationId: fetchI9V3MedicareCodes
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these (code,-code) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/i9v1/color-codes/post-acute-care/{pac-icon-type}:
+    get:
+      tags:
+      - Color codes APIs
+      summary: 'Fetches pac color codes of I9v1 '
+      operationId: getPacColorCodes_1
+      parameters:
+      - name: pac-icon-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - ADDITIONAL_CHARACTER_REQ
+          - HOSPICE_NON_CANCER_DX
+          - NON_ROUTINE_SUPPLY_DX
+          - RIC
+          - RIC_CONDITION_CODE
+          - RUG_IV_CLINICALLY_COMPLEX_DX
+          - RUG_IV_SPECIAL_CARE_HIGH_DX
+          - RUG_IV_SPECIAL_CARE_LOW_DX
+          - REVISED_CODE_TITLE
+          - REVISED_TEXT
+      - name: sort
+        in: query
+        description: Any of these (code,-code,fullDescription,-fullDescription) are allowed values, default is +code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 250
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/i9v1/color-codes/manifestation:
+    get:
+      tags:
+      - Color codes APIs
+      summary: 'Fetches manifestation color codes '
+      operationId: fetchManifestationCodes_1
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these (code,-code,effectiveDate,-effectiveDate) are allowed values, default is +code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/i9v1/color-codes/cc:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches I9v1 CC color codes
+      operationId: fetchI9V1CCCodes
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these (code,-code) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/i9v1/color-codes/age:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches I9v1 Age color codes
+      operationId: fetchI9V1AgeCodes
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these (code,-code) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplColorCodes'
+      security:
+      - bearerAuth: []
+  /api/coding/code/i10_pcs/color-codes/{color-code-type}:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches  Valid-OR, DRG-Non-OR, Non-OR, C-Hac or Coverage color codes
+      operationId: fetchI10SepecificCodes
+      parameters:
+      - name: color-code-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - valid-or
+          - drg-non-or
+          - non-or
+          - c-hac
+          - coverage
+      - name: sort
+        in: query
+        description: Any of these values (code,-code) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch New CPT Color Codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: 02134ZF
+                  fullDescription: Bypass Coronary Artery, Four or More Arteries from Abdominal Artery, Percutaneous Endoscopic Approach
+                  hac: HAC 08
+                  hacDescription: Surgical site infection - mediastinitis after coronary bypass graft (CABG) (procedures)
+                - code: 02134ZC
+                  fullDescription: Bypass Coronary Artery, Four or More Arteries from Thoracic Artery, Percutaneous Endoscopic Approach
+                  hac: HAC 08
+                  hacDescription: Surgical site infection - mediastinitis after coronary bypass graft (CABG) (procedures)
+                - code: 02134Z9
+                  fullDescription: Bypass Coronary Artery, Four or More Arteries from Left Internal Mammary, Percutaneous Endoscopic Approach
+                  hac: HAC 08
+                  hacDescription: Surgical site infection - mediastinitis after coronary bypass graft (CABG) (procedures)
+                - code: 02134Z8
+                  fullDescription: Bypass Coronary Artery, Four or More Arteries from Right Internal Mammary, Percutaneous Endoscopic Approach
+                  hac: HAC 08
+                  hacDescription: Surgical site infection - mediastinitis after coronary bypass graft (CABG) (procedures)
+                - code: 02134Z3
+                  fullDescription: Bypass Coronary Artery, Four or More Arteries from Coronary Artery, Percutaneous Endoscopic Approach
+                  hac: HAC 08
+                  hacDescription: Surgical site infection - mediastinitis after coronary bypass graft (CABG) (procedures)
+                totalCount: 280
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/i10_pcs/color-codes/c-hac
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/i10_pcs/color-codes/sex/{color-code-type}:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches Sex-Male, Sex-Female color codes
+      operationId: fetchI10PCSSexCodes
+      parameters:
+      - name: color-code-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - sex-male
+          - sex-female
+      - name: sort
+        in: query
+        description: Any of these (code,-code) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch new CPT color codes
+          content:
+            application/json:
+              example: "                                      {\n                                        \"content\": [\n                                          {\n                                            \"code\": \"02134ZF\",\n                                            \"fullDescription\": \"Bypass Coronary Artery, Four or More Arteries from Abdominal Artery, Percutaneous Endoscopic Approach\",\n                                            \"sex\": \"Male Procedure\"\n=                                          },\n                                          {\n                                            \"code\": \"02134ZC\",\n                                            \"fullDescription\": \"Bypass Coronary Artery, Four or More Arteries from Thoracic Artery, Percutaneous Endoscopic Approach\",\n                                            \"sex\": \"Male Procedure\"\n                                          },\n                                          {\n                                            \"code\": \"02134Z9\",\n                                            \"fullDescription\": \"Bypass Coronary Artery, Four or More Arteries from Left Internal Mammary, Percutaneous Endoscopic Approach\",\n                                            \"sex\": \"Male Procedure\"\n                                          },\n                                          {\n                                            \"code\": \"02134Z8\",\n                                            \"fullDescription\": \"Bypass Coronary Artery, Four or More Arteries from Right Internal Mammary, Percutaneous Endoscopic Approach\",\n                                            \"sex\": \"Male Procedure\"\n                                          }\n                                        ],\n                                        \"totalCount\": 280\n                                      }\n"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/i10_pcs/color-codes/c-hac
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/hcpcs/color-codes/quantity:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches HCPCS Quantity color codes
+      operationId: fetchQuantityColorCodes
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these values (code,-code) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetches HCPCS Quantity color codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: A0380
+                  fullDescription: BLS mileage (per mile)
+                - code: A0390
+                  fullDescription: ALS mileage (per mile)
+                - code: A0425
+                  fullDescription: Ground mileage, per statute mile
+                - code: A4206
+                  fullDescription: Syringe with needle, sterile, 1 cc or less, each
+                - code: A4207
+                  fullDescription: Syringe with needle, sterile 2 cc, each
+                totalCount: 2319
+        '400':
+          description: Response status 400
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [code]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/hcpcs/color-codes/quantity
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/cpt/color-codes/unlisted:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches CPT unlisted color codes
+      operationId: fetchUnlistedColorCodes
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these values (code,-code) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch CPT unlisted color codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: 01999
+                  fullDescription: Unlisted anesthesia procedure(s)
+                - code: '15999'
+                  fullDescription: Unlisted procedure, excision pressure ulcer
+                - code: '17999'
+                  fullDescription: Unlisted procedure, skin, mucous membrane and subcutaneous tissue
+                - code: '19499'
+                  fullDescription: Unlisted procedure, breast
+                - code: '20999'
+                  fullDescription: Unlisted procedure, musculoskeletal system, general
+                totalCount: 147
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/color-codes/unlisted
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/cpt/color-codes/resequenced:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches CPT Resequenced color codes
+      operationId: fetchResequencedColorCodes
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these (code,-code,effectiveDate,-effectiveDate) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch CPT Resequenced color codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0051A
+                  fullDescription: Immunization administration by intramuscular injection of severe acute respiratory syndrome coronavirus 2 (sars-cov-2) (coronavirus disease [covid-19]) vaccine, mrna-lnp, spike protein, preservative free, 30 mcg/0.3 ml dosage, tris-sucrose formulation; first dose
+                  effectiveDate: '2021-10-29 00:00:00'
+                - code: 0052A
+                  fullDescription: Immunization administration by intramuscular injection of severe acute respiratory syndrome coronavirus 2 (sars-cov-2) (coronavirus disease [covid-19]) vaccine, mrna-lnp, spike protein, preservative free, 30 mcg/0.3 ml dosage, tris-sucrose formulation; second dose
+                  effectiveDate: '2021-10-29 00:00:00'
+                - code: 0053A
+                  fullDescription: Immunization administration by intramuscular injection of severe acute respiratory syndrome coronavirus 2 (sars-cov-2) (coronavirus disease [covid-19]) vaccine, mrna-lnp, spike protein, preservative free, 30 mcg/0.3 ml dosage, tris-sucrose formulation; third dose
+                  effectiveDate: '2021-10-29 00:00:00'
+                - code: 0054A
+                  fullDescription: Immunization administration by intramuscular injection of severe acute respiratory syndrome coronavirus 2 (sars-cov-2) (coronavirus disease [covid-19]) vaccine, mrna-lnp, spike protein, preservative free, 30 mcg/0.3 ml dosage, tris-sucrose formulation; booster dose
+                  effectiveDate: '2021-10-29 00:00:00'
+                - code: 0064A
+                  fullDescription: Immunization administration by intramuscular injection of severe acute respiratory syndrome coronavirus 2 (sars-cov-2) (coronavirus disease [covid-19]) vaccine, mrna-lnp, spike protein, preservative free, 50 mcg/0.25 ml dosage, booster dose
+                  effectiveDate: '2021-10-20 00:00:00'
+                totalCount: 681
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/color-codes/resequenced
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/cpt/color-codes/modifier-80:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches CPT Modifier-80 color codes
+      operationId: fetchModifier80ColorCodes
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these values (code,-code) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetches CPT Modifier-80 color codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0071T
+                  fullDescription: Focused ultrasound ablation of uterine leiomyomata, including mr guidance; total leiomyomata volume less than 200 cc of tissue
+                - code: 0072T
+                  fullDescription: Focused ultrasound ablation of uterine leiomyomata, including mr guidance; total leiomyomata volume greater or equal to 200 cc of tissue
+                - code: 0075T
+                  fullDescription: Transcatheter placement of extracranial vertebral artery stent(s), including radiologic supervision and interpretation, open or percutaneous; initial vessel
+                - code: 0076T
+                  fullDescription: Transcatheter placement of extracranial vertebral artery stent(s), including radiologic supervision and interpretation, open or percutaneous; each additional vessel (list separately in addition to code for primary procedure)
+                - code: 0095T
+                  fullDescription: Removal of total disc arthroplasty (artificial disc), anterior approach, each additional interspace, cervical (list separately in addition to code for primary procedure)
+                totalCount: 3445
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/color-codes/modifier-80
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/cpt/color-codes/add-on:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches CPT ADD-ON color codes
+      operationId: fetchCptSpecificColorCode
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these values (code,-code ,cptAddOnType,-cptAddOnType) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch CPT ADD-ON color codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0001A
+                  fullDescription: Immunization administration by intramuscular injection of severe acute respiratory syndrome coronavirus 2 (sars-cov-2) (coronavirus disease [covid-19]) vaccine, mrna-lnp, spike protein, preservative free, 30 mcg/0.3ml dosage, diluent reconstituted; first dose
+                  cptAddOnType: Optum Add-on Code
+                - code: 0002A
+                  fullDescription: Immunization administration by intramuscular injection of severe acute respiratory syndrome coronavirus 2 (sars-cov-2) (coronavirus disease [covid-19]) vaccine, mrna-lnp, spike protein, preservative free, 30 mcg/0.3ml dosage, diluent reconstituted; second dose
+                  cptAddOnType: Optum Add-on Code
+                - code: 0003A
+                  fullDescription: Immunization administration by intramuscular injection of severe acute respiratory syndrome coronavirus 2 (sars-cov-2) (coronavirus disease [covid-19]) vaccine, mrna-lnp, spike protein, preservative free, 30 mcg/0.3 ml dosage, diluent reconstituted; third dose
+                  cptAddOnType: Optum Add-on Code
+                - code: 0004A
+                  fullDescription: Immunization administration by intramuscular injection of severe acute respiratory syndrome coronavirus 2 (sars-cov-2) (coronavirus disease [covid-19]) vaccine, mrna-lnp, spike protein, preservative free, 30 mcg/0.3 ml dosage, diluent reconstituted; booster dose
+                  cptAddOnType: Optum Add-on Code
+                - code: 0011A
+                  fullDescription: Immunization administration by intramuscular injection of severe acute respiratory syndrome coronavirus 2 (sars-cov-2) (coronavirus disease [covid-19]) vaccine, mrna-lnp, spike protein, preservative free, 100 mcg/0.5ml dosage; first dose
+                  cptAddOnType: Optum Add-on Code
+                totalCount: 764
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/color-codes/add-on
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/cpt/color-codes/51-exempt:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches CPT 51 Exempt Color Codes
+      operationId: fetch51ExemptColorCodes
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these values (code,-code) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch CPT 51 Exempt Color Codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: '20697'
+                  fullDescription: Application of multiplane (pins or wires in more than 1 plane), unilateral, external fixation with stereotactic computer-assisted adjustment (eg, spatial frame), including imaging; exchange (ie, removal and replacement) of strut, each
+                  cptSource:
+                    value: AMA Modifier -51 Exempt
+                    href: ''
+                    iconName: ico_modifier_51_ama.svg
+                - code: '20974'
+                  fullDescription: Electrical stimulation to aid bone healing; noninvasive (nonoperative)
+                  cptSource:
+                    value: AMA Modifier -51 Exempt
+                    href: ''
+                    iconName: ico_modifier_51_ama.svg
+                - code: '20975'
+                  fullDescription: Electrical stimulation to aid bone healing; invasive (operative)
+                  cptSource:
+                    value: AMA Modifier -51 Exempt
+                    href: ''
+                    iconName: ico_modifier_51_ama.svg
+                - code: '33509'
+                  fullDescription: Harvest of upper extremity artery, 1 segment, for coronary artery bypass procedure, endoscopic
+                  cptSource:
+                    value: AMA Modifier -51 Exempt
+                    href: ''
+                    iconName: ico_modifier_51_ama.svg
+                - code: '35600'
+                  fullDescription: Harvest of upper extremity artery, 1 segment, for coronary artery bypass procedure, open
+                  cptSource:
+                    value: AMA Modifier -51 Exempt
+                    href: ''
+                    iconName: ico_modifier_51_ama.svg
+                totalCount: 178
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/color-codes/51-exempt
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/cpt/color-codes/50-exempt:
+    get:
+      tags:
+      - Color codes APIs
+      summary: Fetches CPT 50 Exempt Color Codes
+      operationId: fetch50ExemptColorCodes
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these values (code,-code) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch CPT 50 Exempt Color Codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0214T
+                  fullDescription: Injection(s), diagnostic or therapeutic agent, paravertebral facet (zygapophyseal) joint (or nerves innervating that joint) with ultrasound guidance, cervical or thoracic; second level (list separately in addition to code for primary procedure)
+                - code: 0215T
+                  fullDescription: Injection(s), diagnostic or therapeutic agent, paravertebral facet (zygapophyseal) joint (or nerves innervating that joint) with ultrasound guidance, cervical or thoracic; third and any additional level(s) (list separately in addition to code for primary procedure)
+                - code: 0217T
+                  fullDescription: Injection(s), diagnostic or therapeutic agent, paravertebral facet (zygapophyseal) joint (or nerves innervating that joint) with ultrasound guidance, lumbar or sacral; second level (list separately in addition to code for primary procedure)
+                - code: 0218T
+                  fullDescription: Injection(s), diagnostic or therapeutic agent, paravertebral facet (zygapophyseal) joint (or nerves innervating that joint) with ultrasound guidance, lumbar or sacral; third and any additional level(s) (list separately in addition to code for primary procedure)
+                - code: '15777'
+                  fullDescription: Implantation of biologic implant (eg, acellular dermal matrix) for soft tissue reinforcement (ie, breast, trunk) (list separately in addition to code for primary procedure)
+                totalCount: 28
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/color-codes/50-exempt
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    OptumPageImplColorCodes:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColorCodes'
+        totalCount:
+          type: integer
+          format: int64
+    ColorCodes:
+      type: object
+      properties:
+        code:
+          type: string
+        fullDescription:
+          type: string
+        effectiveDate:
+          type: string
+        cptAddOnType:
+          type: string
+        cptSource:
+          $ref: '#/components/schemas/Link'
+        crossReference:
+          type: string
+        categoryDescription:
+          type: string
+        sex:
+          type: string
+        hac:
+          type: string
+        hacDescription:
+          type: string
+        coverage:
+          type: string
+    Link:
+      type: object
+      properties:
+        value:
+          type: string
+        href:
+          type: string
+        iconName:
+          type: string
+        routerLink:
+          type: string
+        type:
+          type: string
+        tag:
+          type: string
+        label:
+          type: string
+        addonName:
+          type: string
+        addonId:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

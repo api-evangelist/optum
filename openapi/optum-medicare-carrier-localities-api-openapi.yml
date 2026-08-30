@@ -1,0 +1,93 @@
+openapi: 3.2.0
+info:
+  title: Optum Medicare Carrier Localities API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged Medicare Carrier Localities across 2 of this provider''s published API definitions: optum-optum-common-facility-openapi.yml, optum-optum-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Medicare Carrier Localities
+paths:
+  /api/optum/common/medicare-carrier-localities:
+    get:
+      tags:
+      - Medicare Carrier Localities
+      summary: Fetches medicare carrier localities
+      operationId: getMedicareCarrierLocalities
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch medicare carrier localities
+          content:
+            application/json:
+              example:
+              - carrier: '10112'
+                locality: '00'
+                state: Alabama
+              - carrier: '02102'
+                locality: '01'
+                state: Alaska
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2025-01-07T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /optumcommonms/api/optum/common/medicare-carrier-localities
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2025-01-07T06:36:22.518+00:00'
+                path: /optumcommonms/api/optum/common/medicare-carrier-localities
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-optum-common-facility-openapi.yml
+- optum-optum-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

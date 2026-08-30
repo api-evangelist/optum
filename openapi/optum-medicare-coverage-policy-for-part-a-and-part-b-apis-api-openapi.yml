@@ -1,0 +1,450 @@
+openapi: 3.2.0
+info:
+  title: Optum Medicare Coverage Policy for part A and Part B APIs API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged Medicare Coverage Policy for part A and Part B APIs across 2 of this provider''s published API definitions: optum-cms-common-facility-openapi.yml, optum-cms-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: Medicare Coverage Policy for part A and Part B APIs
+paths:
+  /api/cms/{cmsType}/policy-list/ncd/{contractorPart}/{codetype}/{code}:
+    get:
+      tags:
+      - Medicare Coverage Policy for part A and Part B APIs
+      summary: Fetches NCD Policies for particular Contractor part and Code (procedural or diagnosis)
+      operationId: getNCDPolicyList
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - hcpcs
+          - i9v3
+          - cpt
+          - i9v1
+          - i10_pcs
+          - i10_cm
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: A4575
+      - name: cmsType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - physician
+          - facility
+      - name: contractorPart
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - DME
+          - B
+          - A
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 50
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches NCD policies for particular contractor part and code (procedural or diagnosis)
+          content:
+            application/json:
+              example:
+                content:
+                - icpContractorId: 0
+                  icpPolicyId: 274765
+                  determinationNum: 240.2.1
+                  policyType: NCD
+                  cms: 240.2.1
+                  policyTitle: NCD for Home Use of Oxygen in Approved Clinical Trials (240.2.1)
+                  effectiveDate: '2006-03-20'
+                  url: http://www.cms.gov/medicare-coverage-database/details/ncd-details.aspx?NCDId=312&ncdver=1&DocID=240.2.1&bc=gAAAAAgAAAAAAA%3d%3d&
+                  hasArticles: '0'
+                  displayName: 'Home Use of Oxygen in Approved Clinical Trials '
+                totalCount: 1
+        '400':
+          description: 'Bad request: some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '992133' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/policy-list/NCD/C/HCPCS/A4575
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/{cmsType}/policy-list/lcd/{contractorPart}/{codetype}/{code}:
+    get:
+      tags:
+      - Medicare Coverage Policy for part A and Part B APIs
+      summary: Fetches LCD policies for particular contractor Id  , contractor part and code (procedural or diagnosis)
+      operationId: getLCDPolicyList
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - hcpcs
+          - i9v3
+          - cpt
+          - i9v1
+          - i10_pcs
+          - i10_cm
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: A4575
+      - name: cmsType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - physician
+          - facility
+      - name: contractorPart
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - A
+          - B
+          - DME
+      - name: sort
+        in: query
+        description: Any of these (serviceAreas,-serviceAreas) are allowed values, default is serviceAreas
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - serviceAreas
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 50
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: contractor-id
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+        example: 128
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches LCD policies for particular contractor id , contractor part and code (procedural or diagnosis)
+          content:
+            application/json:
+              example:
+                content:
+                - icpContractorId: 128
+                  icpPolicyId: 528715
+                  determinationNum: L37873
+                  contractorType: MA
+                  contractorName: Palmetto GBA
+                  policyType: LCD
+                  cms: L37873
+                  policyTitle: Topical Oxygen Therapy
+                  effectiveDate: '2019-05-06'
+                  url: https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=37873&ver=14&bc=0
+                  serviceAreas: SC
+                  contractorNum: '11201'
+                  hasArticles: '2'
+                totalCount: 1
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/facility/policy-list/LCD/C/HCPCS/A4575?contractor_id=128
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/common/policy-list/ncd/{contractorPart}:
+    get:
+      tags:
+      - Medicare Coverage Policy for part A and Part B APIs
+      summary: Fetches NCD Policies for particular Contractor part
+      operationId: getMedicareNCDPolicyList
+      parameters:
+      - name: contractorPart
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - DME
+          - B
+          - A
+          - LAB
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 50
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches NCD policies for particular contractor part
+          content:
+            application/json:
+              example:
+                content:
+                - icpContractorId: 0
+                  icpPolicyId: 274765
+                  determinationNum: 240.2.1
+                  policyType: NCD
+                  cms: 240.2.1
+                  policyTitle: NCD for Home Use of Oxygen in Approved Clinical Trials (240.2.1)
+                  effectiveDate: '2006-03-20'
+                  url: http://www.cms.gov/medicare-coverage-database/details/ncd-details.aspx?NCDId=312&ncdver=1&DocID=240.2.1&bc=gAAAAAgAAAAAAA%3d%3d&
+                  hasArticles: '0'
+                  displayName: 'Home Use of Oxygen in Approved Clinical Trials '
+                totalCount: 1
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '992133' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/policy-list/NCD/C/A4575
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/common/policy-list/lcd/{contractorPart}:
+    get:
+      tags:
+      - Medicare Coverage Policy for part A and Part B APIs
+      summary: Fetches LCD policies for particular contractor id  , contractor part
+      operationId: getMedicareLCDPolicyList
+      parameters:
+      - name: contractorPart
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - A
+          - B
+          - DME
+      - name: sort
+        in: query
+        description: Any of these (serviceAreas,-serviceAreas) are allowed values, default is serviceAreas
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - serviceAreas
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 50
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: contractor-id
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+        example: 128
+      - name: is-retired-policies
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches LCD policies for particular contractor id , contractor part
+          content:
+            application/json:
+              example:
+                content:
+                - icpContractorId: 128
+                  icpPolicyId: 528715
+                  determinationNum: L37873
+                  contractorType: MA
+                  contractorName: Palmetto GBA
+                  policyType: LCD
+                  cms: L37873
+                  policyTitle: Topical Oxygen Therapy
+                  effectiveDate: '2019-05-06'
+                  url: https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=37873&ver=14&bc=0
+                  serviceAreas: SC
+                  contractorNum: '11201'
+                  hasArticles: '2'
+                totalCount: 1
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/facility/policy-list/LCD/C?contractor_id=128
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-cms-common-facility-openapi.yml
+- optum-cms-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

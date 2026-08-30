@@ -1,0 +1,102 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Facility Opps Cross Codes API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Opps Cross Codes API
+paths:
+  /api/optum/facility/opps-cross-codes:
+    get:
+      tags:
+      - Opps Cross Codes API
+      summary: Fetches OPPS cross codes table data
+      operationId: getOppsCrossCodesList
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these (code,-code) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch columns for OPPS cross codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0734T
+                  description: Remote real-time, motion capture-based neurorehabilitative therapy ordered by a physician or other qualified health care professional; treatment management services by a physician or other qualified health care professional, per calendar month
+                  referenceCodes: 99457-99458
+                  effectiveDate: '2022-07-01 00:00:00'
+                - code: '52441'
+                  description: Cystourethroscopy, with insertion of permanent adjustable transprostatic implant; single implant
+                  referenceCodes: C9739
+                  effectiveDate: '2015-01-01 00:00:00'
+                totalCount: 132
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [code, -code]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one'
+                path: /optumcommonms/api/optum/facility/opps-cross-codes
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

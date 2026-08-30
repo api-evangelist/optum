@@ -1,0 +1,233 @@
+openapi: 3.2.0
+info:
+  title: Core Service Code Image APIs API
+  description: Code Search Service provides the APIs for searching codes related information.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/codesearchms
+tags:
+- name: Code Image APIs
+paths:
+  /api/coding/code/{codetype}/{code}/image:
+    get:
+      tags:
+      - Code Image APIs
+      summary: Fetches the I9v1 ,I9v3 ,CPT ,HCPCS ,I10_pcs ,I10_cm image
+      operationId: imageLinkResource
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - i10_pcs
+          - i10_cm
+          - i9v1
+          - i9v3
+      - name: code
+        in: path
+        description: Code for which image info is required
+        required: true
+        schema:
+          type: string
+        example: 50605
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Returns image associated to code
+          content:
+            application/json:
+              example:
+                value: 50605 ATUN.jpg
+                href: /codesearchms/api/coding/code/image/50605 ATUN.jpg
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided 'zzzz' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/17000/image
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codeOrTerm}/image-search:
+    get:
+      tags:
+      - Code Image APIs
+      summary: Fetches the images based on code or term search
+      operationId: searchImages
+      parameters:
+      - name: codeOrTerm
+        in: path
+        required: true
+        schema:
+          type: string
+        example: blood
+      - name: codeType
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - cpt
+            - hcpcs
+            - i10_pcs
+            - i10_cm
+            - i9v1
+            - i9v3
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetches the images based on code or term search
+          content:
+            application/json:
+              example:
+                allResults:
+                - fileName: 27332-27333 ATLE.jpg
+                  href: codesearchms/api/coding/code/image/27332-27333 ATLE.jpg
+                  codeBeg: '27332'
+                  codeType: 4
+                - fileName: 21431 ATPR.jpg
+                  href: codesearchms/api/coding/code/image/21431 ATPR.jpg
+                  codeBeg: '21431'
+                  codeType: 4
+                layDescription:
+                  SECTION:
+                    header: Section E00-E89
+                    annotations:
+                    - header: Section E00-E89
+                      descriptions:
+                      - The endocrine system is a group of specialized organs.
+                      - this chapter cover a wide range of diseases
+                    - header: Section E08-E13
+                      descriptions:
+                      - One of the most important .
+                      - 'In addition to the expanded '
+                  RANGE:
+                    header: Range E11-
+                    annotations:
+                    - header: Range E11-
+                      descriptions:
+                      - 'Type 2 diabetes mellitus is a systemic disease '
+                codeDescription: Type 2 diabetes mellitus
+      security:
+      - bearerAuth: []
+  /api/coding/code/image/{file}:
+    get:
+      tags:
+      - Code Image APIs
+      summary: Fetches image file
+      operationId: imageResource
+      parameters:
+      - name: file
+        in: path
+        required: true
+        schema:
+          pattern: ^[a-zA-Z0-9!@#$%^&{}\[\]()_+\-=,.~'` ]{1,255}$
+          type: string
+        example: L8040.jpg
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Returns image value
+          content:
+            image/jpeg:
+              example: Image File
+        '400':
+          description: Bad Request - Invalid file name
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - Invalid file name
+                warning: null
+                info: null
+        '404':
+          description: File Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - File Not Found
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/image/abc.jpg
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

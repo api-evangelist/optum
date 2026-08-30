@@ -1,0 +1,170 @@
+openapi: 3.2.0
+info:
+  title: Real Dental Attachments Review Attachments API
+  contact:
+    name: ''
+    email: ''
+  version: v1
+  description: Services requests for Dental Attachments for both Provider and Payer users of the Optum Real Dental suite of products.
+  termsOfService: ''
+  x-shortDescription: Real Dental Attachments API
+servers:
+- url: https://sandbox-apigw.optum.com/dental/attachments/v1
+  description: ''
+security:
+- bearerAuth: []
+tags:
+- name: Review Attachments
+  description: Operations for retrieving attachments for review.
+paths:
+  /attachments/documents/search:
+    post:
+      tags:
+      - Review Attachments
+      summary: Search for Attachments by Ids
+      responses:
+        '200':
+          content:
+            multipart/form-data:
+              schema:
+                type: string
+                format: binary
+                description: Multipart response containing one or more attachment files.
+              examples:
+                multipleAttachments:
+                  value: '------WebKitFormBoundary7MA4YWxkTrZu0gW
+
+                    Content-Disposition: form-data; name="file"; filename="xray_1.pdf"; attachmentControlNumber="507f1f77bcf86cd799439011"; attachmentId="023981023345"
+
+                    Content-Type: application/pdf
+
+
+                    [binary file content]
+
+                    ------WebKitFormBoundary7MA4YWxkTrZu0gW
+
+                    Content-Disposition: form-data; name="file"; filename="report_2.pdf"; attachmentControlNumber="507f1f77bcf86cd799439011"; attachmentId="023981023346"
+
+                    Content-Type: application/pdf
+
+
+                    [binary file content]
+
+                    ------WebKitFormBoundary7MA4YWxkTrZu0gW--'
+                  summary: Multiple attachments response
+                  description: Search results from provided list of Attachment Identifiers
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                example: multipart/form-data; boundary=----WebKitFormBoundary0452a64cf6b94c2f9cc2c6f3da9ae864
+              description: Content type with multipart boundary
+            Content-Length:
+              schema:
+                type: integer
+              description: Total size of the multipart response body in bytes
+          description: All raw files retrieved successfully (base64 encoded)
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: A problem occurred.
+      description: For all of the requested Attachments by Id, get the original binary file with appropriate Content-Type and Content-Disposition headers for download.
+      operationId: searchAttachments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - attachmentIds
+              properties:
+                attachmentIds:
+                  type: array
+                  items:
+                    type: string
+                    pattern: ^([A-Z]{3}#)?([0-9]{12}|[0-9a-fA-F]{24})$
+                  maxItems: 10
+                  minItems: 1
+            examples:
+              searchByAttachmentIds:
+                value:
+                  attachmentIds:
+                  - CHC#123456789055
+                  - CHC#123456358902
+                  - CHC#122256789023
+                summary: Search by Attachment Ids
+                description: Example request body for searching attachments by a list of Attachment Ids
+              searchByAttachmentControlNumber:
+                value:
+                  attachmentIds:
+                  - CHC#507f1f77bcf86cd799439011
+                summary: Search by Attachment Control Number
+                description: Example request body for searching attachments by Attachment Control Number (returns all attachments associated with the control number)
+        required: true
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+          default: about/blank
+          example: https://api-stg.uhg.com/errors/attachment-type-detection
+          description: The problem type URI. Defaults to `about:blank`.
+        title:
+          type: string
+          example: Invalid Attachment Format
+          description: A short, human-readable summary of the problem.
+        detail:
+          type: string
+          example: The provided attachment format is not supported.
+          description: A detailed explanation of the problem.
+        status:
+          type: integer
+          format: int32
+          example: 400
+          maximum: 599
+          minimum: 100
+          description: The HTTP status code for the problem.
+        instance:
+          type: string
+          format: uri
+          example: https://api-stg.uhg.com/errors/attachment-type-detection/12345
+          description: A URI reference that identifies the specific occurrence of the problem.
+        properties:
+          type: object
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: DENTATT_113
+                    description: A code that can be correlated to this error.
+                  field:
+                    type: string
+                    example: DataService.attachments.find.notFound
+                    description: The field in a request that is related to this error, if applicable.
+                  message:
+                    type: string
+                    example: Attachment not found.
+                    description: A human readable message that describes the error.
+              description: A collection that gives specifics about the errors that occurred.
+          description: A map of additional, non-standard properties.
+      description: Representation for an RFC 9457 problem detail.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Enter a Bearer access token. The API Explorer applies the Bearer scheme.
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

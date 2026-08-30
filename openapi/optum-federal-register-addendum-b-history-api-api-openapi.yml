@@ -1,0 +1,204 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Facility Federal Register Addendum B History API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Federal Register Addendum B History API
+paths:
+  /api/optum/facility/federal-reg-add-b-history:
+    post:
+      tags:
+      - Federal Register Addendum B History API
+      summary: Fetches the data of federal register addendum B history
+      operationId: getFederalRegAddBHistoryList
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these values (code, -code) are allowed.The default is code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FederalRegAddBHistoryRequest'
+      responses:
+        '200':
+          description: 'POST: Api for fetching the list of federal register addendum B history'
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0001A
+                  description: Adm sarscov2 30mcg/0.3ml 1st
+                  opsiQ1: E1
+                  opsiQ2: E1
+                  opsiQ3: E1
+                  opsiQ4: E1
+                  year: '2024'
+                - code: 0011A
+                  description: Adm sarscov2 100mcg/0.5ml1st
+                  opsiQ1: E1
+                  opsiQ2: E1
+                  opsiQ3: E1
+                  opsiQ4: E1
+                  year: '2024'
+                - code: 0021A
+                  description: Adm sarscov2 5x1010vp/.5ml 1
+                  opsiQ1: E1
+                  opsiQ2: E1
+                  opsiQ3: E1
+                  opsiQ4: E1
+                  year: '2024'
+                - code: 0031A
+                  description: Adm sarscov2 vac ad26 .5ml
+                  opsiQ1: E1
+                  opsiQ2: E1
+                  opsiQ3: E1
+                  opsiQ4: E1
+                  year: '2024'
+                - code: 0041A
+                  description: Adm sarscov2 5mcg/0.5ml 1st
+                  opsiQ1: S
+                  relWeightQ1: '.4851'
+                  paymentQ1: '41.52'
+                  opsiQ2: S
+                  relWeightQ2: '.4851'
+                  paymentQ2: '41.52'
+                  opsiQ3: S
+                  relWeightQ3: '.4851'
+                  paymentQ3: '41.52'
+                  opsiQ4: S
+                  relWeightQ4: '.4851'
+                  paymentQ4: '41.52'
+                  year: '2024'
+                - code: 0061A
+                  description: Fee covid-19 vac 7 dose 1
+                  opsiQ1: E1
+                  opsiQ2: D
+                  opsiQ3: D
+                  opsiQ4: D
+                  year: '2024'
+                - code: 0091A
+                  description: Adm sarscov2 50 mcg/.5 ml1st
+                  opsiQ1: E1
+                  opsiQ2: E1
+                  opsiQ3: E1
+                  opsiQ4: E1
+                  year: '2024'
+                - code: 0101A
+                  description: Fee covid-19 vac 11 dose 1
+                  opsiQ1: E1
+                  opsiQ2: D
+                  opsiQ3: D
+                  opsiQ4: D
+                  year: '2024'
+                - code: 0111A
+                  description: Adm sarscov2 25mcg/0.25ml1st
+                  opsiQ1: E1
+                  opsiQ2: E1
+                  opsiQ3: E1
+                  opsiQ4: E1
+                  year: '2024'
+                totalCount: 9
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - sort parameter value should be from list of [code,-code]
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2024-11-18T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: optumcommonms/api/optum/facility/federal-reg-add-b-historyyy
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2024-11-18T06:36:22.518+00:00'
+                path: optumcommonms/api/optum/facility/federal-reg-add-b-history
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+    FederalRegAddBHistoryRequest:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+        year:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

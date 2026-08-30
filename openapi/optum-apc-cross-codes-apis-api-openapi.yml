@@ -1,0 +1,222 @@
+openapi: 3.2.0
+info:
+  title: CMS Common Facility APC Cross Codes APIs API
+  description: MicroService that contains CMS related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: APC Cross Codes APIs
+paths:
+  /api/cms/facility/{apctype}:
+    get:
+      tags:
+      - APC Cross Codes APIs
+      summary: Facility - fetches APC cross codes
+      operationId: fetchAPCCrossCodes
+      parameters:
+      - name: apctype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - apc
+          - composite-apc
+          - comprehensive-apc
+      - name: sort
+        in: query
+        description: Any of these values (apc,-apc) are allowed.The default is apc
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - apc
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches APC Cross Codes
+          content:
+            application/json:
+              example:
+                content:
+                - apc: '0701'
+                  description: Sr89 strontium
+                - apc: '0702'
+                  description: Inj, human-lans, per i.u
+                - apc: '0703'
+                  description: Inj daxibotulinumtoxina-lanm
+                totalCount: 915
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-10-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than zero'
+                path: /cmscommonms/api/cms/facility/apc
+      security:
+      - bearerAuth: []
+  /api/cms/facility/{apctype}/{code}:
+    get:
+      tags:
+      - APC Cross Codes APIs
+      summary: Facility - Fetches CPT/HCPCS Code Specific APC Cross Codes
+      operationId: fetchCodeSpecificAPCCrossCodes
+      parameters:
+      - name: apctype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - apc
+          - composite-apc
+          - comprehensive-apc
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 71045
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches CPT/HCPCS Code Specific APC Cross Codes
+          content:
+            application/json:
+              example:
+                content:
+                - apc: '5521'
+                  description: Level 1 Imaging without Contrast
+                totalCount: 1
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2024-05-16T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than zero'
+                path: /cmscommonms/api/cms/facility/apc
+      security:
+      - bearerAuth: []
+  /api/cms/facility/{apcCode}/apc-cross-codes:
+    get:
+      tags:
+      - APC Cross Codes APIs
+      summary: Facility - Fetches APC Cross Codes of given Apc Code
+      operationId: fetchAPCCrossCodeDetail
+      parameters:
+      - name: apcCode
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 5191
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches APC Cross Codes of given Apc Code
+          content:
+            application/json:
+              example: "    {\n        \"content\": [\n           {\n             \"code\": \"93451\",\n             \"opsiCode\": \"J1\",\n             \"apc\": \"5191\",\n             \"description\": \"RIGHT HEART CATH\",\n             \"payRate\": \"3104.73\",\n             \"natUnadjCopay\": \"863.75\",\n             \"minUnadjCopay\": \"620.95\",\n             \"relWeight\": \"35.5305\"\n           },\n           {\n             \"code\": \"93452\",\n             \"opsiCode\": \"J1\",\n             \"apc\": \"5191\",\n             \"description\": \"LEFT HRT CATH W/VENTRCLGRPHY\",\n             \"payRate\": \"3104.73\",\n             \"natUnadjCopay\": \"863.75\",\n             \"minUnadjCopay\": \"620.95\",\n             \"relWeight\": \"35.5305\"\n           },\n           {\n             \"code\": \"93453\",\n             \"opsiCode\": \"J1\",\n             \"apc\": \"5191\",\n             \"description\": \"R&L HRT CATH W/VENTRICLGRPHY\",\n             \"payRate\": \"3104.73\",\n             \"natUnadjCopay\": \"863.75\",\n             \"minUnadjCopay\": \"620.95\",\n             \"relWeight\": \"35.5305\"\n           },\n         ],\n        \"totalCount\": 915\n      }\n"
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-10-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than zero'
+                path: /cmscommonms/api/cms/facility/apcCrossCodes/code
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,297 @@
+openapi: 3.2.0
+info:
+  title: Optum CMS HCC APIs API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged CMS HCC APIs across 2 of this provider''s published API definitions: optum-cms-common-facility-openapi.yml, optum-cms-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: CMS HCC APIs
+paths:
+  /api/cms/common/hcc/{hccType}/{hccCode}/diagnosis-codes:
+    get:
+      tags:
+      - CMS HCC APIs
+      summary: Fetches diagnosis codes on selected hcc type and hcc code
+      operationId: getDiagnosisCodes
+      parameters:
+      - name: hccType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - CMS_HCC
+          - CMS_HCC_ESRD
+          - RX_HCC_V04
+          - HHS_HCC
+      - name: hccCode
+        in: path
+        description: HCC Types
+        required: true
+        schema:
+          type: string
+        example: HCC1
+      - name: sort
+        in: query
+        description: Any of these (diagnosisCode,-diagnosisCode) are allowed values, default is diagnosisCode
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - diagnosisCode
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: 'Fetches diagnosis codes for the given hcc code '
+          content:
+            application/json:
+              example:
+              - diagnosisCode: B20
+                diagnosisCodeDesc: Human immunodeficiency virus [HIV] disease
+              - diagnosisCode: B97.35
+                diagnosisCodeDesc: Human immunodeficiency virus, type 2 [HIV 2] as the cause of diseases classified elsewhere
+              - diagnosisCode: Z21
+                diagnosisCodeDesc: Asymptomatic human immunodeficiency virus [HIV] infection status
+        '400':
+          description: Bad Request - some parameters were invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - sort parameter value should be from list of [diagnosisCode]
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/hcc/{hccType}/{hccCode}/hcc-diagnosis-
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/common/hcc/{hccType}/codes:
+    get:
+      tags:
+      - CMS HCC APIs
+      summary: 'Fetches hcc type specific codes '
+      operationId: getHCCCodes
+      parameters:
+      - name: hccType
+        in: path
+        description: Fetches HCC codes on selected hcc type
+        required: true
+        schema:
+          type: string
+          enum:
+          - CMS_HCC
+          - CMS_HCC_ESRD
+          - RX_HCC_V04
+          - HHS_HCC
+      - name: sort
+        in: query
+        description: Any of these (hccCode,-hccCode) are allowed values, default is hccCode
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - hccCode
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches hcc codes from the selected hcc type
+          content:
+            application/json:
+              example: "[{\n      \"hccCode\": \"HCC1\",\n        \"hccCodeDesc\": \"HIV/AIDS\"\n      },\n      {\n        \"hccCode\": \"HCC2\",\n        \"hccCodeDesc\": \"Septicemia, Sepsis, Systemic Inflammatory Response Syndrome/Shock\"\n      },\n      {\n        \"hccCode\": \"HCC6\",\n        \"hccCodeDesc\": \"Opportunistic Infections\"\n      },]\n"
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - sort parameter value should be from list of [hccCode]
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-08-04T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/hcc/{hccType}/cod
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/common/hcc/{codetype}/{code}/code:
+    get:
+      tags:
+      - CMS HCC APIs
+      summary: Fetches hcc codes for the given diagnosis code
+      operationId: getHCCDiagnosisCodes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_cm
+          - i9v1
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: B20
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches hcc codes for the given diagnosis code
+          content:
+            application/json:
+              example:
+                cmsHCC:
+                - hccCode: HCC1
+                  hccCodeDesc: HIV/AIDS
+                cmsHCCESRD:
+                - hccCode: HCC1
+                  hccCodeDesc: HIV/AIDS
+                rxHCC:
+                - hccCode: RXHCC1
+                  hccCodeDesc: HIV/AIDS
+                hhsHCC:
+                - hccCode: HCC1
+                  hccCodeDesc: HIV/AIDS
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '992133' in this web service request is not a valid 'I10_CM' code.
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/hcc/I10_CM/{code}/codes
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-cms-common-facility-openapi.yml
+- optum-cms-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

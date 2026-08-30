@@ -1,0 +1,1731 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services Code Information API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: Code Information
+paths:
+  /codetype/{codetype}/{code}/anesbaseunit:
+    get:
+      tags:
+      - Code Information
+      summary: Return base units for the given CPT Anesthesia {code}
+      operationId: getAnesBaseUnit
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: '00100'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Items'
+              example:
+                item:
+                - '5'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Items'
+              example:
+                error:
+                - The code provided ('A0021') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/{facNonFac}:
+    get:
+      tags:
+      - Code Information
+      summary: Return code range
+      operationId: getColumnCci
+      parameters:
+      - name: code
+        in: path
+        description: The code for which you want CCI data
+        required: true
+        schema:
+          type: string
+        example: 13100
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: facNonFac
+        in: path
+        description: One of<UL><LI>facility-cci</LI><LI>non-facility-cci</LI></UL>
+        required: true
+        schema:
+          type: string
+          enum:
+          - facility-cci
+          - non-facility-cci
+      - name: data
+        in: query
+        description: 'Comma seperated list of<UL><LI>reason : e.g. Anesthesia Included in Surgical Procedure</LI><LI>modifier-allowed : e.g. true</LI><LI>modifier-allowed : e.g. true</LI></UL>'
+        schema:
+          type: string
+        example: reason,modifier-allowed
+      - name: types
+        in: query
+        description: 'Comma seperated list of<UL><LI>cci-column2 : procedures that are included</LI><LI>cci-column1 : procedures in which this is included</LI><LI>cci-all : All of the above 2 types </LI></UL>'
+        schema:
+          type: string
+          default: cci-all
+        example: cci-all,cci-column2,cci-column1
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cci'
+              example:
+                cciColumn2:
+                - code: 0213T
+                  href: /ws/codetype/cpt/0213T
+                - code: 0216T
+                  href: /ws/codetype/cpt/0216T
+                cciColumn1: []
+        '400':
+          description: Unknown data element
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cci'
+              example:
+                error:
+                - 'Unknown data element : bad'
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cci'
+              example:
+                error:
+                - Code '13104' does not exist
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/codehistory:
+    get:
+      tags:
+      - Code Information
+      summary: Return Code History for the given cpt/hcpcs/icd9v3/icd9v1/icd10cm/icd10pcs {code}
+      operationId: getCodehistory
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd9v3
+          - icd10cm
+          - icd10pcs
+      - name: code
+        in: path
+        description: The code for which you want CCI data
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-mm-dd
+        in: header
+        description: Historical Application Content(HAC) is not applicable here. This Code history webservice accepts Current date or future date only. For Current date, date is optional. For Future date, date must be provided
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompleteCodeHistory'
+              example:
+                codeHistory:
+                - changeEffectiveDate: 01/01/2021
+                  status: Changed
+                  changeSummary: Officially recognized, Other, Changed
+                  fullInfo: <P><FONT color=blue>Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and low level of medical decision making. When using time for code selection, 20-29 minutes of total time is spent on the date of the encounter.</FONT><FONT color=red><STRIKE>EST OUTPT L3 EXP PROB H&E LOW COMPLX MED DEC</STRIKE></FONT>
+                  char48Info: <P><FONT color=blue>OFFICE</FONT><FONT color=red><STRIKE>OFC</STRIKE></FONT>/<FONT color=blue>OUTPATIENT ESTABLISHED LOW</FONT><FONT color=red><STRIKE>OUTPT VISIT E&M EST</STRIKE></FONT> <FONT color=blue>MDM 20</FONT>-<FONT color=blue>29</FONT><FONT color=red><STRIKE>MOD SEVERITY 15</STRIKE></FONT> MIN
+                  char35Info: <P><FONT color=blue>OFFICE O</FONT><FONT color=red><STRIKE>OFC</STRIKE></FONT>/<FONT color=blue>P EST LOW</FONT><FONT color=red><STRIKE>OUTPT E&M ESTAB</STRIKE></FONT> <FONT color=blue>20</FONT>-<FONT color=blue>29</FONT><FONT color=red><STRIKE>MOD 15</STRIKE></FONT> MIN
+                  codeHistoryReferences: {}
+        '400':
+          description: Wrong codetype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompleteCodeHistory'
+              example:
+                error:
+                - The code provided ('250.0') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompleteCodeHistory'
+              example:
+                error:
+                - Code '13108' does not exist
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/properties:
+    get:
+      tags:
+      - Code Information
+      summary: Show properties for the given {codetype} and {code} parameter
+      operationId: getProperty
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd9v3
+          - icd10cm
+          - icd10pcs
+      - name: code
+        in: path
+        description: The code to search
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-mm-dd
+        in: header
+        description: The Properties webservice accepts Current date or future date only. For Current date, date is optional. For Future date, date must be provided
+        schema:
+          type: string
+      - name: data
+        in: query
+        description: 'Comma seperated list of any of the following<UL><LI>desc-35 : up to 35 character description (except 3rd or 4th digit ICD-10-PCS)</LI><LI>desc-48 : up to 48 character description (except 3rd or 4th digit ICD-10-PCS)</LI><LI>desc-255 : up to 255 character description (except 3rd or 4th digit ICD-10-PCS)</LI><LI>desc-full : full description </LI><LI>desc-lay : Lay description (only for cpt/hcpcs/icd9v1/icd10cm)</LI><LI>coding-tip</LI><LI>documentation-tip</LI><LI>reimbursement-tip</LI></UL>'
+        schema:
+          type: string
+          default: desc-full
+        example: desc-full
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeProperties'
+              example:
+                descFull: Central Nervous System and Cranial Nerves, Bypass
+        '400':
+          description: Wrong CodeType
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeProperties'
+              example:
+                error:
+                - Bad data parameter 'bad'
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeProperties'
+              example:
+                error:
+                - Code '13104' does not exist
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/images:
+    get:
+      tags:
+      - Code Information
+      summary: Return image filename(s) for the given code {code}
+      operationId: getCodeImageLinks
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd9v3
+      - name: code
+        in: path
+        description: The code for which you want Image data
+        required: true
+        schema:
+          type: string
+        example: 61885
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+              example:
+              - href: /ws/codetype/cpt/61885/images/61885-61886 ATNN.jpg
+                value: ''
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/images/{filename}:
+    get:
+      tags:
+      - Code Information
+      summary: Return image(s) for the given code {code}
+      operationId: getImage
+      parameters:
+      - name: filename
+        in: path
+        description: The File Name
+        required: true
+        schema:
+          type: string
+          default: 61885-61886 ATNN.jpg
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd9v3
+      - name: code
+        in: path
+        description: The code value
+        required: true
+        schema:
+          type: string
+        example: 61885
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            image/*:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example: default image response
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}:
+    get:
+      tags:
+      - Code Information
+      summary: Return links to all the information available about a given 'code' belonging to the given 'codetype'
+      operationId: getProperties
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd9v3
+          - icd10cm
+          - icd10pcs
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 13100
+      responses:
+        '200':
+          description: Successful Response - code 13100 , type - cpt
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+              example:
+              - href: /ws/codetype/cpt/13100/icd9v3
+                value: icd9v3 crosscodes
+              - href: /ws/codetype/cpt/13100/icd9v1
+                value: icd9v1 crosscodes
+              - href: /ws/codetype/cpt/13100/icd10cm
+                value: icd10cm crosscodes
+              - href: /ws/codetype/cpt/13100/icd10pcs
+                value: icd10pcs crosscodes
+        '400':
+          description: Wrong Code Type
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+              example:
+                error:
+                - The code provided ('250.02') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype:
+    get:
+      tags:
+      - Code Information
+      summary: Show HyperLinks to valid code types
+      operationId: getCodeTypes
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+              example:
+              - href: /ws/codetype/icd9v3
+                value: icd9v3
+              - href: /ws/codetype/icd9v1
+                value: icd9v1
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/indexsearch/{terms}:
+    get:
+      tags:
+      - Code Information
+      summary: Return Index search results
+      operationId: indexSearchResults
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd9v3
+          - icd10cm
+      - name: terms
+        in: path
+        description: Search Term (Starts with Character) to provide results
+        required: true
+        schema:
+          pattern: '[^/]+'
+          type: string
+        example: reduction
+      - name: maxresults
+        in: query
+        description: The number of rows be returned
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndexSearchResults'
+              example:
+                indexSearchResult:
+                - term: <b>Reduction</b>
+                  level: 1
+                - term: Blood Volume
+                  level: 2
+                  codes: '86960'
+        '400':
+          description: The search term can contain maximum of 62 characters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndexSearchResults'
+              example:
+                error:
+                - The search term can contain maximum of 62 characters.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: No search results found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndexSearchResults'
+              example:
+                error: []
+                warning: []
+                info:
+                - No search results found for the term 'xyzfgdf' entered.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /dictionary/coders/{startswith}:
+    get:
+      tags:
+      - Code Information
+      summary: Optum Coders Dictionary Search
+      operationId: searchStedmans
+      parameters:
+      - name: startswith
+        in: path
+        description: The term to start with
+        required: true
+        schema:
+          type: string
+        example: diabetes
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IngenixCodersDictionary'
+              example:
+                entry:
+                - definition: 'Endocrine disease manifested by high blood glucose levels and resulting in the inability to successfully metabolize carbohydrates, proteins, and fats, due to defects in insulin production and secretion, insulin action, or both. Type I results from the autoimmune or other destruction of the pancreatic beta cells, which cease producing insulin. This type is commonly seen at a young age and requires regular insulin injections. Type II is caused by the body''s inability to respond to insulin that is produced, called insulin resistance. The pancreas gradually loses the ability to produce insulin. Type II is usually seen in adulthood and can often be treated with diet, exercise, and oral medications. Type II may also require insulin, however, and is also diagnosed among juvenile patients. Synonym(s): DM.'
+                  icd9: 249, 249.4, 250, 250.4, 581.81, 775.1, 40.1
+                  synonyms: diabetes mellitus hypertension-nephrosis syndrome, diabetes mellitus in newborn infant syndrome
+                  term: diabetes mellitus
+                - definition: High blood pressure and kidney failure resulting from diabetes in which carbohydrate utilization is reduced and lipid and protein use are enhanced.
+                  icd9: 249.40 - 249.41, 250.40 - 250.43, 581.81
+                  term: diabetes mellitus hypertension-nephrosis syndrome
+                - definition: Newborn that has the inability to metabolize carbohydrates, proteins, and fats with insufficient secretion of insulin.
+                  icd9: '775.1'
+                  term: diabetes mellitus in newborn infant syndrome
+                - definition: Educational and training services furnished by a certified provider in an outpatient setting. The physician managing the individual's diabetic condition must certify that the services are needed under a comprehensive plan of care and provide the patient with the skills and knowledge necessary for therapeutic program compliance (including skills related to the self-administration of injectable drugs). The provider must meet applicable standards established by the National Diabetes Advisory or be recognized by an organization that represents individuals with diabetes as meeting standards for furnishing the services.
+                  term: diabetes outpatient self-management training services
+                - definition: Endocrine dysfunction causing diabetes and affecting growth and weight.
+                  icd9: '258.1'
+                  term: diabetes-dwarfism-obesity syndrome
+                - definition: High blood pressure and kidney failure resulting from diabetes in which carbohydrate utilization is reduced and lipid and protein use are enhanced.
+                  icd9: 249.40, 249.40 - 249.41, 249.41, 250.40 - 250.43, 250.41, 250.42, 250.43, 581.81
+                  term: diabetes-nephrosis syndrome
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/instructional-notes:
+    get:
+      tags:
+      - Code Information
+      summary: Return instructional Notes for the given icd9v1 {code}
+      operationId: getInstructions
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          pattern: icd9v1
+          type: string
+        example: icd9v1
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 295
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstructionalNotes'
+              example:
+                instructionalNote:
+                - header: 5. Mental, Behavioral and Neurodevelopmental Disorders (290-319)
+                  note:
+                  - ~5. MENTAL, BEHAVIORAL AND NEURODEVELOPMENTAL DISORDERS (290-319)
+                - header: Psychoses (290-299)
+                  note:
+                  - '~PSYCHOSES (290-299)~Excludes: intellectual disabilities (317-319)~'
+                - header: Other Psychoses (295-299)
+                  note:
+                  - '~PSYCHOSES (290-299)~Excludes: mental retardation (317-319)~OTHER PSYCHOSES (295-299)~Use additional code to identify any associated physical disease, injury, or condition affecting the brain with psychoses classifiable to 295-298'
+        '400':
+          description: The provided code is not a valid icd9v1 code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstructionalNotes'
+              example:
+                error:
+                - The code provided ('99213') in this web service request is not a valid 'icd9v1' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code 'code' does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstructionalNotes'
+              example:
+                error:
+                - Code '999.99' does not exist
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/instructions:
+    get:
+      tags:
+      - Code Information
+      summary: Return instructions for the given cpt {code}
+      operationId: getInstructions_1
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 99213
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Items'
+              example:
+                item:
+                - 'Excludes Services provided in:'
+                - Excludes Hospital observation or inpatient with same day admission and discharge (99234-99236)
+                - Excludes Hospital observation (99217-99220 [99224, 99225, 99226])
+                - 'Includes New patients: have not received professional services from the physician or qualified health care professional or any other physician or qualified health care professional in the same practice in the exact same specialty and subspecialty in the previous three years (99201-99205)'
+                - Includes Office visits
+                - 'Includes Established patients: received prior professional services from the physician or qualified health care professional or another physician or qualified health care professional in the practice of the exact same specialty and subspecialty in the previous three years (99211-99215)'
+                - Includes Outpatient services (including services prior to a formal admission to a facility)
+                - Excludes Emergency department (99281-99285)
+        '400':
+          description: The provided code is not a valid icd9v1 code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Items'
+              example:
+                error:
+                - The code provided ('250.0') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code 'code' does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Items'
+              example:
+                error:
+                - Code '13108' does not exist
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /cci-check/{facNonFac}/{codes}:
+    get:
+      tags:
+      - Code Information
+      summary: Return the billing relationships between the given codes
+      operationId: getMultiCCIData
+      parameters:
+      - name: facNonFac
+        in: path
+        description: One of<UL><LI>facility-cci</LI><LI>non-facility-cci</LI></UL>
+        required: true
+        schema:
+          type: string
+          enum:
+          - facility-cci
+          - non-facility-cci
+      - name: codes
+        in: path
+        description: Comma seperated list of codes
+        required: true
+        schema:
+          type: string
+        example: 99213,13152,11000
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Multicci'
+              example:
+                conflict:
+                - code1:
+                    description: Debridement of extensive eczematous or infected skin; up to 10% of body surface
+                    reason: CPT Manual or CMS manual coding instructions
+                    modifier: Allowed
+                    primarysecondary: Primary
+                    value: '11000'
+                  code2:
+                    description: Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and low level of medical decision making. When using time for code selection, 20-29 minutes of
+                    reason: CPT Manual or CMS manual coding instructions
+                    modifier: Allowed
+                    primarysecondary: Secondary
+                    value: '99213'
+                  name: CCI Conflict Code 11000(Column 1) conflicts with Code 99213(Column 2).
+                  message: 'Warning: These codes may not be billed together. Check to see if a modifier is allowed and supported by documentation'
+        '400':
+          description: Wrong codetype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Multicci'
+              example:
+                error:
+                - The provided code is not a valid cpt/hcpcs code
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: CCI relationship was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Multicci'
+              example:
+                error: []
+                warning: []
+                info:
+                - CCI relationship was not found.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/sectionnotes:
+    get:
+      tags:
+      - Code Information
+      summary: Return section notes for the given cpt/hcpcs {code}
+      operationId: getSectionNotes
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: data
+        in: query
+        description: <b>indent</b> indicates notes will include &lt;indent&gt; tags, only for CPT Code
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Items'
+              example:
+                item:
+                - 'INCLUDES:'
+                - 'Established patients: received prior professional services from physician or qualified health care professional or another physician or qualified health care professional in exact same specialty practice and subspecialty in previous three years (99211-99215)'
+                - 'New patients: have not received professional services from physician or qualified health care professional or any other physician or qualified health care professional in same practice in exact same specialty and subspecialty in previous three years (99202-99205)'
+                - Office visits
+                - Outpatient services (including services prior to formal admission to facility)
+                - 'EXCLUDES:'
+                - 'Services provided in:'
+                - <IndentA>Emergency department (99281-99285)
+                - <IndentA>Hospital observation (99217-99220 [99224, 99225, 99226])
+                - <IndentA>Hospital observation or inpatient with same day admission and discharge (99234-99236)
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/physician-docs:
+    get:
+      tags:
+      - Code Information
+      summary: Return physician document for the given icd10cm {code}
+      operationId: getPhysicianDocs
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - icd10cm
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: S52
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhysicianDocs'
+              example:
+                physicianDoc:
+                - title: Fracture 7th characters
+                  text: '<P>The 7th character in fractures is based on the Gustillo classification.&nbsp;&nbsp;&nbsp; The following information is important to assign the appropriate 7th character:</P>
+
+                    <OL>
+
+                    <LI>Episode of care - Initial, subsequent, sequela</LI>
+
+                    <UL>
+
+                    <LI>Initial encounter - patient is receiving active treatment for the fracture</LI>
+
+                    <UL>
+
+                    <LI>Examples - surgical treatment, emergency department encounter, evaluation by new physician</LI></UL>
+
+                    <LI>Subsequent encounter - patient has completed active treatment for the condition</LI>
+
+                    <UL>
+
+                    <LI>Examples - cast change/removal, medication adjustment, followup visits</LI></UL>
+
+                    <LI>Sequela - complications or conditions that arise as a direct result&nbsp;of a condition</LI>
+
+                    <UL>
+
+                    <LI>Example - scar from a burn.&nbsp;&nbsp; The scar would be coded separately, but the burn would be assigned the "S" seventh character as the injury responsible for the scar.&nbsp;</LI></UL></UL>
+
+                    <LI>Open or closed fracture</LI>
+
+                    <UL>
+
+                    <LI>If open, Type I or Type II (Gustillo classification)</LI>
+
+                    <LI>If open, Type IIIA, IIIB, or IIIC</LI></UL>
+
+                    <LI>Healing </LI>
+
+                    <UL>
+
+                    <LI>Routine healing</LI>
+
+                    <LI>Delayed healing</LI>
+
+                    <LI>Malunion</LI>
+
+                    <LI>Nonunion</LI></UL></OL>
+
+                    <P>&nbsp;</P>'
+        '400':
+          description: Wrong codetype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhysicianDocs'
+              example:
+                error:
+                - The code provided ('33213') in this web service request is not a valid 'icd10cm' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code {code} does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhysicianDocs'
+              example:
+                error:
+                - Code 'J00.99' does not exist
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    CciColumn1:
+      type: object
+      properties:
+        modifierAllowed:
+          type: boolean
+          xml:
+            name: modifier-allowed
+        reason:
+          type: string
+        code:
+          type: string
+          xml:
+            attribute: true
+        href:
+          type: string
+          xml:
+            attribute: true
+    Entry:
+      required:
+      - cpt
+      - definition
+      - hcpcs
+      - icd9
+      - synonyms
+      type: object
+      properties:
+        definition:
+          type: string
+        icd9:
+          type: string
+        cpt:
+          type: string
+        hcpcs:
+          type: string
+        synonyms:
+          type: string
+        term:
+          type: string
+          xml:
+            attribute: true
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    NewCookie:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        version:
+          type: integer
+          format: int32
+        path:
+          type: string
+        domain:
+          type: string
+        comment:
+          type: string
+        maxAge:
+          type: integer
+          format: int32
+        expiry:
+          type: string
+          format: date-time
+        secure:
+          type: boolean
+        httpOnly:
+          type: boolean
+        sameSite:
+          type: string
+          enum:
+          - NONE
+          - LAX
+          - STRICT
+    IndexSearchResults:
+      required:
+      - indexSearchResult
+      type: object
+      properties:
+        indexSearchResult:
+          type: array
+          xml:
+            name: index-search-result
+          items:
+            $ref: '#/components/schemas/IndexSearchResult'
+      xml:
+        name: index-search-results
+    CodeHistory:
+      type: object
+      properties:
+        changeEffectiveDate:
+          type: string
+          xml:
+            name: ChangeEffectiveDate
+        status:
+          type: string
+          xml:
+            name: Status
+        changeSummary:
+          type: string
+          xml:
+            name: ChangeSummary
+        fullInfo:
+          type: string
+          xml:
+            name: FullInfo
+        char48Info:
+          type: string
+          xml:
+            name: Char48Info
+        char35Info:
+          type: string
+          xml:
+            name: Char35Info
+        codeHistoryReferences:
+          $ref: '#/components/schemas/CodeHistoryReferences'
+    PhysicianDocs:
+      type: object
+      properties:
+        physicianDoc:
+          type: array
+          xml:
+            name: physician-doc
+          items:
+            $ref: '#/components/schemas/PhysicianDoc'
+      xml:
+        name: physician-docs
+    Code2:
+      type: object
+      properties:
+        description:
+          type: string
+        reason:
+          type: string
+        modifier:
+          type: string
+        primarysecondary:
+          type: string
+        notes:
+          type: string
+        value:
+          type: string
+          xml:
+            attribute: true
+    MediaType:
+      type: object
+      properties:
+        type:
+          type: string
+        subtype:
+          type: string
+        parameters:
+          type: object
+          additionalProperties:
+            type: string
+        wildcardType:
+          type: boolean
+        wildcardSubtype:
+          type: boolean
+    Conflict:
+      type: object
+      properties:
+        code1:
+          $ref: '#/components/schemas/Code1'
+        code2:
+          $ref: '#/components/schemas/Code2'
+        name:
+          type: string
+        message:
+          type: string
+    Response:
+      type: object
+      properties:
+        entityTag:
+          $ref: '#/components/schemas/EntityTag'
+        mediaType:
+          $ref: '#/components/schemas/MediaType'
+        metadata:
+          type: object
+          properties:
+            empty:
+              type: boolean
+          additionalProperties:
+            type: array
+            items:
+              type: object
+        length:
+          type: integer
+          format: int32
+        location:
+          type: string
+          format: uri
+        language:
+          type: object
+          properties:
+            language:
+              type: string
+            displayName:
+              type: string
+            country:
+              type: string
+            variant:
+              type: string
+            script:
+              type: string
+            unicodeLocaleAttributes:
+              uniqueItems: true
+              type: array
+              items:
+                type: string
+            unicodeLocaleKeys:
+              uniqueItems: true
+              type: array
+              items:
+                type: string
+            displayLanguage:
+              type: string
+            displayScript:
+              type: string
+            displayCountry:
+              type: string
+            displayVariant:
+              type: string
+            extensionKeys:
+              uniqueItems: true
+              type: array
+              items:
+                type: string
+            iso3Language:
+              type: string
+            iso3Country:
+              type: string
+        date:
+          type: string
+          format: date-time
+        lastModified:
+          type: string
+          format: date-time
+        headers:
+          type: object
+          properties:
+            empty:
+              type: boolean
+          additionalProperties:
+            type: array
+            items:
+              type: object
+        closed:
+          type: boolean
+        status:
+          type: integer
+          format: int32
+        entity:
+          type: object
+        links:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        cookies:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/NewCookie'
+        allowedMethods:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        statusInfo:
+          $ref: '#/components/schemas/StatusType'
+        stringHeaders:
+          type: object
+          properties:
+            empty:
+              type: boolean
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    InstructionalNotes:
+      type: object
+      properties:
+        instructionalNote:
+          type: array
+          xml:
+            name: instructional-note
+          items:
+            $ref: '#/components/schemas/InstructionalNote'
+      xml:
+        name: instructional-notes
+    IndexSearchResult:
+      type: object
+      properties:
+        term:
+          type: string
+        level:
+          type: integer
+          format: int64
+        codes:
+          type: string
+    Items:
+      type: object
+      properties:
+        item:
+          type: array
+          items:
+            type: string
+      xml:
+        name: items
+    IngenixCodersDictionary:
+      required:
+      - entry
+      type: object
+      properties:
+        entry:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entry'
+      xml:
+        name: optum360-coders-dictionary
+    Cci:
+      required:
+      - cciColumn1
+      - cciColumn2
+      type: object
+      properties:
+        cciColumn2:
+          type: array
+          xml:
+            name: cci-column2
+          items:
+            $ref: '#/components/schemas/CciColumn2'
+        cciColumn1:
+          type: array
+          xml:
+            name: cci-column1
+          items:
+            $ref: '#/components/schemas/CciColumn1'
+      xml:
+        name: cci
+    StatusType:
+      type: object
+      properties:
+        reasonPhrase:
+          type: string
+        family:
+          type: string
+          enum:
+          - INFORMATIONAL
+          - SUCCESSFUL
+          - REDIRECTION
+          - CLIENT_ERROR
+          - SERVER_ERROR
+          - OTHER
+        statusCode:
+          type: integer
+          format: int32
+    CciColumn2:
+      type: object
+      properties:
+        modifierAllowed:
+          type: boolean
+          xml:
+            name: modifier-allowed
+        reason:
+          type: string
+        code:
+          type: string
+          xml:
+            attribute: true
+        href:
+          type: string
+          xml:
+            attribute: true
+    Multicci:
+      required:
+      - conflict
+      type: object
+      properties:
+        conflict:
+          type: array
+          items:
+            $ref: '#/components/schemas/Conflict'
+      xml:
+        name: multicci
+    CodeProperties:
+      type: object
+      properties:
+        desc35:
+          type: string
+          xml:
+            name: desc-35
+        desc48:
+          type: string
+          xml:
+            name: desc-48
+        desc255:
+          type: string
+          xml:
+            name: desc-255
+        descFull:
+          type: string
+          xml:
+            name: desc-full
+        descLay:
+          type: string
+          xml:
+            name: desc-lay
+        codingTip:
+          type: string
+          xml:
+            name: coding-tip
+        documentationTip:
+          type: string
+          xml:
+            name: documentation-tip
+        reimbursementTip:
+          type: string
+          xml:
+            name: reimbursement-tip
+      xml:
+        name: code-properties
+    Code1:
+      type: object
+      properties:
+        description:
+          type: string
+        reason:
+          type: string
+        modifier:
+          type: string
+        primarysecondary:
+          type: string
+        notes:
+          type: string
+        value:
+          type: string
+          xml:
+            attribute: true
+    InstructionalNote:
+      required:
+      - note
+      type: object
+      properties:
+        header:
+          type: string
+        note:
+          type: array
+          items:
+            type: string
+    EntityTag:
+      type: object
+      properties:
+        value:
+          type: string
+        weak:
+          type: boolean
+    PhysicianDoc:
+      required:
+      - text
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+    CompleteCodeHistory:
+      required:
+      - codeHistory
+      type: object
+      properties:
+        codeHistory:
+          type: array
+          xml:
+            name: code-history
+          items:
+            $ref: '#/components/schemas/CodeHistory'
+      xml:
+        name: complete-code-history
+    CodeHistoryReferences:
+      type: object
+      properties:
+        notInAmaBook:
+          type: string
+          xml:
+            name: NotInAmaBook
+        retroactive:
+          type: string
+          xml:
+            name: Retroactive
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

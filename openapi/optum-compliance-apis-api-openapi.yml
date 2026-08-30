@@ -1,0 +1,275 @@
+openapi: 3.2.0
+info:
+  title: Optum Compliance APIs API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged Compliance APIs across 2 of this provider''s published API definitions: optum-optum-common-facility-openapi.yml, optum-optum-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Compliance APIs
+paths:
+  /api/optum/common/physician/compliance/abn-form:
+    post:
+      tags:
+      - Compliance APIs
+      operationId: getABNForm
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ABNForm'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: byte
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /api/optum/common/{contractor}/medicare-contractors:
+    get:
+      tags:
+      - Compliance APIs
+      summary: Fetches medicare contractors list for a given contractor Type.
+      operationId: fetchMedicareContractors
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these values (id, name) are allowed.The default is id
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - id
+      - name: contractor
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - physician
+          - facility
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContractorValue'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /api/optum/common/source-rationale:
+    get:
+      tags:
+      - Compliance APIs
+      summary: Get Source Rationale
+      operationId: getSourceRationale
+      parameters:
+      - name: ddrId
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: mnemonic
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PhysicianClaimSourceRationale'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /api/optum/common/get-policy-url/{contractror-id}/{policy-id}:
+    get:
+      tags:
+      - Compliance APIs
+      summary: Get Policy URL
+      operationId: getPolicyURL
+      parameters:
+      - name: contractror-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: policy-id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: from-date
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: to-date
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /api/optum/common/compliance/place-of-service-codes:
+    get:
+      tags:
+      - Compliance APIs
+      operationId: getPlaceOfServiceCodes
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlaceOfServiceValue'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+components:
+  schemas:
+    PhysicianClaimSourceRationale:
+      type: object
+      properties:
+        ddrId:
+          type: string
+        mnemonic:
+          type: string
+        editMessage:
+          type: string
+        source:
+          type: string
+        editType:
+          type: string
+        sourceInfo:
+          type: string
+        sourceUrl:
+          type: string
+        description:
+          type: string
+    ContractorValue:
+      type: object
+      properties:
+        contractorNumber:
+          type: string
+        contractorName:
+          type: string
+    PlaceOfServiceValue:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    ABNItemService:
+      type: object
+      properties:
+        codeItemService:
+          type: string
+        estimatedCost:
+          type: string
+        patientAction:
+          type: string
+        medicareNoPayReason:
+          type: string
+        spanishMedicareReason:
+          type: string
+    ABNForm:
+      type: object
+      properties:
+        notifierName:
+          type: string
+        notifierAddress:
+          type: string
+        notifierPhone:
+          type: string
+        patientName:
+          type: string
+        patientIdentifier:
+          type: string
+        itemServices:
+          type: array
+          items:
+            $ref: '#/components/schemas/ABNItemService'
+        additionalInfo:
+          type: string
+        isEnglishPDF:
+          type: boolean
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-optum-common-facility-openapi.yml
+- optum-optum-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

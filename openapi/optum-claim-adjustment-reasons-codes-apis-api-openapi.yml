@@ -1,0 +1,117 @@
+openapi: 3.2.0
+info:
+  title: CMS Common Facility Claim Adjustment Reasons Codes APIs API
+  description: MicroService that contains CMS related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: Claim Adjustment Reasons Codes APIs
+paths:
+  /api/cms/facility/carc:
+    get:
+      tags:
+      - Claim Adjustment Reasons Codes APIs
+      summary: Facility - fetch claim adjustment reasons codes
+      operationId: fetchCARCList
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these (code,-code) are allowed values, default is -code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch Claim Adjustment Reasons Codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: '1'
+                  description: 'Deductible Amount Note: New as of: 01/01/1995'
+                - code: '10'
+                  description: 'The diagnosis is inconsistent with the patient''s gender. Usage: Refer to the 835 Healthcare Policy Identification Segment (loop 2110 Service Payment Information REF), if present. Note: New as of: 01/01/1995 Modified: 07/01/2017'
+                totalCount: 2
+        '400':
+          description: Bad Request - some parameters were invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - sort parameter value should be from list of [adjustmentCode]
+                warning: null
+                info: null
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-12-2T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than zero'
+                path: /cmscommonms/api/cms/facility/carc/?sort=adjustmentCode&limit=150&page=-1
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

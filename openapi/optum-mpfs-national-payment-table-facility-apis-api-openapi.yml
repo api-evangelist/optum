@@ -1,0 +1,140 @@
+openapi: 3.2.0
+info:
+  title: CMS Common Facility MPFS National Payment Table Facility APIs API
+  description: MicroService that contains CMS related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: MPFS National Payment Table Facility APIs
+paths:
+  /api/cms/facility/mpfs/payment/{carrier}/{locality}:
+    get:
+      tags:
+      - MPFS National Payment Table Facility APIs
+      summary: Fetch MPFS facility national payment
+      operationId: getMPFSFacilityPayment
+      parameters:
+      - name: carrier
+        in: path
+        description: Carrier value
+        required: true
+        schema:
+          type: string
+        example: 10112
+      - name: locality
+        in: path
+        description: Locality value
+        required: true
+        schema:
+          type: string
+        example: '00'
+      - name: sort
+        in: query
+        description: Any of these (code,-code ,modifier ,-modifier ,payment ,-payment ) are allowed values, default is +code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch MPFS facility payments
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0446T
+                  codeDescription: Creation of subcutaneous pocket with insertion of implantable interstitial glucose sensor, including system activation and patient training
+                  payment: '53.79'
+                - code: 0447T
+                  codeDescription: Removal of implantable interstitial glucose sensor from subcutaneous pocket via incision
+                  payment: '63.21'
+                - code: 0448T
+                  codeDescription: Removal of implantable interstitial glucose sensor with creation of subcutaneous pocket at different anatomic site and insertion of new implantable sensor, including system activation
+                  payment: '90.13'
+                - code: '19296'
+                  codeDescription: Placement of radiotherapy afterloading expandable catheter (single or multichannel) into the breast for interstitial radioelement application following partial mastectomy, includes imaging guidance; on date separate from partial mastectomy
+                  payment: '197.09'
+                totalCount: 4
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - 'getMPFSFacilityPayment.carrier: Invalid Carrier value. Length should be 5'
+                - 'getMPFSFacilityPayment.locality: Invalid Locality value. Length should be 2'
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/mpfs/facility-payment/10112/00
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

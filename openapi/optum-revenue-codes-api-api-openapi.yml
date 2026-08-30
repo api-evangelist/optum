@@ -1,0 +1,359 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Facility Revenue Codes API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Revenue Codes API
+paths:
+  /api/optum/facility/revenue-procedure-cross-codes/{rev-code}:
+    get:
+      tags:
+      - Revenue Codes API
+      summary: Fetches procedure codes for corresponding revenue code
+      operationId: getProcCodesForRevenueCode
+      parameters:
+      - name: rev-code
+        in: path
+        description: Revenue Code
+        required: true
+        schema:
+          type: string
+        example: '0250'
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these values (code,-code) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches procedure codes for corresponding revenue code
+          content:
+            application/json:
+              example:
+                content:
+                - code: A9270
+                  description: Noncovered item or service
+                  tobCode: '012'
+                  tobDescription: Hospital Inpatient (Medicare Part B only)
+                  note: 'For Medicare claims: This code may be used for items and services associated with an ABN that do not have specific HCPCS codes assigned. Report under any appropriate revenue code. Other payers: This code is by definition a noncovered item or service.'
+                  codeType: hcpcs
+                - code: A9270
+                  description: Noncovered item or service
+                  tobCode: '013'
+                  tobDescription: Hospital Outpatient
+                  note: 'For Medicare claims: This code may be used for items and services associated with an ABN that do not have specific HCPCS codes assigned. Report under any appropriate revenue code. Other payers: This code is by definition a noncovered item or service.'
+                  codeType: hcpcs
+                totalCount: 2
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [code, -code]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one'
+                path: /optumcommonms/api/optum/facility/revenue-procedure-cross-codes/0255?page=-1
+      security:
+      - bearerAuth: []
+  /api/optum/facility/procedure-revenue-codes/{cpt-hcpcs-code}:
+    get:
+      tags:
+      - Revenue Codes API
+      summary: Fetches revenue codes for corresponding procedure code
+      operationId: getRevenueCodesForProcCode
+      parameters:
+      - name: cpt-hcpcs-code
+        in: path
+        description: Cpt or HCPCS Code
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these values (revenueCode,-revenueCode,tobCode,-tobCode) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - revenueCode
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches revenue codes for corresponding procedure code
+          content:
+            application/json:
+              example:
+                content:
+                - revenueCode: '0456'
+                  revenueCodeDesc: Emergency Room-Urgent Care
+                  tobCode: '013'
+                  tobCodeDesc: Hospital Outpatient
+                  note: Clinic or ED Visit. Paid a separate APC.
+                - revenueCode: '0510'
+                  revenueCodeDesc: Clinic-General classification
+                  tobCode: '013'
+                  tobCodeDesc: Hospital Outpatient
+                  note: Clinic or ED Visit. Paid a separate APC.
+                totalCount: 2
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [revenueCode, -revenueCode, tobCode, -tobCode]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one'
+                path: /optumcommonms/api/optum/facility/procedure-revenue-codes/99213?page=-1
+      security:
+      - bearerAuth: []
+  /api/optum/facility/cpt-hcpcs-required-revenue:
+    get:
+      tags:
+      - Revenue Codes API
+      summary: Fetches revenue codes requiring CPT HCPCS
+      operationId: getCptHcpcsRequiredRevenueCodes
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these values (code,-code) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches revenue codes requiring CPT HCPCS
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0278
+                  description: Medical/Surgical Supplies and Devices
+                  hasProcedureCodes: true
+                  rangeDescription: Ancillary Services
+                  subCategoryAbbr: SUPPLY/IMPLANTS
+                  subCategoryDes: Other Implants
+                - code: 0291
+                  description: Durable Medical Equipment (Other than renal)
+                  hasProcedureCodes: true
+                  rangeDescription: Ancillary Services
+                  subCategoryAbbr: DME-RENTAL
+                  subCategoryDes: Rental
+                totalCount: 2
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [code, -code]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one'
+                path: /optumcommonms/api/optum/facility/cpt-hcpcs-required-revenue?page=-1
+      security:
+      - bearerAuth: []
+  /api/optum/facility/all-revenue-codes:
+    get:
+      tags:
+      - Revenue Codes API
+      summary: Fetches all revenue codes table data
+      operationId: getAllRevenueCodes
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these values (code,-code) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches all revenue codes table data
+          content:
+            application/json:
+              example:
+                content:
+                - code: '0000'
+                  description: Reserved
+                  hasProcedureCodes: false
+                - code: '0001'
+                  description: Total Charges (reportable on paper claims only)
+                  hasProcedureCodes: false
+                totalCount: 1232
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [code, -code]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one'
+                path: /optumcommonms/api/optum/facility/all-revenue-codes?page=-1
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

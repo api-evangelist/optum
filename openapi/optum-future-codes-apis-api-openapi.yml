@@ -1,0 +1,155 @@
+openapi: 3.2.0
+info:
+  title: Core Service Future Codes APIs API
+  description: Code Search Service provides the APIs for searching codes related information.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/codesearchms
+tags:
+- name: Future Codes APIs
+paths:
+  /api/coding/code/{codetype}/future-code/{futureCodeType}:
+    get:
+      tags:
+      - Future Codes APIs
+      summary: Fetches new, revised Or deleted future codes
+      operationId: getFutureCodes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - i10_cm
+          - i10_pcs
+      - name: futureCodeType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - new
+          - revised
+          - deleted
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch future codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0791T
+                  fullDescription: Motor-cognitive, semi-immersive virtual reality-facilitated gait training, each 15 minutes (List separately in addition to code for primary procedure)
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0792T
+                  fullDescription: Application of silver diamine fluoride 38%, by a physician or other qualified health care professional
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0793T
+                  fullDescription: Percutaneous transcatheter thermal ablation of nerves innervating the pulmonary arteries, including right heart catheterization, pulmonary artery angiography, and all imaging guidance
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0794T
+                  fullDescription: Patient-specific, assistive, rules-based algorithm for ranking pharmaco-oncologic treatment options based on the patient's tumor-specific cancer marker information obtained from prior molecular pathology, immunohistochemical, or other pathology results which have been previously interpreted and reported separately
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0795T
+                  fullDescription: Transcatheter insertion of permanent dual-chamber leadless pacemaker, including imaging guidance (eg, fluoroscopy, venous ultrasound, right atrial angiography, right ventriculography, femoral venography) and device evaluation (eg, interrogation or programming), when performed; complete system (ie, right atrial and right ventricular pacemaker components)
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0796T
+                  fullDescription: Transcatheter insertion of permanent dual-chamber leadless pacemaker, including imaging guidance (eg, fluoroscopy, venous ultrasound, right atrial angiography, right ventriculography, femoral venography) and device evaluation (eg, interrogation or programming), when performed; right atrial pacemaker component (when an existing right ventricular single leadless pacemaker exists to create a dual-chamber leadless pacemaker system)
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0797T
+                  fullDescription: Transcatheter insertion of permanent dual-chamber leadless pacemaker, including imaging guidance (eg, fluoroscopy, venous ultrasound, right atrial angiography, right ventriculography, femoral venography) and device evaluation (eg, interrogation or programming), when performed; right ventricular pacemaker component (when part of a dual-chamber leadless pacemaker system)
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0798T
+                  fullDescription: Transcatheter removal of permanent dual-chamber leadless pacemaker,?including imaging guidance (eg, fluoroscopy, venous ultrasound, right atrial angiography, right ventriculography, femoral venography), when performed; complete system (ie, right atrial and right ventricular pacemaker components)
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0799T
+                  fullDescription: Transcatheter removal of permanent dual-chamber leadless pacemaker,?including imaging guidance (eg, fluoroscopy, venous ultrasound, right atrial angiography, right ventriculography, femoral venography), when performed; right atrial pacemaker component
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0800T
+                  fullDescription: Transcatheter removal of permanent dual-chamber leadless pacemaker,?including imaging guidance (eg, fluoroscopy, venous ultrasound, right atrial angiography, right ventriculography, femoral venography), when performed; right ventricular pacemaker component (when part of a dual-chamber leadless pacemaker system)
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0801T
+                  fullDescription: Transcatheter removal and replacement of permanent dual-chamber leadless pacemaker, including imaging?guidance (eg, fluoroscopy, venous ultrasound, right atrial angiography, right ventriculography, femoral venography) and device evaluation (eg, interrogation or programming), when performed; dual-chamber system (ie, right atrial and right ventricular pacemaker components)
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0802T
+                  fullDescription: Transcatheter removal and replacement of permanent dual-chamber leadless pacemaker, including imaging?guidance (eg, fluoroscopy, venous ultrasound, right atrial angiography, right ventriculography, femoral venography) and device evaluation (eg, interrogation or programming), when performed; right atrial pacemaker component
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0803T
+                  fullDescription: Transcatheter removal and replacement of permanent dual-chamber leadless pacemaker, including imaging?guidance (eg, fluoroscopy, venous ultrasound, right atrial angiography, right ventriculography, femoral venography) and device evaluation (eg, interrogation or programming), when performed; right ventricular pacemaker component (when part of a dual-chamber leadless pacemaker system)
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0804T
+                  fullDescription: Programming device evaluation (in person) with iterative adjustment of implantable device to test the function of device and to select optimal permanent programmed values, with analysis, review, and report, by a physician or other qualified health care professional, leadless pacemaker system in dual cardiac chambers
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0805T
+                  fullDescription: Transcatheter superior and inferior vena cava prosthetic valve implantation (ie, caval valve implantation [CAVI]); percutaneous femoral vein approach
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0806T
+                  fullDescription: Transcatheter superior and inferior vena cava prosthetic valve implantation (ie, caval valve implantation [CAVI]); open femoral vein approach
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0807T
+                  fullDescription: Pulmonary tissue ventilation analysis using software-based processing of data from separately captured cinefluorograph images; in combination with previously acquired computed tomography (CT) images, including data preparation and transmission, quantification of pulmonary tissue ventilation, data review, interpretation and report
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0808T
+                  fullDescription: Pulmonary tissue ventilation analysis using software-based processing of data from separately captured cinefluorograph images; in combination with computed tomography (CT) images taken for the purpose of pulmonary tissue ventilation analysis, including data preparation and transmission, quantification of pulmonary tissue ventilation, data review, interpretation and report
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0809T
+                  fullDescription: Arthrodesis, sacroiliac joint, percutaneous or minimally invasive (indirect visualization), with image guidance, placement of transfixing device(s) and intra-articular implant(s), including allograft or synthetic device(s)
+                  startDate: '2023-07-01 00:00:00'
+                - code: 0810T
+                  fullDescription: Subretinal injection of a pharmacologic agent, including vitrectomy and 1 or more retinotomies
+                  startDate: '2023-07-01 00:00:00'
+                totalCount: 20
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/future-code/new
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

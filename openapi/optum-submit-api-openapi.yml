@@ -1,0 +1,655 @@
+openapi: 3.2.0
+info:
+  title: Real Prior Authorization Submit API
+  description: FHIR Prior Authorization APIs (CDS, DTR, PAS)
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: Submit
+paths:
+  /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/Claim/$submit:
+    post:
+      operationId: submitClaim
+      tags:
+      - Submit
+      security:
+      - oAuth:
+        - read_healthcheck
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: bh
+      - name: x-optum-consumer-correlation-id
+        in: header
+        schema:
+          type: string
+          description: Unique transaction identifier
+          example: uuid-123
+      - name: environment
+        in: header
+        schema:
+          type: string
+          description: Environment name
+          example: sandbox
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitRequest'
+            example:
+              resourceType: Bundle
+              id: example-bundle-id
+              type: collection
+              entry:
+              - resource:
+                  resourceType: Claim
+                  id: example-claim-id
+                  contained:
+                  - resourceType: DeviceRequest
+                    id: device-request-1
+                    status: active
+                    intent: order
+                    codeCodeableConcept:
+                      coding:
+                      - system: http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets
+                        code: E1223
+                      text: Wheelchair
+                    reasonCode:
+                    - coding:
+                      - system: http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets
+                        code: E1223
+                      text: Wheelchair
+                    note:
+                    - text: No adverse events reported.
+                    authoredOn: '2005-06-02'
+                  - resourceType: Encounter
+                    id: encounter-1
+                    status: arrived
+                    location:
+                    - location:
+                        reference: '#org-1'
+                      period:
+                        start: '2015-01-15'
+                        end: '2016-01-15'
+                    hospitalization:
+                      destination:
+                        reference: '#org-1'
+                  - resourceType: ServiceRequest
+                    id: service-request-1
+                    status: active
+                    intent: original-order
+                    occurrenceTiming:
+                      repeat:
+                        periodUnit: min
+                        durationUnit: min
+                        frequency: 2
+                        count: 2
+                  - resourceType: Procedure
+                    id: procedure-1
+                    status: completed
+                    basedOn:
+                    - reference: '#service-request-1'
+                    code:
+                      coding:
+                      - system: http://www.ama-assn.org/go/cpt
+                        code: '22206'
+                    subject:
+                      reference: '#patient-1'
+                    performedPeriod:
+                      start: '2015-01-15'
+                      end: '2016-01-15'
+                    recorder:
+                      reference: '#practitioner-1'
+                    asserter:
+                      reference: '#practitioner-1'
+                    performer:
+                    - actor:
+                        reference: '#practitioner-1'
+                    reasonCode:
+                    - text: Generalized abdominal pain.
+                    followUp:
+                    - text: Follow up in 5 days.
+                    note:
+                    - text: Routine procedure.
+                  - resourceType: Location
+                    id: location-1
+                    name: Generic Location
+                    managingOrganization:
+                      reference: '#org-1'
+                  - resourceType: Organization
+                    id: org-1
+                    name: Organization
+                    identifier:
+                    - system: http://example.org/sampleepisodeofcare-identifier
+                      type:
+                        coding:
+                        - system: http://terminology.hl7.org/CodeSystem/v2-0203
+                          code: TAX
+                      value: '123'
+                  - resourceType: Coverage
+                    id: coverage-1
+                    status: active
+                    subscriberId: '000000000'
+                    beneficiary:
+                      reference: '#patient-1'
+                    class:
+                    - type:
+                        coding:
+                        - system: http://terminology.hl7.org/CodeSystem/coverage-class
+                          code: group
+                      value: GROUP1
+                    relationship:
+                      coding:
+                      - system: http://terminology.hl7.org/CodeSystem/subscriber-relationship
+                        code: self
+                    payor:
+                    - reference: '#org-2'
+                  - resourceType: Patient
+                    id: patient-1
+                    gender: male
+                  - resourceType: Organization
+                    id: org-2
+                    name: Organization
+                  - resourceType: Organization
+                    id: org-3
+                    name: Insurer Organization
+                  - resourceType: Practitioner
+                    id: practitioner-1
+                  - resourceType: PractitionerRole
+                    id: role-1
+                    practitioner:
+                      reference: '#practitioner-1'
+                    organization:
+                      reference: '#org-2'
+                  identifier:
+                  - system: http://example.org/claim-ids
+                    value: CLAIM000000
+                  meta:
+                    profile:
+                    - http://hl7.org/fhir/us/davinci-pas/STU2/StructureDefinition/profile-claim-submit
+                  status: active
+                  type:
+                    coding:
+                    - system: http://terminology.hl7.org/CodeSystem/claim-type
+                      code: professional
+                      display: Professional
+                  use: preauthorization
+                  patient:
+                    reference: '#patient-1'
+                  created: '2023-10-05T08:30:00Z'
+                  insurer:
+                    reference: '#org-3'
+                  provider:
+                    reference: '#org-2'
+                  priority:
+                    coding:
+                    - system: http://terminology.hl7.org/CodeSystem/processpriority
+                      code: stat
+                      display: Immediate
+                  diagnosis:
+                  - sequence: 1
+                    diagnosisCodeableConcept:
+                      coding:
+                      - system: http://hl7.org/fhir/sid/icd-10-cm
+                        code: S42.192A
+                  procedure:
+                  - sequence: 1
+                    procedureReference:
+                      reference: '#procedure-1'
+                  insurance:
+                  - sequence: 1
+                    focal: true
+                    coverage:
+                      reference: '#coverage-1'
+                  careTeam:
+                  - extension:
+                    - url: http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-careTeamClaimScope
+                      valueBoolean: true
+                    sequence: 1
+                    provider:
+                      reference: '#role-1'
+                    role:
+                      coding:
+                      - system: http://terminology.hl7.org/CodeSystem/claimcareteamrole
+                        code: primary
+                  item:
+                  - extension:
+                    - url: http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-requestedService
+                      valueReference:
+                        reference: '#device-request-1'
+                    - url: http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-serviceItemRequestType
+                      valueCodeableConcept:
+                        coding:
+                        - system: https://codesystem.x12.org/005010/1525
+                          code: HS
+                          display: Health Services Review
+                    - url: http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-certificationType
+                      valueCodeableConcept:
+                        coding:
+                        - system: https://codesystem.x12.org/005010/1322
+                          code: I
+                          display: Initial
+                    sequence: 1
+                    careTeamSequence:
+                    - 1
+                    procedureSequence:
+                    - 1
+                    category:
+                      coding:
+                      - system: https://codesystem.x12.org/005010/1365
+                        code: '42'
+                        display: Home Health Care
+                    productOrService:
+                      coding:
+                      - system: http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets
+                        code: G0154
+                    locationCodeableConcept:
+                      coding:
+                      - system: https://www.cms.gov/Medicare/Coding/place-of-service-codes/Place_of_Service_Code_Set
+                        code: '20'
+                  - extension:
+                    - url: http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-serviceItemRequestType
+                      valueCodeableConcept:
+                        coding:
+                        - system: https://codesystem.x12.org/005010/1525
+                          code: HS
+                          display: Health Services Review
+                    - url: http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-certificationType
+                      valueCodeableConcept:
+                        coding:
+                        - system: https://codesystem.x12.org/005010/1322
+                          code: I
+                          display: Initial
+                    sequence: 2
+                    category:
+                      coding:
+                      - system: https://codesystem.x12.org/005010/1365
+                        code: '42'
+                        display: Home Health Care
+                    productOrService:
+                      coding:
+                      - system: http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets
+                        code: B4184
+                    locationCodeableConcept:
+                      coding:
+                      - system: https://www.cms.gov/Medicare/Coding/place-of-service-codes/Place_of_Service_Code_Set
+                        code: '20'
+                    encounter:
+                    - reference: '#encounter-1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitResponse'
+              example:
+                resourceType: Bundle
+                entry:
+                - resource:
+                    resourceType: ClaimResponse
+                    meta:
+                      profile:
+                      - http://hl7.org/fhir/us/davinci-pas/StructureDefinition-profile-claimresponse-base.html
+                      tag:
+                      - system: system
+                        code: code
+                      - system: COLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGING_SYSTEM_NAME
+                        code: CollectionBasedFhirMethods(mostlikely@Search)shouldbepaged.PleaseelevatethisissuetoyourBAifyouareseeingthismessage.
+                        display: XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.
+                    contained:
+                    - resourceType: Patient
+                      id: patientClaimReference
+                      identifier:
+                      - system: https://www.uhc.com/member-resources/your-member-id-card
+                        value: XXXXX4606
+                      name:
+                      - text: givenfamilyName
+                        family: familyName
+                        given:
+                        - given
+                      telecom:
+                      - system: phone
+                        value: 121-121-1212
+                      gender: male
+                      generalPractitioner:
+                      - reference: '#practitionerReference'
+                    - resourceType: Practitioner
+                      id: practitionerReference
+                    - resourceType: Organization
+                      id: organizationInsurerReference
+                      meta:
+                        profile:
+                        - https://hl7.org/fhir/us/davinci-pas/STU2/StructureDefinition-profile-insurer
+                      active: true
+                      type:
+                      - coding:
+                        - system: https://hl7.org/fhir/R4/codesystem-organization-type.html#organization-type-pay
+                          code: payer
+                          display: Payer
+                        text: Ahealthcarepayer.
+                      name: dummy
+                    - resourceType: Organization
+                      id: organizationRequestorReference
+                      identifier:
+                      - system: http://hl7.org/fhir/sid/us-tin
+                        value: '123456789'
+                      active: true
+                      name: MERCYCENTER
+                      telecom:
+                      - system: phone
+                        value: 123-456-7890
+                      address:
+                      - line:
+                        - lineDR
+                        city: city
+                        state: AZ
+                        postalCode: '12345'
+                      contact:
+                      - name:
+                          text: MERCYCENTER
+                        telecom:
+                        - system: phone
+                          value: 123-345-4567
+                    identifier:
+                    - system: http://hl7.org/fhir/us/davinci-pas/StructureDefinition/profile-identifier
+                      value: A00123456
+                    status: draft
+                    type:
+                      coding:
+                      - system: https://hl7.org/fhir/R4/valueset-claim-type.html
+                        code: professional
+                    use: preauthorization
+                    patient:
+                      reference: '#patientClaimReference'
+                    created: '2025-11-21T16:47:20'
+                    insurer:
+                      reference: '#organizationInsurerReference'
+                    requestor:
+                      reference: '#organizationRequestorReference'
+                    outcome: queued
+                    disposition: Open
+                    preAuthPeriod:
+                      start: '2015-01-15'
+                      end: '2016-01-15'
+                    item:
+                    - itemSequence: 1
+                      adjudication:
+                      - category:
+                          coding:
+                          - system: http://terminology.hl7.org/CodeSystem/adjudication
+                            code: submitted
+                  search:
+                    mode: match
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: UnAuthorized
+          content:
+            application/json:
+              example:
+                message: UnAuthorized
+                statusCode: 401
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+components:
+  schemas:
+    Entry:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Claim'
+    SubmitResponse:
+      type: object
+      description: FHIR Bundle containing ClaimResponse
+      properties:
+        resourceType:
+          type: string
+          example: Bundle
+        entry:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseEntry'
+    CareTeam:
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/Reference'
+        responsible:
+          type: boolean
+          example: true
+    ResponseEntry:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/ClaimResponse'
+        search:
+          type: object
+          properties:
+            mode:
+              type: string
+              example: match
+    ClaimResponse:
+      type: object
+      description: FHIR ClaimResponse
+      properties:
+        resourceType:
+          type: string
+          example: ClaimResponse
+        meta:
+          $ref: '#/components/schemas/Meta'
+        identifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identifier'
+        status:
+          type: string
+          example: active
+        type:
+          $ref: '#/components/schemas/CodeableConcept'
+        use:
+          type: string
+          example: preauthorization
+        created:
+          type: string
+          example: '2025-09-26T09:39:48+00:00'
+        patient:
+          $ref: '#/components/schemas/Reference'
+        insurer:
+          $ref: '#/components/schemas/Reference'
+        requestor:
+          $ref: '#/components/schemas/Reference'
+        outcome:
+          type: string
+          example: complete
+        disposition:
+          type: string
+          example: Open
+        preAuthPeriod:
+          $ref: '#/components/schemas/Period'
+        item:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseItem'
+    CodeableConcept:
+      type: object
+      description: FHIR CodeableConcept
+      properties:
+        coding:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coding'
+    ResponseItem:
+      type: object
+      properties:
+        itemSequence:
+          type: integer
+          example: 1
+        extension:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+        adjudication:
+          type: array
+          items:
+            $ref: '#/components/schemas/Adjudication'
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    Extension:
+      type: object
+      description: FHIR extension with Reference
+      properties:
+        url:
+          type: string
+          example: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
+        valueReference:
+          $ref: '#/components/schemas/Reference'
+    Adjudication:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/CodeableConcept'
+        reason:
+          $ref: '#/components/schemas/CodeableConcept'
+        extension:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
+    Period:
+      type: object
+      properties:
+        start:
+          type: string
+          example: '2025-04-11'
+        end:
+          type: string
+          example: '2025-07-10'
+    SubmitRequest:
+      type: object
+      description: FHIR Bundle containing Claim submission request
+      properties:
+        resourceType:
+          type: string
+          example: Bundle
+        id:
+          type: string
+          example: example-bundle-id
+        type:
+          type: string
+          example: collection
+        entry:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entry'
+    Claim:
+      type: object
+      description: FHIR Claim Inquiry Request
+      properties:
+        resourceType:
+          type: string
+          example: Claim
+        id:
+          type: string
+        meta:
+          $ref: '#/components/schemas/Meta'
+        identifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identifier'
+        status:
+          type: string
+          example: active
+        type:
+          $ref: '#/components/schemas/CodeableConcept'
+        use:
+          type: string
+          example: preauthorization
+        created:
+          type: string
+          example: '2023-10-05T08:30:00Z'
+        patient:
+          $ref: '#/components/schemas/Reference'
+        provider:
+          $ref: '#/components/schemas/Reference'
+        careTeam:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareTeam'
+    Coding:
+      type: object
+      description: Coding structure for answers
+      properties:
+        code:
+          type: string
+          example: '1'
+        display:
+          type: string
+          example: Age ≥ 50
+    Reference:
+      type: object
+      description: FHIR Reference
+      properties:
+        reference:
+          type: string
+          example: Patient/anonymous
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,165 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Facility APC Calculator APIs API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: APC Calculator APIs
+paths:
+  /api/optum/facility/outpatient-claims/:
+    post:
+      tags:
+      - APC Calculator APIs
+      summary: Fetches the data of APC calculator
+      operationId: outpatientClaims
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApcCalculatorRequest'
+        required: true
+      responses:
+        '200':
+          description: 'POST: Fetches APC calculator '
+          content:
+            application/json:
+              example:
+                provider: '010001'
+                fromDateStr: '2024-06-27'
+                thruDateStr: '2024-06-27'
+                gender: M
+                age: '40'
+                zipCode: ''
+                dxCode: I10
+                dxCodeType: icd10
+                tobCode: '0131'
+                conditionCode: ''
+                claimLineList:
+                - cptHcpcs: '99213'
+                  unit: '1'
+                  revCode: 0278
+                  modifiers: ''
+                  dateStr: '2024-06-27'
+                  charge: '100'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /optumcommonms/outpatient-claims
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /optumcommonms/outpatient-claims/
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+    ApcCalculatorRequest:
+      required:
+      - dxCode
+      - dxCodeType
+      - fromDateStr
+      - gender
+      - provider
+      - thruDateStr
+      type: object
+      properties:
+        provider:
+          maxLength: 2147483647
+          minLength: 1
+          type: string
+          description: Terms to search for
+        fromDateStr:
+          type: string
+        thruDateStr:
+          type: string
+        gender:
+          pattern: ^([MFUI])$
+          type: string
+        age:
+          pattern: ^\d{1,3}$
+          type: string
+        zipCode:
+          pattern: ^(\d{1,5}|)$
+          type: string
+        dxCode:
+          type: string
+        dxCodeType:
+          pattern: ^(icd9|icd10)$
+          type: string
+        tobCode:
+          pattern: ^(.{0,4}|)$
+          type: string
+        conditionCode:
+          pattern: ^(.{1,2}|)$
+          type: string
+        claimLineList:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClaimLine'
+    ClaimLine:
+      type: object
+      properties:
+        cptHcpcs:
+          type: string
+        unit:
+          type: string
+        revCode:
+          type: string
+        modifiers:
+          type: string
+        dateStr:
+          type: string
+        charge:
+          type: string
+        cptHcpcsDesc:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

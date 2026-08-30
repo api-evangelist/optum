@@ -1,0 +1,307 @@
+openapi: 3.2.0
+info:
+  title: CMS Common Physician QPP MIPS APIs API
+  description: MicroService that contains CMS related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: QPP MIPS APIs
+paths:
+  /api/cms/physician/qpp/:
+    post:
+      tags:
+      - QPP MIPS APIs
+      summary: Fetches the data for the quality performance category measures look-up
+      operationId: getTableData
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these values (measureId,-measureId,collectionType,-collectionType,specialtyMeasure,-specialtyMeasure,measureType,-measureType,highPriority,-highPriority) are allowed.The default is code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - measureId
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        description: QPP MIPS Search Request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QPPMipsValue'
+            examples:
+              QPP MIPS Search Request:
+                description: QPP MIPS Search Request
+                value:
+                  code: ''
+                  measureId: ''
+                  collectionType: ''
+                  specialtyMeasure: ''
+                  measureType: ''
+                  highPriority: ''
+        required: true
+      responses:
+        '200':
+          description: 'POST-for-GET: Fetch QPP data '
+          content:
+            application/json:
+              example:
+                content:
+                - measureId: '1'
+                  docId: '599161'
+                  description: Percentage of patients 18-75 years of age with diabetes who had hemoglobin A1c > 9.0% during the measurement period.
+                  collectionType: Claims
+                  specialtyMeasure: General Practice/Family Medicine
+                  measureType: Intermediate Outcome
+                  highPriority: 'Yes'
+                totalCount: 1
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/qpp/1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/qpp/
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/qpp/{doc-id}/mips-download:
+    get:
+      tags:
+      - QPP MIPS APIs
+      summary: 'Generates the data for the quality performance category '
+      operationId: qppMipsDocument
+      parameters:
+      - name: doc-id
+        in: path
+        description: MIPS Measure ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+        example: 599161
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches the file content in the form of byte array, response headers and media type as fileType
+          content:
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example: " access-control-expose-headers: Content-Disposition \n cache-control: no-cache,no-store,max-age=0,must-revalidate \n connection: keep-alive \n content-disposition: attachment; filename=R12138OTN.pdf \n content-length: 178521 \n content-type: application/pdf \n date: Fri,28 Jul 2023 12:03:02 GMT \n expires: 0 \n pragma: no-cache \n vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers \n x-content-type-options: nosniff \n x-frame-options: DENY \n x-xss-protection: 0 \n"
+        '404':
+          description: 'Not found: Sub terms not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/qpp/{doc-id}mips-download
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                path: /cmscommonms/api/cms/physician/qpp/{doc-id}mips-download
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/cms/physician/qpp/specialty-measures:
+    get:
+      tags:
+      - QPP MIPS APIs
+      summary: Generates the data for the quality performance category speciality-measures
+      operationId: getSpecialtyMeasures
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch specialty measures
+          content:
+            application/json:
+              example:
+              - Allergy/Immunology
+              - Anesthesiology
+              - Cardiology
+              - Dentistry
+              - Dermatology
+              - Diagnostic Radiology
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/qpp/specialty-measures1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/qpp/specialty-measures
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/physician/qpp/measure-types:
+    get:
+      tags:
+      - QPP MIPS APIs
+      summary: Generates the data for the quality performance category for measure types
+      operationId: getMeasureTypes
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch Specialty Measures
+          content:
+            application/json:
+              example:
+              - Efficiency
+              - Intermediate Outcome
+              - Outcome
+              - Patient Engagement/Experience
+              - Patient-Reported Outcome-Based Performance Measure
+              - Process
+              - Structure
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/qpp/measure-types1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/qpp/measure-types
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+    QPPMipsValue:
+      type: object
+      properties:
+        measureId:
+          type: string
+        docId:
+          type: string
+        description:
+          type: string
+        collectionType:
+          type: string
+        specialtyMeasure:
+          type: string
+        measureType:
+          type: string
+        highPriority:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

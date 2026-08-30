@@ -1,0 +1,121 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Facility DRG Calculator APIs API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: DRG Calculator APIs
+paths:
+  /api/optum/facility/drg-calculator/:
+    post:
+      tags:
+      - DRG Calculator APIs
+      summary: Fetches the data of DRG calculator
+      operationId: calculateDrg
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DrgCalculatorRequest'
+        required: true
+      responses:
+        '200':
+          description: 'POST: Fetch DRG calculator '
+          content:
+            application/json:
+              example:
+                providerId: '010001'
+                drgCode: '024'
+                admitDate: '2023-01-23'
+                disChargeDate: '2023-02-24'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - 'drgCalculatorRequest : Invalid date format. Please use yyyy-MM-dd format.'
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: api/optum/facility/drg-calculator
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /api/optum/facility/drg-calculator/
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    DrgCalculatorRequest:
+      required:
+      - admitDate
+      - disChargeDate
+      - drgCode
+      - providerId
+      type: object
+      properties:
+        providerId:
+          type: string
+        drgCode:
+          type: string
+        admitDate:
+          type: string
+          format: date-time
+        disChargeDate:
+          type: string
+          format: date-time
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

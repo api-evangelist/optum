@@ -1,0 +1,144 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services DRG Codes API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: DRG Codes
+paths:
+  /codetype/drg/{code}/properties:
+    get:
+      tags:
+      - DRG Codes
+      summary: Return Index search results
+      operationId: getProperty_1
+      parameters:
+      - name: code
+        in: path
+        description: The code value
+        required: true
+        schema:
+          type: string
+        example: '021'
+      - name: data
+        in: query
+        description: 'Comma seperated list of any of the following<UL><LI>desc-full      : full description </LI><LI>icd9 or icd10      : optional = icd9 default</LI><LI>mdc        : MDC value      </LI><LI>mdc-desc   : MDC Description </LI><LI>med-surg   : MED/SURG value  </LI><LI>gm-los     : GMLOS value</LI><LI>am-los     : AMLOS value</LI><LI>rw         : Relative Weight value </LI><LI>np         : National Payment value </LI></UL>'
+        schema:
+          type: string
+          default: desc-full
+        example: desc-full
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrgCodeDesc'
+              example:
+                descFull: Intracranial Vascular Procedures with Principal Diagnosis of Hemorrhage with CC
+                codeType: icd9
+        '400':
+          description: Bad data parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrgCodeDesc'
+              example:
+                error:
+                - Bad data parameter 'bad'
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: No Drg code description found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrgCodeDesc'
+              example:
+                error: []
+                warning: []
+                info:
+                - No Drg code description found for the given Drg code you entered.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    DrgCodeDesc:
+      type: object
+      properties:
+        descFull:
+          type: string
+          xml:
+            name: desc-full
+        codeType:
+          type: string
+          xml:
+            name: code-type
+        mdc:
+          type: string
+          xml:
+            name: MDC
+        mdcDesc:
+          type: string
+          xml:
+            name: MDC-desc
+        medSurg:
+          type: string
+          xml:
+            name: med-surg
+        gmLos:
+          type: string
+          xml:
+            name: gm-los
+        amLos:
+          type: string
+          xml:
+            name: am-los
+        relativeWeight:
+          type: string
+          xml:
+            name: relative-weight
+        nationalPayment:
+          type: string
+          xml:
+            name: national-payment
+      xml:
+        name: code-properties
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

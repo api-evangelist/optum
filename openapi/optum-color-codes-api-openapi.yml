@@ -1,0 +1,760 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services Color Codes API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: Color Codes
+paths:
+  /codetype/cpt/{code}/color-codes:
+    get:
+      tags:
+      - Color Codes
+      summary: Show Color Codes for the given CPT code
+      operationId: getColorCodes
+      parameters:
+      - name: code
+        in: path
+        description: The code value
+        required: true
+        schema:
+          type: string
+        example: 13100
+      - name: data
+        in: query
+        description: <b>desc</b>
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ColorCodes'
+              example:
+                modifier51Exempt: []
+                ascPaymentIndicator: ' A2'
+                ascPaymentIndicatorDescription: ' Surgical procedure on ASC list in CY 2007; payment based on OPPS relative payment weight.'
+                medicalUnlikelyEdits: '1'
+                opsiCode: ' T'
+                mulitplePxReductionGuidelinesApply: ''
+        '400':
+          description: Wrong CodeType
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ColorCodes'
+              example:
+                error:
+                - The code provided ('250.02') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ColorCodes'
+              example:
+                error:
+                - Code 13104 does not exist
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/hcpcs/{code}/color-codes:
+    get:
+      tags:
+      - Color Codes
+      summary: Show Color Codes for the given HCPCS code
+      operationId: getColorCodes_1
+      parameters:
+      - name: code
+        in: path
+        description: The code value
+        required: true
+        schema:
+          type: string
+        example: A0080
+      - name: data
+        in: query
+        description: <b>desc</b>
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ColorCodes'
+              example:
+                modifier51Exempt: []
+                ascPaymentIndicator: ' IC'
+                ascPaymentIndicatorDescription: ' Surgical procedure on ASC list in CY 2007; payment based on OPPS relative payment weight.'
+                medicalUnlikelyEdits: '0'
+                opsiCode: ' E1'
+                notCoveredOrValidForMedicare: 01/01/2007
+        '400':
+          description: Wrong CodeType
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ColorCodes'
+              example:
+                error:
+                - The code provided ('250.02') in this web service request is not a valid 'hcpcs' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ColorCodes'
+              example:
+                error:
+                - Code A0000 does not exist
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/icd10cm/{code}/color-codes:
+    get:
+      tags:
+      - Color Codes
+      summary: Show Color Codes for the given ICD10CM code
+      operationId: getColorCodes_2
+      parameters:
+      - name: code
+        in: path
+        description: The code value
+        required: true
+        schema:
+          type: string
+        example: S82.91XB
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Icd10CmColorCodes'
+              example:
+                unspecifiedDiagnosisCode: OP
+                comorbidityOrComplication: IP
+                hospitalAcquiredCondition:
+                - 'HAC 05: Falls and trauma (secondary diagnosis)'
+                conditionalHospitalAcquiredCondition: []
+        '400':
+          description: Wrong CodeType
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Icd10CmColorCodes'
+              example:
+                error:
+                - The code provided ('13100') in this web service request is not a valid 'icd10cm' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Icd10CmColorCodes'
+              example:
+                error:
+                - ICD-10-CM code 'F90.7' not found
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/icd10pcs/{code}/color-codes:
+    get:
+      tags:
+      - Color Codes
+      summary: Show Color Codes for the given ICD10PCS code
+      operationId: getColorCodes_3
+      parameters:
+      - name: code
+        in: path
+        description: The code value
+        required: true
+        schema:
+          type: string
+        example: 04LE0CV
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Icd10pcsColorCodes'
+              example: '{
+
+                "mappingToIcd9Code": "OP",
+
+                "procedureInconsistentLOS": "IP",
+
+                }
+
+                '
+        '400':
+          description: Wrong CodeType
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Icd10pcsColorCodes'
+              example:
+                error:
+                - The code provided ('13100') in this web service request is not a valid 'icd10pcs' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Icd10pcsColorCodes'
+              example:
+                error:
+                - ICD-10-PCS code 'F90.7' not found
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/icd9v1/{code}/color-codes:
+    get:
+      tags:
+      - Color Codes
+      summary: Show Color Codes for the given ICD9V1 code
+      operationId: getColorCodes_4
+      parameters:
+      - name: code
+        in: path
+        description: The code value
+        required: true
+        schema:
+          type: string
+        example: 253.1
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ColorCodes'
+              example:
+                modifier51Exempt: []
+                unspecifiedDiagnosisCode: OP
+                otherSpecifiedDiagnosisCode: OP
+                comorbidityOrComplication: IP
+        '400':
+          description: Wrong CodeType
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ColorCodes'
+              example:
+                error:
+                - The code provided ('13100') in this web service request is not a valid 'icd9v1' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ColorCodes'
+              example:
+                error:
+                - CPT code '000.1' not found
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    Icd10pcsColorCodes:
+      type: object
+      properties:
+        newCode:
+          type: string
+          xml:
+            name: new-code
+        revisedCode:
+          type: string
+          xml:
+            name: revised-code
+        maleDiagnosis:
+          type: string
+          xml:
+            name: male-diagnosis
+        femaleDiagnosis:
+          type: string
+          xml:
+            name: female-diagnosis
+        mappingToIcd9Code:
+          type: string
+          xml:
+            name: mapping-to-icd9-code
+        procedureInconsistentLOS:
+          type: string
+          xml:
+            name: procedure-inconsistent-los
+        nonCoveredByMedicare:
+          type: string
+          xml:
+            name: noncovered-medicare
+        nonORProcedure:
+          type: string
+          xml:
+            name: non-OR-procedure
+        limitedCoverageProcedure:
+          type: string
+      xml:
+        name: icd-10-pcs-color-codes
+    ColorCodes:
+      required:
+      - modifier51Exempt
+      type: object
+      properties:
+        newCode:
+          type: string
+          xml:
+            name: new-code
+        revisedCode:
+          type: string
+          xml:
+            name: revised-code
+        reinstatedCode:
+          type: string
+          xml:
+            name: reinstated-code
+        resequencedCode:
+          type: string
+          xml:
+            name: resequenced-code
+        optumAddonCode:
+          type: string
+          xml:
+            name: optum-addon-code
+        modifier51Exempt:
+          type: array
+          xml:
+            name: modifier-51-exempt
+          items:
+            type: string
+            xml:
+              name: modifier-51-exempt
+        maleProcedure:
+          type: string
+          xml:
+            name: male-procedure
+        femaleProcedure:
+          type: string
+          xml:
+            name: female-procedure
+        unlistedCode:
+          type: string
+          xml:
+            name: unlisted-code
+        ascPaymentIndicator:
+          type: string
+          xml:
+            name: asc-payment-indicator
+        ascPaymentIndicatorDescription:
+          type: string
+          xml:
+            name: asc-payment-indicator-description
+        moderateSedation:
+          type: string
+          xml:
+            name: moderate-sedation
+        medicalUnlikelyEdits:
+          type: string
+          xml:
+            name: medical-unlikely-edits
+        ageRestrictions:
+          type: string
+          xml:
+            name: age-restrictions
+        maternity:
+          type: string
+        modifier63Exempt:
+          type: string
+          xml:
+            name: modifier-63-exempt
+        addOn:
+          type: string
+          xml:
+            name: add-on
+        serviceNotCoveredByMedicare:
+          type: string
+          xml:
+            name: service-not-covered-by-medicare
+        opsiCode:
+          type: string
+          xml:
+            name: opsi-code
+        coSurgeryAllowed:
+          type: string
+          xml:
+            name: co-surgery-allowed
+        assistAtSurgeryAllowedWithDocumentation:
+          type: string
+          xml:
+            name: assist-at-surgery-allowed-with-documentation
+        assistAtSurgeryAllowed:
+          type: string
+          xml:
+            name: assist-at-surgery-allowed
+        cliaWavedTest:
+          type: string
+          xml:
+            name: clia-waved-test
+        carrierPriced:
+          type: string
+          xml:
+            name: carrier-priced
+        teamSurgeryAllowed:
+          type: string
+          xml:
+            name: team-surgery-allowed
+        mulitplePxReductionGuidelinesApply:
+          type: string
+          xml:
+            name: mulitple-px-reduction-guidelines-apply
+        endoscopicMultiplePxGuidelinesApply:
+          type: string
+          xml:
+            name: endoscopic-multiple-px-guidelines-apply
+        bilateralSurgeryAllowed:
+          type: string
+          xml:
+            name: bilateral-surgery-allowed
+        stvxPackaged:
+          type: string
+          xml:
+            name: stvx-packaged
+        bloodAndBloodProducts:
+          type: string
+          xml:
+            name: blood-and-blood-products
+        brachytherapySources:
+          type: string
+          xml:
+            name: brachytherapy-sources
+        mayBePaidThroughCompositeApc:
+          type: string
+          xml:
+            name: may-be-paid-through-composite-apc
+        contractorDiscretion:
+          type: string
+          xml:
+            name: contractor-discretion
+        notCoveredOrValidForMedicare:
+          type: string
+          xml:
+            name: not-covered-or-valid-for-medicare
+        quantityAlert:
+          type: string
+          xml:
+            name: quantity-alert
+        specialCoverageInstructions:
+          type: string
+          xml:
+            name: special-coverage-instructions
+        digitRequired4Th:
+          type: string
+          xml:
+            name: digit-required-4th
+        digitRequired5Th:
+          type: string
+          xml:
+            name: digit-required-5th
+        maleDiagnosis:
+          type: string
+          xml:
+            name: male-diagnosis
+        femaleDiagnosis:
+          type: string
+          xml:
+            name: female-diagnosis
+        unspecifiedDiagnosisCode:
+          type: string
+          xml:
+            name: unspecified-diagnosis-code
+        otherSpecifiedDiagnosisCode:
+          type: string
+          xml:
+            name: other-specified-diagnosis-code
+        adultDiagnosis:
+          type: string
+          xml:
+            name: adult-diagnosis
+        maternityDiagnosis:
+          type: string
+          xml:
+            name: maternity-diagnosis
+        newbornDiagnosis:
+          type: string
+          xml:
+            name: newborn-diagnosis
+        pediatricDiagnosis:
+          type: string
+          xml:
+            name: pediatric-diagnosis
+        hivRelated:
+          type: string
+          xml:
+            name: hiv-related
+        duplicatePrimaryDx:
+          type: string
+          xml:
+            name: duplicate-primary-dx
+        unacceptablePrincipalDx:
+          type: string
+          xml:
+            name: unacceptable-principal-dx
+        manifestationCodeNotAPrimaryDx:
+          type: string
+          xml:
+            name: manifestation-code-not-a-primary-dx
+        comorbidityOrComplication:
+          type: string
+          xml:
+            name: comorbidity-or-complication
+        majorComplication:
+          type: string
+          xml:
+            name: major-complication
+        reviseNoteNotBook:
+          type: string
+          xml:
+            name: revisedcode-note-not-ama-book
+        newCptNotAmaBook:
+          type: string
+          xml:
+            name: newcptcode-not-ama-book
+        modifier95:
+          type: string
+          xml:
+            name: modifier-95
+        tpackaged:
+          type: string
+        vcodeAsPrimaryDx:
+          type: string
+      xml:
+        name: color-codes
+    Icd10CmColorCodes:
+      type: object
+      properties:
+        newCode:
+          type: string
+          xml:
+            name: new-code
+        revisedCode:
+          type: string
+          xml:
+            name: revised-code
+        characterRequired4Th:
+          type: string
+          xml:
+            name: character-required-4th
+        characterRequired5Th:
+          type: string
+          xml:
+            name: character-required-5th
+        characterRequired6Th:
+          type: string
+          xml:
+            name: character-required-6th
+        characterRequired7Th:
+          type: string
+          xml:
+            name: character-required-7th
+        characterRequiredX7Th:
+          type: string
+          xml:
+            name: character-required-x7th
+        maleDiagnosis:
+          type: string
+          xml:
+            name: male-diagnosis
+        femaleDiagnosis:
+          type: string
+          xml:
+            name: female-diagnosis
+        unspecifiedDiagnosisCode:
+          type: string
+          xml:
+            name: unspecified-diagnosis-code
+        otherSpecifiedDiagnosisCode:
+          type: string
+          xml:
+            name: other-specified-diagnosis-code
+        adultDiagnosis:
+          type: string
+          xml:
+            name: adult-diagnosis
+        maternityDiagnosis:
+          type: string
+          xml:
+            name: maternity-diagnosis
+        newbornDiagnosis:
+          type: string
+          xml:
+            name: newborn-diagnosis
+        pediatricDiagnosis:
+          type: string
+          xml:
+            name: pediatric-diagnosis
+        hivRelated:
+          type: string
+          xml:
+            name: hiv-related
+        unacceptablePrincipalDx:
+          type: string
+          xml:
+            name: unacceptable-principal-dx
+        manifestationCodeNotAPrimaryDx:
+          type: string
+          xml:
+            name: manifestation-code-not-a-primary-dx
+        comorbidityOrComplication:
+          type: string
+          xml:
+            name: comorbidity-or-complication
+        majorComplication:
+          type: string
+          xml:
+            name: major-complication
+        questionablePdx:
+          type: string
+          xml:
+            name: questionable-pdx
+        hospitalAcquiredCondition:
+          type: array
+          xml:
+            name: hospital-acquired-condition
+          items:
+            type: string
+            xml:
+              name: hospital-acquired-condition
+        conditionalHospitalAcquiredCondition:
+          type: array
+          xml:
+            name: conditional-hospital-acquired-condition
+          items:
+            type: string
+            xml:
+              name: conditional-hospital-acquired-condition
+        zcodeIndicator:
+          type: string
+      xml:
+        name: icd-10-cm-color-codes
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

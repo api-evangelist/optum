@@ -1,0 +1,525 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services HCC Information API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: HCC Information
+paths:
+  /hcctype/{hccType}/{hccCode}:
+    get:
+      tags:
+      - HCC Information
+      summary: Returns all the Diagnosis Codes for the supplied HCC Code
+      operationId: getDiagList
+      parameters:
+      - name: hccType
+        in: path
+        description: Value for hccType
+        required: true
+        schema:
+          type: string
+          enum:
+          - cms-hcc
+          - cms-hcc-esrd-pace
+          - rx-hcc
+      - name: hccCode
+        in: path
+        description: Value for hccCode
+        required: true
+        schema:
+          type: string
+        example: HCC1
+      - name: modelCategory
+        in: query
+        description: <b>cms-hcc</b><ul><li>v22 or v12</li></ul><b>cms-hcc-esrd-pace</b><br/><ul><li>none</li></ul><b>rx-hcc</b><br/><ul><li>v04 or none</li></ul>
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiagnosisCodeList'
+              example:
+                cmsHccV22:
+                - code: '042'
+                  desc: Human immunodeficiency virus [HIV]
+                - code: '079.53'
+                  desc: Human immunodeficiency virus, type 2 (HIV 2), in conditions classified elsewhere and of unspecified site
+                cmsHccV12:
+                - code: '042'
+                  desc: Human immunodeficiency virus [HIV]
+                - code: '079.53'
+                  desc: Human immunodeficiency virus, type 2 (HIV 2), in conditions classified elsewhere and of unspecified site
+                - code: V08
+                  desc: Asymptomatic human immunodeficiency virus (HIV) infection status
+                cmsHccEsrdPace: []
+                rxHccV04: []
+                rxHcc: []
+        '400':
+          description: The provided code is not a valid HCC code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiagnosisCodeList'
+              example:
+                error:
+                - Not a valid HCC Code for the cms-hcc type
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: No Drg code description found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiagnosisCodeList'
+              example:
+                error: []
+                warning: []
+                info:
+                - No Drg code description found for the given Drg code you entered.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/hcc:
+    get:
+      tags:
+      - HCC Information
+      summary: Returns the HCC Data for I9V1/I10CM Code
+      operationId: getI9I10HccData
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - icd9v1
+          - icd10cm
+      - name: code
+        in: path
+        description: The value of the code
+        required: true
+        schema:
+          type: string
+        example: '042'
+      - name: yyyy-mm-dd
+        in: header
+        description: Date needed for HCC Web Services
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hcc'
+              example:
+                cmsHccV22:
+                - hccCode: HCC1
+                  desc: HIV/AIDS
+                cmsHccV12:
+                - hccCode: HCC1
+                  desc: HIV/AIDS
+                cmsHccEsrdPace:
+                - hccCode: HCC1
+                  desc: HIV/AIDS
+                rxHccV04: []
+                rxHcc:
+                - hccCode: RXHCC1
+                  desc: HIV/AIDS
+        '400':
+          description: The provided code is not a valid icd9v1/icd10cm code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hcc'
+              example:
+                error:
+                - The provided code is not a valid icd9v1/icd10cm code
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: HCC Data does not exist for the particular icd9v1/icd10cm code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hcc'
+              example:
+                error:
+                - HCC Data does not exist for the particular icd9v1/icd10cm code
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /hcctype/{hccType}:
+    get:
+      tags:
+      - HCC Information
+      summary: Returns all the HCC Codes for the supplied HCC Type
+      operationId: getHccData
+      parameters:
+      - name: hccType
+        in: path
+        description: Value for hccType
+        required: true
+        schema:
+          type: string
+          enum:
+          - cms-hcc
+          - cms-hcc-esrd-pace
+          - rx-hcc
+      - name: modelCategory
+        in: query
+        description: <b>cms-hcc</b><ul><li>v22 or v12</li></ul><b>cms-hcc-esrd-pace</b><br/><ul><li>none</li></ul><b>rx-hcc</b><br/><ul><li>v04 or none</li></ul>
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hcc'
+              example:
+                cmsHccV22:
+                - hccCode: HCC1
+                  desc: HIV/AIDS
+                  href: /ws/hcctype/cms-hcc/HCC1
+                cmsHccV12:
+                - hccCode: HCC1
+                  desc: HIV/AIDS
+                  href: /ws/hcctype/cms-hcc/HCC1
+                cmsHccEsrdPace: []
+                rxHccV04: []
+                rxHcc: []
+        '400':
+          description: Not a valid HCC Code for the cms-hcc type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hcc'
+              example:
+                error:
+                - Not a valid HCC Code for the cms-hcc type
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: No Diagnosis Code found for the HCC Code entered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hcc'
+              example:
+                error: []
+                warning: []
+                info:
+                - No Diagnosis Code found for the HCC Code entered.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /hcctype:
+    get:
+      tags:
+      - HCC Information
+      summary: Show HyperLinks to valid HCC types
+      operationId: getHCCTypes
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+              example:
+              - href: /ws/hcctype/cms-hcc
+                value: cms-hcc
+              - href: /ws/hcctype/cms-hcc-esrd-pace
+                value: cms-hcc-esrd-pace
+              - href: /ws/hcctype/rx-hcc
+                value: rx-hcc
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    RxHcc:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    CmsHccEsrdPace:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    CmsHccVx:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    Hcc:
+      required:
+      - cmsHccEsrdPace
+      - cmsHccV12
+      - cmsHccV22
+      - rxHcc
+      - rxHccV04
+      type: object
+      properties:
+        cmsHccV22:
+          type: array
+          xml:
+            name: cms-hcc-v22
+          items:
+            $ref: '#/components/schemas/CmsHccV22'
+        cmsHccVx:
+          type: array
+          xml:
+            name: cms-hcc-vx
+          items:
+            $ref: '#/components/schemas/CmsHccVx'
+        cmsHccV12:
+          type: array
+          xml:
+            name: cms-hcc-v12
+          items:
+            $ref: '#/components/schemas/CmsHccV12'
+        cmsHccEsrdPace:
+          type: array
+          xml:
+            name: cms-hcc-esrd-pace
+          items:
+            $ref: '#/components/schemas/CmsHccEsrdPace'
+        rxHccV04:
+          type: array
+          xml:
+            name: rx-hcc-v04
+          items:
+            $ref: '#/components/schemas/RxHccV04'
+        rxHcc:
+          type: array
+          xml:
+            name: rx-hcc
+          items:
+            $ref: '#/components/schemas/RxHcc'
+      xml:
+        name: hcc
+    RxHccV04:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    CmsHccV12:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    DiagnosisCodeList:
+      required:
+      - cmsHccEsrdPace
+      - cmsHccV12
+      - cmsHccV22
+      - cmsHccVx
+      - rxHcc
+      - rxHccV04
+      type: object
+      properties:
+        cmsHccV22:
+          type: array
+          xml:
+            name: cms-hcc-v22
+          items:
+            $ref: '#/components/schemas/CmsHccV22'
+        cmsHccVx:
+          type: array
+          xml:
+            name: cms-hcc-vx
+          items:
+            $ref: '#/components/schemas/CmsHccVx'
+        cmsHccV12:
+          type: array
+          xml:
+            name: cms-hcc-v12
+          items:
+            $ref: '#/components/schemas/CmsHccV12'
+        cmsHccEsrdPace:
+          type: array
+          xml:
+            name: cms-hcc-esrd-pace
+          items:
+            $ref: '#/components/schemas/CmsHccEsrdPace'
+        rxHccV04:
+          type: array
+          xml:
+            name: rx-hcc-v04
+          items:
+            $ref: '#/components/schemas/RxHccV04'
+        rxHcc:
+          type: array
+          xml:
+            name: rx-hcc
+          items:
+            $ref: '#/components/schemas/RxHcc'
+      xml:
+        name: diagnosis-code-list
+    CmsHccV22:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

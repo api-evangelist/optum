@@ -1,0 +1,172 @@
+openapi: 3.2.0
+info:
+  title: Real Prior Authorization Discovery API
+  description: FHIR Prior Authorization APIs (CDS, DTR, PAS)
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: Discovery
+paths:
+  /oihub/fhirpriorauth/v1/cdsHooksServer/{payerId}/{lob}/api/cds-services:
+    get:
+      operationId: getDiscovery
+      tags:
+      - Discovery
+      security:
+      - oAuth:
+        - read_healthcheck
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ph
+      - name: x-optum-consumer-correlation-id
+        in: header
+        schema:
+          type: string
+          example: uuid-123
+      - name: environment
+        in: header
+        schema:
+          type: string
+          example: sandbox
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoveryResponse'
+              example:
+                services:
+                - id: coverageRequirements-serviceRequest
+                  hook: order-sign
+                  title: United Health Care Order Sign Decision Support
+                  description: Coverage Requirement Guidance related to orders being signed
+                  prefetch:
+                    claimResponse: ClaimResponse?patient={{%context.patientId}}
+                    condition: Condition?patient={{%context.patientId}}
+                    coverage: Coverage?patient={{%context.patientId}}&status=active
+                    device: Device?patient={{%context.patientId}}
+                    encounter: Encounter/{{%context.encounterId}}
+                    location: Location?_id={{%context.locationId}}
+                    patient: Patient/{{%context.patientId}}
+                    practitioner: Practitioner/{{%context.userId}}
+                    practitionerRole: PractitionerRole?practitioner={{%context.userId}}
+                  usageRequirements: requirement-1, requirement-2
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: UnAuthorized
+          content:
+            application/json:
+              example:
+                message: UnAuthorized
+                statusCode: 401
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+components:
+  schemas:
+    DiscoveryService:
+      type: object
+      properties:
+        id:
+          type: string
+          example: coverageRequirements-serviceRequest
+        hook:
+          type: string
+          example: order-sign
+        title:
+          type: string
+          example: United Health Care Order Sign Decision Support
+        description:
+          type: string
+          example: Coverage Requirement Guidance related to orders being signed
+        prefetch:
+          $ref: '#/components/schemas/Prefetch'
+        usageRequirements:
+          type: string
+          example: requirement-1, requirement-2
+      required:
+      - id
+      - hook
+      - title
+    DiscoveryResponse:
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscoveryService'
+    Prefetch:
+      type: object
+      properties:
+        claimResponse:
+          type: string
+          example: ClaimResponse?patient={{%context.patientId}}
+        condition:
+          type: string
+          example: Condition?patient={{%context.patientId}}
+        coverage:
+          type: string
+          example: Coverage?patient={{%context.patientId}}&status=active
+        device:
+          type: string
+          example: Device?patient={{%context.patientId}}
+        encounter:
+          type: string
+          example: Encounter/{{%context.encounterId}}
+        location:
+          type: string
+          example: Location?_id={{%context.locationId}}
+        patient:
+          type: string
+          example: Patient/{{%context.patientId}}
+        practitioner:
+          type: string
+          example: Practitioner/{{%context.userId}}
+        practitionerRole:
+          type: string
+          example: PractitionerRole?practitioner={{%context.userId}}
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

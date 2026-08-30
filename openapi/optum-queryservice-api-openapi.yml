@@ -1,0 +1,31 @@
+openapi: 3.2.0
+info:
+  title: ABM Care Decision Support Query Service API
+  version: 1.7.0
+servers:
+- url: https://sandbox-apigw.optum.com
+  description: ABM Care Decision Support API server
+tags:
+- name: QueryService
+paths:
+  /abm/dsrservicesearch/v1/:
+    get:
+      tags:
+      - QueryService
+      summary: Query Decision Support Records by organizationId and procedureCode (GET /abm/dsrservicesearch/v1/)
+      parameters:
+      - name: organizationId
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: procedureCode
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

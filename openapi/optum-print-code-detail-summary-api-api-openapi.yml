@@ -1,0 +1,99 @@
+openapi: 3.2.0
+info:
+  title: Core Service Print Code Detail Summary API
+  description: Code Search Service provides the APIs for searching codes related information.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/codesearchms
+tags:
+- name: Print Code Detail Summary API
+paths:
+  /api/coding/code/{print-type}/print:
+    post:
+      tags:
+      - Print Code Detail Summary API
+      summary: Fetches the file content for print code summary
+      operationId: printCodeSummary
+      parameters:
+      - name: print-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - physician
+          - facility
+      - name: codes
+        in: query
+        description: Takes comma separated codes with minimum of 1 codes and maximum of 3 codes
+        required: true
+        schema:
+          type: string
+        example: 99213,99214
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetches the file content in the form of byte array, response headers and media type as FileType
+          content:
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example: "  access-control-expose-headers: Content-Disposition\n  cache-control: no-cache,no-store,max-age=0,must-revalidate\n  connection: keep-alive\n  content-disposition: attachment; filename=codesummary.pdf\n  content-length: 254685\n  content-type: application/pdf\n  date: Thu,16 May 2024 06:49:56 GMT\n  expires: 0\n  pragma: no-cache\n  vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers\n  x-content-type-options: nosniff\n  x-frame-options: DENY\n  x-xss-protection: 0\n"
+        '404':
+          description: 'Not found: Sub terms not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /codesearchms/api/coding/code/physician/prints
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                path: /codesearchms/api/coding/code/physician/print
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,224 @@
+openapi: 3.2.0
+info:
+  title: Real Dental Attachments Create Attachments API
+  contact:
+    name: ''
+    email: ''
+  version: v1
+  description: Services requests for Dental Attachments for both Provider and Payer users of the Optum Real Dental suite of products.
+  termsOfService: ''
+  x-shortDescription: Real Dental Attachments API
+servers:
+- url: https://sandbox-apigw.optum.com/dental/attachments/v1
+  description: ''
+security:
+- bearerAuth: []
+tags:
+- name: Create Attachments
+  description: Operations for creating and uploading attachments.
+paths:
+  /attachments/documents:
+    post:
+      tags:
+      - Create Attachments
+      summary: Create Attachments by Uploading Documents
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAttachmentResponse'
+              examples:
+                singleFile:
+                  value:
+                    status: CLOSED
+                    createdAt: '2024-01-15T14:30:00Z'
+                    attachmentIds:
+                    - CHC#123456789055
+                    attachmentControlNumber: CHC#507f1f77bcf86cd799439011
+                  summary: Single file uploaded
+                multipleFiles:
+                  value:
+                    status: CLOSED
+                    createdAt: '2024-01-15T14:30:00Z'
+                    attachmentIds:
+                    - CHC#123456358902
+                    - CHC#122256789023
+                    - CHC#133456789024
+                    attachmentControlNumber: CHC#507f1f77bcf86cd799439011
+                  summary: Multiple files uploaded
+          description: Attachments created successfully
+        default:
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: A problem occurred.
+      description: "Create Attachments by uploading files along with required metadata in a single request. All attachments will be associated with a new Attachment Control Number and ClaimId and will be considered Closed upon completion of the request.\n\n**Request Format:**\n- Content-Type: `multipart/form-data`\n- The request consists of two parts:\n  1. `request` (JSON): Contains claim metadata\n  2. `files` (binary): One or more attachment files (1-10 files) \n\n**Example Request:**\n```\n--boundary\nContent-Disposition: form-data; name=\\\"request\\\"\nContent-Type: application/json\n\n{\n  \\\"claimId\\\": \\\"CLM-2024-001234\\\",\n  \\\"payerId\\\": \\\"ABC12\\\",\n  \\\"providerNPI\\\": \\\"1234567890\\\",\n  \\\"dateOfService\\\": \\\"2024-01-15\\\",\n  \\\"patientLastName\\\": \\\"Atreides\\\",\n  \\\"patientFirstName\\\": \\\"Paul\\\",\n  \\\"patientDateOfBirth\\\": \\\"2000-01-01\\\",\n  \\\"memberId\\\": \\\"44444444\\\"\n}\n\n--boundary\nContent-Disposition: form-data; name=\\\"files\\\"; filename=\\\"xray_image.pdf\\\";\n \nContent-Type: application/pdf\n\n[binary file content]\n\n--boundary--\n```\n\n**Supported File Types:** BMP, JPG/JPEG, TIFF, PNG, PDF, TXT, DOC/DOCX, DICOM, GIF, RTF\n\n**File Limits:** 1-10 files per request."
+      operationId: createAttachments
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - submitterId
+              - billingProviderTaxId
+              - claimId
+              - payerId
+              - providerNPI
+              - dateOfService
+              - patientLastName
+              - patientFirstName
+              - patientDateOfBirth
+              - memberId
+              - files
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  maxItems: 10
+                  minItems: 1
+                  description: Raw binary of the files to be uploaded as attachments
+                claimId:
+                  type: string
+                  maxLength: 50
+                  description: JSON property of request body property 'request' containing the claim ID associated with the attachments
+                payerId:
+                  type: string
+                  pattern: ^[A-Za-z0-9]{5}$
+                  description: JSON property of request body property 'request' containing the payer Id associated with the attachments
+                memberId:
+                  type: string
+                  maxLength: 50
+                providerNPI:
+                  type: string
+                  pattern: ^[0-9]{10}$
+                  description: JSON property of request body property 'request' containing the provider NPI associated with the attachments
+                submitterId:
+                  type: string
+                  maxLength: 50
+                  description: JSON property of request body property 'request' containing the submitter Id associated with the attachments. Requestor MUST have access to this submitter id.
+                dateOfService:
+                  type: string
+                  format: date
+                  description: JSON property of request body property 'request' containing the first Date of Service associated with the attachments
+                patientLastName:
+                  type: string
+                  maxLength: 75
+                patientFirstName:
+                  type: string
+                  maxLength: 50
+                patientDateOfBirth:
+                  type: string
+                  maxLength: 10
+                billingProviderTaxId:
+                  type: string
+                  maxLength: 50
+                  description: JSON property of request body property 'request' containing the billing provider tax Id associated with the attachments. Requestor MUST have access to this billing provider tax id (TIN).
+            encoding:
+              files:
+                contentType: application/octet-stream, image/bmp, image/x-ms-bmp, image/jpeg, image/pjpeg, image/tiff, image/x-tiff, image/png, application/pdf, text/plain, text/x-text, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/dicom, application/dicom+json, application/dicom+xml, image/gif, application/rtf, text,rtf
+              request:
+                contentType: application/json
+        required: true
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    CreateAttachmentResponse:
+      type: object
+      required:
+      - attachmentControlNumber
+      - attachmentIds
+      - status
+      - createdAt
+      properties:
+        status:
+          enum:
+          - CREATED
+          - ACTIVE
+          - CLOSED
+          - ARCHIVED
+          type: string
+        claimId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        attachmentIds:
+          type: array
+          items:
+            type: string
+            example: CHC#023981023345
+            pattern: ^[A-Z]{3}#[0-9]{12}$
+        attachmentControlNumber:
+          type: string
+          example: CHC#507f1f77bcf86cd799439011
+          pattern: ^[A-Z]{3}#[0-9a-fA-F]{24}$
+        imageIntelligenceTransactionId:
+          type: string
+          description: If the request included image intelligence metadata and the files were successfully processed by Optum Image Intelligence, this field will be populated with the transaction id for reference
+    ErrorResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+          default: about/blank
+          example: https://api-stg.uhg.com/errors/attachment-type-detection
+          description: The problem type URI. Defaults to `about:blank`.
+        title:
+          type: string
+          example: Invalid Attachment Format
+          description: A short, human-readable summary of the problem.
+        detail:
+          type: string
+          example: The provided attachment format is not supported.
+          description: A detailed explanation of the problem.
+        status:
+          type: integer
+          format: int32
+          example: 400
+          maximum: 599
+          minimum: 100
+          description: The HTTP status code for the problem.
+        instance:
+          type: string
+          format: uri
+          example: https://api-stg.uhg.com/errors/attachment-type-detection/12345
+          description: A URI reference that identifies the specific occurrence of the problem.
+        properties:
+          type: object
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: DENTATT_113
+                    description: A code that can be correlated to this error.
+                  field:
+                    type: string
+                    example: DataService.attachments.find.notFound
+                    description: The field in a request that is related to this error, if applicable.
+                  message:
+                    type: string
+                    example: Attachment not found.
+                    description: A human readable message that describes the error.
+              description: A collection that gives specifics about the errors that occurred.
+          description: A map of additional, non-standard properties.
+      description: Representation for an RFC 9457 problem detail.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Enter a Bearer access token. The API Explorer applies the Bearer scheme.
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

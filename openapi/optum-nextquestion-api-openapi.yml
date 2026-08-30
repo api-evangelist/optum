@@ -1,0 +1,375 @@
+openapi: 3.2.0
+info:
+  title: Real Prior Authorization Next Question API
+  description: FHIR Prior Authorization APIs (CDS, DTR, PAS)
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: NextQuestion
+paths:
+  /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/Questionnaire/$next-question:
+    post:
+      operationId: getNextQuestion
+      tags:
+      - NextQuestion
+      security:
+      - oAuth:
+        - read_healthcheck
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: bh
+      - name: x-optum-consumer-correlation-id
+        in: header
+        schema:
+          type: string
+          description: Unique transaction identifier
+          example: uuid-123
+      - name: environment
+        in: header
+        schema:
+          type: string
+          description: Environment name
+          example: sandbox
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NextQuestionRequest'
+            example:
+              resourceType: QuestionnaireResponse
+              id: 62b12331-3b16-4345-a1a6-6e60b236e6a5
+              meta:
+                profile:
+                - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+              contained:
+              - resourceType: Questionnaire
+                id: '12345'
+                meta:
+                  profile:
+                  - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-adapt
+                extension:
+                - url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-questionnaireAdaptive
+                  valueBoolean: true
+                name: Questionnaire name
+                title: Questionnaire title
+                status: active
+                date: '2025-07-03T00:00:00-05:00'
+                description: Questionnaire description
+              extension:
+              - url: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
+                valueReference:
+                  reference: Coverage/CoverageExample
+              questionnaire: '#12345'
+              status: in-progress
+              subject:
+                reference: Patient/anonymous
+              authored: '2025-11-04T12:12:59.7131+00:00'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NextQuestionResponse'
+              example:
+                resourceType: QuestionnaireResponse
+                meta:
+                  profile:
+                  - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+                contained:
+                - resourceType: Questionnaire
+                  id: '12345'
+                  meta:
+                    profile:
+                    - http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-adapt
+                  extension:
+                  - url: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-questionnaireAdaptive
+                    valueBoolean: true
+                  name: Questionnaire name
+                  title: Questionnaire title
+                  status: active
+                  date: '2025-07-03T05:00:00+00:00'
+                  description: Questionnaire description
+                  item:
+                  - id: '1264854090'
+                    extension:
+                    - url: http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink
+                      valueUri: https://apimarketplace.uhcprovider.com/DTR_DOC_REF_API
+                    linkId: '1'
+                    text: 'Choose one:'
+                    type: choice
+                    required: true
+                    repeats: false
+                    answerOption:
+                    - valueCoding:
+                        code: '1'
+                        display: Age ≥ 50
+                    - valueCoding:
+                        code: '2'
+                        display: Age < 50
+                extension:
+                - url: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
+                  valueReference:
+                    reference: Coverage/CoverageExample
+                questionnaire: '#12345'
+                status: in-progress
+                subject:
+                  reference: Patient/anonymous
+                authored: '2025-11-04T12:12:59.7131+00:00'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: UnAuthorized
+          content:
+            application/json:
+              example:
+                message: UnAuthorized
+                statusCode: 401
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+components:
+  schemas:
+    Item:
+      type: object
+      description: Questionnaire item (question)
+      properties:
+        id:
+          type: string
+          example: '1264854090'
+        linkId:
+          type: string
+          example: '1'
+        text:
+          type: string
+          example: 'Choose one:'
+        type:
+          type: string
+          example: choice
+        required:
+          type: boolean
+          example: true
+        repeats:
+          type: boolean
+          example: false
+        extension:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtensionGeneric'
+        answerOption:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnswerOption'
+        item:
+          type: array
+          description: Nested child questions
+          items:
+            $ref: '#/components/schemas/Item'
+    ExtensionGeneric:
+      type: object
+      description: Generic extension supporting multiple value types
+      properties:
+        url:
+          type: string
+          example: http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink
+        valueBoolean:
+          type: boolean
+          example: true
+        valueUri:
+          type: string
+          example: https://apimarketplace.uhcprovider.com/DTR_DOC_REF_API
+    Questionnaire:
+      type: object
+      description: FHIR Questionnaire resource
+      properties:
+        resourceType:
+          type: string
+          example: Questionnaire
+        id:
+          type: string
+          example: '12345'
+        meta:
+          $ref: '#/components/schemas/Meta'
+        extension:
+          type: array
+          description: Questionnaire extensions
+          items:
+            $ref: '#/components/schemas/ExtensionGeneric'
+        name:
+          type: string
+          description: Questionnaire name
+          example: Questionnaire name
+        title:
+          type: string
+          description: Questionnaire title
+          example: Questionnaire title
+        status:
+          type: string
+          description: Questionnaire status
+          example: active
+        date:
+          type: string
+          description: Date of creation
+          example: '2025-07-03T00:00:00-05:00'
+        description:
+          type: string
+          description: Questionnaire description
+          example: Questionnaire description
+        item:
+          type: array
+          description: List of questions
+          items:
+            $ref: '#/components/schemas/Item'
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    Extension:
+      type: object
+      description: FHIR extension with Reference
+      properties:
+        url:
+          type: string
+          example: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
+        valueReference:
+          $ref: '#/components/schemas/Reference'
+    Coding:
+      type: object
+      description: Coding structure for answers
+      properties:
+        code:
+          type: string
+          example: '1'
+        display:
+          type: string
+          example: Age ≥ 50
+    Reference:
+      type: object
+      description: FHIR Reference
+      properties:
+        reference:
+          type: string
+          example: Patient/anonymous
+    NextQuestionRequest:
+      type: object
+      description: FHIR QuestionnaireResponse request containing current answers and context to fetch next adaptive question
+      properties:
+        resourceType:
+          type: string
+          description: FHIR resource type
+          example: QuestionnaireResponse
+        id:
+          type: string
+          description: Unique QuestionnaireResponse identifier
+          example: 62b12331-3b16-4345-a1a6-6e60b236e6a5
+        meta:
+          $ref: '#/components/schemas/Meta'
+        contained:
+          type: array
+          description: Contained Questionnaire resource
+          items:
+            $ref: '#/components/schemas/Questionnaire'
+        extension:
+          type: array
+          description: FHIR extensions providing additional context
+          items:
+            $ref: '#/components/schemas/Extension'
+        questionnaire:
+          type: string
+          description: Reference to Questionnaire
+          example: '#12345'
+        status:
+          type: string
+          description: QuestionnaireResponse status
+          example: in-progress
+        subject:
+          $ref: '#/components/schemas/Reference'
+        authored:
+          type: string
+          description: Date/time when response was authored
+          example: '2025-11-04T12:12:59.7131+00:00'
+    NextQuestionResponse:
+      type: object
+      description: FHIR QuestionnaireResponse response containing next adaptive question
+      properties:
+        resourceType:
+          type: string
+          example: QuestionnaireResponse
+        meta:
+          $ref: '#/components/schemas/Meta'
+        contained:
+          type: array
+          description: Contained Questionnaire with next question items
+          items:
+            $ref: '#/components/schemas/Questionnaire'
+        extension:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+        questionnaire:
+          type: string
+          example: '#12345'
+        status:
+          type: string
+          example: in-progress
+        subject:
+          $ref: '#/components/schemas/Reference'
+        authored:
+          type: string
+          example: '2025-11-04T12:12:59.7131+00:00'
+    AnswerOption:
+      type: object
+      description: Answer choice option
+      properties:
+        valueCoding:
+          $ref: '#/components/schemas/Coding'
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

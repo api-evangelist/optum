@@ -1,0 +1,113 @@
+openapi: 3.2.0
+info:
+  title: File and Document Tracking API v1 Get Listof Doc Status API
+  description: The File and Document Tracking API, a healthcare API for customers using Communication and Payment Services solutions from Optus, provides payers with real-time processing status at the file and document levels.
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com/api/ptapi/v1
+tags:
+- name: GetListofDocStatus
+paths:
+  /getListofDocStatus/{contextID}/{recipientType}:
+    get:
+      tags:
+      - GetListofDocStatus
+      parameters:
+      - name: contextID
+        in: path
+        description: The client context ID should be a unique identifier for a specific client.
+        required: true
+        schema:
+          type: string
+      - name: recipientType
+        in: path
+        description: Type Of the Recipient
+        required: true
+        schema:
+          type: string
+      - name: fileName
+        in: query
+        description: An unique filename
+        schema:
+          type: string
+      - name: claimNumber
+        in: query
+        description: 'An unique claim Number '
+        schema:
+          type: string
+      - name: claimType
+        in: query
+        description: Type of the Claim
+        schema:
+          type: string
+      - name: docType
+        in: query
+        description: Type of the Document
+        schema:
+          type: string
+      - name: importStartDate
+        in: query
+        description: MM/DD/YYYY
+        schema:
+          type: string
+      - name: importEndDate
+        in: query
+        description: MM/DD/YYYY
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/documentStatusRespObj'
+components:
+  schemas:
+    docStatusObj:
+      type: object
+      properties:
+        fileName:
+          type: string
+          example: 123402820210604004.TXT
+        importDate:
+          type: string
+          example: 05/06/2021 06:05:42 AM
+        claimNumber:
+          type: string
+          example: 7N928A
+        claimType:
+          type: string
+          example: P5
+        recipientType:
+          type: string
+          example: '00'
+        documentStatus:
+          type: string
+          example: Released
+        eNoteDeliveryDate:
+          type: string
+          example: 05/06/2021 06:05:42 AM
+        docCompletedDate:
+          type: string
+          example: Released
+        clientKey:
+          type: string
+          example: '1234028'
+        docType:
+          type: string
+          example: '01'
+    documentStatusRespObj:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/docStatusObj'
+        rowCount:
+          type: integer
+          example: 1
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-enabled: true

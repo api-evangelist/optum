@@ -1,0 +1,146 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Physician Coding Tips API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Coding Tips API
+paths:
+  /api/optum/physician/{code}/coding-tips:
+    get:
+      tags:
+      - Coding Tips API
+      summary: Fetches the list of codingTips for CPT or HCPCS codes
+      operationId: getCodingTips
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches the list of codingTips for CPT or HCPCS codes
+          content:
+            application/json:
+              example:
+              - tipType: Coding Tips
+                tip: Note that 38790 is a unilateral procedure.
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /optumcommonms/api/optum/physician/99213/coding-tips
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /optumcommonms/api/optum/physician/99213/coding-tips
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/optum/physician/{code}/annotations:
+    get:
+      tags:
+      - Coding Tips API
+      summary: Fetches the list of  annotations for HCPCS codes
+      operationId: getAnnotations
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: G0137
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches the list of annotations for HCPCS codes
+          content:
+            application/json:
+              example:
+                content:
+                - annotationType: Annotation
+                  annotationDescription: diagnostic services;
+                - annotationType: DEF
+                  annotationDescription: Plaque deposits in natural heart vessels.
+                totalCount: 2
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /optumcommonms/api/optum/physician/A2007/annotations
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /optumcommonms/api/optum/physician/A2007/annotations
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

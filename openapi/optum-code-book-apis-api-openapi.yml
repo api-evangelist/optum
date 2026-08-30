@@ -1,0 +1,375 @@
+openapi: 3.2.0
+info:
+  title: Core Service Code Book APIs API
+  description: Code Search Service provides the APIs for searching codes related information.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/codesearchms
+tags:
+- name: Code Book APIs
+paths:
+  /api/coding/code/book/{codeType}:
+    get:
+      tags:
+      - Code Book APIs
+      summary: Fetch the code book for the given code type
+      operationId: fetchCodeBook
+      parameters:
+      - name: codeType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i9v1
+          - i9v3
+          - cpt
+          - hcpcs
+          - i10_cm
+      - name: isDental
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Code book of hcpcs code type
+          content:
+            application/json:
+              example:
+              - codeBeg: A0021
+                codeEnd: A0999
+                styleLevel: 0
+                header: Transportation Services Including Ambulance
+                codeBook:
+                - codeBeg: A0021
+                  codeEnd: A0999
+                  styleLevel: 1
+                  header: Transportation Services Including Ambulance
+                  codeBook:
+                  - codeBeg: A0021
+                    codeEnd: A0398
+                    styleLevel: 2
+                    header: Ambulance Transport and Supplies
+                  - codeBeg: A0420
+                    codeEnd: A0420
+                    styleLevel: 2
+                    header: Waiting Time
+                  - codeBeg: A0422
+                    codeEnd: A0999
+                    styleLevel: 2
+                    header: Other Ambulance Services
+              - codeBeg: A2001
+                codeEnd: A9999
+                styleLevel: 0
+                header: Medical and Surgical Supplies
+                codeBook:
+                - codeBeg: A2001
+                  codeEnd: A9999
+                  styleLevel: 1
+                  header: Medical and Surgical Supplies
+                  codeBook:
+                  - codeBeg: A2001
+                    codeEnd: A4100
+                    styleLevel: 2
+                    header: Skin Substitutes
+                  - codeBeg: A4206
+                    codeEnd: A4232
+                    styleLevel: 2
+                    header: Injection Supplies
+                  - codeBeg: A4233
+                    codeEnd: A4236
+                    styleLevel: 2
+                    header: Batteries
+                  - codeBeg: A4238
+                    codeEnd: A4290
+                    styleLevel: 2
+                    header: Other Supplies
+                  - codeBeg: A4300
+                    codeEnd: A4306
+                    styleLevel: 2
+                    header: Vascular Catheters and Drug Delivery Systems
+                  - codeBeg: A4310
+                    codeEnd: A4360
+                    styleLevel: 2
+                    header: Incontinence Appliances and Care Supplies
+                  - codeBeg: A4361
+                    codeEnd: A4437
+                    styleLevel: 2
+                    header: Ostomy Supplies
+                    codeBook:
+                    - codeBeg: A4361
+                      codeEnd: A4400
+                      styleLevel: 3
+                      header: Ostomy Supplies
+                    - codeBeg: A4402
+                      codeEnd: A4437
+                      styleLevel: 3
+                      header: Ostomy Supplies
+                  - codeBeg: A4450
+                    codeEnd: A4608
+                    styleLevel: 2
+                    header: Miscellaneous Supplies
+                  - codeBeg: A4611
+                    codeEnd: A4629
+                    styleLevel: 2
+                    header: Supplies for Oxygen and Related Respiratory Equipment
+                  - codeBeg: A4630
+                    codeEnd: A4640
+                    styleLevel: 2
+                    header: Replacement Supplies for DME
+                  - codeBeg: A4641
+                    codeEnd: A4642
+                    styleLevel: 2
+                    header: Radiopharmaceuticals
+                  - codeBeg: A4648
+                    codeEnd: A4652
+                    styleLevel: 2
+                    header: Miscellaneous Supplies
+                  - codeBeg: A4653
+                    codeEnd: A4932
+                    styleLevel: 2
+                    header: Dialysis Supplies
+                    codeBook:
+                    - codeBeg: A4653
+                      codeEnd: A4728
+                      styleLevel: 3
+                      header: Dialysis Supplies
+                    - codeBeg: A4730
+                      codeEnd: A4932
+                      styleLevel: 3
+                      header: Dialysis Supplies
+                  - codeBeg: A5051
+                    codeEnd: A5093
+                    styleLevel: 2
+                    header: Ostomy Pouches and Supplies
+                  - codeBeg: A5102
+                    codeEnd: A5200
+                    styleLevel: 2
+                    header: Incontinence Supplies
+                  - codeBeg: A5500
+                    codeEnd: A5514
+                    styleLevel: 2
+                    header: Diabetic Shoes, Fitting, and Modifications
+                  - codeBeg: A6000
+                    codeEnd: A6461
+                    styleLevel: 2
+                    header: Dressings
+                    codeBook:
+                    - codeBeg: A6000
+                      codeEnd: A6215
+                      styleLevel: 3
+                      header: Dressing Supplies
+                    - codeBeg: A6216
+                      codeEnd: A6233
+                      styleLevel: 3
+                      header: Gauze Supplies
+                    - codeBeg: A6234
+                      codeEnd: A6241
+                      styleLevel: 3
+                      header: Hydrocolloid Supplies
+                    - codeBeg: A6242
+                      codeEnd: A6250
+                      styleLevel: 3
+                      header: Hydrogel Supplies
+                    - codeBeg: A6251
+                      codeEnd: A6256
+                      styleLevel: 3
+                      header: Absorptive Dressing Supplies
+                    - codeBeg: A6257
+                      codeEnd: A6407
+                      styleLevel: 3
+                      header: Wound Dressing Supplies
+                    - codeBeg: A6410
+                      codeEnd: A6412
+                      styleLevel: 3
+                      header: Eye Pad/Patch
+                    - codeBeg: A6413
+                      codeEnd: A6461
+                      styleLevel: 3
+                      header: Bandage Supplies
+                  - codeBeg: A6501
+                    codeEnd: A6550
+                    styleLevel: 2
+                    header: Compression Garments
+                  - codeBeg: A7000
+                    codeEnd: A7048
+                    styleLevel: 2
+                    header: Respiratory Supplies
+                  - codeBeg: A7501
+                    codeEnd: A7527
+                    styleLevel: 2
+                    header: Tracheostomy Supplies
+                  - codeBeg: A8000
+                    codeEnd: A8004
+                    styleLevel: 2
+                    header: Protective Helmet
+                  - codeBeg: A9150
+                    codeEnd: A9300
+                    styleLevel: 2
+                    header: Other Supplies and Devices
+                  - codeBeg: A9500
+                    codeEnd: A9800
+                    styleLevel: 2
+                    header: Radiopharmaceuticals
+                    codeBook:
+                    - codeBeg: A9500
+                      codeEnd: A9504
+                      styleLevel: 3
+                      header: Technetium Radiopharmaceuticals
+                    - codeBeg: A9505
+                      codeEnd: A9509
+                      styleLevel: 3
+                      header: Radiopharmaceuticals
+                    - codeBeg: A9510
+                      codeEnd: A9521
+                      styleLevel: 3
+                      header: Technetium Radiopharmaceuticals
+                    - codeBeg: A9524
+                      codeEnd: A9532
+                      styleLevel: 3
+                      header: Radiopharmaceuticals
+                    - codeBeg: A9536
+                      codeEnd: A9541
+                      styleLevel: 3
+                      header: Technetium Radiopharmaceuticals
+                    - codeBeg: A9542
+                      codeEnd: A9548
+                      styleLevel: 3
+                      header: Radiopharmaceuticals
+                    - codeBeg: A9550
+                      codeEnd: A9551
+                      styleLevel: 3
+                      header: Technetium Radiopharmaceuticals
+                    - codeBeg: A9552
+                      codeEnd: A9559
+                      styleLevel: 3
+                      header: Radiopharmaceuticals
+                    - codeBeg: A9560
+                      codeEnd: A9562
+                      styleLevel: 3
+                      header: Technetium Radiopharmaceuticals
+                    - codeBeg: A9563
+                      codeEnd: A9564
+                      styleLevel: 3
+                      header: Radiopharmaceuticals
+                    - codeBeg: A9566
+                      codeEnd: A9569
+                      styleLevel: 3
+                      header: Technetium Radiopharmaceuticals
+                    - codeBeg: A9570
+                      codeEnd: A9800
+                      styleLevel: 3
+                      header: Radiopharmaceuticals
+                  - codeBeg: A9900
+                    codeEnd: A9999
+                    styleLevel: 2
+                    header: Miscellaneous
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/book/hcpcs
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/book/i10_pcs:
+    get:
+      tags:
+      - Code Book APIs
+      summary: Fetch the code book for the given pcs code type
+      operationId: fetchPcsCodeBook
+      parameters:
+      - name: section
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: body
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Code book of pcs code type
+          content:
+            application/json:
+              example:
+              - id: 90810
+                title: 0 Medical and Surgical
+              - id: 90810
+                title: 1 Obstetrics
+              - id: 90810
+                title: 2 Placement
+              - id: 90810
+                title: 3 Administration
+              - id: 90810
+                title: 4 Measurement and Monitoring
+              - id: 90810
+                title: 5 Extracorporeal or Systemic Assistance and Performance
+              - id: 90810
+                title: 6 Extracorporeal or Systemic Therapies
+              - id: 90810
+                title: 7 Osteopathic
+              - id: 90810
+                title: 8 Other Procedures
+              - id: 90810
+                title: 9 Chiropractic
+              - id: 90810
+                title: B Imaging
+              - id: 90810
+                title: C Nuclear Medicine
+              - id: 90810
+                title: D Radiation Therapy
+              - id: 90810
+                title: F Physical Rehabilitation and Diagnostic Audiology
+              - id: 90810
+                title: G Mental Health
+              - id: 90810
+                title: H Substance Abuse Treatment
+              - id: 90810
+                title: X New Technology
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/book/i10_pcs
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

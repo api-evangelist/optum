@@ -1,0 +1,469 @@
+openapi: 3.2.0
+info:
+  title: Optum DME and PEN Fee Schedule APIs API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged DME and PEN Fee Schedule APIs across 2 of this provider''s published API definitions: optum-cms-common-facility-openapi.yml, optum-cms-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: DME and PEN Fee Schedule APIs
+paths:
+  /api/cms/common/fee-schedule/{fee-schedule-type}:
+    get:
+      tags:
+      - DME and PEN Fee Schedule APIs
+      summary: Fetches DME or PEN fee schedule for all states
+      operationId: getOutpatientFees
+      parameters:
+      - name: fee-schedule-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - DME
+          - PEN
+      - name: sort
+        in: query
+        description: Any of these (code,-code,modifier,-modifier,modifier2,-modifier2,category,-category,state,-state,nonRuralFee,-nonRuralFee,ruralFee,-ruralFee) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch DME/PEN fees for all states
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                content:
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: AZ
+                  nonRuralFee: '0.58'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: CA
+                  nonRuralFee: '0.59'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: CO
+                  nonRuralFee: '0.59'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: CT
+                  nonRuralFee: '0.59'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: DC
+                  nonRuralFee: '0.59'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: DE
+                  nonRuralFee: '0.59'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: FL
+                  nonRuralFee: '0.55'
+                  ruralFee: '0.00'
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: GA
+                  nonRuralFee: '0.59'
+                  ruralFee: '0.00'
+                totalCount: 2
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-08-14T16:46:24.623+00:00'
+                status: 400
+                error: Bad Request
+                path: /cmscommonms/api/cms/common/fee-schedule/test
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/fee-schedule/DME
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/common/fee-schedule/{fee-schedule-type}/{state}:
+    get:
+      tags:
+      - DME and PEN Fee Schedule APIs
+      summary: Fetches DME OR PEN fee schedule for specific state
+      operationId: getOutpatientFees_1
+      parameters:
+      - name: fee-schedule-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - DME
+          - PEN
+      - name: state
+        in: path
+        description: State
+        required: true
+        schema:
+          type: string
+        example: AL
+      - name: sort
+        in: query
+        description: Any of these (code,-code,modifier,-modifier,modifier2,-modifier2,category,-category,state,-state,nonRuralFee,-nonRuralFee,ruralFee,-ruralFee) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch DME/PEN Fees for specific state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                content:
+                - code: A4216
+                  codeDescription: Sterile water, saline and/or dextrose, diluent/flush, 10 ml
+                  category: OS
+                  state: AL
+                  nonRuralFee: '0.55'
+                  ruralFee: '0.00'
+                - code: A4217
+                  codeDescription: Sterile water/saline, 500 ml
+                  modifier: AU
+                  category: OS
+                  state: AL
+                  nonRuralFee: '3.54'
+                  ruralFee: '0.00'
+                - code: A4217
+                  codeDescription: Sterile water/saline, 500 ml
+                  category: SU
+                  state: AL
+                  nonRuralFee: '3.54'
+                  ruralFee: '0.00'
+                - code: A4221
+                  codeDescription: Supplies for maintenance of noninsulin drug infusion catheter, per week (list drugs separately)
+                  category: SU
+                  state: AL
+                  nonRuralFee: '25.41'
+                  ruralFee: '26.97'
+                - code: A4222
+                  codeDescription: Infusion supplies for external drug infusion pump, per cassette or bag (list drugs separately)
+                  category: SU
+                  state: AL
+                  nonRuralFee: '49.45'
+                  ruralFee: '53.68'
+                - code: A4224
+                  codeDescription: Supplies for maintenance of insulin infusion catheter, per week
+                  category: SU
+                  state: AL
+                  nonRuralFee: '25.41'
+                  ruralFee: '26.97'
+                - code: A4225
+                  codeDescription: Supplies for external insulin infusion pump, syringe type cartridge, sterile, each
+                  category: SU
+                  state: AL
+                  nonRuralFee: '3.28'
+                  ruralFee: '3.36'
+                - code: A4233
+                  codeDescription: Replacement battery, alkaline (other than J cell), for use with medically necessary home blood glucose monitor owned by patient, each
+                  modifier: NU
+                  category: IN
+                  state: AL
+                  nonRuralFee: '0.51'
+                  ruralFee: '0.00'
+                - code: A4234
+                  codeDescription: Replacement battery, alkaline, J cell, for use with medically necessary home blood glucose monitor owned by patient, each
+                  modifier: NU
+                  category: IN
+                  state: AL
+                  nonRuralFee: '2.36'
+                  ruralFee: '0.00'
+                - code: A4235
+                  codeDescription: Replacement battery, lithium, for use with medically necessary home blood glucose monitor owned by patient, each
+                  modifier: NU
+                  category: IN
+                  state: AL
+                  nonRuralFee: '1.00'
+                  ruralFee: '0.00'
+                - code: A4236
+                  codeDescription: Replacement battery, silver oxide, for use with medically necessary home blood glucose monitor owned by patient, each
+                  modifier: NU
+                  category: IN
+                  state: AL
+                  nonRuralFee: '1.16'
+                  ruralFee: '0.00'
+                - code: A4238
+                  codeDescription: Supply allowance for adjunctive, nonimplanted continuous glucose monitor (CGM), includes all supplies and accessories, 1 month supply = 1 unit of service
+                  modifier: KF
+                  category: SU
+                  state: AL
+                  nonRuralFee: '261.95'
+                  ruralFee: '0.00'
+                - code: A4239
+                  codeDescription: Supply allowance for nonadjunctive, nonimplanted continuous glucose monitor (CGM), includes all supplies and accessories, 1 month supply = 1 unit of service
+                  modifier: KF
+                  category: SU
+                  state: AL
+                  nonRuralFee: '296.72'
+                  ruralFee: '0.00'
+                - code: A4239
+                  codeDescription: Supply allowance for nonadjunctive, nonimplanted continuous glucose monitor (CGM), includes all supplies and accessories, 1 month supply = 1 unit of service
+                  category: SU
+                  state: AL
+                  nonRuralFee: '255.01'
+                  ruralFee: '0.00'
+                - code: A4253
+                  codeDescription: Blood glucose test or reagent strips for home blood glucose monitor, per 50 strips
+                  modifier: NU
+                  category: IN
+                  state: AL
+                  nonRuralFee: '8.32'
+                  ruralFee: '0.00'
+                - code: A4255
+                  codeDescription: Platforms for home blood glucose monitor, 50 per box
+                  category: SU
+                  state: AL
+                  nonRuralFee: '5.47'
+                  ruralFee: '0.00'
+                - code: A4256
+                  codeDescription: Normal, low, and high calibrator solution/chips
+                  category: SU
+                  state: AL
+                  nonRuralFee: '3.38'
+                  ruralFee: '0.00'
+                - code: A4257
+                  codeDescription: Replacement lens shield cartridge for use with laser skin piercing device, each
+                  category: SU
+                  state: AL
+                  nonRuralFee: '16.97'
+                  ruralFee: '0.00'
+                totalCount: 3367
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - Invalid state value. Length should be 2
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/fee-schedule/DME/AL
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/common/fee-schedule/zip-code/{state}:
+    get:
+      tags:
+      - DME and PEN Fee Schedule APIs
+      summary: Fetches rural ZIP codes available for given state
+      operationId: getZipCodes
+      parameters:
+      - name: state
+        in: path
+        description: State
+        required: true
+        schema:
+          type: string
+        example: AL
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch DME fees for all states
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                content:
+                - zipCode: '35010'
+                - zipCode: '35011'
+                - zipCode: '35014'
+                - zipCode: '35016'
+                - zipCode: '35019'
+                totalCount: 5
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - 'getZipCodes.filter: length must be between 2 and 30'
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/fee-schedule/zip-codes/AL
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-cms-common-facility-openapi.yml
+- optum-cms-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

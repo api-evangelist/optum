@@ -1,0 +1,93 @@
+openapi: 3.2.0
+info:
+  title: Optum Release Dates API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged Release Dates API across 2 of this provider''s published API definitions: optum-cms-common-facility-openapi.yml, optum-cms-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: Release Dates API
+paths:
+  /api/cms/common/release-date/{id}:
+    get:
+      tags:
+      - Release Dates API
+      summary: Fetches release date for particular Id
+      operationId: getReleaseDate
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch Release Date for particular Id
+          content:
+            application/json:
+              example:
+                releaseDate: '2023-01-01 00:00:00'
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                status: 400
+                error: Bad Request
+                message: Bad Request
+                path: /cmscommonms/api/cms/common/release-date/AMB1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/release-date/AMB
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-cms-common-facility-openapi.yml
+- optum-cms-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

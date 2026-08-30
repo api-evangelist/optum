@@ -1,0 +1,59 @@
+openapi: 3.2.0
+info:
+  title: Optum CCI Edits Code Validator API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged CCI Edits Code Validator API across 2 of this provider''s published API definitions: optum-cms-common-facility-openapi.yml, optum-cms-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: CCI Edits Code Validator API
+paths:
+  /app/cms/common/cci/codeValidator:
+    get:
+      tags:
+      - CCI Edits Code Validator API
+      summary: Returns list of valid codes from a string of comma separated codes
+      operationId: fetchValidCodes
+      parameters:
+      - name: codes
+        in: query
+        description: Takes comma separated codes with minimum of 1 code and maximum of 36 codes
+        required: true
+        schema:
+          type: string
+        example: 99213,99214
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: string
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-cms-common-facility-openapi.yml
+- optum-cms-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

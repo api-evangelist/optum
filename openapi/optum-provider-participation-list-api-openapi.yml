@@ -1,0 +1,275 @@
+openapi: 3.2.0
+info:
+  title: NCC Data Acquisition Provider Participation List API
+  version: 1.0.0
+  description: 'The National Clinical Clearing(NCC) Data Acquisition API provides users with a REST-based solution for requesting and receiving clinical data from the chosen data vendor through the NCC platform. Authentication: All API''s requires JWT based authentication.'
+servers:
+- url: https://gateway-nonprod.optuminsightplatform.com/odxcloudapigatewaypreprod/ncc
+  variables: {}
+  description: Pre Prod
+- url: https://gateway.optuminsightplatform.com/odxcloudapigateway/ncc
+  variables: {}
+  description: Prod
+tags:
+- name: Provider Participation List
+paths:
+  /v1/vendors/providerparticipation:
+    get:
+      summary: NCC Provider participation list API
+      description: To fetch provider details in NCC, please use /findProviders legacy API. Either TIN or NPI is required.
+      operationId: findProviders
+      parameters:
+      - name: tin
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: npi
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: startDate
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: endDate
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: requestType
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - OR
+          - AND
+          - AND/OR
+      - name: pageNo
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: tenantId
+        in: header
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: clientOrgId
+        in: header
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: acceptEncoding
+        in: header
+        required: true
+        schema:
+          type: string
+          example: gzip
+      security:
+      - ncc_auth:
+        - scope-1
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseProviderParticipationResponse'
+        '401':
+          description: User is unauthorized to access vendor order status API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    format: int64
+                  error:
+                    type: string
+              examples:
+                authError:
+                  value:
+                    error: Token is expired
+                    status: 401
+        '500':
+          description: Application failed to retrieve provider details , Internal server error occured
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                internalError:
+                  value:
+                    status: 500
+                    statusMessage: Internal Server Error
+                    error:
+                      status: INTERNAL_SERVER_ERROR
+                      detail:
+                        message: '{"status":"FAILED","error":{"code":"INTERNAL_SERVER_ERROR"}}'
+      tags:
+      - Provider Participation List
+components:
+  schemas:
+    ProviderParticipation:
+      type: object
+      properties:
+        vendor_orgId:
+          type: string
+        vendorName:
+          type: string
+          description: Vendor name. Possible values are Athena, Veradigm, Moxe, EPP etc.
+        emrInternalOrgs:
+          type: array
+          items:
+            type: object
+            properties:
+              emr_id:
+                type: string
+              emr:
+                type: string
+              providerInfo:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProviderInfo'
+    ApiErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        statusMessage:
+          type: string
+        error:
+          $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        detail:
+          $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    ProviderInfo:
+      type: object
+      properties:
+        provider_infoId:
+          type: string
+        provider_tin:
+          type: string
+        provider_npi:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        provider_orgName:
+          type: string
+        provider_orgState:
+          type: string
+        provider_orgZip:
+          type: string
+        facility_name:
+          type: string
+        facility_npi:
+          type: string
+        facility_tin:
+          type: string
+        facility_state:
+          type: string
+        facility_zip:
+          type: string
+        creationDateTime:
+          type: string
+          format: date-time
+        updatedDateTime:
+          type: string
+          format: date-time
+        activeStartDate:
+          type: string
+          format: date
+        activeEndDate:
+          type: string
+          format: date
+        lastOptOutDate:
+          type: string
+          format: date
+        optInStartDate:
+          type: string
+          format: date
+        optInEndDate:
+          type: string
+          format: date
+    ApiResponseProviderParticipationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            totalNoOfRecords:
+              type: integer
+              format: int64
+              description: Total number of records available
+            pageSize:
+              type: integer
+              format: int32
+              description: Maximum number of records per page
+            pageNumber:
+              type: integer
+              format: int32
+              description: Current page number
+            providerParticipation:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProviderParticipation'
+        status:
+          type: string
+          description: HTTP Response Status
+          example: success
+        message:
+          type: string
+          description: Returns 'VENDOR MATCHED' message if records are found, otherwise 'NO VENDOR MATCHED'
+          enum:
+          - VENDOR MATCHED
+          - NO VENDOR MATCHED
+        error:
+          $ref: '#/components/schemas/ApiErrorResponse'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ncc_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,430 @@
+openapi: 3.2.0
+info:
+  title: Core Service Notes Information APIs API
+  description: Code Search Service provides the APIs for searching codes related information.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/codesearchms
+tags:
+- name: Notes Information APIs
+paths:
+  /api/coding/code/{code}/ama-section-guidelines-doc:
+    get:
+      tags:
+      - Notes Information APIs
+      operationId: fetchSectionGuidelinesPDF
+      parameters:
+      - name: code
+        in: path
+        description: code
+        required: true
+        schema:
+          type: string
+        example: 17000
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PDFDocument'
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{code}/chapter-notes:
+    get:
+      tags:
+      - Notes Information APIs
+      summary: ' Fetches I10CM chapter notes'
+      operationId: chapterNotes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_cm
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: E11
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch chapter notes
+          content:
+            application/json:
+              example:
+                notes:
+                - noteType: Note header (red box) left align
+                  noteTypeId: 126
+                  content:
+                  - All neoplasms, whether functionally active or not, are classified in Chapter 2. Appropriate codes in this chapter (i.e. E05.8, E07.0, E16-E31, E34.-) may be used as additional codes to indicate either functional activity by neoplasms and ectopic endocrine tissue or hyperfunction and hypofunction of endocrine glands associated with neoplasms and other conditions classified elsewhere.
+                  sectionTitle: Chapter 4. Endocrine, Nutritional and Metabolic Diseases (E00-E89)
+                - noteType: Excludes 1 header
+                  noteTypeId: 80
+                  content:
+                  - transitory endocrine and metabolic disorders specific to newborn (P70-P74)
+                  sectionTitle: Chapter 4. Endocrine, Nutritional and Metabolic Diseases (E00-E89)
+                - noteType: AHA reference
+                  noteTypeId: 243
+                  content:
+                  - 2018, 2Q, 6
+                  sectionTitle: Chapter 4. Endocrine, Nutritional and Metabolic Diseases (E00-E89)
+                - noteType: Chapter contains blocks
+                  noteTypeId: 70
+                  content:
+                  - 'This chapter contains the following blocks:'
+                  - E00-E07|Disorders of thyroid gland
+                  - E08-E13|Diabetes mellitus
+                  - E15-E16|Other disorders of glucose regulation and pancreatic internal secretion
+                  - E20-E35|Disorders of other endocrine glands
+                  - E36|Intraoperative complications of endocrine system
+                  - E40-E46|Malnutrition
+                  - E50-E64|Other nutritional deficiencies
+                  - E65-E68|Overweight, obesity and other hyperalimentation
+                  - E70-E88|Metabolic disorders
+                  - E89|Postprocedural endocrine and metabolic complications and disorders, not elsewhere classified
+                  sectionTitle: Chapter 4. Endocrine, Nutritional and Metabolic Diseases (E00-E89)
+        '400':
+          description: 'Bad request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided 'E111' in this web service request is not a valid 'i10_cm' code.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/i10_cm/E11/chapter-notes
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{code}/code-notes:
+    get:
+      tags:
+      - Notes Information APIs
+      summary: ' Fetches CPT or I10CM notes'
+      operationId: codeNotes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - i10_cm
+      - name: code
+        in: path
+        description: Code for which code notes is required
+        required: true
+        schema:
+          type: string
+        example: 29581
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Returns code notes associated to code
+          content:
+            application/json:
+              example:
+                notes:
+                - noteType: CPT Excludes Header
+                  content:
+                  - 'Excludes For treatment in same extremity:'
+                - noteType: CPT Excludes A
+                  content:
+                  - Excludes Endovenous ablation therapy incompetent vein (36473-36479, [36482, 36483])
+                - noteType: CPT Excludes A
+                  content:
+                  - Excludes Sclerosal injection for incompetent vein(s) ([36465], [36466], 36468-36471)
+                - noteType: CPT Excludes A
+                  content:
+                  - Excludes Strapping (29540, 29580)
+        '400':
+          description: 'Bad request: No code notes found for this code and codetype'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '295811' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/i10_cm/29581/code-notes
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{code}/range-notes:
+    get:
+      tags:
+      - Notes Information APIs
+      summary: ' Fetches CPT ,I10CM ,I9v1 range notes'
+      operationId: rangeNotes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - i9v1
+          - i10_cm
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch code range notes
+          content:
+            application/json:
+              example:
+                notes:
+                - noteType: INCLUDES
+                  content:
+                  - 'Established patients: received prior professional services from physician or qualified health care professional or another physician or qualified health care professional in exact same specialty practice and subspecialty in previous three years (99211-99215)'
+                  - 'New patients: have not received professional services from physician or qualified health care professional or any other physician or qualified health care professional in same practice in exact same specialty and subspecialty in previous three years (99202-99205)'
+                  - Office visits
+                  - Outpatient services (including services prior to formal admission to facility)
+                - noteType: EXCLUDES
+                  content:
+                  - 'Services provided in:'
+                  - <IndentA>Emergency department (99281-99285)
+                  - <IndentA>Hospital observation (99217-99220 [99224, 99225, 99226])
+                  - <IndentA>Hospital observation or inpatient with same day admission and discharge (99234-99236)
+        '400':
+          description: 'Bad request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '992133' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/i10_cm/E11/range-notes
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{code}/section-notes:
+    get:
+      tags:
+      - Notes Information APIs
+      summary: ' Fetches CPT ,HCPCS ,I10_CM section notes'
+      operationId: sectionNotes
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - i10_cm
+          - hcpcs
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch section notes
+          content:
+            application/json:
+              example:
+                notes:
+                - noteType: Includes
+                  noteTypeId: 84
+                  content:
+                  - Categories Z40-Z53 are intended for use to indicate a reason for care. They may be used for patients who have already been treated for a disease or injury, but who are receiving aftercare or prophylactic care, or care to consolidate the treatment, or to deal with a residual state
+                  sectionTitle: Encounters for other specific health care (Z40-Z53)
+                - noteType: Excludes 2 header
+                  noteTypeId: 83
+                  content:
+                  - follow-up examination for medical surveillance after treatment (Z08-Z09)
+                  sectionTitle: Encounters for other specific health care (Z40-Z53)
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '992133' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-09-06T11:57:45.881+00:00'
+                path: /api/coding/code/i10_cm/O85/section-notes
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/coding/code/cpt/{code}/subsection-notes:
+    get:
+      tags:
+      - Notes Information APIs
+      summary: Fetches CPT sub section notes
+      operationId: getSubSectionNotes
+      parameters:
+      - name: code
+        in: path
+        description: CPT code for which sub section notes are required
+        required: true
+        schema:
+          type: string
+        example: 17000
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch sub section notes
+          content:
+            application/json:
+              example:
+                notes:
+                - content:
+                  - Destruction means the ablation of benign, premalignant or malignant tissues by any method, with or without curettement, including local anesthesia, and not usually requiring closure.
+                  sectionTitle: Destruction Procedures on the Integumentary System
+                  range: 17000-17999
+        '400':
+          description: 'Bad request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '992133' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-09-06T11:57:45.881+00:00'
+                path: /api/coding/code/cpt/17000/subsection-notes
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    PDFDocument:
+      type: object
+      properties:
+        fileType:
+          type: string
+        fileName:
+          type: string
+        documentBuffer:
+          type: string
+          format: byte
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,182 @@
+openapi: 3.2.0
+info:
+  title: Optum Code Specific Guidelines APIs API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged Code Specific Guidelines APIs across 2 of this provider''s published API definitions: optum-optum-common-facility-openapi.yml, optum-optum-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Code Specific Guidelines APIs
+paths:
+  /api/optum/common/code-specific-guidelines/{codetype}/article/{code}/{article-id}:
+    get:
+      tags:
+      - Code Specific Guidelines APIs
+      summary: Fetch current year code specific guidelines article
+      operationId: fetchCodeSpecificArticle
+      parameters:
+      - name: code
+        in: path
+        description: Term/code search value
+        required: true
+        schema:
+          type: string
+        example: N17.9
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_cm
+          - i10_pcs
+        example: i10_cm
+      - name: article-id
+        in: path
+        required: true
+        schema:
+          type: string
+        example: CGi10440125
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch current year code specific guidelines article
+          content:
+            application/json:
+              example: "{\n    \"year\": \"2025\",\n    \"title\": \"Diseases of the Genitourinary System\",\n    \"articleId\": \"CGi10440125\",\n    \"article\": \"article details\",\n    \"articleUpdate\": \"article update details\"\n    \"quarter\": 0,\n    \"sourceType\": \"CSG_CM\",\n    \"code\": \"N17.9\",\n    \"codeTypeId\": 16384\n}\n"
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2025-07-11T12:23:36.422+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /api/optum/common/code-specific-guidelines/article
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example: "{\n  \"timestamp\": \"2025-05-08T07:22:01.017+00:00\",\n  \"path\": \"/api/optum/common/code-specific-guidelines/article/N17.9\",\n  \"status\": 500,\n  \"error\": \"Internal Server Error\",\n}"
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /api/optum/common/code-specific-guidelines/{codetype}/article-list/{code}:
+    get:
+      tags:
+      - Code Specific Guidelines APIs
+      summary: Fetch current year code specific guidelines articles list
+      operationId: fetchCodeSpecificArticlesList
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: code
+        in: path
+        description: Term/code search value
+        required: true
+        schema:
+          type: string
+        example: I10
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_cm
+          - i10_pcs
+        example: i10_cm
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch current year code specific guidelines articles list
+          content:
+            application/json:
+              example:
+              - year: '2025'
+                title: Diseases of the Genitourinary System
+                articleId: CGi10440125
+                quarter: 0
+                sourceType: CSG_CM
+                code: N17.9
+                codeTypeId: 16384
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2025-07-11T12:23:36.422+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /api/optum/common/code-specific-guidelines/i10_cm/article-list
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example: "{\n  \"timestamp\": \"2025-05-08T07:22:01.017+00:00\",\n  \"path\": \"/api/optum/common/code-specific-guidelines/i10_cm/article-list/E11.01\",\n  \"status\": 500,\n  \"error\": \"Internal Server Error\",\n}"
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-optum-common-facility-openapi.yml
+- optum-optum-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

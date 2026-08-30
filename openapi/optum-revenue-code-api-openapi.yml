@@ -1,0 +1,418 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services Revenue Code API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: Revenue Code
+paths:
+  /codetype/{codetype}/all:
+    get:
+      tags:
+      - Revenue Code
+      summary: Show properties for Revenue Code
+      operationId: getReveunueCodesList
+      parameters:
+      - name: codetype
+        in: path
+        description: The type needed to identify
+        required: true
+        schema:
+          type: string
+          enum:
+          - revenue
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevCodeDesc'
+              example:
+                item:
+                - '0000'
+                - '0001'
+                - '0002'
+                - '0003'
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/revenue/{code}/properties:
+    get:
+      tags:
+      - Revenue Code
+      summary: Show properties for Revenue Code
+      operationId: getProperty_4
+      parameters:
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: '0250'
+      - name: data
+        in: query
+        description: 'Comma seperated list of any of the following<UL><LI>desc-35 : up to 35 character description </LI><LI>desc-48 : up to 48 character description </LI><LI>desc-255 : up to 255 character description </LI><LI>desc-full : full description </LI></UL>'
+        schema:
+          type: string
+          default: desc-full
+        example: desc-full
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevCodeDesc'
+              example:
+                desc35: Pharmacy-General Classification
+        '400':
+          description: Bad data parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevCodeDesc'
+              example:
+                error:
+                - Bad data parameter 'bad'
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: No revenue code description found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevCodeDesc'
+              example:
+                error: []
+                warning: []
+                info:
+                - No revenue code description found for the given revenue code you entered.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/revenuecodes:
+    get:
+      tags:
+      - Revenue Code
+      summary: Return CPT/HCPCS to Revenue code crosswalk for the given cpt/hcpcs {code}
+      operationId: getRevenueCodes
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 99213
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhysicianDocs'
+              example:
+                item:
+                - revCode: '0456'
+                  revCodeDesc: Emergency Room-Urgent Care
+                  tobFacilityCode: '013'
+                  tobFacilityCodeDesc: Hospital Outpatient
+                  note: Clinic or ED Visit. Paid a separate APC.
+        '400':
+          description: Wrong codetype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhysicianDocs'
+              example:
+                error:
+                - The code provided ('9999') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Revenue code crosswalk not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhysicianDocs'
+              example:
+                error: []
+                warning: []
+                info:
+                - Revenue code crosswalk not found for the code (99999) entered.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/{xwalkcodetype}:
+    get:
+      tags:
+      - Revenue Code
+      summary: Rev Codes to CPT/HCPCS Crosswalk
+      operationId: getprocCodes
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - revenue
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: '0250'
+      - name: xwalkcodetype
+        in: path
+        description: 'The xwalkcodetype value '
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: start
+        in: query
+        description: start parameter must be a non negative value and default value is 0
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: maxresults
+        in: query
+        description: maxresults parameter must be a non negative value and default value is 100
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevenueCodeToProcedure'
+              example:
+                item:
+                - code: '90296'
+                  desc: Diphtheria antitoxin, equine, any route
+                  tobFacilityCode: '013'
+                  tobFacilityCodeDesc: Hospital Outpatient
+                  note: This code is not covered by Medicare when submitted on any outpatient claim.
+                link: []
+        '400':
+          description: Start value is negative
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevenueCodeToProcedure'
+              example:
+                error:
+                - Start value is negative.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: No cpt/hcps crosswalk codes found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevenueCodeToProcedure'
+              example:
+                error: []
+                warning: []
+                info:
+                - No cpt/hcps crosswalk codes found for the given revenue code you entered.
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    Item:
+      type: object
+      properties:
+        code:
+          type: string
+        desc:
+          type: string
+        tobFacilityCode:
+          type: string
+          xml:
+            name: tob-facility-code
+        tobFacilityCodeDesc:
+          type: string
+          xml:
+            name: tob-facility-code-desc
+        note:
+          type: string
+        codetype:
+          type: string
+          xml:
+            attribute: true
+    RevenueCodeToProcedure:
+      type: object
+      properties:
+        item:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        link:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+      xml:
+        name: revenue-code-to-procedure
+    PhysicianDoc:
+      required:
+      - text
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+    RevCodeDesc:
+      type: object
+      properties:
+        desc35:
+          type: string
+          xml:
+            name: desc-35
+        desc48:
+          type: string
+          xml:
+            name: desc-48
+        desc255:
+          type: string
+          xml:
+            name: desc-255
+        descFull:
+          type: string
+          xml:
+            name: desc-full
+      xml:
+        name: code-properties
+    PhysicianDocs:
+      type: object
+      properties:
+        physicianDoc:
+          type: array
+          xml:
+            name: physician-doc
+          items:
+            $ref: '#/components/schemas/PhysicianDoc'
+      xml:
+        name: physician-docs
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

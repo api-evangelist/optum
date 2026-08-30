@@ -1,0 +1,205 @@
+openapi: 3.2.0
+info:
+  title: Optum Modifier CrossWalk API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged Modifier CrossWalk API across 2 of this provider''s published API definitions: optum-optum-common-facility-openapi.yml, optum-optum-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Modifier CrossWalk API
+paths:
+  /api/optum/common/{code}/{modifier-type}/{mod-code}/{prod-code}/modifier-download:
+    get:
+      tags:
+      - Modifier CrossWalk API
+      summary: Generates the pdf format file with the details of selected modifier code
+      operationId: printModCodesReport
+      parameters:
+      - name: code
+        in: path
+        description: 'Cpt OR Hcpcs code '
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: modifier-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - MPFS
+          - DME
+          - AMBULANCE
+      - name: mod-code
+        in: path
+        description: 'modifier code '
+        required: true
+        schema:
+          type: string
+        example: 24
+      - name: prod-code
+        in: path
+        description: Product code C/M i.e Commercial/ Medicare
+        required: true
+        schema:
+          type: string
+        example: M
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Generates the PDF and return the content in the format of byte array, response headers and media type as PDF
+          content:
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example: " access-control-expose-headers: Content-Disposition \n cache-control: no-cache,no-store,max-age=0,must-revalidate \n connection: keep-alive \n content-disposition: attachment; filename=PHYSICIAN.pdf \n content-length: 3663 \n content-type: application/pdf \n date: Wed,26 Apr 2023 12:17:11 GMT \n expires: 0 \n pragma: no-cache \n strict-transport-security: max-age=31536000 ; includeSubDomains \n vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers \n x-content-type-options: nosniff \n x-frame-options: DENY \n x-xss-protection: 1; mode=block \n"
+        '404':
+          description: Not found- No Data Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - No Data Found.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-02-08T06:19:48.666+00:00'
+                path: /optumcommonms/api/optum/common/99213/MPFS/24/M/modifier-download
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /api/optum/common/{code}/{modifier-type}/modifier-crosswalk:
+    get:
+      tags:
+      - Modifier CrossWalk API
+      summary: Returns the list of modifierCrosswalk based on the selected cpt or hcpcs code
+      operationId: modifierCrosswalk
+      parameters:
+      - name: code
+        in: path
+        description: 'Cpt OR Hcpcs code '
+        required: true
+        schema:
+          type: string
+        example: A4580
+      - name: modifier-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - MPFS
+          - DME
+          - AMBULANCE
+          - ASC
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: fetch available list of modifier crosswalk for the selected code
+          content:
+            application/json:
+              example:
+                content:
+                - code: A4580
+                  modifierCodeLink:
+                    value: '52'
+                    href: /api/coding/code/52/modifier-crosscodes
+                  description: Reduced Services
+                  usage: (Modifier 52 is used for surgical procedures and certain diagnostic procedures for whch anesthesia was not planned. Report this modifier when the procedure was discontinued after the patient was prepared and brought to the room where the procedure was to be performed. only.~Modifier is valid for reporting reduced radiology procedures.~When a radiology procedure is reduced, the correct reporting is to assign  the CPT code to the extent of the procedure performed.  This modifier is used only to report a radiology procedure that has been reduced when no other code exists to report what has been done.  Report the intended code with modifier 52.~For example, if the planned procedure is a two-view chest x-ray and only one view of the chest is performed, do not report CPT code 71020-52 (for x-ray chest, two views-reduced service).  Instead, report CPT code 71010 (x-ray chest, single view).  If a barium swallow is not completed because the patient cannot handle the barium, report CPT code 74270-52.)
+                  definition: 'Under certain circumstances a service or procedure is partially reduced or eliminated at the discretion of the physician or other qualified health care professional. Under these circumstances the service provided can be identified by its usual procedure number and the addition of modifier 52, signifying that the service is reduced. This provides a means of reporting reduced services without disturbing the identification of the basic service. Note: For hospital outpatient reporting of a previously scheduled procedure/service that is partially reduced or cancelled as a result of extenuating circumstances or those that threaten the well-being of the patient prior to or after administration of anesthesia, see modifiers 73 and 74 (see modifiers approved for ASC hospital outpatient use).'
+                  sourcingRationaleNum: 'Sourcing Rationale: 589'
+                  sourcingRationale: "Current Procedural Terminology (CPT) Level I modifiers and Healthcare Common Procedure Coding System (HCPCS) Level II modifiers are appended to Level I or Level II codes based on information from the Centers for Medicare and Medicaid Services (CMS). The identified modifiers are: the ambulance specific modifiers, 1P, 24, 25, 2P, 3P, 50, 51, 52, 54, 55, 56, 57, 58, 59, 76, 77, 78, 79, 8P, 90, 91, AA, AB, AD, AQ, AR, AT, AU, AV, AW, AX, AY, BA, BP, BR, BU, CD, CE, CF, CH, CI, CJ, CK, CL, CM, CN, CT, EA, EB, EC, EM, EY, G7-G9, GE, GG, GK, GL, GM, GN, GO, GP, GQ, GT, J4, KB, KC, KF, KI, KJ, KM, KN, KZ, LR, NR, NU, PI, PS, PT, Q7-Q9, QA, QB, QE, QF, QG, QK, QR, QS, QW, QX, QY, QZ, RR, UE, UN, UP, UQ, UR, US, VM, XE, XP, XS, XU, ZA, ZB,ZC.   \nThe above identified CPT/HCPCS modifier to procedure relationships are supported by CMS information from the Medicare Claims Processing Manual, program transmittals, National Physician Fee Schedule (NPFS), Clinical Laboratory Fee Schedule, DME/PEN fee schedules, Ambulance fee schedule, and claims adjudication policies.\nModifiers that are covered by other Medicare rules; therefore are excluded from this rule are:\n22, 26, 62, 66, 80-82, AS, and TC.\nModifiers that do not have a specific national CMS source or a source that addresses specific codes that these modifiers should be appended to; therefore are excluded from this rule are:\n23, 32, 33, 47, 53, 63, 92, 93, 95, 96, 97, 99, A1-A9, AE, AF, AG, AH, AI,AJ, AK, AM, AO,AP, BO, CB, CC, CG, CO, CP, CQ, CR, CS, DA, E1-E4, EJ, EP, ER, EX, F1-FA, FP, FQ, FR, FS, FT, FX, FY, G0,GA, GB, GC, GD, GH, GJ, GR, GU, GV, GX, GW, J1, J2, J3, J5, JA, JB, JC, JD, JE, JG, JK, JL, JW, JZ, K0-K4, KA, KD ,KE,  KG, KH, KK, KL, KO, KP, KQ, KR, KS, KT, KU, KV, KW, KX, KY, LC, LD, LL, LM, LS, LT, LU, M2, MA-MH, MS, N1, N2, N3, NB, P1-P6, PA, PB, PC, PD, PL, PM, PN, PO, Q0-Q1, Q3-Q6, QC, QD, QH, QJ, QL, QP, QQ, QT, RA, RB, RC, RD, RE, RI, RT, SC, SF, SG, SW, SZ, T1-TA, TB, TS, UJ, V1-V9, VP, X1, X2, X3, X4, X5.\nModifiers that have a coverage indicator of I, M, or S on the HCPCS file.  These indicators state that they are noncovered or nonpayable by Medicare.  These modifiers are excluded from this rule are:\nAZ, FB, GY, GZ, H9, HA-HZ, PA-PC, SA-SB, SD-SE, SH-SN, SQ, SS-SV, SY, TD-TH, TJ-TN, TP-TR, TT-TW, U1-U9, UA-UD, UF-UH and UK.\nModifiers that have facility related only national CMS sources; therefore are not included in this professional rule:\n27, 73, 74, BL, CA, ED, EE, ET, FC, G1-G6, GF, GS, JG, L1, Q2, QM, and QN."
+                  source: CMS Policy
+                  productCode: M
+                  commercialMedicare: Medicare
+                totalCount: 43
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-03-27T12:23:36.422+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /optumcommonms/api/optum/common/A4580/test/modifier-crosswalk?limit=150&page=1
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-optum-common-facility-openapi.yml
+- optum-optum-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

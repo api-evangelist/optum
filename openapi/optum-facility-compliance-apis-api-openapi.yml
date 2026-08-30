@@ -1,0 +1,632 @@
+openapi: 3.2.0
+info:
+  title: Optum Facility Compliance APIs API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged Facility Compliance APIs across 2 of this provider''s published API definitions: optum-optum-common-facility-openapi.yml, optum-optum-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Facility Compliance APIs
+paths:
+  /app/optum/facility/claim/update:
+    put:
+      tags:
+      - Facility Compliance APIs
+      summary: Update the claim
+      operationId: updateClaim
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacilityClaimUpdate'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /app/optum/facility/claim/update-claim-line:
+    put:
+      tags:
+      - Facility Compliance APIs
+      summary: Update the claim line
+      operationId: updateClaimLine
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacilityClaimUpdate'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /app/optum/facility/claim/update-claim-diagnosis:
+    put:
+      tags:
+      - Facility Compliance APIs
+      summary: Update the claim diagnosis
+      operationId: updateClaimDiagnosis
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacilityClaimUpdate'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /app/optum/facility/claim/submit/{compliance-type}/{scenario-number}:
+    post:
+      tags:
+      - Facility Compliance APIs
+      summary: Submit claim
+      operationId: submitClaim
+      parameters:
+      - name: compliance-type
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: scenario-number
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: moduleId
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - '106'
+          - '105'
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FacilityClaimResponse'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /app/optum/facility/claim/reset:
+    post:
+      tags:
+      - Facility Compliance APIs
+      summary: Reset claim
+      operationId: resetClaim
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacilityClaim'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /app/optum/facility/claim/create:
+    post:
+      tags:
+      - Facility Compliance APIs
+      summary: Inserts a new claim
+      operationId: createClaim
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacilityClaim'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /app/optum/facility/claim/create-claim-line:
+    post:
+      tags:
+      - Facility Compliance APIs
+      summary: Inserts a new claim line
+      operationId: createClaimLine
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacilityClaimLine'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int64
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /app/optum/facility/claim/create-claim-diagnosis:
+    post:
+      tags:
+      - Facility Compliance APIs
+      summary: Inserts a new claim diagnosis
+      operationId: createClaimDiagnosis
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacilityClaimDiag'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /app/optum/facility/claim/details/{compliance-type}/{scenario-number}:
+    get:
+      tags:
+      - Facility Compliance APIs
+      summary: Get claim
+      operationId: getClaim
+      parameters:
+      - name: compliance-type
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: scenario-number
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: moduleId
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - '106'
+          - '105'
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FacilityClaim'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /app/optum/facility/claim/abn/{scenario-number}:
+    get:
+      tags:
+      - Facility Compliance APIs
+      summary: Get applicable codes for ABN
+      operationId: getAbnCodes
+      parameters:
+      - name: scenario-number
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Code'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /app/optum/facility/claim/delete/claim-line-edits:
+    delete:
+      tags:
+      - Facility Compliance APIs
+      summary: Delete claim line edits
+      operationId: deleteClaimLineEdits
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int32
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /app/optum/facility/claim/delete-claim-line/{claim-line-id}:
+    delete:
+      tags:
+      - Facility Compliance APIs
+      summary: Delete the claim line
+      operationId: deleteClaimLine
+      parameters:
+      - name: claim-line-id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+components:
+  schemas:
+    FacilityClaimLine:
+      type: object
+      properties:
+        claimLineId:
+          type: integer
+          format: int32
+        claimId:
+          type: integer
+          format: int64
+        revenueCode:
+          type: string
+        procedureCode:
+          type: string
+        modifier:
+          type: string
+        lineNumber:
+          type: integer
+          format: int32
+        units:
+          type: integer
+          format: int32
+        dateOfService:
+          type: string
+          format: date-time
+        ndc:
+          type: string
+    FacilityClaimDiag:
+      type: object
+      properties:
+        claimId:
+          type: integer
+          format: int64
+        principalDx:
+          type: string
+        admitting:
+          type: string
+        others:
+          type: string
+        primary1Px:
+          type: string
+        primary1PxDate:
+          type: string
+          format: date-time
+        primary2Px:
+          type: string
+        primary2PxDate:
+          type: string
+          format: date-time
+        other1Px:
+          type: string
+        other1PxDate:
+          type: string
+          format: date-time
+        other2Px:
+          type: string
+        other2PxDate:
+          type: string
+          format: date-time
+        other3Px:
+          type: string
+        other3PxDate:
+          type: string
+          format: date-time
+        other4Px:
+          type: string
+        other4PxDate:
+          type: string
+          format: date-time
+        reasonForVisit:
+          type: string
+        ipAdmitting:
+          type: string
+    FacilityClaimUpdate:
+      type: object
+      properties:
+        claimId:
+          type: integer
+          format: int64
+        claimLineId:
+          type: integer
+          format: int64
+        fieldName:
+          type: string
+        fieldValue:
+          type: string
+    Code:
+      type: object
+      properties:
+        codeValue:
+          type: string
+        description:
+          type: string
+    FacilityClaim:
+      type: object
+      properties:
+        claimId:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        currentTimeStamp:
+          type: string
+          format: date-time
+        tabNumber:
+          type: integer
+          format: int32
+        payerType:
+          type: integer
+          format: int32
+        contractorNum:
+          type: string
+        contractorSort:
+          type: string
+        medicaidState:
+          type: string
+        claimIdentifier:
+          type: string
+        typeOfBill:
+          type: string
+        statStartDate:
+          type: string
+          format: date-time
+        statEndDate:
+          type: string
+          format: date-time
+        patientDOB:
+          type: string
+          format: date-time
+        patientGender:
+          type: string
+        patientStatus:
+          type: string
+        pointOfOrigin:
+          type: string
+        admissionDate:
+          type: string
+          format: date-time
+        admissionType:
+          type: string
+        conditionCodes:
+          type: string
+        valueCodes:
+          type: string
+        occurrenceCodes:
+          type: string
+        occurrenceSpanCodes:
+          type: string
+        complianceType:
+          type: integer
+          format: int32
+        moduleId:
+          type: string
+        facilityClaimLineList:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityClaimLine'
+        claimDiag:
+          $ref: '#/components/schemas/FacilityClaimDiag'
+        claimLineEditsList:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityClaimLineEdits'
+        payer:
+          type: string
+    FacilityClaimResponse:
+      type: object
+      properties:
+        claimId:
+          type: integer
+          format: int64
+        patientUserId:
+          type: integer
+          format: int64
+        claimType:
+          type: string
+          enum:
+          - PHYSICIAN
+          - FACILITY
+        edits:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityClaimLineEdits'
+    FacilityClaimLineEdits:
+      type: object
+      properties:
+        claimLineId:
+          type: integer
+          format: int32
+        editType:
+          type: string
+        mnemonic:
+          type: string
+        message:
+          type: string
+        claimLineNum:
+          type: integer
+          format: int32
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-optum-common-facility-openapi.yml
+- optum-optum-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

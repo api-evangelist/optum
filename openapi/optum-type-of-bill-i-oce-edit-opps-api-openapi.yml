@@ -1,0 +1,166 @@
+openapi: 3.2.0
+info:
+  title: CMS Common Facility Type of Bill I/OCE Edit OPPS API
+  description: MicroService that contains CMS related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: Type of Bill I/OCE Edit OPPS
+paths:
+  /api/cms/facility/tob-oce:
+    get:
+      tags:
+      - Type of Bill I/OCE Edit OPPS
+      summary: Fetches the type of bill I/OCE edit
+      operationId: getTobOce
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 250
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch the type of bill I/OCE Edit OPPS details
+          content:
+            application/json:
+              example:
+                content:
+                - code: '1'
+                  description: TOB 012X or 014X with condition code 41 reported in FLs 18-28
+                - code: '2'
+                  description: TOB 012X or 014X without condition code 41
+                totalCount: 19
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2024-04-24T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/facility/tob-oce
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/facility/tob-oce/{code}:
+    get:
+      tags:
+      - Type of Bill I/OCE Edit OPPS
+      summary: Fetches the specifics bill type of bill I/OCE edit
+      operationId: getTobOceByCode
+      parameters:
+      - name: code
+        in: path
+        description: Code of the TOB OCE
+        required: true
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch the type of bill I/OCE edit OPPS details
+          content:
+            application/json:
+              example:
+              - description: Line Item Date Edit
+                oceValueList:
+                - code: '10'
+                  description: Service submitted for denial (condition code [UB-4 FL 18-28] 21)
+                  editResult: "This edit occurs when the claim has a condition code 21, Request for Denial Notification, reported  in FLs 18-28.    It identifies services that are billed by a provider for a denial notice. \n\nThe claim will be denied."
+                  providerAction: 'The provider cannot correct and resubmit the claim but they can appeal the denial.  '
+                - code: '23'
+                  description: Invalid date
+                  editResult: "This edit occurs when the from and through statement covers dates (FL 6) or the service date (FL 45) are invalid or the service date falls outside the from and through dates.  This edit terminates the processing of the claim. \n\nReturn claim to provider (RTP)."
+                  providerAction: The provider should resubmit the claim once the problem(s) is/are corrected.
+                - code: '24'
+                  description: Date out of OCE range
+                  editResult: "This edit occurs when the \"from\" date reported in the statement covers period, FL 6 falls outside the date range for any version of the OCE program (before August 1, 2000).  This edit terminates the processing of the claim.  \n\nThe claim will be suspended."
+                  providerAction: A suspended claim is not returned to the provider but will not be processed for payment until the FI makes a determination or obtains further information.
+                - code: '11'
+                  description: Service submitted for FI/MAC review (condition code [UB-4 FL 18-28] 20)
+                  editResult: 'This edit occurs when the claim has a condition code 20, Request for FI/MAC Review,  reported  in FLs 18-28.  It identifies non-covered services that are billed by the provider when a beneficiary requests a Medicare review for coverage.
+
+
+                    The claim will be suspended.'
+                  providerAction: A suspended claim is not returned to the provider but will not be processed for payment until the FI makes a determination or obtains further information.
+              - description: Bill Type Edit
+                oceValueList:
+                - code: '46'
+                  description: Partial hospitalization condition code 41 not approved for type of bill
+                  editResult: "This edit identifies incorrect partial hospitalization claims and occurs when TOB code (FL 4) 12X or 14X is present on the claim with condition code 41 in FLs 18-28. \n\nReturn claim to provider (RTP)."
+                  providerAction: The provider should resubmit the claim once the problem(s) is/are corrected.
+        '400':
+          description: 'Bad request: If any of the path parameters are invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - Type of Bill I/OCE Edit Code is not supported
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2024-04-24T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/facility/tob-oce/111
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,170 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services Claim Review API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: Claim Review
+paths:
+  /claims5x:
+    get:
+      tags:
+      - Claim Review
+      summary: Get Claims Information
+      operationId: getClaims
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/xml:
+              schema:
+                type: string
+              example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<claims>\n  <claim id=\"1\">\n    <claim-line diagnostic-type='icd10cm'>\n      <service-begin-date>2009-07-16</service-begin-date>\n      <diagnostic-code>E10.9</diagnostic-code>\n      <diagnostic-code>E10.19</diagnostic-code>\n      <modifier>21</modifier>\n      <modifier>51</modifier>\n      <procedure-code>13100</procedure-code>\n    </claim-line>\n    <claim-line diagnostic-type='icd10cm'>\n      <service-begin-date>2009-07-16</service-begin-date>\n      <diagnostic-code>E10.9</diagnostic-code>\n      <diagnostic-code>250.01</diagnostic-code>\n      <modifier>21</modifier>\n      <modifier>51</modifier>\n      <procedure-code>13100</procedure-code>\n      <place-of-service>11</place-of-service>\n      <units>1</units>\n    </claim-line>\n    <birth-date>2009-07-16</birth-date>\n    <service-date>2009-07-16</service-date>\n    <gender>M</gender>\n    <payer>10102</payer>\n    <taxonomy>208600000X</taxonomy>\n  </claim>\n</claims>"
+        '401':
+          description: Not Authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimResponses'
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+    post:
+      tags:
+      - Claim Review
+      summary: Get Claims Responses
+      operationId: process
+      requestBody:
+        description: Term Search Request.
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ClaimResponses'
+            examples:
+              Claim Request:
+                description: Claim Request
+                value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<claims>\n  <claim id=\"1\">\n    <claim-line diagnostic-type='icd10cm'>\n      <service-begin-date>2009-07-16</service-begin-date>\n      <diagnostic-code>E10.9</diagnostic-code>\n      <diagnostic-code>E10.19</diagnostic-code>\n      <modifier>21</modifier>\n      <modifier>51</modifier>\n      <procedure-code>13100</procedure-code>\n    </claim-line>\n    <claim-line diagnostic-type='icd10cm'>\n      <service-begin-date>2009-07-16</service-begin-date>\n      <diagnostic-code>E10.9</diagnostic-code>\n      <diagnostic-code>250.01</diagnostic-code>\n      <modifier>21</modifier>\n      <modifier>51</modifier>\n      <procedure-code>13100</procedure-code>\n      <place-of-service>11</place-of-service>\n      <units>1</units>\n    </claim-line>\n    <birth-date>2009-07-16</birth-date>\n    <service-date>2009-07-16</service-date>\n    <gender>M</gender>\n    <payer>10102</payer>\n    <taxonomy>208600000X</taxonomy>\n  </claim>\n</claims>"
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimResponses'
+              example:
+                claimResponse:
+                - edit:
+                  - description: '[Pattern 8400] The diagnosis code(s) E1019 and E109 are invalid.'
+                    editConflict: Invalid Diagnosis Code
+                    editType: Review
+                    mnemonic: ICD
+                    line: 1
+                  - description: '[Pattern 13248] The modifier code(s) 21 are invalid.'
+                    editConflict: Invalid Modifier
+                    editType: Review
+                    mnemonic: IMO
+                    line: 1
+                  - description: '[Pattern 8400] The diagnosis code(s) 25001 and E109 are invalid.'
+                    editConflict: Invalid Diagnosis Code
+                    editType: Review
+                    mnemonic: ICD
+                    line: 2
+                  - description: '[Pattern 13248] The modifier code(s) 21 are invalid.'
+                    editConflict: Invalid Modifier
+                    editType: Review
+                    mnemonic: IMO
+                    line: 2
+                  claimId: '1'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimResponses'
+              example: "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<notifications>\n    <error>Unexpected close tag &lt;/servce-date&gt;; expected &lt;/service-date&gt;.\n at [row,col {unknown-source}]: [48,41]</error>\n</notifications>"
+        '401':
+          description: Not Authorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimResponses'
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+components:
+  schemas:
+    ClaimResponses:
+      required:
+      - claimResponse
+      type: object
+      properties:
+        claimResponse:
+          type: array
+          xml:
+            name: claim-response
+          items:
+            $ref: '#/components/schemas/ClaimResponse'
+      xml:
+        name: claim-responses
+    ClaimResponse:
+      type: object
+      properties:
+        edit:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClaimLineEdit'
+        claimId:
+          type: string
+          xml:
+            name: claim-id
+            attribute: true
+    ClaimLineEdit:
+      required:
+      - description
+      - editConflict
+      - editType
+      - mnemonic
+      type: object
+      properties:
+        description:
+          type: string
+        editConflict:
+          type: string
+          xml:
+            name: edit-conflict
+        editType:
+          type: string
+          xml:
+            name: edit-type
+        mnemonic:
+          type: string
+        line:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

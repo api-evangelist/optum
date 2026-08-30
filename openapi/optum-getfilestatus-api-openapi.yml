@@ -1,0 +1,88 @@
+openapi: 3.2.0
+info:
+  title: File and Document Tracking API v1 Get File Status API
+  description: The File and Document Tracking API, a healthcare API for customers using Communication and Payment Services solutions from Optus, provides payers with real-time processing status at the file and document levels.
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com/api/ptapi/v1
+tags:
+- name: GetFileStatus
+paths:
+  /getFileStatus/{contextID}/{fileName}:
+    get:
+      tags:
+      - GetFileStatus
+      description: To get file status by a filename
+      parameters:
+      - name: contextID
+        in: path
+        description: The client context ID should be a unique identifier for a specific client.
+        required: true
+        schema:
+          type: string
+      - name: fileName
+        in: path
+        description: An unique filename
+        required: true
+        schema:
+          type: string
+      - name: importStartDate
+        in: query
+        description: MM/DD/YYYY
+        schema:
+          type: string
+      - name: importEndDate
+        in: query
+        description: MM/DD/YYYY
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fileStatusRespObj'
+components:
+  schemas:
+    fileStatusObj:
+      type: object
+      properties:
+        fileName:
+          type: string
+          example: 123402820210316OR.TXT
+        importDate:
+          type: string
+          example: 05/06/2021 06:05:42 AM
+        fileStatus:
+          type: string
+          example: Released
+        fileCompletedDate:
+          type: string
+          example: 05/06/2021 06:05:42 AM
+        firstMailDate:
+          type: string
+          example: 05/06/2021 06:05:42 AM
+        lastMailDate:
+          type: string
+          example: 05/06/2021 06:05:42 AM
+        eNoteDeliveryDate:
+          type: string
+          example: 05/06/2021 06:05:42 AM
+        clientKey:
+          type: string
+          example: '1234028'
+    fileStatusRespObj:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/fileStatusObj'
+        rowCount:
+          type: integer
+          example: 1
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-enabled: true

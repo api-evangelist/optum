@@ -1,0 +1,142 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services ICD10 Mapping API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: ICD10 Mapping
+paths:
+  /codetype/{codetype}/{code}/icd10mapping:
+    get:
+      tags:
+      - ICD10 Mapping
+      summary: Return ICD-10 Mapping for the given ICD-9-V1 or ICD-9-V3 {code}
+      operationId: getI10Mapping
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - icd9v1
+          - icd9v3
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 314.2
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Icd10Mapping'
+              example:
+                node:
+                - code: 08J0XZZ
+                  desc: Inspection of Right Eye, External Approach
+                  tips: GEM
+                  premierPick: N
+                  billTogether: N
+                  href: /ws/codetype/icd10pcs/08J0XZZ
+        '400':
+          description: Wrong codetype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Icd10Mapping'
+              example:
+                error:
+                - The code provided ('5.31') in this web service request is not a valid 'icd9v1' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Code does not have ICD-10 Mapping
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Icd10Mapping'
+              example:
+                error:
+                - The Code '315.3' does not have ICD-10 Mapping
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    Icd10Code:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+        desc:
+          type: string
+        tips:
+          type: string
+        premierPick:
+          type: string
+          xml:
+            name: premier-pick
+        billTogether:
+          type: string
+          xml:
+            name: bill-together
+        href:
+          type: string
+          xml:
+            attribute: true
+    Icd10Mapping:
+      type: object
+      properties:
+        node:
+          type: array
+          items:
+            $ref: '#/components/schemas/Icd10Code'
+      xml:
+        name: icd-10-mapping
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

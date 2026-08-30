@@ -1,0 +1,402 @@
+openapi: 3.2.0
+info:
+  title: Optum Health Check API
+  version: '1.0'
+  description: 'Operations tagged HealthCheck across 14 of this provider''s published API definitions: optum-abm-care-decision-support-api-openapi.yml, optum-auth-referral-submission-health-check-openapi.yml, optum-claim-actions-health-check-openapi.yml, optum-claim-inquiry-health-check-openapi.yml, optum-document-search-health-check-openapi.yml, optum-eligibility-pre-service-health-check-openapi.yml, optum-enhanced-eligibility-api-openapi.yml, optum-formatting-rule-api-openapi.yml, optum-optum-real-health-check-api-openapi.yml, optum-patient-benefit-check-health-check-openapi.yml, optum-real-dental-claim-submission-api-openapi.yml, optum-real-prior-authorization-api-openapi.yml, optum-real-provider-access-api-openapi.yml, optum-telecom-formatter-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://sandbox-apigw.optum.com
+  description: ABM Care Decision Support API server
+- url: https://apigw.optum.com
+  description: Production server (uses live data)
+- description: Generated server url
+  url: https://sandbox-apigw.optum.com/rxn/formattingrules
+- url: https://sandbox-apigw.optum.com/oihub
+- description: Generated server url
+  url: ' https://sandbox-apigw.optum.com/rxn/telecomformatter'
+tags:
+- name: HealthCheck
+paths:
+  /abm/dsrservicehc/v1:
+    get:
+      tags:
+      - HealthCheck
+      summary: Health check endpoint for the Decision Support API (GET /abm/dsrservicehc/v1)
+      responses:
+        '200':
+          description: OK
+    servers:
+    - url: https://sandbox-apigw.optum.com
+      description: ABM Care Decision Support API server
+  /oihub/patient/auth/referral/v1/healthcheck:
+    get:
+      summary: Health Check
+      description: Performs a health check to validate the availability and operational status of the  Auth Referral Submission Service.
+      operationId: healthCheck
+      security:
+      - oAuth:
+        - read_healthcheck
+      tags:
+      - HealthCheck
+      responses:
+        '200':
+          description: Service is healthy - If the API engine is working correctly and if the entry points are accessible, the API operating status response shows "OK".
+        '500':
+          description: 'Service is unhealthy
+
+            - **Note:** If you receive a response other than 200 OK, the health check failed. Please submit a ticket with Optum.
+
+            '
+    servers:
+    - url: https://sandbox-apigw.optum.com
+  /oihub/claim/actions/v1/healthcheck:
+    get:
+      summary: Health Check
+      description: Performs a health check to validate the availability and operational status of the Claim Actions service.
+      operationId: healthCheck
+      security:
+      - oAuth:
+        - read_healthcheck
+      tags:
+      - HealthCheck
+      responses:
+        '200':
+          description: Service is healthy - If the API engine is working correctly and if the entry points are accessible, the API operating status response shows "OK".
+        '500':
+          description: 'Service is unhealthy
+
+            - **Note:** If you receive a response other than 200 OK, the health check failed. Please submit a ticket with Optum.
+
+            '
+    servers:
+    - url: https://sandbox-apigw.optum.com
+  /oihub/claim/inquiry/v1/healthcheck:
+    get:
+      summary: Health Check
+      description: Performs a health check to validate the availability and operational status of the Claim Inquiry service.
+      operationId: healthCheck
+      security:
+      - oAuth:
+        - read_healthcheck
+      tags:
+      - HealthCheck
+      responses:
+        '200':
+          description: Service is healthy - If the API engine is working correctly and if the entry points are accessible, the API operating status response shows "OK".
+        '500':
+          description: 'Service is unhealthy
+
+            - **Note:** If you receive a response other than 200 OK, the health check failed. Please submit a ticket with Optum.
+
+            '
+    servers:
+    - url: https://sandbox-apigw.optum.com
+  /oihub/document/search/v1/healthcheck:
+    get:
+      summary: Health Check
+      description: Performs a health check to validate the availability and operational status of the  Document Search API Service.
+      operationId: healthCheck
+      security:
+      - oAuth:
+        - read_healthcheck
+      tags:
+      - HealthCheck
+      responses:
+        '200':
+          description: Service is healthy - If the API engine is working correctly and if the entry points are accessible, the API operating status response shows "OK".
+        '500':
+          description: 'Service is unhealthy
+
+            - **Note:** If you receive a response other than 200 OK, the health check failed. Please submit a ticket with Optum.
+
+            '
+    servers:
+    - url: https://sandbox-apigw.optum.com
+  /oihub/eligibility/v1/healthcheck:
+    get:
+      summary: Health Check
+      description: Performs a health check to validate the availability and operational status of the  Eligibility Pre Service.
+      operationId: healthCheck
+      security:
+      - oAuth:
+        - read_healthcheck
+      tags:
+      - HealthCheck
+      responses:
+        '200':
+          description: Service is healthy - If the API engine is working correctly and if the entry points are accessible, the API operating status response shows "OK".
+        '500':
+          description: 'Service is unhealthy
+
+            - **Note:** If you receive a response other than 200 OK, the health check failed. Please submit a ticket with Optum.
+
+            '
+    servers:
+    - url: https://sandbox-apigw.optum.com
+  /rcm/eligibility/v1/healthcheck:
+    get:
+      tags:
+      - HealthCheck
+      summary: Validate the status of the system
+      description: A healthcheck of the Enhanced Eligibility workflow
+      security:
+      - oAuth:
+        - read_healthcheck
+      operationId: healthcheck
+      responses:
+        '200':
+          $ref: '#/components/responses/HealthcheckHealthyResponse'
+        '401':
+          $ref: '#/components/responses/PermissionDeniedError'
+        '500':
+          $ref: '#/components/responses/HealthcheckUnhealthyResponse'
+    servers:
+    - url: https://sandbox-apigw.optum.com
+      description: Sandbox server (uses test data)
+    - url: https://apigw.optum.com
+      description: Production server (uses live data)
+  /health/formatting-rules:
+    get:
+      responses:
+        '200':
+          description: OK
+      summary: Health check endpoint for the formatting rule engine
+      tags:
+      - HealthCheck
+      security:
+      - oauth2_security: []
+    servers:
+    - description: Generated server url
+      url: https://sandbox-apigw.optum.com/rxn/formattingrules
+  /pre-service/v1/healthcheck:
+    get:
+      summary: Health Check
+      description: API Health Check - The health check endpoint checks the operating status of our APIs. It is a ping for the APIs entry point to ensure the entry points are accessible. This is the first thing you can do if something goes wrong.
+      operationId: healthCheck
+      security:
+      - oAuth:
+        - read_healthcheck
+      tags:
+      - HealthCheck
+      responses:
+        '200':
+          description: Service is healthy - If the API engine is working correctly and if the entry points are accessible, the API operating status response shows "OK".
+        '500':
+          description: 'Service is unhealthy
+
+            - **Note:** If you receive a response other than 200 OK, the health check failed. Please submit a ticket with Optum.
+
+            '
+    servers:
+    - url: https://sandbox-apigw.optum.com/oihub
+  /oihub/patient/benefit/check/v1/healthcheck:
+    get:
+      summary: Health Check
+      description: Performs a health check to validate the availability and operational status of the  Patient Benefit Check Service.
+      operationId: healthCheck
+      security:
+      - oAuth:
+        - read_healthcheck
+      tags:
+      - HealthCheck
+      responses:
+        '200':
+          description: Service is healthy - If the API engine is working correctly and if the entry points are accessible, the API operating status response shows "OK".
+        '500':
+          description: 'Service is unhealthy
+
+            - **Note:** If you receive a response other than 200 OK, the health check failed. Please submit a ticket with Optum.
+
+            '
+    servers:
+    - url: https://sandbox-apigw.optum.com
+  /py/oihub/claim/dnt/submit/v1/health-check:
+    get:
+      responses:
+        '200':
+          description: Service is healthy
+        '500':
+          description: Service is unhealthy
+      operationId: healthCheck
+      tags:
+      - HealthCheck
+      summary: Health Check Endpoint
+      security:
+      - bearerAuth: []
+    servers:
+    - url: https://sandbox-apigw.optum.com
+  /oihub/fhirpriorauth/v1/health-check:
+    get:
+      summary: Health Check
+      description: Performs a health check to validate the availability and operational status of the FHIR Prior Auth.
+      operationId: healthCheck
+      security:
+      - oAuth:
+        - read_healthcheck
+      tags:
+      - HealthCheck
+      responses:
+        '200':
+          description: Service is healthy - If the API engine is working correctly and if the entry points are accessible, the API operating status response shows "OK".
+        '500':
+          description: 'Service is unhealthy
+
+            - **Note:** If you receive a response other than 200 OK, the health check failed. Please submit a ticket with Optum.
+
+            '
+    servers:
+    - url: https://sandbox-apigw.optum.com
+  /oihub/fhirprovideraccess/v1/health-check:
+    get:
+      summary: Health Check
+      description: Performs a health check to validate the availability and operational status of the FHIR Provider Access.
+      operationId: healthCheck
+      security:
+      - oAuth:
+        - read_healthcheck
+      tags:
+      - HealthCheck
+      responses:
+        '200':
+          description: Service is healthy - If the API engine is working correctly and if the entry points are accessible, the API operating status response shows "OK".
+        '500':
+          description: 'Service is unhealthy
+
+            - **Note:** If you receive a response other than 200 OK, the health check failed. Please submit a ticket with Optum.
+
+            '
+    servers:
+    - url: https://sandbox-apigw.optum.com
+  /health/telecom-formatter:
+    get:
+      responses:
+        '200':
+          description: OK
+      summary: Health check endpoint for the telecom-formatter
+      tags:
+      - HealthCheck
+      security:
+      - oauth2_security: []
+    servers:
+    - description: Generated server url
+      url: ' https://sandbox-apigw.optum.com/rxn/telecomformatter'
+components:
+  responses:
+    HealthcheckUnhealthyResponse:
+      description: Internal Server Error
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: unhealthy
+    PermissionDeniedError:
+      description: Unauthorized.
+      headers:
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: invalid_product
+              error_description:
+                type: string
+                example: Permission Denied.
+              traceId:
+                type: string
+                example: 942537e6-d544-ed7c-469b-a27efc4a6cff
+    HealthcheckHealthyResponse:
+      description: OK
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: ok
+  headers:
+    correlationid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
+    traceid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: A unique identifier value that is attached to the response that allow reference to the original request.
+    tenantid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: The unique ID of the tenant that invoking user belongs to. Used to enforce data tenancy.
+    subtenantid:
+      schema:
+        type: string
+        example: 5e2f9f4f-6f1d-4b37-92b5-6c5a9d1f8a21
+      description: (Optional) Identifies an Optum-assigned sub-tenant configuration for your organization. Include this header only when Optum has provided a value for a specific enabled customer configuration. Clients must not generate or infer this value.
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/sntl/v1/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+    oauth2_security:
+      flows:
+        clientCredentials:
+          scopes: {}
+          tokenUrl: https://idx-stage.linkhealth.com/auth/realms/developer-platform/protocol/openid-connect/token
+      type: oauth2
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Enter a Bearer access token. The API Explorer applies the Bearer scheme.
+externalDocs:
+  description: Resource Docs
+  url: https://springdoc.org/
+x-refined-from:
+- optum-abm-care-decision-support-api-openapi.yml
+- optum-auth-referral-submission-health-check-openapi.yml
+- optum-claim-actions-health-check-openapi.yml
+- optum-claim-inquiry-health-check-openapi.yml
+- optum-document-search-health-check-openapi.yml
+- optum-eligibility-pre-service-health-check-openapi.yml
+- optum-enhanced-eligibility-api-openapi.yml
+- optum-formatting-rule-api-openapi.yml
+- optum-optum-real-health-check-api-openapi.yml
+- optum-patient-benefit-check-health-check-openapi.yml
+- optum-real-dental-claim-submission-api-openapi.yml
+- optum-real-prior-authorization-api-openapi.yml
+- optum-real-provider-access-api-openapi.yml
+- optum-telecom-formatter-api-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

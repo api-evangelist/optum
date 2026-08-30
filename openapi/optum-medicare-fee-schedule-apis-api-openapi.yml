@@ -1,0 +1,823 @@
+openapi: 3.2.0
+info:
+  title: Optum Medicare Fee Schedule APIs API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged Medicare Fee Schedule APIs across 2 of this provider''s published API definitions: optum-cms-common-physician-openapi.yml, optum-optum-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/cmscommonms
+- url: /v1/optumcommonms
+tags:
+- name: Medicare Fee Schedule APIs
+paths:
+  /api/cms/physician/{code}/physician-time:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches Physician time for particular CPT or HCPCS code
+      operationId: getPhysicianTime
+      parameters:
+      - name: code
+        in: path
+        description: CPT or HCPCS code
+        required: true
+        schema:
+          type: string
+        example: 14000
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch Physician Time
+          content:
+            application/json:
+              example:
+                physicianTime: 348
+                unit: minutes
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/14000/physician-time1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/14000/physician-time
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/physician/mpfs/status-codes:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS Status codes
+      operationId: getStatusCodes
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches MPFS status codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: A
+                  description: Active Code
+                  definition: These codes are paid separately under the physician fee schedule, if covered.  There will be RVUs for codes with this status.  The presence of an "A" indicator does not mean that Medicare has made a national coverage determination regarding the service; carriers remain responsible for coverage decisions in the absence of a national Medicare policy.
+                totalCount: 17
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-12-06T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/status-codes1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/status-codes
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/physician/mpfs/payment-indicators/{ruletype}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS payment indicators and its definitions for particular medicare rule type
+      operationId: getPaymentIndicatorList
+      parameters:
+      - name: ruletype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - PCTC
+          - MULT_PROC
+          - ASST_SURG
+          - BILAT_SURG
+          - CO_SURG
+          - PHYS_SUP
+          - TEAM_SURG
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: MPFS payment indicators and its definitions for particular medicare rule type
+          content:
+            application/json:
+              example:
+                content:
+                - paymentIndicator: '0'
+                  definition: Team surgeons are not permitted for this procedure.
+                - paymentIndicator: '1'
+                  definition: Team surgeons may be allowed with supporting documentation to establish medical necessity.
+                - paymentIndicator: '2'
+                  definition: 'Team surgeons permitted, pay by report. '
+                - paymentIndicator: '9'
+                  definition: Team surgery concept does not apply
+                totalCount: 4
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/payment-indicators/AAA
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/payment-indicators/TEAM_SURG
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/physician/mpfs/payment-indicator-status/{code}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches payment indicator and status information for CPT or HCPCS codes
+      operationId: fetchPaymentIndicatorAndStatusFees
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches payment indicator and status information for CPT or HCPCS codes
+          content:
+            application/json:
+              example: "  {{\n       \"Global\": {\n         \"pctc\": 0,\n         \"multProc\": 0,\n         \"bilatSurg\": 0,\n         \"asstSurg\": 0,\n         \"coSurg\": 0,\n         \"teamSurg\": 0,\n         \"status\": \"A\",\n         \"physSup\": \"09\",\n         \"modifier\": \" \",\n         \"statusDesc\": \"Active Code.  These codes are paid separately under the physician fee schedule, if covered.  There will be RVUs for codes with this status.  The presence of an \\\"A\\\" indicator does not mean that Medicare has made a national coverage determination regarding the service; carriers remain responsible for coverage decisions in the absence of a national Medicare policy.\",\n         \"pctcDesc\": \"PC/TC Indicator|Physician service codes: This indicator identifies codes that describe physician services\",\n         \"multProcDesc\": \"Multiple Procedures|No payment adjustment rules apply. If the procedure is reported on the same day as another procedure, the procedure is paid at the lower of the actual charge or the fee schedule amount for the procedure\",\n         \"bilatSurgDesc\": null,\n         \"asstSurgDesc\": \"Surgical Assistant|Payment restriction for assistants at surgery applies to this procedure unless supporting documentation is submitted to establish medical necessity.\",\n         \"teamSurgDesc\": \"Team Surgery|Team surgeons are not permitted for this procedure.\",\n         \"physSurgDesc\": \"Physician Supervision of Diagnostic Procedures|Concept does not apply\",\n         \"coSurgDesc\": \"Co-surgeons|Co-surgeons are not permitted for this procedure.\"\n       }\n     }\n  }\n"
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/payment-indicator-status1/99213
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/payment-indicator-status/99213
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/physician/mpfs/national-physician-relative-file:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS file content particular medicare rule type
+      operationId: getRelativeFile
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches the file content in the form of byte array, response headers and media type as fileType
+          content:
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example: " access-control-expose-headers: Content-Disposition \n cache-control: no-cache,no-store,max-age=0,must-revalidate \n connection: keep-alive \n content-disposition: attachment; filename=RVU3C.pdf \n content-length: 178521 \n content-type: application/pdf \n date: Fri,28 Jul 2023 12:03:02 GMT \n expires: 0 \n pragma: no-cache \n vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers \n x-content-type-options: nosniff \n x-frame-options: DENY \n x-xss-protection: 0 \n"
+        '404':
+          description: 'Not found: Sub terms not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/mpfs/national-physician-relative-file
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                path: /cmscommonms/api/cms/mpfs/national-physician-relative-file
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/physician/mpfs/global-days/{code}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS global days for CPT and HCPCS code
+      operationId: getGlobalDays
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches MPFS global days for CPT and HCPCS code
+          content:
+            application/json:
+              example:
+                preop: 0
+                intraop: 0
+                postop: 0
+                globalDays: '000'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - 'code : Invalid CPT or HCPCS value. Length should be 5'
+                warning: null
+                info: null
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/global-day/99213
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2024-01-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/global-days/99213
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/physician/mpfs/fee-schedule/{codetype}/{code}/{carrier}/{locality}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS fee schedule
+      operationId: fetchMedicareFees
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - hcpcs
+          - cpt
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: carrier
+        in: path
+        description: Carrier value
+        required: true
+        schema:
+          type: string
+        example: '00000'
+      - name: locality
+        in: path
+        description: Locality value
+        required: true
+        schema:
+          type: string
+        example: '00'
+      - name: cf
+        in: query
+        required: false
+        schema:
+          type: number
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches MPFS fee schedule for cpt codes
+          content:
+            application/json:
+              example:
+                medicareFeeValues:
+                  RVU_FACILITY:
+                    TC_FEE:
+                    - fee: 0
+                      feeLabel: WORK RVU
+                    - fee: 0.7463
+                      feeLabel: PE RVU
+                    - fee: 0.00748
+                      feeLabel: Malpractice RVU
+                    - fee: 0.75378
+                      feeLabel: Total RVU
+                    PROF_FEE:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.07024
+                      feeLabel: PE RVU
+                    - fee: 0.00748
+                      feeLabel: Malpractice RVU
+                    - fee: 0.30772
+                      feeLabel: Total RVU
+                    NATIONAL:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.93
+                      feeLabel: PE RVU
+                    - fee: 0.02
+                      feeLabel: Malpractice RVU
+                    - fee: 1.18
+                      feeLabel: Total RVU
+                    LOCALITY:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.81654
+                      feeLabel: PE RVU
+                    - fee: 0.01496
+                      feeLabel: Malpractice RVU
+                    - fee: 1.0615
+                      feeLabel: Total RVU
+                  RVU_OPPS:
+                    TC_FEE:
+                    - fee: 0
+                      feeLabel: WORK RVU
+                    - fee: 2.73936
+                      feeLabel: PE RVU
+                    - fee: 0.02992
+                      feeLabel: Malpractice RVU
+                    - fee: 2.76928
+                      feeLabel: Total RVU
+                    PROF_FEE:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.07024
+                      feeLabel: PE RVU
+                    - fee: 0.00748
+                      feeLabel: Malpractice RVU
+                    - fee: 0.30772
+                      feeLabel: Total RVU
+                    NATIONAL:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 3.2
+                      feeLabel: PE RVU
+                    - fee: 0.05
+                      feeLabel: Malpractice RVU
+                    - fee: 3.48
+                      feeLabel: Total RVU
+                    LOCALITY:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 2.8096
+                      feeLabel: PE RVU
+                    - fee: 0.0374
+                      feeLabel: Malpractice RVU
+                    - fee: 3.077
+                      feeLabel: Total RVU
+                  RVU_NON_FACILITY:
+                    TC_FEE:
+                    - fee: 0
+                      feeLabel: WORK RVU
+                    - fee: 0.7463
+                      feeLabel: PE RVU
+                    - fee: 0.00748
+                      feeLabel: Malpractice RVU
+                    - fee: 0.75378
+                      feeLabel: Total RVU
+                    PROF_FEE:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.07024
+                      feeLabel: PE RVU
+                    - fee: 0.00748
+                      feeLabel: Malpractice RVU
+                    - fee: 0.30772
+                      feeLabel: Total RVU
+                    NATIONAL:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.93
+                      feeLabel: PE RVU
+                    - fee: 0.02
+                      feeLabel: Malpractice RVU
+                    - fee: 1.18
+                      feeLabel: Total RVU
+                    LOCALITY:
+                    - fee: 0.23
+                      feeLabel: WORK RVU
+                    - fee: 0.81654
+                      feeLabel: PE RVU
+                    - fee: 0.01496
+                      feeLabel: Malpractice RVU
+                    - fee: 1.0615
+                      feeLabel: Total RVU
+                  TOTAL_FEES:
+                    TC_FEE:
+                    - fee: 25.543493616
+                      feeLabel: Facility
+                    - fee: 25.543493616
+                      feeLabel: Non-Facility
+                    - fee: 93.843145216
+                      feeLabel: OPPS Global
+                    PROF_FEE:
+                    - fee: 10.427769184
+                      feeLabel: Facility
+                    - fee: 10.427769184
+                      feeLabel: Non-Facility
+                    - fee: 10.427769184
+                      feeLabel: OPPS Global
+                    NATIONAL:
+                    - fee: 39.986896
+                      feeLabel: Facility
+                    - fee: 39.986896
+                      feeLabel: Non-Facility
+                    - fee: 117.927456
+                      feeLabel: OPPS Global
+                    LOCALITY:
+                    - fee: 35.9712628
+                      feeLabel: Facility
+                    - fee: 35.9712628
+                      feeLabel: Non-Facility
+                    - fee: 104.2709144
+                      feeLabel: OPPS Global
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/fee-schedule/i9v1/A4562/10112/00
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/fee-schedule/cpt/72072/10112/00
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/hcpcs/{code}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS reduction groups applicable for particular code
+      operationId: getHcpcsMedicareReductionGroups
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: A4562
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch Medicare Localities
+          content:
+            application/json:
+              example:
+              - reductionLabel: Sequestration
+                mpfsReductionGroupId: 13
+                nonFacTotalAdjFactor: 98.4
+                facTotalAdjFactor: 98.4
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/i9v1/A4562
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/hcpcs/A4562
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/cpt/{code}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS Reduction Groups applicable for particular code
+      operationId: getCptMedicareReductionGroups
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches MPFS Reduction Groups applicable for cpt code
+          content:
+            application/json:
+              example:
+              - reductionLabel: FX Modifier Reduction
+                mpfsReductionGroupId: 21
+                nonFacTotalAdjFactor: 80
+                facTotalAdjFactor: 80
+              - reductionLabel: FY Modifier Reduction
+                mpfsReductionGroupId: 22
+                nonFacTotalAdjFactor: 93
+                facTotalAdjFactor: 93
+              - reductionLabel: Sequestration
+                mpfsReductionGroupId: 13
+                nonFacTotalAdjFactor: 98.4
+                facTotalAdjFactor: 98.4
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/i9v1/A4562
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/physician/mpfs/fee-schedule/mpfs-reduction-groups/hcpcs/A4562
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/optum/physician/mpfs/locality-fee/{codetype}/{code}/{carrier}/{locality}:
+    get:
+      tags:
+      - Medicare Fee Schedule APIs
+      summary: Fetches MPFS fee scedule
+      operationId: fetchMedicareLocalityFees
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - hcpcs
+          - cpt
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: carrier
+        in: path
+        description: Carrier value
+        required: true
+        schema:
+          type: string
+        example: '00000'
+      - name: locality
+        in: path
+        description: Locality value
+        required: true
+        schema:
+          type: string
+        example: '00'
+      - name: cf
+        in: query
+        required: false
+        schema:
+          type: number
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches MPFS fee schedule for cpt codes
+          content:
+            application/json:
+              example:
+                medicareFeeValues:
+                  RVU_FACILITY:
+                    Locality:
+                    - fee: 1.3
+                      feeLabel: Work
+                    - fee: 1.97
+                      feeLabel: Total
+                  RVU_NON_FACILITY:
+                    Locality:
+                    - fee: 1.3
+                      feeLabel: Work
+                    - fee: 2.75
+                      feeLabel: Total
+                  TOTAL_FEES:
+                    Locality:
+                    - fee: 63.722605
+                      feeLabel: Facility
+                    - fee: 88.952875
+                      feeLabel: Non-Facility
+                conversionFactor: 32.3465
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/optum/physician/mpfs/locality-fee/i9v1/A4562/10112/00
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/optum/physician/mpfs/locality-fee/cpt/72072/10112/00
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-cms-common-physician-openapi.yml
+- optum-optum-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

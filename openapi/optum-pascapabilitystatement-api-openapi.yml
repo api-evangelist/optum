@@ -1,0 +1,263 @@
+openapi: 3.2.0
+info:
+  title: Real Prior Authorization Pas Capability Statement API
+  description: FHIR Prior Authorization APIs (CDS, DTR, PAS)
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: PasCapabilityStatement
+paths:
+  /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/pas/metadata:
+    get:
+      operationId: getPasCapabilityStatement
+      tags:
+      - PasCapabilityStatement
+      security:
+      - oAuth:
+        - read_healthcheck
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: ph
+      - name: x-optum-consumer-correlation-id
+        in: header
+        schema:
+          type: string
+          example: uuid-123
+      - name: environment
+        in: header
+        schema:
+          type: string
+          example: sandbox
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasCapabilityStatementResponse'
+              example:
+                resourceType: CapabilityStatement
+                id: 69d03dab-fd65-4412-83ce-395ffe9856f3
+                text:
+                  status: generated
+                  div: <div xmlns="http://www.w3.org/1999/xhtml">uhcpp-paan-pas-server</div>
+                name: UHC PAAN FHIR Layer Exchange
+                status: active
+                date: '2026-04-23T16:34:36.237+00:00'
+                publisher: UHC PAAN
+                description: The CapabilityStatement resource documents the functionality implemented from the HL7® FHIR® standard
+                kind: instance
+                software:
+                  name: uhcpp-paan-pas-server
+                  version: 8.8.0
+                implementation:
+                  description: uhcpp-paan-pas-server implementation
+                  url: https://apimarketplace-stg.uhc.com/PriorAuth/v1
+                fhirVersion: 4.0.1
+                format:
+                - application/fhir+xml
+                - xml
+                - application/fhir+json
+                - json
+                - application/x-turtle
+                - ttl
+                rest:
+                - mode: server
+                  resource:
+                  - type: Claim
+                    profile: http://hl7.org/fhir/StructureDefinition/Claim
+                    searchInclude:
+                    - '*'
+                    operation:
+                    - name: submit
+                      definition: https://apimarketplace-stg.uhc.com/PriorAuth/v1/OperationDefinition/claim-submit
+                    - name: inquire
+                      definition: https://apimarketplace-stg.uhc.com/PriorAuth/v1/OperationDefinition/claim-inquire
+                  - type: OperationDefinition
+                    profile: http://hl7.org/fhir/StructureDefinition/OperationDefinition
+                    interaction:
+                    - code: read
+                    searchInclude:
+                    - '*'
+                  operation:
+                  - name: submit-attachment
+                    definition: https://apimarketplace-stg.uhc.com/PriorAuth/v1/OperationDefinition/submit-attachment
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: UnAuthorized
+          content:
+            application/json:
+              example:
+                message: UnAuthorized
+                statusCode: 401
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+components:
+  schemas:
+    CapabilityStatementSoftware:
+      type: object
+      properties:
+        name:
+          type: string
+          example: uhcpp-paan-pas-server
+        version:
+          type: string
+          example: 8.8.0
+    PasCapabilityStatementResponse:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          example: CapabilityStatement
+        id:
+          type: string
+          example: 69d03dab-fd65-4412-83ce-395ffe9856f3
+        text:
+          $ref: '#/components/schemas/Narrative'
+        name:
+          type: string
+          example: UHC PAAN FHIR Layer Exchange
+        status:
+          type: string
+          example: active
+        date:
+          type: string
+          format: date-time
+          example: '2026-04-23T16:34:36.237+00:00'
+        publisher:
+          type: string
+          example: UHC PAAN
+        description:
+          type: string
+        kind:
+          type: string
+          example: instance
+        software:
+          $ref: '#/components/schemas/CapabilityStatementSoftware'
+        implementation:
+          $ref: '#/components/schemas/CapabilityStatementImplementation'
+        fhirVersion:
+          type: string
+          example: 4.0.1
+        format:
+          type: array
+          items:
+            type: string
+        rest:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapabilityStatementRest'
+    Narrative:
+      type: object
+      properties:
+        status:
+          type: string
+          example: generated
+        div:
+          type: string
+          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
+    CapabilityStatementImplementation:
+      type: object
+      properties:
+        description:
+          type: string
+          example: uhcpp-paan-pas-server implementation
+        url:
+          type: string
+          format: uri
+          example: https://apimarketplace-stg.uhc.com/PriorAuth/v1
+    CapabilityStatementRest:
+      type: object
+      properties:
+        mode:
+          type: string
+          example: server
+        resource:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapabilityStatementResource'
+        operation:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapabilityStatementOperation'
+    CapabilityStatementResource:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Claim
+        profile:
+          type: string
+          format: uri
+        searchInclude:
+          type: array
+          items:
+            type: string
+        interaction:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapabilityStatementInteraction'
+        operation:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapabilityStatementOperation'
+    CapabilityStatementInteraction:
+      type: object
+      properties:
+        code:
+          type: string
+          example: read
+    CapabilityStatementOperation:
+      type: object
+      properties:
+        name:
+          type: string
+          example: submit
+        definition:
+          type: string
+          format: uri
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

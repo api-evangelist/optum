@@ -1,0 +1,108 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Facility Federal Register Addendum B API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Federal Register Addendum B API
+paths:
+  /api/optum/facility/federal-register-addendum-b:
+    get:
+      tags:
+      - Federal Register Addendum B API
+      summary: Fetches all federal register addendum B table data
+      operationId: getFederalRegAddBList
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these values (code,-code,opsiCode,-opsiCode,description,-description,apc,-apc) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches all federal register addendum B table data
+          content:
+            application/json:
+              example:
+                content:
+                - code: 0001F
+                  opsiCode: E1
+                  description: HEART FAILURE COMPOSITE
+                  relWeight: 0
+                  payRate: 0
+                  natUnadjCopay: 0
+                  minUnadjCopay: 0
+                - code: 0001U
+                  opsiCode: A
+                  description: RBC DNA HEA 35 AG 11 BLD GRP
+                  relWeight: 0
+                  payRate: 0
+                  natUnadjCopay: 0
+                  minUnadjCopay: 0
+                totalCount: 18341
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [code, -code]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page size must not be less than one'
+                path: /optumcommonms/api/optum/facility/federal-register-addendum-b?page=-1
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

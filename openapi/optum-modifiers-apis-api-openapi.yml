@@ -1,0 +1,636 @@
+openapi: 3.2.0
+info:
+  title: Core Service Modifiers APIs API
+  description: Code Search Service provides the APIs for searching codes related information.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/codesearchms
+tags:
+- name: Modifiers APIs
+paths:
+  /api/coding/code/{modifier}/modifier-crosscodes:
+    get:
+      tags:
+      - Modifiers APIs
+      summary: Returns the list of codes associated with a modifier
+      operationId: allModifierCodeList
+      parameters:
+      - name: codetype
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: modifier
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: modifier-type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - PHYSICIAN
+          - FACILITY
+          - MPFS
+          - DME
+          - AMBULANCE
+      - name: include-asc-modifier
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: sort
+        in: query
+        description: Any of combination (code,-code,description,-description) are allowed values, default is +code.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplCode'
+      security:
+      - bearerAuth: []
+  /api/coding/code/{code}/{modifier-type}/{mod-code}/{prod-code}/modifier-download:
+    get:
+      tags:
+      - Modifiers APIs
+      summary: Generates the pdf format file with the details of selected modifier code
+      operationId: printModCodesReport
+      parameters:
+      - name: code
+        in: path
+        description: 'cpt OR hcpcs code '
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: modifier-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - PHYSICIAN
+          - FACILITY
+      - name: mod-code
+        in: path
+        description: 'modifier code '
+        required: true
+        schema:
+          type: string
+        example: 24
+      - name: prod-code
+        in: path
+        description: Product code C/M i.e Commercial/ Medicare
+        required: true
+        schema:
+          type: string
+        example: C
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Generates the PDF and return the content in the format of byte array, response headers and media type as PDF
+          content:
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example: " access-control-expose-headers: Content-Disposition \n cache-control: no-cache,no-store,max-age=0,must-revalidate \n connection: keep-alive \n content-disposition: attachment; filename=PHYSICIAN.pdf \n content-length: 3663 \n content-type: application/pdf \n date: Wed,26 Apr 2023 12:17:11 GMT \n expires: 0 \n pragma: no-cache \n strict-transport-security: max-age=31536000 ; includeSubDomains \n vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers \n x-content-type-options: nosniff \n x-frame-options: DENY \n x-xss-protection: 1; mode=block \n"
+        '404':
+          description: Not found- No Data Found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - No Data Found.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-02-08T06:19:48.666+00:00'
+                path: 99213/PHYSICIAN/24/C/modifier-download
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{code}/{modifier-type}/modifier-crosswalk:
+    get:
+      tags:
+      - Modifiers APIs
+      summary: Returns the list of modifierCrosswalk based on the selected code
+      operationId: modifierCrosswalk
+      parameters:
+      - name: code
+        in: path
+        description: 'cpt OR hcpcs code '
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: modifier-type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - PHYSICIAN
+          - FACILITY
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: fetch available list of modifier crosswalk for the selected code
+          content:
+            application/json:
+              example:
+                content:
+                - modifierLink:
+                    value: '24'
+                    href: /api/coding/code/24/modifier-crosscodes
+                    iconName: null
+                  effectiveDate: '2003-10-01 00:00:00.0'
+                  description: Unrelated Evaluation and Management Service by the Same Physician or Other Qualified Health Care Professional During a Postoperative Period
+                  definition: The physician or other qualified health care professional may need to indicate that an evaluation and management service was performed during a postoperative period for a reason(s) unrelated to the original procedure. This circumstance may be reported by adding modifier 24 to the appropriate level of E/M service.
+                  code: '99213'
+                  sourcingRationaleNum: 'Sourcing Rationale: 589'
+                  sourcingRationale: "Current Procedural Terminology (CPT) Level I modifiers and Healthcare Common Procedure Coding System (HCPCS) Level II modifiers are appended to Level I or Level II codes based on information from the Centers for Medicare and Medicaid Services (CMS). The identified modifiers are: the ambulance specific modifiers, 1P, 24, 25, 2P, 3P, 50, 51, 52, 54, 55, 56, 57, 58, 59, 76, 77, 78, 79, 8P, 90, 91, AA, AD, AQ, AR, AT, AU, AV, AW, AX, AY, BA, BL, BP, BR, BU, CB, CD, CE, CF, CH, CI, CJ, CK, CL, CM, CN, CS, CT, EA, EB, EC, EM, EY, G7-G9, GE, GG, GK, GL, GM, GN, GO, GP, GQ, GT, J4, KB, KC, KF, KI, KJ, KM, KN, KZ, LR, NR, NU, PI, PS, PT, Q7-Q9, QA, QB, QE, QF, QG, QK, QR, QS, QW, QX, QY, QZ, RR,TS, UE, UN, UP, UQ, UR, US, VM, XE, XP, XS, XU, ZA, ZB,ZC.   \nThe above identified CPT/HCPCS modifier to procedure relationships are supported by CMS information from the Medicare Claims Processing Manual, program transmittals, National Physician Fee Schedule (NPFS), Clinical Laboratory Fee Schedule, DME/PEN fee schedules, Ambulance fee schedule, and claims adjudication policies.\nModifiers that are covered by other Medicare rules; therefore are excluded from this rule are:\n22, 26, 62, 66, 80-82, AS, and TC.\nModifiers that do not have a specific national CMS source or a source that addresses specific codes that these modifiers should be appended to; therefore are excluded from this rule are:\n23, 32, 33, 47, 53, 63, 92, 93, 95, 96, 97, 99, A1-A9, AB, AE, AF, AG, AH, AI,AJ, AK, AM, AO,AP, BO, CC, CG, CO, CP, CQ, CR, DA, E1-E4, EJ, EP, ER, EX, F1-FA, FP, FQ, FR, FS, FT, FX, FY, G0,GA, GB, GC, GD, GH, GJ, GR, GU, GV, GX, GW, J1, J2, J3, J5, JA, JB, JC, JD, JE, JG, JW, JZ, K0-K4, KA, KD ,KE,  KG, KH, KK, KL, KO, KP, KQ, KR, KS, KT, KU, KV, KW, KX, KY, LC, LD, LL, LM, LS, LT, LU, M2, MA-MH, MS, N1, N2, N3, NB, P1-P6, PA, PB, PC, PD, PL, PM, PN, PO, Q0-Q1, Q3-Q6, QC, QD, QH, QJ, QL, QP, QQ, QT, RA, RB, RC, RD, RE, RI, RT, SC, SF, SG, SW, SZ, T1-TA, TB, UJ, V1-V9, VP, X1, X2, X3, X4, X5.\nModifiers that have a coverage indicator of I, M, or S on the HCPCS file.  These indicators state that they are noncovered or nonpayable by Medicare.  These modifiers are excluded from this rule are:\nAZ, FB, GY, GZ, H9, HA-HZ, PA-PC, SA-SB, SD-SE, SH-SN, SQ, SS-SV, SY, TD-TH, TJ-TN, TP-TR, TT-TW, U1-U9, UA-UD, UF-UH and UK.\nModifiers that have facility related only national CMS sources; therefore are not included in this professional rule:\n27, 73, 74, CA, ED, EE, ET, FC, G1-G6, GF, GS, JG, L1, Q2, QM, and QN."
+                  source: CMS Policy
+                  productCode: M
+                  commercialMedicare: Medicare
+                - modifierLink:
+                    value: '24'
+                    href: /api/coding/code/24/modifier-crosscodes
+                    iconName: null
+                  effectiveDate: '1990-01-01 00:00:00.0'
+                  description: Unrelated Evaluation and Management Service by the Same Physician or Other Qualified Health Care Professional During a Postoperative Period
+                  definition: The physician or other qualified health care professional may need to indicate that an evaluation and management service was performed during a postoperative period for a reason(s) unrelated to the original procedure. This circumstance may be reported by adding modifier 24 to the appropriate level of E/M service.
+                  code: '99213'
+                  sourcingRationaleNum: 'Sourcing Rationale: 34'
+                  sourcingRationale: "Modifier 24 edit relationships follow CPT(R) , the American Medical Association (AMA), the Centers for Medicare and Medicaid (CMS) and specialty society guidelines that indicate modifier 24 is appended to evaluation and management (E/M) service codes rendered during the postoperative period that are unrelated to the surgical procedure.  Modifier 24 is not applicable to E/M codes designated as solely new patient codes. \nThe CPT(R) modifier 24 descriptor in the current CPT(R) Professional Edition states, ''Unrelated Evaluation and Management Service by the Same Physician or Other Qualified Health Care Professional During a Postoperative Period:  The physician or other qualified health care professional may need to indicate that an evaluation and management service was performed during a postoperative period for a reason(s) unrelated to the original procedure.  This circumstance may be reported by adding modifier 24 to the appropriate level of E/M service.''  \nA CPT(R) Assistant article from May 1997 states that, ''Modifier -24 is used when a physician provides a surgical service related to one problem and then during the period of follow-up care for the surgery provides an evaluation and management service unrelated to the problem requiring the surgery. '' An example provided illustrates a patient who fell and sprained her wrist during the postoperative period of a hip replacement surgery provided by the same surgeon. ''The orthopedic surgeon reports the E/M service (related to the sprained wrist) performed in the office using the established patient, office or other outpatient service codes.'' Modifier 24 is appended to the unrelated established patient E/M service code. The Principles of CPT(R) Coding guidelines, published by the AMA, further states, ''The diagnosis code selection is critical when indicating the reason for the additional E/M service.'' The publication, Coding with Modifiers, also published by the AMA, reiterate the CPT(R) Assistant and Principles of CPT(R) Coding guidelines.\nGuidelines in the July 2004 and the November 2006 CPT(R) Assistants state, ''E/M services following Mohs micrographic surgery may be reported depending on the global period of any surgical reconstruction services done with Mohs surgery... If reconstruction is performed with Mohs surgery, the 10- or 90-day global period of the reconstruction applies and no E/M service related to the reconstruction procedure is allowable during the global period. However, an E/M service may be reported if it is for an unrelated service, in which case modifier 24, Unrelated evaluation and management service by the same physician during a postoperative period, would be appended.''\nGuidelines in the CPT(R) Reference Guide for Cardiovascular Coding 2013 further support this rationale by indicating modifier 24 should be appended to the E/M service if it is unrelated and performed during the postoperative period by the same physician that performed the procedure.  \nThe CMS' Medicare Claims Processing Manual mirrors CPT guidelines and states, ''The physician may need to indicate that an evaluation and management service was performed during the postoperative period of an unrelated procedure.  This circumstance is reported by adding the modifier ''-24'' to the appropriate level of evaluation and management service.''  \nThe CMS National Correct Coding Initiative Policy Manual general guidelines for E/M services states, ''For major and minor surgical procedures, postoperative E&M services related to recovery from the surgical procedure during the postoperative period are included in the global surgical package as are E&M services related to complications of the surgery. Postoperative visits unrelated to the diagnosis for which the surgical procedure was performed unless related to a complication of surgery may be reported separately on the same day as a surgical procedure with modifier 24 (''Unrelated Evaluation and Management Service by the Same Physician or Other Qualified Health Care Professional During a Postoperative Period'').''\nModifier 24 is used to indicate that an established E/M service is unrelated to procedure during the postoperative period by the same physician. The CPT(R) codebook states ''An established patient is one who has received professional services from the physician/qualified health care professional or another physician/qualified health care professional [QHP] of the exact same specialty and subspecialty who belongs to the same group practice, within the past three years.'' The Principles of CPT(R) state ''Physicians/QHPs who are part of a group practice with the same specialty code and tax identiï¬�cation number are considered the same; even if, for example, a surgeon in the practice performs surgery and another surgeon in the same practice that meets the criteria above manages postoperative care, it does not meet the requirements for reporting modiï¬�er 24.'' Therefore, modifier 24 is used in conjunction with an established patient E/M code to indicate the service is unrelated to the procedure performed by the same physician/qualified health care professional, or a physician/qualified health care professional of the same specialty that belongs to the same group practice, during the postoperative period. It would not be appropriate to append modifier 24 to a new patient E/M code.\nIt is also indicated in in the American Academy of Pediatrics October 2010 Pediatric Coding Newsletter to append modifier 24 to established E/M codes 99211-99215 for unrelated E/M services reported during the postoperative period. \nBased on the information from the CPT(R) codebook, the AMA, the CMS and specialty societies, appending modifier 24 to an established patient E/M code indicates circumstances where the same physician or qualified health care professional performs an unrelated E/M service during the postoperative period of a prior surgery. Modifier 24 is not applicable to E/M codes designated as solely new patient codes.\nNOTE: An individual Edit Rationale Statement (ERS) often addresses multiple edits. Each of those edits is sourced to at least one national industry source. There may be multiple national industry sources involved across the whole set of edits that are addressed by a given ERS. Therefore, a specific source may apply to only a subset of the edits addressed by a given ERS.  The specific sourcing that supports an individual edit may be viewed at the edit level in the application or in the Edit Rationale Module."
+                  source: CPT
+                  productCode: C
+                  commercialMedicare: Commercial
+                - modifierLink:
+                    value: '25'
+                    href: /api/coding/code/25/modifier-crosscodes
+                    iconName: null
+                  effectiveDate: '2003-10-01 00:00:00.0'
+                  description: Significant, Separately Identifiable Evaluation and Management Service by the Same Physician or Other Qualified Health Care Professional on the Same Day of the Procedure or Other Service
+                  usage: '(Under OPPS, modifier may be used only with E/M visit codes (with status indicator V) within the following code ranges:  92002-92014, 99201-99285, 99431, G0101, G0175, G0245, G0246, G0344 G0380-G0384 ~~Modifier used on an E/M code when it is reported with a procedure code that has a outpatient payment status indicator (OPSI) of "S" or "T."  However, this does not preclude the provider from reporting this modifier with E/M codes that are assigned to an OPSI other than the "S" or "T" as long as the procedure meets the definition of "significant, separately identifiable E/M service" (Medicare Claims Processing Manual, chapter 4, section 20.6, Medicare transmittal 1045, September 1, 2006.)'
+                  definition: 'It may be necessary to indicate that on the day a procedure or service identified by a CPT code was performed, the patient''s condition required a significant, separately identifiable E/M service above and beyond the other service provided or beyond the usual preoperative and postoperative care associated with the procedure that was performed. A significant, separately identifiable E/M service is defined or substantiated by documentation that satisfies the relevant criteria for the respective E/M service to be reported (see Evaluation and Management Services Guidelines for instructions on determining level of E/M service). The E/M service may be prompted by the symptom or condition for which the procedure and/or service was provided. As such, different diagnoses are not required for reporting of the E/M services on the same date. This circumstance may be reported by adding modifier 25 to the appropriate level of E/M service. Note: This modifier is not used to report an E/M service that resulted in a decision to perform surgery. See modifier 57. For significant, separately identifiable non-E/M services, see modifier 59.'
+                  code: '99213'
+                  sourcingRationaleNum: 'Sourcing Rationale: 589'
+                  sourcingRationale: "Current Procedural Terminology (CPT) Level I modifiers and Healthcare Common Procedure Coding System (HCPCS) Level II modifiers are appended to Level I or Level II codes based on information from the Centers for Medicare and Medicaid Services (CMS). The identified modifiers are: the ambulance specific modifiers, 1P, 24, 25, 2P, 3P, 50, 51, 52, 54, 55, 56, 57, 58, 59, 76, 77, 78, 79, 8P, 90, 91, AA, AD, AQ, AR, AT, AU, AV, AW, AX, AY, BA, BL, BP, BR, BU, CB, CD, CE, CF, CH, CI, CJ, CK, CL, CM, CN, CS, CT, EA, EB, EC, EM, EY, G7-G9, GE, GG, GK, GL, GM, GN, GO, GP, GQ, GT, J4, KB, KC, KF, KI, KJ, KM, KN, KZ, LR, NR, NU, PI, PS, PT, Q7-Q9, QA, QB, QE, QF, QG, QK, QR, QS, QW, QX, QY, QZ, RR,TS, UE, UN, UP, UQ, UR, US, VM, XE, XP, XS, XU, ZA, ZB,ZC.   \nThe above identified CPT/HCPCS modifier to procedure relationships are supported by CMS information from the Medicare Claims Processing Manual, program transmittals, National Physician Fee Schedule (NPFS), Clinical Laboratory Fee Schedule, DME/PEN fee schedules, Ambulance fee schedule, and claims adjudication policies.\nModifiers that are covered by other Medicare rules; therefore are excluded from this rule are:\n22, 26, 62, 66, 80-82, AS, and TC.\nModifiers that do not have a specific national CMS source or a source that addresses specific codes that these modifiers should be appended to; therefore are excluded from this rule are:\n23, 32, 33, 47, 53, 63, 92, 93, 95, 96, 97, 99, A1-A9, AB, AE, AF, AG, AH, AI,AJ, AK, AM, AO,AP, BO, CC, CG, CO, CP, CQ, CR, DA, E1-E4, EJ, EP, ER, EX, F1-FA, FP, FQ, FR, FS, FT, FX, FY, G0,GA, GB, GC, GD, GH, GJ, GR, GU, GV, GX, GW, J1, J2, J3, J5, JA, JB, JC, JD, JE, JG, JW, JZ, K0-K4, KA, KD ,KE,  KG, KH, KK, KL, KO, KP, KQ, KR, KS, KT, KU, KV, KW, KX, KY, LC, LD, LL, LM, LS, LT, LU, M2, MA-MH, MS, N1, N2, N3, NB, P1-P6, PA, PB, PC, PD, PL, PM, PN, PO, Q0-Q1, Q3-Q6, QC, QD, QH, QJ, QL, QP, QQ, QT, RA, RB, RC, RD, RE, RI, RT, SC, SF, SG, SW, SZ, T1-TA, TB, UJ, V1-V9, VP, X1, X2, X3, X4, X5.\nModifiers that have a coverage indicator of I, M, or S on the HCPCS file.  These indicators state that they are noncovered or nonpayable by Medicare.  These modifiers are excluded from this rule are:\nAZ, FB, GY, GZ, H9, HA-HZ, PA-PC, SA-SB, SD-SE, SH-SN, SQ, SS-SV, SY, TD-TH, TJ-TN, TP-TR, TT-TW, U1-U9, UA-UD, UF-UH and UK.\nModifiers that have facility related only national CMS sources; therefore are not included in this professional rule:\n27, 73, 74, CA, ED, EE, ET, FC, G1-G6, GF, GS, JG, L1, Q2, QM, and QN."
+                  source: CMS Policy
+                  productCode: M
+                  commercialMedicare: Medicare
+                totalCount: 43
+        '404':
+          description: 'Not found: Only CPT and HCPCS code types are applicable for modifier crosswalk'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-03-27T12:23:36.422+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /codesearchms/api/coding/code/i10cm/99213/PHYSICIAN/modifier-crosswalk
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{modifier}/modifier-crosscodes:
+    get:
+      tags:
+      - Modifiers APIs
+      summary: Returns the list of codes associated with a modifier
+      operationId: modifierCodeList
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: modifier
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: modifier-type
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - PHYSICIAN
+          - FACILITY
+          - MPFS
+          - DME
+          - AMBULANCE
+      - name: include-asc-modifier
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: sort
+        in: query
+        description: Any of combination values (code,-code,description,-description) are allowed.The default is +code.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 150
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: 'fetch available list of codes associated to selected modifier '
+          content:
+            application/json:
+              example:
+                content:
+                - fullDescription: Angiography, pulmonary, by nonselective catheter or venous injection, radiological supervision and interpretation
+                  code: '75746'
+                - fullDescription: Angiography, pulmonary, unilateral, selective, radiological supervision and interpretation
+                  code: '75741'
+                - fullDescription: Angiography, selective, each additional vessel studied after basic examination, radiological supervision and interpretation (List separately in addition to code for primary procedure)
+                  code: '75774'
+                - fullDescription: Angiography, spinal, selective, radiological supervision and interpretation
+                  code: '75705'
+                - fullDescription: Angiography, visceral, selective or supraselective (with or without flush aortogram), radiological supervision and interpretation
+                  code: '75726'
+                - fullDescription: Angioscopy (noncoronary vessels or grafts) during therapeutic intervention (List separately in addition to code for primary procedure)
+                  code: '35400'
+                totalCount: 10
+        '404':
+          description: 'Not found: Only CPT and HCPCS are applicable for modifiers list'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-03-27T12:23:36.422+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /codesearchms/api/coding/code/cpt/modifier/modifier-crosscodes
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/modifiers:
+    get:
+      tags:
+      - Modifiers APIs
+      summary: Returns the list of modifiers based on the selected code type
+      operationId: modifiers
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch available list of modifiers for the selected code type
+          content:
+            application/json:
+              example:
+                content:
+                - modifierLink:
+                    value: 1P
+                    href: /api/coding/code/cpt/1P/modifier-crosscodes
+                  effectiveDate: '2006-07-01 00:00:00'
+                  description: Performance Measure Exclusion Modifier due to Medical Reasons:~~Includes:~Not indicated (absence of organ/limb), already received/performed,other)--Contraindicated (patient allergic history, potential adverse drug interaction,other)--Other medical reasons
+                  usage: null
+                  definition: null
+                - modifierLink:
+                    value: '22'
+                    href: /api/coding/code/cpt/22/modifier-crosscodes
+                  effectiveDate: '2004-01-01 00:00:00'
+                  description: Increased Procedural Services
+                  usage: null
+                  definition: 'When the work required to provide a service is substantially greater than typically required, it may be identified by adding modifier 22 to the usual procedure code. Documentation must support the substantial additional work and the reason for the additional work (ie, increased intensity, time, technical difficulty of procedure, severity of patient''s condition, physical and mental effort required). Note: This modifier should not be appended to an E/M service.'
+                totalCount: 10
+        '404':
+          description: 'Not found: Only CPT and HCPCS are applicable for modifiers list'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-03-27T12:23:36.422+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /codesearchms/api/coding/code/i10cm/modifiers
+      security:
+      - bearerAuth: []
+  /api/coding/code/modifier/{modifier}/validate:
+    get:
+      tags:
+      - Modifiers APIs
+      operationId: modifierValid
+      parameters:
+      - name: modifier
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: boolean
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    OptumPageImplCode:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Code'
+        totalCount:
+          type: integer
+          format: int64
+    Link:
+      type: object
+      properties:
+        value:
+          type: string
+        href:
+          type: string
+        iconName:
+          type: string
+        routerLink:
+          type: string
+        type:
+          type: string
+        tag:
+          type: string
+        label:
+          type: string
+        addonName:
+          type: string
+        addonId:
+          type: string
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+    CodeGroup:
+      type: object
+      properties:
+        codes:
+          type: array
+          items:
+            type: string
+        desc:
+          type: array
+          items:
+            type: string
+    Code:
+      type: object
+      properties:
+        codeType:
+          type: string
+        shortDescription:
+          type: string
+        fullDescription:
+          type: string
+        fullDictionaryTerms:
+          type: object
+          additionalProperties:
+            type: string
+        image:
+          $ref: '#/components/schemas/Link'
+        edits:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+        pcsChar1Description:
+          type: string
+        pcsChar2Description:
+          type: string
+        pcsChar3Description:
+          type: string
+        codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Code'
+        codeNote:
+          type: string
+        codeStatus:
+          type: string
+          enum:
+          - ACTIVE
+          - DELETED
+          - INVALID
+        indent1:
+          type: integer
+          format: int32
+        indent2:
+          type: integer
+          format: int32
+        codeInfo:
+          type: string
+        mappingInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        backwardMappingCodes:
+          type: array
+          items:
+            type: string
+        references:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        billedTogether:
+          type: array
+          items:
+            $ref: '#/components/schemas/CodeGroup'
+        favorite:
+          type: boolean
+        nonBillable:
+          type: boolean
+        nextCode:
+          type: boolean
+        code:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

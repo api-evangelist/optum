@@ -1,0 +1,389 @@
+openapi: 3.2.0
+info:
+  title: Real Prior Authorization Order Sign API
+  description: FHIR Prior Authorization APIs (CDS, DTR, PAS)
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: OrderSign
+paths:
+  /oihub/fhirpriorauth/v1/cdsHooksServer/{payerId}/{lob}/api/cds-services/crd-order-sign:
+    post:
+      operationId: orderSign
+      tags:
+      - OrderSign
+      security:
+      - oAuth:
+        - read_healthcheck
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: bh
+      - name: x-optum-consumer-correlation-id
+        in: header
+        schema:
+          type: string
+          example: uuid-123
+      - name: environment
+        in: header
+        schema:
+          type: string
+          example: sandbox
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderSignRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderSignResponseWrapper'
+              example:
+                cards:
+                - summary: Required
+                  indicator: info
+                  source:
+                    label: UnitedHealthcarePriorAuthorizationRequirements
+                    url: https://apimarketplace.uhcprovider.com/#/all-apis/prior-auth-api
+                  uuid: uuid
+                  detail: A9521DMESUP/ACCESS/SRV-COMPON/OTHHCPCS
+                  links:
+                  - label: CompleteDocumentation(DTR)
+                    url: ''
+                    type: absolute
+                    appContext: f48ed17f-dc96-457d-8dc3-906a12f0a294
+                systemActions: []
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: UnAuthorized
+          content:
+            application/json:
+              example:
+                message: UnAuthorized
+                statusCode: 401
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+components:
+  schemas:
+    OrderSignResponseWrapper:
+      type: object
+      description: Wrapper for Order Sign response
+      properties:
+        cards:
+          type: array
+          description: List of CDS Hooks cards
+          items:
+            $ref: '#/components/schemas/Card'
+        systemActions:
+          type: array
+          description: System actions returned by CDS service
+          items:
+            type: object
+          example: []
+    Link:
+      type: object
+      description: Card action link
+      properties:
+        label:
+          type: string
+          description: Link label
+          example: CompleteDocumentation(DTR)
+        url:
+          type: string
+          description: Link URL
+          example: ''
+        type:
+          type: string
+          description: Link type
+          example: absolute
+        appContext:
+          type: string
+          description: Application context identifier
+          example: f48ed17f-dc96-457d-8dc3-906a12f0a294
+    OrderSignRequest:
+      type: object
+      description: CDS Hooks Order Sign Request payload
+      properties:
+        hook:
+          type: string
+          description: CDS Hooks hook name
+          example: order-sign
+        hookInstance:
+          type: string
+          description: Unique hook instance identifier
+          example: serviceRequestCoverageRequirements
+        fhirServer:
+          type: string
+          description: FHIR server base URL
+          example: http://hooks.smarthealth.org:9121
+        fhirAuthorization:
+          $ref: '#/components/schemas/FhirAuthorization'
+        context:
+          $ref: '#/components/schemas/Context'
+        prefetch:
+          $ref: '#/components/schemas/Prefetch'
+    Entry:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Claim'
+    CareTeam:
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/Reference'
+        responsible:
+          type: boolean
+          example: true
+    Card:
+      type: object
+      description: CDS Hooks card response
+      properties:
+        summary:
+          type: string
+          description: Short summary of the card
+          example: Required
+        indicator:
+          type: string
+          description: Severity indicator
+          example: info
+        detail:
+          type: string
+          description: Detailed description
+          example: A9521DMESUP/ACCESS/SRV-COMPON/OTHHCPCS
+        uuid:
+          type: string
+          description: Unique card identifier
+          example: uuid
+        source:
+          $ref: '#/components/schemas/Source'
+        links:
+          type: array
+          description: Links for additional actions or documentation
+          items:
+            $ref: '#/components/schemas/Link'
+    CodeableConcept:
+      type: object
+      description: FHIR CodeableConcept
+      properties:
+        coding:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coding'
+    Context:
+      type: object
+      description: CDS Hooks context information
+      properties:
+        userId:
+          type: string
+          description: User identifier
+          example: Practitioner/1381234567
+        patientId:
+          type: string
+          description: Patient identifier
+          example: patient_id
+        encounterId:
+          type: string
+          description: Encounter identifier
+          example: encounter_id
+        draftOrders:
+          $ref: '#/components/schemas/Bundle'
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    Bundle:
+      type: object
+      description: FHIR Bundle resource
+      properties:
+        resourceType:
+          type: string
+          example: Bundle
+        type:
+          type: string
+          example: collection
+        entry:
+          type: array
+          description: Bundle entries
+          items:
+            $ref: '#/components/schemas/Entry'
+    Claim:
+      type: object
+      description: FHIR Claim Inquiry Request
+      properties:
+        resourceType:
+          type: string
+          example: Claim
+        id:
+          type: string
+        meta:
+          $ref: '#/components/schemas/Meta'
+        identifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identifier'
+        status:
+          type: string
+          example: active
+        type:
+          $ref: '#/components/schemas/CodeableConcept'
+        use:
+          type: string
+          example: preauthorization
+        created:
+          type: string
+          example: '2023-10-05T08:30:00Z'
+        patient:
+          $ref: '#/components/schemas/Reference'
+        provider:
+          $ref: '#/components/schemas/Reference'
+        careTeam:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareTeam'
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
+    Prefetch:
+      type: object
+      properties:
+        claimResponse:
+          type: string
+          example: ClaimResponse?patient={{%context.patientId}}
+        condition:
+          type: string
+          example: Condition?patient={{%context.patientId}}
+        coverage:
+          type: string
+          example: Coverage?patient={{%context.patientId}}&status=active
+        device:
+          type: string
+          example: Device?patient={{%context.patientId}}
+        encounter:
+          type: string
+          example: Encounter/{{%context.encounterId}}
+        location:
+          type: string
+          example: Location?_id={{%context.locationId}}
+        patient:
+          type: string
+          example: Patient/{{%context.patientId}}
+        practitioner:
+          type: string
+          example: Practitioner/{{%context.userId}}
+        practitionerRole:
+          type: string
+          example: PractitionerRole?practitioner={{%context.userId}}
+    Coding:
+      type: object
+      description: Coding structure for answers
+      properties:
+        code:
+          type: string
+          example: '1'
+        display:
+          type: string
+          example: Age ≥ 50
+    Reference:
+      type: object
+      description: FHIR Reference
+      properties:
+        reference:
+          type: string
+          example: Patient/anonymous
+    Source:
+      type: object
+      description: Source information for the card
+      properties:
+        label:
+          type: string
+          description: Source label
+          example: UnitedHealthcarePriorAuthorizationRequirements
+        url:
+          type: string
+          description: Source URL
+          example: https://apimarketplace.uhcprovider.com/#/all-apis/prior-auth-api
+    FhirAuthorization:
+      type: object
+      description: FHIR authorization details
+      properties:
+        access_token:
+          type: string
+          description: Access token for FHIR server
+          example: some-opaque-fhir-access-token
+        token_type:
+          type: string
+          description: Token type
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Token expiration time in seconds
+          example: 300
+        scope:
+          type: string
+          description: Authorized scope
+          example: user/Patient.read user/DeviceRequest.read
+        subject:
+          type: string
+          description: Subject identifier
+          example: cds-service4
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

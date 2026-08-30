@@ -1,0 +1,905 @@
+openapi: 3.2.0
+info:
+  title: PES Payer Enrollments V1 Payments API
+  version: '1.0'
+  contact:
+    name: Michael Perusko
+  description: API for PES enrollments
+servers:
+- url: https://sandbox-apigw.optum.com/
+tags:
+- name: Payments
+paths:
+  /payments/pes-payer-enrollments/v1:
+    get:
+      summary: GET PES Payer Enrollments
+      tags:
+      - Payments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    tin:
+                      type: string
+                      minLength: 7
+                      maxLength: 9
+                    tinType:
+                      type: string
+                      enum:
+                      - EIN
+                      - SSN
+                    name:
+                      type: string
+                      minLength: 2
+                      maxLength: 80
+                      example: Test Provider Name
+                    dba:
+                      type: string
+                      maxLength: 80
+                    submitterEmail:
+                      type: string
+                      description: Email address that executed the last activity
+                      maxLength: 128
+                      minLength: 5
+                      example: test@example.com
+                    submittedTimestamp:
+                      type: string
+                      description: Last activity timestamp in ISO 8601 format
+                      example: '2021-04-15T00:00:00Z'
+                    verificationTimestamp:
+                      type: string
+                      description: Last activity timestamp in ISO 8601 format
+                      example: '2021-04-15T00:00:00Z'
+                    address:
+                      type: object
+                      properties:
+                        addressLine1:
+                          type: string
+                          minLength: 1
+                          maxLength: 50
+                        addressLine2:
+                          type: string
+                          maxLength: 50
+                        city:
+                          type: string
+                          minLength: 1
+                          maxLength: 60
+                        state:
+                          type: string
+                          minLength: 2
+                          maxLength: 2
+                        zip:
+                          type: string
+                          minLength: 5
+                          maxLength: 10
+                    contact:
+                      type: object
+                      properties:
+                        firstName:
+                          type: string
+                          minLength: 1
+                          maxLength: 64
+                        lastName:
+                          type: string
+                          minLength: 1
+                          maxLength: 64
+                        phone:
+                          type: string
+                          maxLength: 15
+                        ext:
+                          type: string
+                          minLength: 1
+                          maxLength: 15
+                        email:
+                          type: string
+                          minLength: 5
+                          maxLength: 128
+                    agent:
+                      type: object
+                      properties:
+                        companyName:
+                          type: string
+                          minLength: 2
+                          maxLength: 80
+                        firstName:
+                          type: string
+                          minLength: 1
+                          maxLength: 64
+                        lastName:
+                          type: string
+                          minLength: 1
+                          maxLength: 64
+                        phone:
+                          type: string
+                          maxLength: 15
+                        ext:
+                          type: string
+                          minLength: 1
+                          maxLength: 15
+                        email:
+                          type: string
+                          minLength: 5
+                          maxLength: 128
+                    signee:
+                      type: object
+                      properties:
+                        firstName:
+                          type: string
+                          minLength: 1
+                          maxLength: 64
+                        lastName:
+                          type: string
+                          minLength: 1
+                          maxLength: 64
+                        signatureTimestamp:
+                          type: string
+                          example: '2021-04-15T00:00:00Z'
+                    eftEnrollments:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          enrollmentId:
+                            type: number
+                          changesetId:
+                            type: number
+                          payerName:
+                            type: string
+                            maxLength: 100
+                          activityType:
+                            type: string
+                            enum:
+                            - NEW
+                            - CHANGE
+                            - CANCELLATION
+                          groupingPreference:
+                            type: string
+                            enum:
+                            - TIN
+                            - NPI
+                          status:
+                            type: string
+                            enum:
+                            - APPROVED
+                            - REJECTED
+                            - TERMINATED
+                            - CANCELLED
+                          submitterEmail:
+                            type: string
+                            description: Email address that executed the last activity
+                            minLength: 5
+                            maxLength: 128
+                          submittedTimestamp:
+                            type: string
+                            description: Last activity timestamp in ISO 8601 format
+                            example: '2021-04-15T00:00:00Z'
+                          verificationTimestamp:
+                            type: string
+                            description: Last activity timestamp in ISO 8601 format
+                            example: '2021-04-15T00:00:00Z'
+                          npis:
+                            type: array
+                            items:
+                              type: string
+                              minLength: 10
+                              maxLength: 10
+                          bank:
+                            type: object
+                            properties:
+                              bankName:
+                                type: string
+                                minLength: 2
+                                maxLength: 128
+                              ownerType:
+                                type: string
+                                enum:
+                                - BUSINESS
+                                - INDIVIDUAL
+                              ownerBusinessName:
+                                type: string
+                                minLength: 2
+                                maxLength: 80
+                              ownerFirstName:
+                                type: string
+                                minLength: 1
+                                maxLength: 64
+                              ownerLastName:
+                                type: string
+                                minLength: 1
+                                maxLength: 64
+                              routingNumber:
+                                type: string
+                                minLength: 1
+                                maxLength: 50
+                              accountNumber:
+                                type: string
+                                minLength: 4
+                                maxLength: 50
+                              accountType:
+                                type: string
+                                enum:
+                                - CHECKING
+                                - SAVINGS
+                    eraEnrollments:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          enrollmentId:
+                            type: number
+                          changesetId:
+                            type: number
+                          payerName:
+                            type: string
+                            maxLength: 100
+                          activityType:
+                            type: string
+                            enum:
+                            - NEW
+                            - CHANGE
+                            - CANCELLATION
+                          groupingPreference:
+                            type: string
+                            enum:
+                            - TIN
+                            - NPI
+                          status:
+                            type: string
+                            enum:
+                            - APPROVED
+                            - REJECTED
+                            - TERMINATED
+                            - CANCELLED
+                          submitterEmail:
+                            type: string
+                            description: Email address that executed the last activity
+                            minLength: 5
+                            maxLength: 128
+                          submittedTimestamp:
+                            type: string
+                            description: Last activity timestamp in ISO 8601 format
+                            example: '2021-04-15T00:00:00Z'
+                          verificationTimestamp:
+                            type: string
+                            description: Last activity timestamp in ISO 8601 format
+                            example: '2021-04-15T00:00:00Z'
+                          npis:
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 10
+                              minLength: 10
+                          eraRetrievalMethod:
+                            type: string
+                            maxLength: 100
+                          eraRetrievalValue:
+                            type: string
+                            maxLength: 100
+              examples:
+                Success Example:
+                  value:
+                  - tin: '123456789'
+                    tinType: EIN
+                    name: Test Provider
+                    dba: Test DBA
+                    submitterEmail: user@example.com
+                    submittedTimestamp: '2021-04-20T00:00:00Z'
+                    verificationTimestamp: '2021-04-20T00:00:00Z'
+                    address:
+                      addressLine1: 123 Main St.
+                      addressLine2: ''
+                      city: New York
+                      state: NY
+                      zip: '01234'
+                    contact:
+                      firstName: John
+                      lastName: Doe
+                      phone: 555-555-5555
+                      ext: '12345'
+                      email: user@example.com
+                    agent:
+                      companyName: Test Agent Company
+                      firstName: Jane
+                      lastName: Smith
+                      phone: 555-555-5555
+                      ext: '12345'
+                      email: user@example.com
+                    signee:
+                      firstName: John
+                      lastName: Doe
+                      signatureTimestamp: '2021-04-16T00:00:00Z'
+                    eftEnrollments:
+                    - enrollmentId: 5000001
+                      changesetId: 123
+                      payerName: Test Provider
+                      activityType: NEW
+                      service: EFT
+                      groupingPreference: NPI
+                      status: APPROVED
+                      submitterEmail: user@example.com
+                      submittedTimestamp: '2021-04-20T00:00:00Z'
+                      verificationTimestamp: '2021-04-20T00:00:00Z'
+                      npis:
+                      - 0123456789
+                      - '9876543210'
+                      bank:
+                        bankName: Test National Bank
+                        ownerFirstName: John
+                        ownerLastName: Doe
+                        routingNumber: '123456789'
+                        accountNumber: '9876543210'
+                        accountType: CHECKING
+                    eraEnrollments:
+                    - enrollmentId: 5000002
+                      changesetId: 124
+                      payerName: Test Provider
+                      activityType: NEW
+                      service: ERA
+                      groupingPreference: NPI
+                      status: APPROVED
+                      submitterEmail: user@example.com
+                      submittedTimestamp: '2021-04-20T00:00:00Z'
+                      verificationTimestamp: '2021-04-20T00:00:00Z'
+                      npis:
+                      - 0123456789
+                      - '9876543210'
+                      eraRetrievalMethod: Clearinghouse
+                      eraRetrievalValue: Change Healthcare
+                      tradingPartnerId: TPID123456
+        '401':
+          description: Status 401
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  error:
+                    type: string
+                    minLength: 1
+                  error_description:
+                    type: string
+                    minLength: 1
+                required:
+                - error
+                - error_description
+              examples:
+                Unauthorized Example:
+                  value:
+                    error: invalid_request
+                    error_description: The access token is missing
+        '422':
+          description: Status 422
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - code
+                - message
+                properties:
+                  code:
+                    type: string
+                    description: 'The error code. The format of the error code is MPS-####, where #### is a four digit code representing the type of error. 1024 is the code for a JSON schema validation error, and the schemaValidationErrors property will be populated.'
+                  message:
+                    type: string
+                    description: The error message
+                  schemaValidationErrors:
+                    type: array
+                    description: Optional array of objects that contain the fields that have JSON schema validation errors and what the failure is.
+                    items:
+                      type: object
+                      required:
+                      - field
+                      - message
+                      properties:
+                        field:
+                          type: string
+                          description: The field with the JSON schema error
+                        message:
+                          type: string
+                          description: The JSON schema error
+                    minItems: 1
+              examples:
+                Validation Example:
+                  value:
+                    code: PES-1234
+                    message: A JSON schema validation error occurred
+                    schemaValidationErrors:
+                    - field: data.startTimestamp
+                      message: is required
+        '500':
+          description: Status 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Error example:
+                  value:
+                    code: PES-1000
+                    message: An unexpected error occurred
+      operationId: get-pes-enrollments
+      parameters:
+      - schema:
+          type: string
+        in: header
+        name: Authorization
+        description: Bearer token
+        required: true
+      - schema:
+          type: string
+          example: '2021-04-01T00:00:00Z'
+        in: query
+        name: startTimestamp
+        description: Start timestamp in ISO 8601 format
+        required: true
+      - schema:
+          type: string
+          example: '2021-04-15T00:00:00Z'
+        in: query
+        name: endTimestamp
+        description: End timestamp in ISO 8601 format
+        required: true
+      - schema:
+          type: string
+        in: header
+        name: X-CHC-CorrelationId
+        description: Unique ID for the request
+      - schema:
+          type: string
+          enum:
+          - ERA
+          - EFT
+          - ALL
+        in: query
+        name: service
+        description: If not passed, will return enrollments for all services
+      - schema:
+          type: string
+          enum:
+          - APPROVED
+          - REJECTED
+          - TERMINATED
+          - CANCELLED
+          - ALL
+        in: query
+        name: status
+        description: If not passed, will return enrollments for all statuses
+      - schema:
+          type: string
+          enum:
+          - NEW
+          - CHANGE
+          - CANCELLATION
+          - ALL
+        in: query
+        name: activityType
+        description: If not passed, will return enrollments for all activity types
+      description: Retrieve PES enrollments
+    patch:
+      summary: PATCH PES Payer Enrollment
+      tags:
+      - Payments
+      operationId: patch-pes-payer-enrollments-v1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  enrollmentId:
+                    type: number
+                  changesetId:
+                    type: number
+                  status:
+                    type: string
+                    enum:
+                    - PAYER APPROVED
+                    - PAYER REJECTED
+                  rejectedReasonCode:
+                    type: string
+                    enum:
+                    - '0001'
+                    - '0002'
+              examples:
+                Successful Example:
+                  value:
+                    enrollmentId: 5000001
+                    changesetId: 123
+                    status: PAYER APPROVED
+                Rejected Example:
+                  value:
+                    enrollmentId: 5000002
+                    status: PAYER REJECTED
+        '401':
+          description: Status 401
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  error:
+                    type: string
+                    minLength: 1
+                  error_description:
+                    type: string
+                    minLength: 1
+                required:
+                - error
+                - error_description
+              examples:
+                Unauthorized Example:
+                  value:
+                    error: invalid_request
+                    error_description: The access token is missing
+        '422':
+          description: Status 422
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - code
+                - message
+                properties:
+                  code:
+                    type: string
+                    description: 'The error code. The format of the error code is MPS-####, where #### is a four digit code representing the type of error. 1024 is the code for a JSON schema validation error, and the schemaValidationErrors property will be populated.'
+                  message:
+                    type: string
+                    description: The error message
+                  schemaValidationErrors:
+                    type: array
+                    description: Optional array of objects that contain the fields that have JSON schema validation errors and what the failure is.
+                    items:
+                      type: object
+                      required:
+                      - field
+                      - message
+                      properties:
+                        field:
+                          type: string
+                          description: The field with the JSON schema error
+                        message:
+                          type: string
+                          description: The JSON schema error
+                    minItems: 1
+              examples:
+                Schema Validation Error Example:
+                  value:
+                    code: PES-1234
+                    message: A JSON schema validation error occurred
+                    schemaValidationErrors:
+                    - field: data.enrollmentId
+                      message: is required
+        '500':
+          description: Status 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Error example:
+                  value:
+                    code: PES-1000
+                    message: An unexpected error occurred
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enrollmentId:
+                  type: string
+                changesetId:
+                  type: string
+                status:
+                  type: string
+                  enum:
+                  - PAYER APPROVED
+                  - PAYER REJECTED
+                rejectedReasonCode:
+                  type: string
+                  enum:
+                  - '0001'
+                  - '0002'
+                  - '0003'
+                  - '0004'
+                  - '0005'
+                  - '0006'
+                  - '0007'
+              required:
+              - enrollmentId
+              - status
+      description: Update PES payer enrollment status
+      parameters:
+      - schema:
+          type: string
+        in: header
+        name: Authorization
+        description: Bearer token
+        required: true
+      - schema:
+          type: string
+        in: header
+        name: X-CHC-CorrelationId
+        description: Unique ID for the request
+  /payments/pes-payer-enrollments/v1/enrollment-status:
+    get:
+      summary: GET PES Payer Enrollments Status
+      tags:
+      - Payments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    tin:
+                      type: string
+                      minLength: 7
+                      maxLength: 9
+                      example: 123456789
+                    name:
+                      type: string
+                      minLength: 2
+                      maxLength: 80
+                      example: Test Provider Name
+                    billingNpi:
+                      type: string
+                      minLength: 10
+                      maxLength: 10
+                      example: 1234567890
+                    exemptFromNpi:
+                      type: boolean
+                      example: false
+                    eftEnrollments:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          enrollmentId:
+                            type: number
+                          payerName:
+                            type: string
+                          service:
+                            type: string
+                            enum:
+                            - EFT
+                          groupingPreference:
+                            type: string
+                            enum:
+                            - TIN
+                            - NPI
+                          status:
+                            type: string
+                            enum:
+                            - Approved
+                            - Rejected
+                            - Terminated
+                            - Cancelled
+                            - In Progress
+                            - In Progress Aged
+                            - Submitted
+                            - Manual Review
+                            - Risk Review
+                            - Returned to Customer
+                            - Pending Attachments
+                            - Duplicate
+                            - Withdrawn
+                            - Payer Approved
+                            - Payer Rejected
+                          npis:
+                            type: array
+                            items:
+                              type: string
+                              minLength: 10
+                              maxLength: 10
+                          updatedAt:
+                            type: string
+                            description: Last activity timestamp in ISO 8601 format
+                            example: '2022-01-01T00:00:00Z'
+                    eraEnrollments:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          enrollmentId:
+                            type: number
+                          payerName:
+                            type: string
+                          service:
+                            type: string
+                            enum:
+                            - ERA
+                          groupingPreference:
+                            type: string
+                            enum:
+                            - TIN
+                            - NPI
+                          status:
+                            type: string
+                            enum:
+                            - Approved
+                            - Rejected
+                            - Terminated
+                            - Cancelled
+                            - In Progress
+                            - In Progress Aged
+                            - Submitted
+                            - Manual Review
+                            - Risk Review
+                            - Returned to Customer
+                            - Pending Attachments
+                            - Duplicate
+                            - Withdrawn
+                            - Payer Approved
+                            - Payer Rejected
+                          npis:
+                            type: array
+                            items:
+                              type: string
+                              minLength: 10
+                              maxLength: 10
+                          updatedAt:
+                            type: string
+                            description: Last activity timestamp in ISO 8601 format
+                            example: '2022-01-01T00:00:00Z'
+              examples:
+                Success Example:
+                  value:
+                  - tin: '123456789'
+                    name: Test Provider
+                    billingNpi: '1234567890'
+                    exemptFromNpi: false
+                    eftEnrollments:
+                    - enrollmentId: 5000001
+                      payerName: BlueCross BlueShield of Tennessee
+                      service: EFT
+                      groupingPreference: NPI
+                      status: APPROVED
+                      npis:
+                      - 0123456789
+                      - '9876543210'
+                      updatedAt: '2022-05-01T00:00:00Z'
+                    eraEnrollments:
+                    - enrollmentId: 5000002
+                      payerName: BlueCross BlueShield of Tennessee
+                      service: ERA
+                      groupingPreference: NPI
+                      status: APPROVED
+                      npis:
+                      - 0123456789
+                      - '9876543210'
+                      updatedAt: '2022-05-01T00:00:00Z'
+                Success Example - no data return:
+                  value:
+                    message: Provider not found
+        '400':
+          description: Status 400
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The error message
+              examples:
+                Validation Example:
+                  value:
+                    message: Bad Request - querystring should match one of ['startTimestamp' and 'endTimestamp'] or ['tin' and/or 'npi']
+        '401':
+          description: Status 401
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  error:
+                    type: string
+                    minLength: 1
+                  error_description:
+                    type: string
+                    minLength: 1
+                  traceId:
+                    type: string
+                required:
+                - error
+                - error_description
+                - traceId
+              examples:
+                Unauthorized Example:
+                  value:
+                    error: invalid_access_token
+                    error_description: Invalid access token
+                    traceId: c908b858-0e32-af0e-1d02-7582c346da70
+        '422':
+          description: Status 422
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                properties:
+                  message:
+                    type: string
+                    description: The error message
+              examples:
+                Validation Example:
+                  value:
+                    message: Day range limit is 30 days
+        '500':
+          description: Status 500
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                Error example:
+                  value:
+                    message: An unexpected error occurred
+      operationId: get-pes-enrollments-enrollment-status
+      parameters:
+      - schema:
+          type: string
+        in: header
+        name: Authorization
+        description: Bearer token
+        required: true
+      - schema:
+          type: string
+          example: '2021-04-01T00:00:00Z'
+        in: query
+        name: startTimestamp
+        description: Start timestamp in ISO 8601 format, if passed, must to pass endTimestamp, can not pass tin or npi
+      - schema:
+          type: string
+          example: '2021-04-15T00:00:00Z'
+        in: query
+        name: endTimestamp
+        description: Start timestamp in ISO 8601 format, if passed, must to pass startTimestamp, can not pass tin or npi
+      - schema:
+          type: string
+        in: query
+        name: tin
+        description: If passed, can not pass startTimestamp and endTimestamp, can combine npi for searching
+      - schema:
+          type: string
+        in: query
+        name: npi
+        description: If passed, can not pass startTimestamp and endTimestamp, can combine tin for searching
+      description: Retrieve PES enrollments with all enrollment status
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true
+  samples-enabled: true

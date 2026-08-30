@@ -1,0 +1,1121 @@
+openapi: 3.2.0
+info:
+  title: Enhanced Eligibility Eligibility Transactions API
+  description: 'Enhanced Eligibility provides real-time eligibility verification for medical benefit inquiries and optional Coverage Discovery workflows when additional coverage needs to be researched asynchronously.
+
+
+    Timing guidance:
+
+    - Real-Time Eligibility is synchronous, but payer and clearinghouse response time dominate the end-to-end latency.
+
+    - The OI Enterprise gateway times out at 110 seconds for this API.
+
+    - Request deduplication is customer-configurable and determines whether a request is sent to the clearinghouse or short-circuited by replaying a prior transaction response.
+
+    - RTCOB and Coverage Insight also use a separate non-configurable 72-hour request cache. When that cache is hit, the path is marked as skipped instead of creating a new downstream submission.
+
+    - Coverage Discovery is asynchronous because some paths involve chained clearinghouse work and additional connected workflow dependencies.
+
+    - Most non-Coverage-Insight discovery paths are near real time relative to traditional discovery workflows.
+
+    - Customers with strict turnaround sensitivity should evaluate Coverage Insight enrollment carefully.
+
+    - Coverage Discovery paths and add-ons are enabled per customer and are not included automatically.
+
+
+    Primary integration patterns:
+
+    1. Submit a real-time eligibility request as normalized JSON or as a JSON request body with `x12` set to the X12 270 payload, and receive a normalized JSON response.
+
+    2. If enrolled in Coverage Discovery, inspect the real-time response `link` header for related discovery task resources when discovery is automatically triggered from the real-time request/response.
+
+    3. For advanced use cases, submit Coverage Discovery requests directly when you already possess a processed canonical eligibility request and, when needed, a processed eligibility response, and want asynchronous follow-up processing using a callback URL or by polling the discovery task resource.
+
+    4. When using direct discovery, the X12 workflow is often easier than the canonical JSON workflow because it accepts the processed `x12-270` and `x12-271` rather than requiring mapping into both canonical models.
+
+    '
+  version: v0.2.0
+servers:
+- url: https://sandbox-apigw.optum.com
+  description: Sandbox server (uses test data)
+- url: https://apigw.optum.com
+  description: Production server (uses live data)
+tags:
+- name: Eligibility Transactions
+  description: 'Retrieve previously processed real-time eligibility transactions. Use these endpoints to list transactions, filter by status, date range, patient details, or correlation metadata, and fetch a single transaction record by id for audit, troubleshooting, and downstream workflows.
+
+    '
+paths:
+  /rcm/eligibility/v1/transactions:
+    get:
+      tags:
+      - Eligibility Transactions
+      summary: Find all eligibility transactions
+      security:
+      - oAuth:
+        - read_txn
+      description: 'Returns matching eligibility transactions. You can use the query parameters listed below to filter the results. If no query parameters are provided, all eligibility transactions will be returned in paginated form.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/header-correlation-id'
+      - $ref: '#/components/parameters/query-status'
+      - $ref: '#/components/parameters/query-correlationid'
+      - $ref: '#/components/parameters/query-patientFirstName'
+      - $ref: '#/components/parameters/query-patientLastName'
+      - $ref: '#/components/parameters/query-patientAccountNumber'
+      - $ref: '#/components/parameters/query-medicalRecordNumber'
+      - $ref: '#/components/parameters/query-memberId'
+      - $ref: '#/components/parameters/query-patientDateOfBirth'
+      - $ref: '#/components/parameters/query-npi'
+      - $ref: '#/components/parameters/query-payerId'
+      - $ref: '#/components/parameters/query-start-date-time'
+      - $ref: '#/components/parameters/query-end-date-time'
+      - $ref: '#/components/parameters/query-sort-txns'
+      - $ref: '#/components/parameters/query-offset'
+      - $ref: '#/components/parameters/query-limit'
+      - $ref: '#/components/parameters/query-return-total-count'
+      responses:
+        '200':
+          description: OK
+          headers:
+            x-optum-tenant-id:
+              $ref: '#/components/headers/tenantid'
+            x-optum-correlation-id:
+              $ref: '#/components/headers/correlationid'
+            x-optum-trace-id:
+              $ref: '#/components/headers/traceid'
+            link:
+              $ref: '#/components/headers/link'
+            x-total-count:
+              $ref: '#/components/headers/total-count'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '401':
+          $ref: '#/components/responses/PermissionDeniedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        5XX:
+          $ref: '#/components/responses/UnexpectedError'
+  /rcm/eligibility/v1/transactions/{id}:
+    get:
+      tags:
+      - Eligibility Transactions
+      summary: Find eligibility transaction by ID
+      security:
+      - oAuth:
+        - read_txn
+      description: Returns an individual transaction with the corresponding ID, if found.
+      parameters:
+      - $ref: '#/components/parameters/header-correlation-id'
+      - $ref: '#/components/parameters/path-txn-id'
+      responses:
+        '200':
+          description: OK
+          headers:
+            x-optum-tenant-id:
+              $ref: '#/components/headers/tenantid'
+            x-optum-correlation-id:
+              $ref: '#/components/headers/correlationid'
+            x-optum-trace-id:
+              $ref: '#/components/headers/traceid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '401':
+          $ref: '#/components/responses/PermissionDeniedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityError'
+        5XX:
+          $ref: '#/components/responses/UnexpectedError'
+components:
+  headers:
+    correlationid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
+    total-count:
+      schema:
+        type: string
+        example: '1440'
+      description: The total number of records associated with the query. For example, with the query `?correlationId=123456579`, `x-total-count` returns the total amount of records associated with the given correlationId.
+    link:
+      schema:
+        type: string
+        example: </?limit=30&offset=2>; rel="next"
+      description: RFC 8288-style pagination link header used by list endpoints such as `GET /transactions` and `GET /coverage-discovery`. This header is separate from the related-task `link` header used by real-time eligibility responses.
+    traceid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: A unique identifier value that is attached to the response that allow reference to the original request.
+    tenantid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: The unique ID of the tenant that invoking user belongs to. Used to enforce data tenancy.
+    subtenantid:
+      schema:
+        type: string
+        example: 5e2f9f4f-6f1d-4b37-92b5-6c5a9d1f8a21
+      description: (Optional) Identifies an Optum-assigned sub-tenant configuration for your organization. Include this header only when Optum has provided a value for a specific enabled customer configuration. Clients must not generate or infer this value.
+  parameters:
+    query-payerId:
+      in: query
+      name: payerId
+      schema:
+        type: string
+        example: '12345'
+      description: (Optional) Payer ID (CHC ID).
+    path-txn-id:
+      in: path
+      name: id
+      description: The unique ID of the target transaction
+      required: true
+      schema:
+        type: string
+        example: 36743735-3303-4d9d-9f21-20dd5f6d7ab2
+    query-start-date-time:
+      in: query
+      name: startDateTime
+      required: false
+      schema:
+        type: string
+        example: '2017-07-21T17:32:28Z'
+      description: (Optional) The start date for the report. Start date must be before the end date
+    query-patientLastName:
+      in: query
+      name: patientLastName
+      schema:
+        type: string
+        example: Doe
+      description: (Optional) Patient's last name.
+    query-end-date-time:
+      in: query
+      name: endDateTime
+      required: false
+      schema:
+        type: string
+        example: '2017-09-21T17:32:28Z'
+      description: (Optional) The end date for the report. Must occur after the provided start date
+    query-npi:
+      in: query
+      name: npi
+      schema:
+        type: string
+        example: '1234567893'
+      description: (Optional) NPI of the primary care provider.
+    query-return-total-count:
+      in: query
+      name: returnTotalCount
+      schema:
+        type:
+        - boolean
+        - 'null'
+        example: true
+      description: (Optional) Whether or not to return the total number of records matching the supplied query parameters under the x-total-number HTTP response header. Defaults to false
+    query-offset:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+      description: (Optional) Pagination. The offset number to retrieve, which is determined by the limit. For example,if limit is 30 and offset is 0, then the response data will include records 1~30; If offset is 30 and limit is 30 then the response data will include records 30~59.
+    query-patientAccountNumber:
+      in: query
+      name: patientAccountNumber
+      schema:
+        type: string
+        example: '38300904'
+      description: (Optional) Patient's account number.
+    query-memberId:
+      in: query
+      name: memberId
+      schema:
+        type: string
+        example: XKY933M53442
+      description: (Optional) Member Id.
+    query-status:
+      in: query
+      name: status
+      required: false
+      explode: false
+      schema:
+        type: array
+        items:
+          enum:
+          - eligible
+          - ineligible
+          - payer_unavailable
+          - payer_not_in_system
+          - processing_error
+          - patient_unknown
+      description: (Optional) The status of the eligibility transaction. Valid values match `Transaction.status.value`.
+    query-correlationid:
+      in: query
+      name: correlationId
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: (Optional) The correlationId associated with the original request.
+    query-patientDateOfBirth:
+      in: query
+      name: patientDateOfBirth
+      schema:
+        type: string
+        example: '1995-01-15'
+      description: (Optional) Patient's date of birth.
+    query-patientFirstName:
+      in: query
+      name: patientFirstName
+      schema:
+        type: string
+        example: Jane
+      description: (Optional) Patient's first name.
+    query-sort-txns:
+      in: query
+      name: sort
+      required: false
+      explode: false
+      schema:
+        type: array
+        items:
+          enum:
+          - processedDate
+          - -processedDate
+        example:
+        - -processedDate
+      description: (Optional) The property to order the results of the report by. Defaults to '-processedDate', negative sign is 'desc'
+    header-correlation-id:
+      in: header
+      name: x-optum-correlation-id
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      required: false
+      description: (Optional) A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
+    query-limit:
+      in: query
+      name: limit
+      schema:
+        type:
+        - integer
+        - 'null'
+        minimum: 1
+        maximum: 100
+        example: 30
+      description: (Optional) Number of transactions to return per page. Must be greater than 0 and less than or equal to 100. Defaults to 30.
+    query-medicalRecordNumber:
+      in: query
+      name: medicalRecordNumber
+      schema:
+        type: string
+        example: '194570'
+      description: (Optional) Medical Record Number.
+  responses:
+    ForbiddenError:
+      description: Forbidden.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+          - invalid tenant id
+    UnexpectedError:
+      description: Unexpected error.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntityError:
+      description: Unprocessable Entity.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+          - Unprocessable Entity - Unable to deserialize record
+    PermissionDeniedError:
+      description: Unauthorized.
+      headers:
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: invalid_product
+              error_description:
+                type: string
+                example: Permission Denied.
+              traceId:
+                type: string
+                example: 942537e6-d544-ed7c-469b-a27efc4a6cff
+    NotFoundError:
+      description: Not found.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+          - Not Found - record not found
+  schemas:
+    Error:
+      description: The base object model for errors returned from the workflow
+      type: array
+      items:
+        type: string
+        example: Internal - An unknown error occurred
+    Transaction:
+      type: object
+      description: The base object model for the `/transactions` endpoints and the canonical model for Enhanced Eligibility
+      properties:
+        id:
+          type: string
+          example: 9fb77454-8c58-4345-aa50-43f133e06d20
+          description: The unique ID of the transaction
+        sourceId:
+          type: string
+          example: 9fb77454-8c58-4345-aa50-43f133e06d20
+          description: The id of the transaction that spawned this record. If empty, this transaction has no parent.
+        sourceType:
+          type: string
+          enum:
+          - new
+          - historical
+          - duplicate
+          - autosubmit
+          example: new
+          description: How the transaction was created. `new` means the transaction was submitted through the Real-Time Eligibility flow. `duplicate` means customer-configured deduplication found a prior matching request, skipped clearinghouse submission, and returned the previous response. `autosubmit` means the transaction was generated by Coverage Discovery path execution. `historical` means the record originated from historical retrieval rather than a newly created request.
+        correlationId:
+          type: string
+          description: An ID provided by the consumer at the time of transaction processing
+        processedDate:
+          type: string
+          example: '2017-07-21T17:32:28Z'
+          description: The time the transaction was processed by the system
+        status:
+          type: object
+          description: The outcome of the transaction
+          properties:
+            value:
+              type: string
+              enum:
+              - eligible
+              - ineligible
+              - payer_unavailable
+              - payer_not_in_system
+              - processing_error
+              - patient_unknown
+              example: eligible
+            description:
+              type: string
+              example: Eligible with insurance
+              description: A human readable representation of the 'value' field.
+        errors:
+          type: array
+          items:
+            type: string
+          description: A list of errors that occurred during process
+        benefits:
+          type: array
+          items:
+            type: object
+            example:
+              service: Urgent Care
+              networkClass: inNetwork
+              benefitType: family
+              name: copay
+              type: string
+              scope: common
+              benefitQualifier: DY
+            properties:
+              service:
+                type: string
+                example: Urgent Care
+                description: Text description of service type code
+              networkClass:
+                type: string
+                enum:
+                - inNetwork
+                - outNetwork
+                example: inNetwork
+                description: Whether the benefit conditions apply to 'in' or 'out' of network
+              benefitType:
+                type: string
+                enum:
+                - individual
+                - family
+                example: individual
+                description: Benefit type maps to either individual or family
+              name:
+                type: string
+                example: copay
+                description: Benefit field name
+              value:
+                type: string
+                description: Benefit field value
+              type:
+                type: string
+                enum:
+                - string
+                - date
+                - number
+                - percent
+                - monetary
+                - phone
+                description: Benefit field data type
+              scope:
+                type: string
+                enum:
+                - common
+                - service
+                example: common
+                description: Benefit field relates either to a service type or is common (not related to a service type)
+              insuranceType:
+                type: string
+                enum:
+                - AllPayers
+                - Medicaid
+                - Medicare
+                example: AllPayers
+                description: 'Insurance classification: Medicare, Medicaid, or AllPayers'
+              benefitQualifier:
+                type: string
+                example: DY (value of the benefit is in days)
+                description: Benefit field code identifying type or source
+          description: Detailed benefit information for each service returned by the payer
+        patient:
+          type: object
+          properties:
+            dateOfBirth:
+              type: string
+              format: date
+              example: '1880-01-02'
+            dateOfDeath:
+              type: string
+              format: date
+              example: '1880-01-02'
+            eligibilityCategory:
+              type: string
+              description: Expresses the eligibility category of the member to properly administer health benefits and coverage (from Department of Defense)
+            firstName:
+              type: string
+              example: John
+            gender:
+              type: string
+              example: M
+            lastName:
+              type: string
+              example: Doe
+            memberId:
+              type: string
+              example: '4784784'
+            middleName:
+              type: string
+              example: Dave
+            militaryPersonnel:
+              type: boolean
+              example: false
+            mrn:
+              type: string
+              example: '657883'
+            phone:
+              type: string
+              example: '1234567890'
+            relationship:
+              type: string
+              example: child
+            ssn:
+              type: string
+              example: '555443333'
+            suffix:
+              type: string
+              example: Mr.
+            agencyClaimNumber:
+              type: string
+              example: WC1234567
+            address:
+              type: object
+              properties:
+                lines:
+                  type: array
+                  items:
+                    type: string
+                    example:
+                    - 1234 Main Street
+                city:
+                  type: string
+                  example: Dallas
+                county:
+                  type: string
+                  example: Harris County
+                state:
+                  type: string
+                  example: TX
+                subdivisionCode:
+                  type: string
+                  example: TX
+                zip:
+                  type: string
+                  example: '77001'
+          description: The patient details captured on the eligibility response
+        payer:
+          type: object
+          properties:
+            aaaSource:
+              type: string
+              example: Additional Text From Payer
+            certificationNumber:
+              type: string
+              example: '9999999999'
+              description: 10 digits
+            contactExtension:
+              type: string
+              example: '7657'
+            contactName:
+              type: string
+              example: Contact Example
+            description:
+              type: string
+              example: HEALTHFIRST-MANAGED MEDICAID
+            email:
+              type: string
+              example: payer.email@email.com
+            fax:
+              type: string
+              example: '8009999999'
+            name:
+              type: string
+              example: HEALTHFIRST
+            phone:
+              type: string
+              example: '8009252272'
+            thirdPartyAdminstrator:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: BCBSM TPA
+                phone:
+                  type: string
+                  example: '8009252272'
+            url:
+              type: string
+              example: payerwebsite.com
+            address:
+              type: object
+              properties:
+                lines:
+                  type: array
+                  items:
+                    type: string
+                    example:
+                    - 1234 Main Street
+                city:
+                  type: string
+                  example: Dallas
+                county:
+                  type: string
+                  example: Harris County
+                state:
+                  type: string
+                  example: TX
+                subdivisionCode:
+                  type: string
+                  example: TX
+                zip:
+                  type: string
+                  example: '77001'
+            chcId:
+              type: string
+              example: 09876z5y-43x2-1w09-v8u7-tr6543s210qp
+          description: Represents data about the payer that is on record for the eligibility request
+        plan:
+          type: object
+          description: Detailed information about the Subscriber’s plan, group, and policy
+          properties:
+            beginDate:
+              type: string
+              format: date
+              example: '2008-01-02'
+            dateOfDecision:
+              type: string
+              format: date
+              example: '2008-01-02'
+            endDate:
+              type: string
+              format: date
+              example: '2008-01-02'
+            benefitFirstBilledDate:
+              type: string
+              format: date
+              example: '2008-01-02'
+            groupOrPolicyNumber:
+              type: string
+              example: '8888888888'
+            insuranceType:
+              type: string
+              example: Health Maintenance Organization (HMO)
+            lastBilledDate:
+              type: string
+              format: date
+              example: '2008-01-02'
+            medicalAssistanceCategory:
+              type: string
+              example: '999'
+            otherAdditionalCoverageQualifier:
+              type: string
+              example: PHARMACY
+            otherCoverage:
+              type: string
+              example: FIRST HEALTH LIFE & HEALTH INSURANCE COMPANY
+            otherProductDescription:
+              type: string
+              example: HealthPlan
+            planBeginDate:
+              type: string
+              format: date
+              example: '2008-01-02'
+            planCoverageDescription:
+              type: string
+              example: HEALTHFIRST-MANAGED MEDICAID
+            description:
+              type: string
+              example: Plan Description
+            name:
+              type: string
+              example: Cigna PPO
+            number:
+              type: string
+              example: S5768 135
+            ppo:
+              type: string
+              example: Dr. T Test
+              description: Preferred provider organization
+            productDescription:
+              type: string
+              example: HEALTHFIRST-MANAGED MEDICAID
+            dependentMemberID:
+              type: string
+              example: M20220314
+            familyUnitNumber:
+              type: string
+              example: '01'
+            identificationCardSerialNumber:
+              type: string
+              example: ICSN0001
+            insurancePolicyNumber:
+              type: string
+              example: ICSN0001
+            subscriberPremiumPaidEndDate:
+              type: string
+              format: date
+              example: '2008-01-01'
+            aca:
+              type: object
+              properties:
+                hixMessage:
+                  type: string
+                  example: HIX Grace Period
+                periodStart:
+                  type: string
+                  format: date
+                  example: '2008-01-01'
+                periodEnd:
+                  type: string
+                  format: date
+                  example: '2008-01-01'
+            case:
+              type: object
+              description: Used to clarify plan level details
+              properties:
+                type:
+                  type: string
+                  description: Reference Information as defined for a Reference Identification Qualifier
+                description:
+                  type: string
+                  example: Free form text
+            gatewayProvider:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Gateway Provider A
+                address:
+                  type: object
+                  properties:
+                    lines:
+                      type: array
+                      items:
+                        type: string
+                        example:
+                        - 1234 Main Street
+                    city:
+                      type: string
+                      example: Dallas
+                    county:
+                      type: string
+                      example: Harris County
+                    state:
+                      type: string
+                      example: TX
+                    subdivisionCode:
+                      type: string
+                      example: TX
+                    zip:
+                      type: string
+                      example: '77001'
+            group:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: FLORIDA MEDICAID
+                number:
+                  type: string
+                  example: FLMCD000
+                policyName:
+                  type: string
+                  example: FLMPOL256
+            hmo:
+              type: object
+              description: Health maintenance organization details
+              properties:
+                name:
+                  type: string
+                  example: Cigna HMO
+                planNumber:
+                  type: string
+                  example: CIG991122
+            hra:
+              type: object
+              description: Health reimbursement arrangement details
+              properties:
+                balance:
+                  type: string
+                  example: '90'
+                employerPledge:
+                  type: string
+                  example: '500'
+                paid:
+                  type: string
+                  example: '400'
+                priorCarryover:
+                  type: string
+                  example: '100'
+            hsa:
+              type: object
+              description: Health savings account details
+              properties:
+                balance:
+                  type: string
+                  example: '500'
+                employerPledge:
+                  type: string
+                  example: '800'
+                paid:
+                  type: string
+                  example: '200'
+                priorCarryover:
+                  type: string
+                  example: '0'
+            ipa:
+              type: object
+              description: Individual practice association details
+              properties:
+                name:
+                  type: string
+                  example: AETNA CHOICE POS II
+                contactName:
+                  type: string
+                  example: MERITAIN HEALTH CUSTOMER SERVICE
+                id:
+                  type: string
+                  example: IPAID
+                phone:
+                  type: string
+                  example: '8009252272'
+                address:
+                  type: object
+                  properties:
+                    lines:
+                      type: array
+                      items:
+                        type: string
+                        example:
+                        - 1234 Main Street
+                    city:
+                      type: string
+                      example: Dallas
+                    county:
+                      type: string
+                      example: Harris County
+                    state:
+                      type: string
+                      example: TX
+                    subdivisionCode:
+                      type: string
+                      example: TX
+                    zip:
+                      type: string
+                      example: '77001'
+            otherPayer:
+              type: object
+              description: Additional Payer Associated with Patient
+              properties:
+                groupNumber:
+                  type: string
+                  example: CIG998877
+                policyNumber:
+                  type: string
+                  example: CIGNA PPO
+            planNetworkIdentification:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: Free form qualifier
+                number:
+                  type: string
+                  example: PNIN08549
+            policy:
+              type: object
+              description: Information about the plan policy
+              properties:
+                name:
+                  type: string
+                  example: Cigna PPO
+                  description: Plan description from the payer
+                number:
+                  type: string
+                  example: S5768 135
+                  description: Group or policy number associated with the plan mapping to the policy reference identifier from the payer
+            preferredProviderOrg:
+              type: object
+              description: Details about the preferred provider organization
+              properties:
+                name:
+                  type: string
+                  example: Dr. T Test
+                contactName:
+                  type: string
+                  example: Test Contact Name
+                id:
+                  type: string
+                  example: '452114586'
+                phone:
+                  type: string
+                  example: '8009252272'
+                address:
+                  type: object
+                  properties:
+                    lines:
+                      type: array
+                      items:
+                        type: string
+                        example:
+                        - 1234 Main Street
+                    city:
+                      type: string
+                      example: Dallas
+                    county:
+                      type: string
+                      example: Harris County
+                    state:
+                      type: string
+                      example: TX
+                    subdivisionCode:
+                      type: string
+                      example: TX
+                    zip:
+                      type: string
+                      example: '77001'
+            primaryCareProvider:
+              type: object
+              properties:
+                providerName:
+                  type: string
+                  example: Provider Name
+                physician:
+                  type: string
+                  example: ALBERTO BRIZUELA-DUCHARNE
+                npi:
+                  type: string
+                  example: '1234567893'
+                phoneNumber:
+                  type: string
+                  example: '8009252272'
+                dateRange:
+                  type: string
+                  example: '2022-01-01'
+                address:
+                  type: object
+                  properties:
+                    lines:
+                      type: array
+                      items:
+                        type: string
+                        example:
+                        - 1234 Main Street
+                    city:
+                      type: string
+                      example: Dallas
+                    county:
+                      type: string
+                      example: Harris County
+                    state:
+                      type: string
+                      example: TX
+                    subdivisionCode:
+                      type: string
+                      example: TX
+                    zip:
+                      type: string
+                      example: '77001'
+        subscriber:
+          type: object
+          properties:
+            agencyNumber:
+              type: string
+              example: WC1234567
+            anniversaryDate:
+              type: string
+              format: date
+              example: '1880-01-02'
+            dateOfBirth:
+              type: string
+              format: date
+              example: '1880-01-02'
+            employer:
+              type: string
+              example: Optum
+            firstName:
+              type: string
+              example: johnOne
+            gender:
+              type: string
+              example: M
+            idCardNumber:
+              type: string
+              example: 5678 1234-A
+            lastName:
+              type: string
+              example: doeOne
+            memberId:
+              type: string
+              example: '12345921601'
+            middleName:
+              type: string
+              example: mOne
+            militaryPersonnel:
+              type: boolean
+              example: false
+            mrn:
+              type: string
+              example: '657883'
+            priorIdNumber:
+              type: string
+              example: '4784784'
+              description: The prior identification number (memberId)
+            ssn:
+              type: string
+              example: '555443333'
+            suffix:
+              type: string
+              example: Mr.
+            premiumPaidEndDate:
+              type: string
+              format: date
+              example: '2020-01-02'
+            address:
+              type: object
+              properties:
+                lines:
+                  type: array
+                  items:
+                    type: string
+                    example:
+                    - 1234 Main Street
+                city:
+                  type: string
+                  example: Dallas
+                county:
+                  type: string
+                  example: Harris County
+                state:
+                  type: string
+                  example: TX
+                subdivisionCode:
+                  type: string
+                  example: TX
+                zip:
+                  type: string
+                  example: '77001'
+          description: Subscriber data that originated from the Payer
+        x12-271:
+          type: string
+          description: Raw X12 271 eligibility response payload returned for the transaction.
+          example: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000       *220304*0343*^*00501*123456789*0*T*:~GS*HB*MTEXE*LLX1210001*20131015*2219*123456789*X*005010X279A1~ST*271*0001*005010X279A1~BHT*0022*11*1-622233a9-6fca5eb41ae6862b269452c9*20220304*0343~HL*1**20*1~NM1*PR*2*CMS*****PI*CMSMED~HL*2*1*21*1~NM1*1P*2*HAPPY DOCTORS GROUP PRACTICE*****XX*1234567893~HL*3*2*22*0~TRN*2*123456789*9877281234~TRN*2*1266798199*9MCK-TSHRT~NM1*IL*1*DOEONE*JOHNONE*M***MI*0000000000~N3*123 address1~N4*SEATTLE*WA*981010000~DMG*D8*18800102*F~INS*Y*18*001*25~DTP*307*RD8*20211020-20211020~EB*I**41^54~EB*1**88~EB*1**30^42^45^48^49^69^76^83^A5^A7^AG^BT^BU^BV*MA~DTP*291*D8*20041101~MSG*0-Beneficiary insured due to age OASI~EB*C**30*MA**26*1484~DTP*291*RD8*20210101-20211231~EB*C**30*MA**29*1484~DTP*291*RD8*20210101-20211231~EB*C**42^45*MA**26*0~DTP*292*RD8*20210101-20211231~EB*1**30^2^23^24^25^26^27^28^3^33^36^37^38^39^4^40^42^50^51^52^53^62^67^69^73^76^83^86^98^A4^A6^A8^AI^AJ^AK^AL^BT^BU^BV^DM^UC*MB~DTP*291*D8*20041101~MSG*0-Beneficiary insured due to age OASI~EB*C**30*MB**23*203~DTP*291*RD8*20210101-20211231~EB*C**30*MB**29*0~DTP*291*RD8*20210101-20211231~EB*A**30*MB**27**0.2~DTP*291*RD8*20210101-20211231~EB*C**42^67^AJ*MB**23*0~DTP*292*RD8*20210101-20211231~EB*A**42^67^AJ*MB**27**0~DTP*292*RD8*20210101-20211231~EB*R**88*OT~REF*18*S5601~REF*N6*203*SilverScript SmartRx~DTP*292*D8*20210101~LS*2120~NM1*PR*2*extra healthy insurance~N3*123 address1~N4*Nashville*TN*37203~PER*IC**TE*0000000000*UR*www.testwebsite.com~LE*2120~SE*50*0001~GE*1*123456789~IEA*1*123456789~
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow. [More info](https://api.example.com/docs/auth)
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system

@@ -1,0 +1,2037 @@
+openapi: 3.2.0
+info:
+  title: Optum Inquiry API
+  version: '1.0'
+  description: 'Operations tagged Inquiry across 2 of this provider''s published API definitions: optum-prior-authorization-v1-openapi.yml, optum-real-prior-authorization-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://sandbox-apigw.optum.com/rcm/prior-authorization/v1/
+- url: /processor
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: Inquiry
+paths:
+  /inquiry/x12:
+    post:
+      summary: 278x215 Prior Authorization Inquiry
+      description: 'Given a valid X12 278x215 request, the request will be submitted to the payer or clearing house and a 278 response returned.
+
+        '
+      tags:
+      - Inquiry
+      parameters:
+      - $ref: '#/components/parameters/x-optum-tenant-id'
+      - $ref: '#/components/parameters/x-optum-correlation-id'
+      requestBody:
+        description: Authorization request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InquiryX12Request'
+      responses:
+        '200':
+          description: Success
+          headers:
+            x-amzn-trace-id:
+              $ref: '#/components/headers/x-amzn-trace-id'
+            transaction-id:
+              $ref: '#/components/headers/transaction-id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquiryResponse'
+              examples:
+                subscriber:
+                  $ref: '#/components/examples/UserInquiryResponseSubscriber'
+                dependent:
+                  $ref: '#/components/examples/UserInquiryResponseDependent'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: https://sandbox-apigw.optum.com/rcm/prior-authorization/v1/
+    - url: /processor
+  /inquiry:
+    post:
+      summary: JSON Prior Authorization Inquiry
+      description: 'Given a valid JSON request, the request will be submitted to the payer or clearing house and a JSON response returned.
+
+        '
+      tags:
+      - Inquiry
+      parameters:
+      - $ref: '#/components/parameters/x-optum-tenant-id'
+      - $ref: '#/components/parameters/x-optum-correlation-id'
+      requestBody:
+        description: Authorization request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InquiryJSONRequest'
+            examples:
+              subscriber:
+                $ref: '#/components/examples/UserInquiryRequestSubscriber'
+              dependent:
+                $ref: '#/components/examples/UserInquiryRequestDependent'
+      responses:
+        '200':
+          description: Success
+          headers:
+            x-amzn-trace-id:
+              $ref: '#/components/headers/x-amzn-trace-id'
+            transaction-id:
+              $ref: '#/components/headers/transaction-id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquiryResponse'
+              examples:
+                subscriber:
+                  $ref: '#/components/examples/UserInquiryResponseSubscriber'
+                dependent:
+                  $ref: '#/components/examples/UserInquiryResponseDependent'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: https://sandbox-apigw.optum.com/rcm/prior-authorization/v1/
+    - url: /processor
+  /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/Claim/$inquire:
+    post:
+      operationId: inquireClaim
+      tags:
+      - Inquiry
+      security:
+      - oAuth:
+        - read_healthcheck
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: bh
+      - name: x-optum-consumer-correlation-id
+        in: header
+        schema:
+          type: string
+          description: Unique transaction identifier
+          example: uuid-123
+      - name: environment
+        in: header
+        schema:
+          type: string
+          description: Environment
+          example: sandbox
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InquireRequest'
+            example:
+              resourceType: Bundle
+              id: pas-inquiry-request-bundle-example
+              type: collection
+              entry:
+              - resource:
+                  resourceType: Claim
+                  id: claim-inquiry-example
+                  contained:
+                  - resourceType: Organization
+                    id: requestor-organization-tin
+                    identifier:
+                    - system: http://hl7.org/fhir/sid/us-tin
+                      value: '123456789'
+                    name: Requestor Organization
+                  - resourceType: Practitioner
+                    id: facilityName
+                    name:
+                    - family: Medical Center
+                  - resourceType: PractitionerRole
+                    id: primary-role
+                    practitioner:
+                      reference: '#facilityName'
+                  identifier:
+                  - system: http://example.org/claim-ids
+                    value: A123456789
+                  meta:
+                    profile:
+                    - http://hl7.org/fhir/us/davinci-pas/STU2/StructureDefinition/profile-claim-inquiry
+                  status: active
+                  type:
+                    coding:
+                    - system: http://terminology.hl7.org/CodeSystem/claim-type
+                      code: professional
+                      display: Professional
+                  patient:
+                    reference: '#example'
+                  use: preauthorization
+                  created: '2023-10-05T08:30:00Z'
+                  provider:
+                    reference: '#requestor-organization-tin'
+                    display: Requestor Organization
+                  careTeam:
+                  - provider:
+                      reference: '#primary-role'
+                    responsible: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InquireResponse'
+              example:
+                resourceType: Bundle
+                entry:
+                - resource:
+                    resourceType: ClaimResponse
+                    meta:
+                      profile:
+                      - https://hl7.org/fhir/us/davinci-pas/StructureDefinition-profile-claiminquiryresponse.html
+                      tag:
+                      - system: http://optum.com/fhir/wm/system/2021/07/resourceid
+                        code: 8uj6vtuJ72g6wzEt46kqwjD+zY91vjtc3xBp0QTV0ZQd7vqimNYhpHtwnWeWUqLexvrvEVO+4rgK80Os00k+jrPw=
+                      - system: COLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGING_SYSTEM_NAME
+                        code: CollectionBasedFhirMethods(mostlikely@Search)shouldbepaged.PleaseelevatethisissuetoyourBAifyouareseeingthismessage.
+                        display: XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.XXXCOLLECTION_BASED_FHIR_METHODS_SHOULD_IMPLEMENT_PAGINGXXX.
+                    contained:
+                    - resourceType: Patient
+                      id: patientClaimReference
+                      language: English
+                      identifier:
+                      - system: https://www.uhc.com/member-resources/your-member-id-card
+                        value: '#memberId'
+                      name:
+                      - text: memberfullname
+                        family: memberlastname
+                        given:
+                        - memberfirstname
+                      telecom:
+                      - system: phone
+                        value: '#memberphone'
+                      gender: membergender
+                      communication:
+                      - language:
+                          coding:
+                          - display: English
+                      generalPractitioner:
+                      - reference: '#practitionerReference'
+                    - resourceType: Practitioner
+                      id: practitionerReference
+                      name:
+                      - text: '#Practitioner'
+                    - resourceType: Organization
+                      id: organizationInsurerReference
+                      meta:
+                        profile:
+                        - https://hl7.org/fhir/us/davinci-pas/STU2/StructureDefinition-profile-insurer
+                      active: true
+                      type:
+                      - coding:
+                        - system: https://hl7.org/fhir/R4/codesystem-organization-type.html#organization-type-pay
+                          code: payer
+                          display: Payer
+                        text: Ahealthcarepayer.
+                      name: UnitedHealthcare
+                    - resourceType: Organization
+                      id: organizationRequestorReference
+                      identifier:
+                      - system: https://hl7.org/fhir/sid/us-tin
+                        value: '123456789'
+                      active: true
+                      name: MEDICALCENTER
+                      telecom:
+                      - system: phone
+                        value: 123-456-7890
+                      address:
+                      - line:
+                        - address1
+                        city: address2
+                        state: AZ
+                        postalCode: postalcode
+                      contact:
+                      - telecom:
+                        - system: phone
+                          value: 123-456-7890
+                        address:
+                          text: address
+                    identifier:
+                    - system: http://hl7.org/fhir/us/davinci-pas/StructureDefinition/profile-identifier
+                      value: A123456789
+                    status: active
+                    type:
+                      coding:
+                      - system: https://hl7.org/fhir/R4/valueset-claim-type.html
+                        code: professional
+                    use: preauthorization
+                    patient:
+                      reference: '#patientClaimReference'
+                    created: '2025-09-26T09:39:48.115+00:00'
+                    insurer:
+                      reference: '#organizationInsurerReference'
+                    requestor:
+                      reference: '#organizationRequestorReference'
+                    outcome: complete
+                    disposition: Open
+                    preAuthPeriod:
+                      start: '2025-04-11'
+                      end: '2025-07-10'
+                    item:
+                    - extension:
+                      - url: http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-itemTraceNumber
+                        valueIdentifier:
+                          value: A123456789
+                      - url: http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-itemPreAuthIssueDate
+                        valueDate: '2025-04-11T06:48:28.407+00:00'
+                      - url: http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-itemPreAuthPeriod
+                        valuePeriod:
+                          start: '2025-04-11'
+                          end: '2025-07-10'
+                      itemSequence: 1
+                      adjudication:
+                      - extension:
+                        - url: http://hl7.org/fhir/us/davinci-pas/StructureDefinition/extension-reviewActionCode
+                          valueCodeableConcept:
+                            coding:
+                            - code: complete
+                        category:
+                          coding:
+                          - system: http://terminology.hl7.org/CodeSystem/adjudication
+                            code: submitted
+                        reason:
+                          coding:
+                          - code: Covered/Approved
+                  search:
+                    mode: match
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: UnAuthorized
+          content:
+            application/json:
+              example:
+                message: UnAuthorized
+                statusCode: 401
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+    servers:
+    - url: https://sandbox-apigw.optum.com
+components:
+  headers:
+    transaction-id:
+      description: Transaction Id of the request
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: c9476bc2-b563-4555-9527-4afe9dccaf9a
+    x-amzn-trace-id:
+      description: Generated traceId of the request
+      required: true
+      example: Root=1-61d7441a-56e4c77350687b5230e5707
+      schema:
+        type: string
+  examples:
+    UserInquiryResponseSubscriber:
+      summary: Inquiry Response Subscriber Only
+      value:
+        authorizationId: a14081f3-b463-449e-a9dc-7ee21aef4552
+        inquiry:
+          x12: ISA*00*          *00*          *ZZ*INQMEDSOLUTIONS*ZZ*123456789      *240220*2059*^*00501*709893603*0*P*:~GS*HI*INQMEDSOLUTIONS*123456789*20240220*205925*148363198*X*005010X215~ST*278*0001*005010X215~BHT*0007*49*1234567890*20240220*205925*RD~HL*1**20*1~NM1*PR*2*MEDSOLUTIONS*****PI*CIGNA~PER*IC**UR*https//www.evicore.com/provider#login~HL*2*1*21*1~NM1*1P*2*WESTCHESTER MEDICAL CENTER*****XX*1234567890~REF*EI*123456789~HL*3*2*22*1~NM1*IL*1*SMITH*TOM****MI* U1234567890~REF*SY*123121234~REF*3L*12345-1702~REF*1L*CIGNA SI-PPO/OAP~N3*SOME ROAD~N4*BEDFORD*NY*12345~DMG*D8*19700101~HL*4*3*EV*1~HCR*A1*A12345678~REF*BB*A12345678~REF*NT*52598960~DTP*102*D8*20240220~DTP*036*D8*20240818~DTP*007*D8*20240220~DTP*881*D8*20240220~HI*ABK:R07.9~MSG*APPROVED~NM1*FA*2*TEST, DOMINICA*****XX*1234567890~N3*100 DEMO RD~N4*VALHALLA*NY*12345~PER*IC**TE*2223334444*FX*1112223333~NM1*DN*1*TEST*DOMINICA****XX*1234567890~N3*100 DEMO RD~N4*VALHALLA*NY*12345~PER*IC**TE*3334445555~HL*5*4*SS*0~HCR*A1*A12345678~SV1*HC:78452**UN*1~MSG*MYOCARDIAL PERFUSION IMAGING (SPECT); MULTIPLE STUDIES~SE*39*0001~GE*1*148363198~IEA*1*709893603~
+          json:
+            submitterTransactionIdentifier: '1234567890'
+            payerId: CIGNA
+            payerName: MEDSOLUTIONS
+            umClearingHouseId: '123456789'
+            contactUrl: https//www.evicore.com/provider#login
+            umRequestValidation: null
+            requester:
+              requesterType: 1P
+              organizationName: WESTCHESTER MEDICAL CENTER
+              requesterIdentification:
+                employerIdentificationNumber: '123456789'
+              npi: '1234567890'
+            subscriber:
+              lastName: SMITH
+              firstName: TOM
+              memberId: ' U1234567890'
+              dateOfBirth: '19700101'
+              address1: SOME ROAD
+              city: BEDFORD
+              state: NY
+              postalCode: '12345'
+              supplementalIdentification:
+                policyNumber: CIGNA SI-PPO/OAP
+                branchIdentifier: 12345-1702
+                ssn: '123121234'
+            patientEventDetail:
+              certificationActionCode: A1
+              reviewIdentificationNumber: A12345678
+              previousReviewAuthorizationNumber: A12345678
+              previousAdministrativeReferenceNumber: '52598960'
+              certificationIssueDate: '20240220'
+              certificationExpirationDate: '20240818'
+              certificationEffectiveDateBegin: '20240220'
+              healthCareServicesReviewRequestDateBegin: '20240220'
+              diagnosisTypeCode: ABK
+              diagnosisCode: R07.9
+              freeFormMessageText: APPROVED
+              patientEventProviderName:
+              - entityIdentifierCode: FA
+                organizationName: TEST, DOMINICA
+                identificationCodeQualifier: XX
+                identifier: '1234567890'
+                address1: 100 DEMO RD
+                city: VALHALLA
+                state: NY
+                postalCode: '12345'
+                providerSupplementalInformation: {}
+                contactFacsimile: '1112223333'
+                contactTelephone: '2223334444'
+              - entityIdentifierCode: DN
+                lastName: TEST
+                firstName: DOMINICA
+                identificationCodeQualifier: XX
+                identifier: '1234567890'
+                address1: 100 DEMO RD
+                city: VALHALLA
+                state: NY
+                postalCode: '12345'
+                providerSupplementalInformation: {}
+                contactTelephone: '3334445555'
+              serviceLevel:
+              - certificationActionCode: A1
+                reviewIdentificationNumber: A12345678
+                professionalService:
+                  productOrServiceIDQualifier: HC
+                  procedureCode: '78452'
+                  unitOrBasisForMeasurementCode: UN
+                  serviceUnitCount: '1'
+                institutionalService: {}
+                dentalService: {}
+                freeFormMessageText: MYOCARDIAL PERFUSION IMAGING (SPECT); MULTIPLE STUDIES
+    UserInquiryRequestSubscriber:
+      summary: Inquiry Request Subscriber Only
+      value:
+        senderId: 201985AAS
+        submitterTransactionIdentifier: '1234567890'
+        payerId: BCBSSC
+        payerName: South Carolina Blue Cross Blue
+        umClearingHouseId: '000000000000001'
+        requester:
+          requesterType: 1P
+          organizationName: Regional Medical Center
+          lastName: Regional Medical Center
+          requesterIdentification:
+            employerIdentificationNumber: '123456789'
+          city: Orangeburg
+          state: SC
+          postalCode: '12345'
+          npi: '1234567890'
+          contactTelephone: '8033952200'
+        subscriber:
+          lastName: TEST
+          firstName: BRITTANY
+          memberId: ZCS12345678
+          dateOfBirth: '19701231'
+          supplementalIdentification:
+            groupNumber: '123456789'
+            ssn: '111223333'
+        patientEventDetail:
+          requestCategoryCode: HS
+          certificationTypeCode: I
+          serviceTypeCode: '1'
+          facilityTypeCode: '11'
+          facilityCodeQualifier: B
+          eventDateBegin: '20231017'
+          eventDateEnd: '20231017'
+          patientEventProviderName:
+          - entityIdentifierCode: SJ
+            lastName: TEST
+            firstName: STEVEN
+            identificationCodeQualifier: XX
+            identifier: '1234567890'
+          - entityIdentifierCode: DN
+            lastName: TEST
+            firstName: STEVEN
+            identificationCodeQualifier: XX
+            identifier: '1234567890'
+          serviceLevel:
+          - requestCategoryCode: HS
+            facilityTypeCode: '11'
+            facilityCodeQualifier: B
+            serviceDateBegin: '20231017'
+            serviceDateEnd: '20231017'
+            professionalService:
+              productOrServiceIDQualifier: HC
+              procedureCode: '71260'
+          - requestCategoryCode: HS
+            facilityTypeCode: '11'
+            facilityCodeQualifier: B
+            serviceDateBegin: '20231017'
+            serviceDateEnd: '20231017'
+            professionalService:
+              productOrServiceIDQualifier: HC
+              procedureCode: '74177'
+    UserInquiryRequestDependent:
+      summary: Inquiry Request with Dependent
+      value:
+        senderId: 201985AAS
+        submitterTransactionIdentifier: '1234567890'
+        payerId: BCBSSC
+        payerName: South Carolina Blue Cross Blue
+        umClearingHouseId: '000000000000001'
+        requester:
+          requesterType: 1P
+          organizationName: Regional Medical Center
+          lastName: Regional Medical Center
+          requesterIdentification:
+            employerIdentificationNumber: '123456789'
+          city: Orangeburg
+          state: SC
+          postalCode: '12345'
+          npi: '1234567890'
+          contactTelephone: '8033952200'
+        subscriber:
+          lastName: TEST
+          firstName: BRITTANY
+          memberId: ZCS12345678
+          dateOfBirth: '19701231'
+          supplementalIdentification:
+            groupNumber: '123456789'
+            ssn: '111223333'
+        dependent:
+          lastName: TEST
+          firstName: MARY
+          dateOfBirth: '201001231'
+          supplementalIdentification:
+            ssn: '444556666'
+        patientEventDetail:
+          requestCategoryCode: HS
+          certificationTypeCode: I
+          serviceTypeCode: '1'
+          facilityTypeCode: '11'
+          facilityCodeQualifier: B
+          eventDateBegin: '20231017'
+          eventDateEnd: '20231017'
+          patientEventProviderName:
+          - entityIdentifierCode: SJ
+            lastName: TEST
+            firstName: STEVEN
+            identificationCodeQualifier: XX
+            identifier: '1234567890'
+          - entityIdentifierCode: DN
+            lastName: TEST
+            firstName: STEVEN
+            identificationCodeQualifier: XX
+            identifier: '1234567890'
+          serviceLevel:
+          - requestCategoryCode: HS
+            facilityTypeCode: '11'
+            facilityCodeQualifier: B
+            serviceDateBegin: '20231017'
+            serviceDateEnd: '20231017'
+            professionalService:
+              productOrServiceIDQualifier: HC
+              procedureCode: '71260'
+          - requestCategoryCode: HS
+            facilityTypeCode: '11'
+            facilityCodeQualifier: B
+            serviceDateBegin: '20231017'
+            serviceDateEnd: '20231017'
+            professionalService:
+              productOrServiceIDQualifier: HC
+              procedureCode: '74177'
+    UserInquiryResponseDependent:
+      summary: Inquiry Response with Dependent
+      value:
+        authorizationId: a14081f3-b463-449e-a9dc-7ee21aef4552
+        inquiry:
+          x12: ISA*00*          *00*          *ZZ*INQMEDSOLUTIONS*ZZ*123456789      *240220*2059*^*00501*709893603*0*P*:~GS*HI*INQMEDSOLUTIONS*123456789*20240220*205925*148363198*X*005010X215~ST*278*0001*005010X215~BHT*0007*49*1234567890*20240220*205925*RD~HL*1**20*1~NM1*PR*2*MEDSOLUTIONS*****PI*CIGNA~PER*IC**UR*https//www.evicore.com/provider#login~HL*2*1*21*1~NM1*1P*2*WESTCHESTER MEDICAL CENTER*****XX*1234567890~REF*EI*123456789~HL*3*2*22*1~NM1*IL*1*SMITH*TOM****MI* U1234567890~REF*SY*123121234~REF*3L*12345-1702~REF*1L*CIGNA SI-PPO/OAP~N3*SOME ROAD~N4*BEDFORD*NY*12345~DMG*D8*19700101~HL*4*3*EV*1~HCR*A1*A12345678~REF*BB*A12345678~REF*NT*52598960~DTP*102*D8*20240220~DTP*036*D8*20240818~DTP*007*D8*20240220~DTP*881*D8*20240220~HI*ABK:R07.9~MSG*APPROVED~NM1*FA*2*TEST, DOMINICA*****XX*1234567890~N3*100 DEMO RD~N4*VALHALLA*NY*12345~PER*IC**TE*2223334444*FX*1112223333~NM1*DN*1*TEST*DOMINICA****XX*1234567890~N3*100 DEMO RD~N4*VALHALLA*NY*12345~PER*IC**TE*3334445555~HL*5*4*SS*0~HCR*A1*A12345678~SV1*HC:78452**UN*1~MSG*MYOCARDIAL PERFUSION IMAGING (SPECT); MULTIPLE STUDIES~SE*39*0001~GE*1*148363198~IEA*1*709893603~
+          json:
+            submitterTransactionIdentifier: '1234567890'
+            payerId: CIGNA
+            payerName: MEDSOLUTIONS
+            umClearingHouseId: '123456789'
+            contactUrl: https//www.evicore.com/provider#login
+            umRequestValidation: null
+            requester:
+              requesterType: 1P
+              organizationName: WESTCHESTER MEDICAL CENTER
+              requesterIdentification:
+                employerIdentificationNumber: '123456789'
+              npi: '1234567890'
+            subscriber:
+              lastName: SMITH
+              firstName: TOM
+              memberId: ' U1234567890'
+              dateOfBirth: '19700101'
+              address1: SOME ROAD
+              city: BEDFORD
+              state: NY
+              postalCode: '12345'
+              supplementalIdentification:
+                policyNumber: CIGNA SI-PPO/OAP
+                branchIdentifier: 12345-1702
+                ssn: '123121234'
+            dependent:
+              lastName: SMITH
+              firstName: JANE
+              dateOfBirth: '19700101'
+              address1: SOME ROAD
+              city: BEDFORD
+              state: NY
+              postalCode: '12345'
+              supplementalIdentification:
+                ssn: '123984321'
+            patientEventDetail:
+              certificationActionCode: A1
+              reviewIdentificationNumber: A12345678
+              previousReviewAuthorizationNumber: A12345678
+              previousAdministrativeReferenceNumber: '52598960'
+              certificationIssueDate: '20240220'
+              certificationExpirationDate: '20240818'
+              certificationEffectiveDateBegin: '20240220'
+              healthCareServicesReviewRequestDateBegin: '20240220'
+              diagnosisTypeCode: ABK
+              diagnosisCode: R07.9
+              freeFormMessageText: APPROVED
+              patientEventProviderName:
+              - entityIdentifierCode: FA
+                organizationName: TEST, DOMINICA
+                identificationCodeQualifier: XX
+                identifier: '1234567890'
+                address1: 100 DEMO RD
+                city: VALHALLA
+                state: NY
+                postalCode: '12345'
+                providerSupplementalInformation: {}
+                contactFacsimile: '1112223333'
+                contactTelephone: '2223334444'
+              - entityIdentifierCode: DN
+                lastName: TEST
+                firstName: DOMINICA
+                identificationCodeQualifier: XX
+                identifier: '1234567890'
+                address1: 100 DEMO RD
+                city: VALHALLA
+                state: NY
+                postalCode: '12345'
+                providerSupplementalInformation: {}
+                contactTelephone: '3334445555'
+              serviceLevel:
+              - certificationActionCode: A1
+                reviewIdentificationNumber: A12345678
+                professionalService:
+                  productOrServiceIDQualifier: HC
+                  procedureCode: '78452'
+                  unitOrBasisForMeasurementCode: UN
+                  serviceUnitCount: '1'
+                institutionalService: {}
+                dentalService: {}
+                freeFormMessageText: MYOCARDIAL PERFUSION IMAGING (SPECT); MULTIPLE STUDIES
+  schemas:
+    AuthorizationJSONResponse:
+      type: object
+      properties:
+        requestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        submitterTransactionIdentifier:
+          type: string
+        payerId:
+          type: string
+        payerName:
+          type: string
+        umClearingHouseId:
+          type: string
+        contactName:
+          type: string
+        contactElectronicMail:
+          type: string
+        contactFacsimile:
+          type: string
+        contactTelephone:
+          type: string
+        contactTelephoneExtension:
+          type: string
+        contactUrl:
+          type: string
+        umRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        requester:
+          $ref: '#/components/schemas/AuthorizationJSONResponseRequester'
+        subscriber:
+          $ref: '#/components/schemas/AuthorizationJSONResponseSubscriber'
+        dependent:
+          $ref: '#/components/schemas/AuthorizationJSONResponseDependent'
+        patientEventDetail:
+          $ref: '#/components/schemas/AuthorizationJSONResponsePatientEventDetail'
+    AuthorizationJSONResponsePatientEventDetail:
+      type: object
+      properties:
+        dependentRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        requestCategoryCode:
+          type: string
+        certificationTypeCode:
+          type: string
+        serviceTypeCode:
+          type: string
+        facilityTypeCode:
+          type: string
+        facilityCodeQualifier:
+          type: string
+        certificationActionCode:
+          type: string
+        reviewIdentificationNumber:
+          type: string
+        reviewDecisionReasonCode:
+          type: string
+        secondSurgicalOpinionIndicator:
+          type: string
+        previousReviewAuthorizationNumber:
+          type: string
+        previousAdministrativeReferenceNumber:
+          type: string
+        eventDateBegin:
+          type: string
+        eventDateEnd:
+          type: string
+        admissionDateBegin:
+          type: string
+        admissionDateEnd:
+          type: string
+        dischargeDate:
+          type: string
+        certificationIssueDate:
+          type: string
+        certificationExpirationDate:
+          type: string
+        certificationEffectiveDateBegin:
+          type: string
+        certificationEffectiveDateEnd:
+          type: string
+        healthCareServicesReviewRequestDateBegin:
+          type: string
+        healthCareServicesReviewRequestDateEnd:
+          type: string
+        diagnosisTypeCode:
+          type: string
+        diagnosisCode:
+          type: string
+        quantityQualifier:
+          type: string
+        serviceUnitCount:
+          type: string
+        unitOrBasisForMeasurementCode:
+          type: string
+        sampleSelectionModulus:
+          type: string
+        timePeriodQualifier:
+          type: string
+        periodCount:
+          type: string
+        deliveryFrequencyCode:
+          type: string
+        deliveryPatternTimeCode:
+          type: string
+        institutionalAdmissionTypeCode:
+          type: string
+        institutionalAdmissionSourceCode:
+          type: string
+        institutionalPatientStatusCode:
+          type: string
+        ambulanceTransportCode:
+          type: string
+        ambulanceUnitOrBasisForMeasurementCode:
+          type: string
+        ambulanceTransportDistance:
+          type: string
+        spinalManipulationTreatmentSeriesNumber:
+          type: string
+        spinalManipulationTreatmentCount:
+          type: string
+        spinalManipulationSubluxationLevelCode:
+          type: string
+        spinalManipulationSubluxationLevelCode2:
+          type: string
+        oxygenEquipmentTypeCode:
+          type: string
+        oxygenEquipmentTypeCode2:
+          type: string
+        oxygenFlowRate:
+          type: string
+        dailyOxygenUseCount:
+          type: string
+        oxygenUsePeriodHourCount:
+          type: string
+        respiratoryTherapistOrderText:
+          type: string
+        portableOxygenSystemFlowRate:
+          type: string
+        oxygenDeliverySystemCode:
+          type: string
+        oxygenSystemTypeCode:
+          type: string
+        homeHealthPrognosisCode:
+          type: string
+        homeHealthStartDate:
+          type: string
+        homeHealthCertificationPeriod:
+          type: string
+        homeHealthMedicareCoverageIndicator:
+          type: string
+        homeHealthCertificationTypeCode:
+          type: string
+        freeFormMessageText:
+          type: string
+        patientEventProviderName:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponsePatientEventProviderName'
+        patientEventTransportInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponsePatientEventTransportInformation'
+        serviceLevel:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseServiceLevel'
+    AuthorizationJSONResponsePatientEventTransportInformation:
+      type: object
+      properties:
+        entityIdentifierCode:
+          type: string
+        organizationName:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+    InquiryX12Request:
+      type: object
+      properties:
+        x12:
+          type: string
+          description: EDI X12 278x215 Request
+          example: ISA*00*          *00*          *ZZ*943207296      *ZZ*000000000000001*230810*1021*^*00501*916040697*0*P*:~GS*HI*943207296*INQHEALTHHELP*20230810*102137*3294199*X*005010X215~ST*278*0001*005010X215~BHT*0007*28*1402448037*20230810*102137~HL*1**20*1~NM1*PR*2*Humana*****PI*HUMANA~HL*2*1*21*1~NM1*1P*2*North Memorial Health*****XX*1851344907~REF*EI*410729979~N4*Robbinsdale*MN*55422~PER*IC**TE*7635814480*FX*7635814480~HL*3*2*22*1~NM1*IL*1*DOE*JOE****MI*H1111111~REF*6P*00000000~DMG*D8*19010101~HL*4*3*EV*0~UM*HS*I*1*11:B~DTP*AAH*D8*20230802~HI*ABK:C34.32~NM1*SJ*2*North Memorial Medical Center*****XX*1851344907~NM1*DN*2*North Memorial Medical Center*****XX*1851344907~REF*ZH*410729979~SE*21*0001~GE*1*3294199~IEA*1*916040697~
+    InquiryResponse:
+      type: object
+      properties:
+        authorizationId:
+          type: string
+        inquiry:
+          type: object
+          properties:
+            x12:
+              type: string
+            json:
+              $ref: '#/components/schemas/AuthorizationJSONResponse'
+    AuthorizationJSONResponseRequestValidation:
+      type: object
+      properties:
+        responseCode:
+          type: string
+        rejectReasonCode:
+          type: string
+        followupActionCode:
+          type: string
+    AuthorizationJSONResponseIonalService:
+      type: object
+      properties:
+        serviceLineRevenueCode:
+          type: string
+        productOrServiceIDQualifier:
+          type: string
+        procedureCode:
+          type: string
+        procedureModifier:
+          type: string
+        procedureModifier2:
+          type: string
+        procedureModifier3:
+          type: string
+        procedureModifier4:
+          type: string
+        procedureCodeDescription:
+          type: string
+        procedureCode2:
+          type: string
+        serviceLineAmount:
+          type: string
+        unitOrBasisForMeasurementCode:
+          type: string
+        serviceUnitCount:
+          type: string
+        serviceLineRate:
+          type: string
+        epsdtIndicator:
+          type: string
+    AuthorizationJSONResponsePatientEventProviderName:
+      type: object
+      properties:
+        patientEventProviderRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        entityIdentifierCode:
+          type: string
+        organizationName:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        namePrefix:
+          type: string
+        nameSuffix:
+          type: string
+        identificationCodeQualifier:
+          type: string
+        identifier:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        countryCode:
+          type: string
+        countrySubDivisionCode:
+          type: string
+        providerSupplementalInformation:
+          $ref: '#/components/schemas/AuthorizationJSONResponseProviderSupplementalInformation'
+        contactName:
+          type: string
+        contactElectronicMail:
+          type: string
+        contactFacsimile:
+          type: string
+        contactTelephone:
+          type: string
+        contactTelephoneExtension:
+          type: string
+        contactUrl:
+          type: string
+        providerCode:
+          type: string
+        providerTaxonomyCode:
+          type: string
+    AuthorizationJSONResponseDependent:
+      type: object
+      properties:
+        dependentRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        lastName:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        suffix:
+          type: string
+        dateOfBirth:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        countryCode:
+          type: string
+        countrySubDivisionCode:
+          type: string
+        supplementalIdentification:
+          $ref: '#/components/schemas/AuthorizationJSONResponseDependentSupplementalIdentification'
+    InquiryJSONRequest:
+      type: object
+      properties:
+        senderId:
+          type: string
+        submitterTransactionIdentifier:
+          type: string
+        payerId:
+          type: string
+        payerName:
+          type: string
+        umClearingHouseId:
+          type: string
+        requester:
+          type: object
+          properties:
+            requesterType:
+              type: string
+            organizationName:
+              type: string
+            lastName:
+              type: string
+            firstName:
+              type: string
+            requesterIdentification:
+              type: object
+              properties:
+                providerUpinNumber:
+                  type: string
+                facilityIdNumber:
+                  type: string
+                employerIdentificationNumber:
+                  type: string
+                providerSiteNumber:
+                  type: string
+                providerPlanNetworkIdNumber:
+                  type: string
+                facilityNetworkIdNumber:
+                  type: string
+                socialSecurityNumber:
+                  type: string
+                federalTaxpayerIdentificationNumber:
+                  type: string
+                carrierAssignedReferenceNumber:
+                  type: string
+            address1:
+              type: string
+            address2:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            postalCode:
+              type: string
+            countryCode:
+              type: string
+            countrySubDivisionCode:
+              type: string
+            npi:
+              type: string
+            payorId:
+              type: string
+            ssn:
+              type: string
+            servicesPlanID:
+              type: string
+            employersId:
+              type: string
+            etin:
+              type: string
+            contactName:
+              type: string
+            contactElectronicMail:
+              type: string
+            contactFacsimile:
+              type: string
+            contactTelephone:
+              type: string
+            contactTelephoneExtension:
+              type: string
+            providerCode:
+              type: string
+            referenceIdentification:
+              type: string
+        subscriber:
+          type: object
+          properties:
+            lastName:
+              type: string
+            firstName:
+              type: string
+            middleName:
+              type: string
+            suffix:
+              type: string
+            memberId:
+              type: string
+            dateOfBirth:
+              type: string
+            supplementalIdentification:
+              type: object
+              properties:
+                policyNumber:
+                  type: string
+                branchIdentifier:
+                  type: string
+                groupNumber:
+                  type: string
+                departmentNumber:
+                  type: string
+                patientAccountNumber:
+                  type: string
+                healthInsuranceClaimNumber:
+                  type: string
+                idCard:
+                  type: string
+                insurancePolicyNumber:
+                  type: string
+                planNetworkIdentificationNumber:
+                  type: string
+                medicaidRecipientIdentificationNumber:
+                  type: string
+                ssn:
+                  type: string
+        dependent:
+          type: object
+          properties:
+            lastName:
+              type: string
+            firstName:
+              type: string
+            middleName:
+              type: string
+            suffix:
+              type: string
+            dateOfBirth:
+              type: string
+            supplementalIdentification:
+              type: object
+              properties:
+                employeeIdentificationNumber:
+                  type: string
+                patientAccountNumber:
+                  type: string
+                ssn:
+                  type: string
+        patientEventDetail:
+          type: object
+          properties:
+            requestCategoryCode:
+              type: string
+            certificationTypeCode:
+              type: string
+            serviceTypeCode:
+              type: string
+            facilityTypeCode:
+              type: string
+            facilityCodeQualifier:
+              type: string
+            certificationActionCode:
+              type: string
+            previousReviewAuthorizationNumber:
+              type: string
+            previousAdministrativeReferenceNumber:
+              type: string
+            accidentDate:
+              type: string
+            eventDateBegin:
+              type: string
+            eventDateEnd:
+              type: string
+            admissionDateBegin:
+              type: string
+            admissionDateEnd:
+              type: string
+            dischargeDate:
+              type: string
+            certificationIssueDateBegin:
+              type: string
+            certificationIssueDateEnd:
+              type: string
+            certificationExpirationDateBegin:
+              type: string
+            certificationExpirationDateEnd:
+              type: string
+            certificationEffectiveDateBegin:
+              type: string
+            certificationEffectiveDateEnd:
+              type: string
+            healthCareServicesReviewRequestDate:
+              type: string
+            diagnosisTypeCode:
+              type: string
+            diagnosisCode:
+              type: string
+            patientEventProviderName:
+              type: array
+              items:
+                type: object
+                properties:
+                  entityIdentifierCode:
+                    type: string
+                  organizationName:
+                    type: string
+                  lastName:
+                    type: string
+                  firstName:
+                    type: string
+                  middleName:
+                    type: string
+                  namePrefix:
+                    type: string
+                  nameSuffix:
+                    type: string
+                  identificationCodeQualifier:
+                    type: string
+                  identifier:
+                    type: string
+                  address1:
+                    type: string
+                  address2:
+                    type: string
+                  city:
+                    type: string
+                  state:
+                    type: string
+                  postalCode:
+                    type: string
+                  countryCode:
+                    type: string
+                  countrySubDivisionCode:
+                    type: string
+                  providerSupplementalInformation:
+                    type: object
+                    properties:
+                      stateLicenseNumber:
+                        type: string
+                      licenseNumberStateCode:
+                        type: string
+                      providerUpinNumber:
+                        type: string
+                      facilityIdNumber:
+                        type: string
+                      employersIdentificationNumber:
+                        type: string
+                      providerPlanNetworkIdentificationNumber:
+                        type: string
+                      facilityNetworkIdentificationNumber:
+                        type: string
+                      ssn:
+                        type: string
+                      carrierAssignedReferenceNumber:
+                        type: string
+                  providerCode:
+                    type: string
+                  providerTaxonomyCode:
+                    type: string
+            serviceLevel:
+              type: array
+              items:
+                type: object
+                properties:
+                  requestCategoryCode:
+                    type: string
+                  certificationTypeCode:
+                    type: string
+                  serviceTypeCode:
+                    type: string
+                  facilityTypeCode:
+                    type: string
+                  facilityCodeQualifier:
+                    type: string
+                  certificationActionCode:
+                    type: string
+                  previousReviewAuthorizationNumber:
+                    type: string
+                  previousAdministrativeReferenceNumber:
+                    type: string
+                  serviceDateBegin:
+                    type: string
+                  serviceDateEnd:
+                    type: string
+                  certificationIssueDateBegin:
+                    type: string
+                  certificationIssueDateEnd:
+                    type: string
+                  certificationExpirationDateBegin:
+                    type: string
+                  certificationExpirationDateEnd:
+                    type: string
+                  certificationEffectiveDateBegin:
+                    type: string
+                  certificationEffectiveDateEnd:
+                    type: string
+                  professionalService:
+                    type: object
+                    properties:
+                      productOrServiceIDQualifier:
+                        type: string
+                      procedureCode:
+                        type: string
+                      procedureCode2:
+                        type: string
+                      unitOrBasisForMeasurementCode:
+                        type: string
+                      serviceUnitCount:
+                        type: string
+                  institutionalService:
+                    type: object
+                    properties:
+                      serviceLineRevenueCode:
+                        type: string
+                      productOrServiceIDQualifier:
+                        type: string
+                      procedureCode:
+                        type: string
+                      procedureCode2:
+                        type: string
+                      unitOrBasisForMeasurementCode:
+                        type: string
+                      serviceUnitCount:
+                        type: string
+                  dentalService:
+                    type: object
+                    properties:
+                      procedureCode:
+                        type: string
+                      procedureCode2:
+                        type: string
+                      americanDentalAssociationCodes:
+                        type: string
+                      prosthesisCrownOrInlayCode:
+                        type: string
+                      serviceUnitCount:
+                        type: string
+                  toothInformation:
+                    type: object
+                    properties:
+                      toothCode:
+                        type: string
+                      toothSurfaceCode:
+                        type: string
+                  serviceProviderName:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        entityIdentifierCode:
+                          type: string
+                        organizationName:
+                          type: string
+                        lastName:
+                          type: string
+                        firstName:
+                          type: string
+                        middleName:
+                          type: string
+                        namePrefix:
+                          type: string
+                        nameSuffix:
+                          type: string
+                        identificationCodeQualifier:
+                          type: string
+                        identifier:
+                          type: string
+                        address1:
+                          type: string
+                        address2:
+                          type: string
+                        city:
+                          type: string
+                        state:
+                          type: string
+                        postalCode:
+                          type: string
+                        countryCode:
+                          type: string
+                        countrySubDivisionCode:
+                          type: string
+                        providerSupplementalInformation:
+                          type: object
+                          properties:
+                            stateLicenseNumber:
+                              type: string
+                            licenseNumberStateCode:
+                              type: string
+                            providerUpinNumber:
+                              type: string
+                            facilityIdNumber:
+                              type: string
+                            employersIdentificationNumber:
+                              type: string
+                            providerSiteNumber:
+                              type: string
+                            providerPlanNetworkIdentificationNumber:
+                              type: string
+                            facilityNetworkIdentificationNumber:
+                              type: string
+                            ssn:
+                              type: string
+                            carrierAssignedReferenceNumber:
+                              type: string
+                        providerCode:
+                          type: string
+                        providerTaxonomyCode:
+                          type: string
+    AuthorizationJSONResponseDependentSupplementalIdentification:
+      type: object
+      additionalProperties: false
+      properties:
+        employeeIdentificationNumber:
+          type: string
+        patientAccountNumber:
+          type: string
+        ssn:
+          type: string
+    AuthorizationJSONResponseServiceLevel:
+      type: object
+      properties:
+        serviceRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        requestCategoryCode:
+          type: string
+        certificationTypeCode:
+          type: string
+        serviceTypeCode:
+          type: string
+        facilityTypeCode:
+          type: string
+        facilityCodeQualifier:
+          type: string
+        certificationActionCode:
+          type: string
+        reviewIdentificationNumber:
+          type: string
+        reviewDecisionReasonCode:
+          type: string
+        secondSurgicalOpinionIndicator:
+          type: string
+        previousReviewAuthorizationNumber:
+          type: string
+        previousAdministrativeReferenceNumber:
+          type: string
+        serviceDateBegin:
+          type: string
+        serviceDateEnd:
+          type: string
+        certificationIssueDate:
+          type: string
+        certificationExpirationDate:
+          type: string
+        certificationEffectiveDateBegin:
+          type: string
+        certificationEffectiveDateEnd:
+          type: string
+        professionalService:
+          $ref: '#/components/schemas/AuthorizationJSONResponseIonalService'
+        institutionalService:
+          $ref: '#/components/schemas/AuthorizationJSONResponseIonalService'
+        dentalService:
+          $ref: '#/components/schemas/AuthorizationJSONResponseDentalService'
+        toothInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseToothInformation'
+        quantityQualifier:
+          type: string
+        serviceUnitCount:
+          type: string
+        unitOrBasisForMeasurementCode:
+          type: string
+        sampleSelectionModulus:
+          type: string
+        timePeriodQualifier:
+          type: string
+        periodCount:
+          type: string
+        deliveryFrequencyCode:
+          type: string
+        deliveryPatternTimeCode:
+          type: string
+        freeFormMessageText:
+          type: string
+        serviceProviderName:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseServiceProviderName'
+    AuthorizationJSONResponseRequesterIdentification:
+      type: object
+      properties:
+        providerUpinNumber:
+          type: string
+        facilityIdNumber:
+          type: string
+        employerIdentificationNumber:
+          type: string
+        providerSiteNumber:
+          type: string
+        providerPlanNetworkIdNumber:
+          type: string
+        facilityNetworkIdNumber:
+          type: string
+        socialSecurityNumber:
+          type: string
+        carrierAssignedReferenceNumber:
+          type: string
+    AuthorizationJSONResponseRequester:
+      type: object
+      properties:
+        requesterRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        requesterType:
+          type: string
+        organizationName:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        requesterIdentification:
+          $ref: '#/components/schemas/AuthorizationJSONResponseRequesterIdentification'
+        npi:
+          type: string
+        payorId:
+          type: string
+        ssn:
+          type: string
+        servicesPlanID:
+          type: string
+        employersId:
+          type: string
+        etin:
+          type: string
+        providerCode:
+          type: string
+        referenceIdentification:
+          type: string
+    AuthorizationJSONResponseProviderSupplementalInformation:
+      type: object
+      properties:
+        stateLicenseNumber:
+          type: string
+        licenseNumberStateCode:
+          type: string
+        providerUpinNumber:
+          type: string
+        facilityIdNumber:
+          type: string
+        employersIdentificationNumber:
+          type: string
+        providerPlanNetworkIdentificationNumber:
+          type: string
+        facilityNetworkIdentificationNumber:
+          type: string
+        ssn:
+          type: string
+        carrierAssignedReferenceNumber:
+          type: string
+        providerSiteNumber:
+          type: string
+    AuthorizationJSONResponseDentalService:
+      type: object
+      properties:
+        procedureCode:
+          type: string
+        procedureModifier:
+          type: string
+        procedureModifier2:
+          type: string
+        procedureModifier3:
+          type: string
+        procedureModifier4:
+          type: string
+        procedureCodeDescription:
+          type: string
+        procedureCode2:
+          type: string
+        serviceLineAmount:
+          type: string
+        americanDentalAssociationCodes:
+          type: string
+        americanDentalAssociationCodes2:
+          type: string
+        americanDentalAssociationCodes3:
+          type: string
+        americanDentalAssociationCodes4:
+          type: string
+        americanDentalAssociationCodes5:
+          type: string
+        prosthesisCrownOrInlayCode:
+          type: string
+        serviceUnitCount:
+          type: string
+    Errors:
+      type: array
+      items:
+        type: string
+        example: This is an example error string
+    AuthorizationJSONResponseSubscriberSupplementalIdentification:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+        branchIdentifier:
+          type: string
+        groupNumber:
+          type: string
+        departmentNumber:
+          type: string
+        patientAccountNumber:
+          type: string
+        healthInsuranceClaimNumber:
+          type: string
+        idCard:
+          type: string
+        insurancePolicyNumber:
+          type: string
+        planNetworkIdentificationNumber:
+          type: string
+        medicaidRecipientIdentificationNumber:
+          type: string
+        ssn:
+          type: string
+    AuthorizationJSONResponseToothInformation:
+      type: object
+      properties:
+        toothCode:
+          type: string
+        toothSurfaceCode:
+          type: string
+        toothSurfaceCode2:
+          type: string
+        toothSurfaceCode3:
+          type: string
+        toothSurfaceCode4:
+          type: string
+        toothSurfaceCode5:
+          type: string
+    AuthorizationJSONResponseServiceProviderName:
+      type: object
+      properties:
+        serviceProviderRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        entityIdentifierCode:
+          type: string
+        organizationName:
+          type: string
+        lastName:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        namePrefix:
+          type: string
+        nameSuffix:
+          type: string
+        identificationCodeQualifier:
+          type: string
+        identifier:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        countryCode:
+          type: string
+        countrySubDivisionCode:
+          type: string
+        providerSupplementalInformation:
+          $ref: '#/components/schemas/AuthorizationJSONResponseProviderSupplementalInformation'
+        contactName:
+          type: string
+        contactElectronicMail:
+          type: string
+        contactFacsimile:
+          type: string
+        contactTelephone:
+          type: string
+        contactTelephoneExtension:
+          type: string
+        contactUrl:
+          type: string
+        providerCode:
+          type: string
+        providerTaxonomyCode:
+          type: string
+    AuthorizationJSONResponseSubscriber:
+      type: object
+      properties:
+        subscriberRequestValidation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorizationJSONResponseRequestValidation'
+        lastName:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        suffix:
+          type: string
+        memberId:
+          type: string
+        dateOfBirth:
+          type: string
+        address1:
+          type: string
+        address2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        countryCode:
+          type: string
+        countrySubDivisionCode:
+          type: string
+        supplementalIdentification:
+          $ref: '#/components/schemas/AuthorizationJSONResponseSubscriberSupplementalIdentification'
+    Entry:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Claim'
+    CareTeam:
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/Reference'
+        responsible:
+          type: boolean
+          example: true
+    ResponseEntry:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/ClaimResponse'
+        search:
+          type: object
+          properties:
+            mode:
+              type: string
+              example: match
+    ClaimResponse:
+      type: object
+      description: FHIR ClaimResponse
+      properties:
+        resourceType:
+          type: string
+          example: ClaimResponse
+        meta:
+          $ref: '#/components/schemas/Meta'
+        identifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identifier'
+        status:
+          type: string
+          example: active
+        type:
+          $ref: '#/components/schemas/CodeableConcept'
+        use:
+          type: string
+          example: preauthorization
+        created:
+          type: string
+          example: '2025-09-26T09:39:48+00:00'
+        patient:
+          $ref: '#/components/schemas/Reference'
+        insurer:
+          $ref: '#/components/schemas/Reference'
+        requestor:
+          $ref: '#/components/schemas/Reference'
+        outcome:
+          type: string
+          example: complete
+        disposition:
+          type: string
+          example: Open
+        preAuthPeriod:
+          $ref: '#/components/schemas/Period'
+        item:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseItem'
+    CodeableConcept:
+      type: object
+      description: FHIR CodeableConcept
+      properties:
+        coding:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coding'
+    ResponseItem:
+      type: object
+      properties:
+        itemSequence:
+          type: integer
+          example: 1
+        extension:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+        adjudication:
+          type: array
+          items:
+            $ref: '#/components/schemas/Adjudication'
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    Extension:
+      type: object
+      description: FHIR extension with Reference
+      properties:
+        url:
+          type: string
+          example: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
+        valueReference:
+          $ref: '#/components/schemas/Reference'
+    Adjudication:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/CodeableConcept'
+        reason:
+          $ref: '#/components/schemas/CodeableConcept'
+        extension:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
+    Period:
+      type: object
+      properties:
+        start:
+          type: string
+          example: '2025-04-11'
+        end:
+          type: string
+          example: '2025-07-10'
+    Claim:
+      type: object
+      description: FHIR Claim Inquiry Request
+      properties:
+        resourceType:
+          type: string
+          example: Claim
+        id:
+          type: string
+        meta:
+          $ref: '#/components/schemas/Meta'
+        identifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identifier'
+        status:
+          type: string
+          example: active
+        type:
+          $ref: '#/components/schemas/CodeableConcept'
+        use:
+          type: string
+          example: preauthorization
+        created:
+          type: string
+          example: '2023-10-05T08:30:00Z'
+        patient:
+          $ref: '#/components/schemas/Reference'
+        provider:
+          $ref: '#/components/schemas/Reference'
+        careTeam:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareTeam'
+    Coding:
+      type: object
+      description: Coding structure for answers
+      properties:
+        code:
+          type: string
+          example: '1'
+        display:
+          type: string
+          example: Age ≥ 50
+    Reference:
+      type: object
+      description: FHIR Reference
+      properties:
+        reference:
+          type: string
+          example: Patient/anonymous
+    InquireRequest:
+      type: object
+      description: FHIR Bundle for claim inquiry
+      properties:
+        resourceType:
+          type: string
+          example: Bundle
+        id:
+          type: string
+          example: pas-inquiry-request-bundle-example
+        type:
+          type: string
+          example: collection
+        entry:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entry'
+    InquireResponse:
+      type: object
+      description: FHIR Bundle with ClaimResponse
+      properties:
+        resourceType:
+          type: string
+          example: Bundle
+        entry:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseEntry'
+  responses:
+    '403':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Forbidden. Authentication succeeded but authenticated user doesn't have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '401':
+      description: Unauthorized. No or invalid authentication details are provided
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '400':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Bad Request. The request body is malformed or missing required information.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '500':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Internal Server Error. An unexpected error has occurred.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+  parameters:
+    x-optum-tenant-id:
+      description: The unique ID of the tenant that the invoking user belongs to.
+      in: header
+      name: x-optum-tenant-id
+      schema:
+        type: string
+        format: uuid
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      required: true
+    x-optum-correlation-id:
+      description: A unique identifier assigned to each request.
+      in: header
+      name: x-optum-correlation-id
+      schema:
+        type: string
+        format: uuid
+        example: c9476bc2-b563-4555-9527-4afe9dccaf9a
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-refined-from:
+- optum-prior-authorization-v1-openapi.yml
+- optum-real-prior-authorization-api-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

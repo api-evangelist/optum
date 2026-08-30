@@ -1,0 +1,142 @@
+openapi: 3.2.0
+info:
+  title: Core Service Code History APIs API
+  description: Code Search Service provides the APIs for searching codes related information.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/codesearchms
+tags:
+- name: Code History APIs
+paths:
+  /api/coding/code/{codetype}/{code}/history:
+    get:
+      tags:
+      - Code History APIs
+      summary: Fetches the complete history for a code.
+      operationId: codeHistory
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - i10_pcs
+          - i10_cm
+          - i9v1
+          - i9v3
+      - name: code
+        in: path
+        description: Code for which history is required
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Complete code history of code
+          content:
+            application/json:
+              example:
+              - changeEffectiveDate: '2021-01-01 00:00:00'
+                status: Changed
+                changeSummary: Officially recognized, Other, Changed
+                fullInfo: <P><FONT color=blue>Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and low level of medical decision making. When using time for code selection, 20-29 minutes of total time is spent on the date of the encounter.</FONT><FONT color=red><STRIKE>EST OUTPT L3 EXP PROB H&E LOW COMPLX MED DEC</STRIKE></FONT>
+                char48Info: <P><FONT color=blue>OFFICE</FONT><FONT color=red><STRIKE>OFC</STRIKE></FONT>/<FONT color=blue>OUTPATIENT ESTABLISHED LOW</FONT><FONT color=red><STRIKE>OUTPT VISIT E&M EST</STRIKE></FONT> <FONT color=blue>MDM 20</FONT>-<FONT color=blue>29</FONT><FONT color=red><STRIKE>MOD SEVERITY 15</STRIKE></FONT> MIN
+                char35Info: <P><FONT color=blue>OFFICE O</FONT><FONT color=red><STRIKE>OFC</STRIKE></FONT>/<FONT color=blue>P EST LOW</FONT><FONT color=red><STRIKE>OUTPT E&M ESTAB</STRIKE></FONT> <FONT color=blue>20</FONT>-<FONT color=blue>29</FONT><FONT color=red><STRIKE>MOD 15</STRIKE></FONT> MIN
+              - changeEffectiveDate: '2013-01-01 00:00:00'
+                status: Changed
+                changeSummary: Officially recognized, Other, Changed
+                fullInfo: '<P><FONT color=blue>Office or other outpatient visit for the evaluation and management of an established patient, which requires at least 2 of these 3 key components: An expanded problem focused history; An expanded problem focused examination; Medical decision making of low complexity. Counseling and coordination of care with other physicians, other qualified health care professionals, or agencies are provided consistent with the nature of the problem(s) and the patient''s and/or family''s needs. Usually, the presenting problem(s) are of low to moderate severity. Typically, 15 minutes are spent face-to-face with the patient and/or family.</FONT><FONT color=red><STRIKE>EST OUTPT L3 EXP PROB H&E LOW COMPLX MED DEC</STRIKE></FONT>'
+                char48Info: <P><FONT color=blue>OFFICE OUTPATIENT VISIT</FONT><FONT color=red><STRIKE>OFC/OUTPT</STRIKE></FONT> 15 <FONT color=blue>MINUTES</FONT><FONT color=red><STRIKE>MIN</STRIKE></FONT>
+                char35Info: <P><FONT color=blue>OFFICE</FONT><FONT color=red><STRIKE>OFC</STRIKE></FONT>/<FONT color=blue>OUTPATIENT VISIT EST</FONT><FONT color=red><STRIKE>OUTPT E&M ESTAB LOW-MOD 15 MIN</STRIKE></FONT>
+              - changeEffectiveDate: '2004-01-01 00:00:00'
+                status: Changed
+                changeSummary: Officially recognized, Other, Changed
+                fullInfo: '<P><FONT color=blue>Office or other outpatient visit for the evaluation and management of an established patient, which requires at least 2 of these 3 key components: An expanded problem focused history; An expanded problem focused examination; Medical decision making of low complexity. Counseling and coordination of care with other providers or agencies are provided consistent with the nature of the problem(s) and the patient''s and/or family''s needs. Usually, the presenting problem(s) are of low to moderate severity. Physicians typically spend 15 minutes face-to-face with the patient and/or family.</FONT><FONT color=red><STRIKE>EST OUTPT L3 EXP PROB H&E LOW COMPLX MED DEC</STRIKE></FONT>'
+                char48Info: <P><FONT color=blue>OFFICE OUTPATIENT VISIT</FONT><FONT color=red><STRIKE>OFC/OUTPT</STRIKE></FONT> 15 <FONT color=blue>MINUTES</FONT><FONT color=red><STRIKE>MIN</STRIKE></FONT>
+                char35Info: <P><FONT color=blue>OFFICE</FONT><FONT color=red><STRIKE>OFC</STRIKE></FONT>/<FONT color=blue>OUTPATIENT VISIT EST</FONT><FONT color=red><STRIKE>OUTPT E&M ESTAB LOW-MOD 15 MIN</STRIKE></FONT>
+              - changeEffectiveDate: '2003-01-01 00:00:00'
+                status: Changed
+                changeSummary: Officially recognized, Other, Changed
+                fullInfo: '<P><FONT color=blue>Office or other outpatient visit for the evaluation and management of an established patient, which requires at least two of these three key components: an expanded problem focused history; an expanded problem focused examination; medical decision making of low complexity. Counseling and coordination of care with other providers or agencies are provided consistent with the nature of the problem(s) and the patient''s and/or family''s needs. Usually, the presenting problem(s) are of low to moderate severity. Ph</FONT><FONT color=red><STRIKE>EST OUTPT L3 EXP PROB H&E LOW COMPLX MED DEC</STRIKE></FONT>'
+                char48Info: There are no differences in these versions.
+                char35Info: There are no differences in these versions.
+              - changeEffectiveDate: '2000-01-01 00:00:00'
+                status: Changed
+                changeSummary: Officially recognized, Other, Changed
+                fullInfo: '<P><FONT color=blue>Office or other outpatient visit for the evaluation and management of an established patient, which requires at least two of these three key components: an expanded problem focused history; an expanded problem focused examination; medical decision making of low complexity. Counseling and coordination of care with other providers or agencies are provided consistent with the nature of the problem(s) and the patient''s and/or family''s needs. Usually, the presenting problem(s) are of low to moderate severity. Physicians typically spend 15 minutes face-to-face with the patient and/or family.</FONT><FONT color=red><STRIKE>EST OUTPT L3 EXP PROB H&E LOW COMPLX MED DEC</STRIKE></FONT>'
+                char48Info: There are no differences in these versions.
+                char35Info: There are no differences in these versions.
+              - changeEffectiveDate: '1994-01-01 00:00:00'
+                status: Changed
+                changeSummary: Officially recognized, Other, Changed
+                fullInfo: <P><FONT color=blue>OFFIC/OUTPT VISIT E&M</FONT> EST<FONT color=red><STRIKE>OUTPT L3 EXP PROB H&E</STRIKE></FONT> LOW<FONT color=blue>-MOD SEVERITY 15MIN</FONT><FONT color=red><STRIKE>COMPLX MED DEC</STRIKE></FONT>
+                char48Info: There are no differences in these versions.
+                char35Info: There are no differences in these versions.
+              - changeEffectiveDate: '1993-01-01 00:00:00'
+                status: New
+                changeSummary: Officially recognized, Other, New
+                fullInfo: There are no differences in these versions.
+                char48Info: There are no differences in these versions.
+                char35Info: There are no differences in these versions.
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '999' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/11000/history
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

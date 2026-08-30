@@ -1,0 +1,532 @@
+openapi: 3.2.0
+info:
+  title: Cross Community Rest APIs(XC-Rest) Document Search API
+  version: '1.49'
+  description: Documentation for Cross Community API to query and retrieve patient data.
+  contact:
+    email: odx_ncc_foundation@optum.com
+    name: ODX/NCC Foundation Team
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://gateway-nonprod.optuminsightplatform.com/odxcloudxcservicesint
+  variables: {}
+  description: XC-Rest APIs Internal Server(INT)
+tags:
+- name: documentSearch
+paths:
+  /api/xc/v1/clinical/documents/search:
+    summary: Patient Document Search API
+    description: Performs patient search, and also searches for the patient's clinical documents if the patient is found.
+    post:
+      summary: Search patient document
+      description: Search patient document based on the search criteria.
+      operationId: documentSearch
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        description: 'DocumentSearchRequest: request object that contains patient information used for patient search.'
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/DocumentSearchRequest'
+            examples:
+              documentSearchRequest:
+                value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<documentSearchRequest>\n\t<authorization>\n\t\t<subjectId>SampleHIEUser</subjectId>\n\t\t<organizationName>Sequoia HIE</organizationName>\n\t\t<organizationId>1.1.131.1</organizationId>\n\t\t<tenantId>3</tenantId>\n\t\t<tenantOid>1.4.3</tenantOid>\n\t\t<clientId>odxtst</clientId>\n\t\t<role>Medical Doctor</role>\n\t\t<purposeOfUse>TREATMENT</purposeOfUse>\n\t</authorization>\n\t<patientDemographics>\n\t\t<livingSubjectId>\n\t\t\t<extension>11.53.128.2021</extension>\n\t\t\t<root>1153.012.8.2021</root>\n\t\t</livingSubjectId>\n\t\t<livingSubjectName>\n\t\t\t<family>Violet</family>\n\t\t\t<given>\n\t\t\t\t<name>Violet</name>\n\t\t\t</given>\n\t\t</livingSubjectName>\n\t\t<livingSubjectBirthTime>19820202</livingSubjectBirthTime>\n\t\t<livingSubjectAdministrativeGender>F</livingSubjectAdministrativeGender>\n\t\t<livingSubjectAddress>\n\t\t\t<address>\n\t\t\t\t<city>Boston</city>\n\t\t\t\t<country>usa</country>\n\t\t\t\t<postalCode>27511</postalCode>\n\t\t\t\t<state>NC</state>\n\t\t\t\t<streetAddressLine>1154 violet Drive</streetAddressLine>\n\t\t\t\t<use>HP</use>\n\t\t\t</address>\n\t\t</livingSubjectAddress>\n\t\t<livingSubjectTelecommunication>\n\t\t\t<phone>\n\t\t\t\t<use>HP</use>\n\t\t\t\t<value>tel:+1-505-243-450</value>\n\t\t\t</phone>\n\t\t\t<phone>\n\t\t\t\t<use>WP</use>\n\t\t\t\t<value>tel:+6951294567</value>\n\t\t\t</phone>\n\t\t</livingSubjectTelecommunication>\n\t</patientDemographics>\n\t<additionalSearchParameters>\n\t\t<includeODD>N</includeODD>\n\t</additionalSearchParameters>\n</documentSearchRequest>"
+      responses:
+        '202':
+          description: DocumentSearchResponse that contains consolidated patient search result's and the patient's clinical documents information.
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/DocumentSearchResponse'
+              examples:
+                documentSearchSuccessResponse:
+                  description: Document search response when the API is able to successfully fetch the document.
+                  value: "<DocumentSearchResponse>\n    <searchResults>\n        <result>\n            <organizationId>1.1.131.1.2345.1</organizationId>\n            <organizationName>Redding Hospital</organizationName>\n            <patientSearchResult>\n                <responseStatus>\n                    <responseState>SUCCESS</responseState>\n                </responseStatus>\n                <patientInformation>\n                    <id>\n                        <extension>0fdcc407-945d-4b98-b115-f2d831065d30</extension>\n                        <root>1.1.1.1</root>\n                    </id>\n                    <patientPerson>\n                        <birthplace/>\n                        <name>\n                            <given>Violet</given>\n                            <family>Violet</family>\n                            <use>L</use>\n                        </name>\n                        <telecom>\n                            <value>tel:tel:+1-505-243-450</value>\n                            <use>HP</use>\n                        </telecom>\n                        <telecom>\n                            <value>tel:tel:+6951294567</value>\n                            <use>WP</use>\n                        </telecom>\n                        <administrativeGenderCode>\n                            <codeSystemVersion>76</codeSystemVersion>\n                            <codeSystemName>AdministrativeGender</codeSystemName>\n                            <codeSystem>2.16.840.1.113883.5.1</codeSystem>\n                            <code>F</code>\n                            <displayName>Female</displayName>\n                        </administrativeGenderCode>\n                        <addr>\n                            <postalCode>27511</postalCode>\n                            <streetAddressLine>1154 violet Drive</streetAddressLine>\n                            <state>NC</state>\n                            <city>Boston</city>\n                            <country>USA</country>\n                        </addr>\n                        <birthTime>\n                            <value>19820202</value>\n                        </birthTime>\n                        <deceasedTime/>\n                    </patientPerson>\n                    <classCode>PAT</classCode>\n                </patientInformation>\n            </patientSearchResult>\n            <documentSearchResult>\n                <documentMetadataList>\n                    <documentMetadata>\n                        <typeCodeDescription>Clinical Summary (Deduplicated)</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>2.16.840.1.113883.3.2966.10.3</typeCodeScheme>\n                        <documentUniqueId>2.25.195403230751672740758930559008568396222</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>Optum HIE</authorInstitution>\n                        <typeCode>00001</typeCode>\n                        <creationTime>2023-11-13T15:30:42Z</creationTime>\n                        <classCodeDescription>Summarization of Episode Note</classCodeDescription>\n                        <authorPerson>Optum HIE</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>6.7.8.9</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Clinical Summary (Including Duplicates)</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>2.16.840.1.113883.3.2966.10.3</typeCodeScheme>\n                        <documentUniqueId>2.25.85078915595587352936372168036013328244</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>Optum HIE</authorInstitution>\n                        <typeCode>00002</typeCode>\n                        <creationTime>2023-11-13T15:30:42Z</creationTime>\n                        <classCodeDescription>Summarization of Episode Note</classCodeDescription>\n                        <authorPerson>Optum HIE</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>6.7.8.9</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>1152.128.2021</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>1152.128.7451</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>1152.128.2021</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>1152.128.7451</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>1152.128.2023.01</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>1152.128.7451</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>1152.128.2021</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>1152.128.2023.01</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>1152.128.7451</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>1152.128.2021</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>1152.128.7451</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>1152.128.2021</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                    <documentMetadata>\n                        <typeCodeDescription>Outpatient Evaluation And Management</typeCodeDescription>\n                        <homeCommunityId>urn:oid:1.1.131.1.2345.1</homeCommunityId>\n                        <typeCodeScheme>LOINCa</typeCodeScheme>\n                        <documentUniqueId>16379.23963.011</documentUniqueId>\n                        <classCodeScheme>2.16.840.1.113883.6.1</classCodeScheme>\n                        <classCode>34133-9</classCode>\n                        <authorInstitution>InGen</authorInstitution>\n                        <typeCode>34108-1</typeCode>\n                        <creationTime>2012-02-17T00:00:00Z</creationTime>\n                        <classCodeDescription>Summarization of episode note</classCodeDescription>\n                        <authorPerson>^Smittya^Gerald^^^</authorPerson>\n                        <homeCommunityName>Redding Hospital</homeCommunityName>\n                        <repositoryUniqueId>2.3.4.5</repositoryUniqueId>\n                    </documentMetadata>\n                </documentMetadataList>\n            </documentSearchResult>\n        </result>\n    </searchResults>\n</DocumentSearchResponse>"
+                documentSearchCustomSuccessResponse:
+                  description: Document search custom response when the API is able to successfully fetch the document.
+                  value: "<documentSearchResponse>\n    <searchResults>\n        <result>\n            <organizationId>1.2.3.131.1</organizationId>\n            <organizationName>DaVita Hospital</organizationName>\n            <documentList>\n                <payload>\n                    <![CDATA[<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type='text/xsl' href='https://ced-a.ms.allscriptscloud.com/ced/3.2/ced.xsl' alternate='no' title='Allscripts Default'?>\n<ClinicalDocument xmlns=\"urn:hl7-org:v3\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n   <realmCode code=\"US\"/>\n   <typeId extension=\"POCD_HD000040\" root=\"2.16.840.1.113883.1.3\"/>\n   <templateId extension=\"IMPL_CDAR2_LEVEL1\" root=\"2.16.840.1.113883.10\"/>\n   <templateId extension=\"Medical Summary\" root=\"1.3.6.1.4.1.19376.1.5.3.1.1.2\"/>\n   <templateId extension=\"Referral Summary\" root=\"1.3.6.1.4.1.19376.1.5.3.1.1.3\"/>\n   <templateId root=\"2.16.840.1.113883.10.20.1\"/>\n   <templateId root=\"2.16.840.1.113883.10.20.3\"/>\n   <templateId root=\"2.16.840.1.113883.3.88.11.32.1\"/>\n   <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.1.1\"/>\n   <templateId root=\"2.16.840.1.113883.3.88.11.48.1\"/>\n   <id extension=\"8282988782\" root=\"1.3.6.1.4.1.22812.3.8296802.135498.1\"/>\n   <code code=\"34133-9\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\" displayName=\"SUMMARIZATION OF EPISODE NOTE\"/>\n   <title>Medical Summary - Referral</title>\n   <effectiveTime value=\"20190314025506-0700\"/>\n   <confidentialityCode codeSystem=\"2.16.840.1.113883.5.25\" code=\"N\" codeSystemName=\"HL7 ConfidentialityCode\"/>\n   <languageCode code=\"en-US\"/>\n   <recordTarget>\n      <patientRole>\n         <id extension=\"20-2482454\" root=\"1.3.6.1.4.1.22812.3.8296802.135498\"/>\n         <addr use=\"H\">\n            <streetAddressLine>12345 ROSE BOWL LN</streetAddressLine>\n            <city>PASADENA</city>\n            <state>CA</state>\n            <postalCode>91104</postalCode>\n            <country>US</country>\n         </addr>\n         <telecom nullFlavor=\"UNK\"/>\n         <patient>\n            <name>\n               <given>ALPHA</given>\n               <family>OPTUM</family>\n            </name>\n            <administrativeGenderCode code=\"M\" codeSystem=\"2.16.840.1.113883.5.1\"/>\n            <birthTime value=\"19680605\"/>\n            <ethnicGroupCode codeSystem=\"2.16.840.1.113883.6.238\" code=\"2135-2\" displayName=\"Hispanic or Latino\"/>\n            <languageCommunication>\n               <templateId root=\"2.16.840.1.113883.3.88.11.32.2\"/>\n               <templateId root=\"2.16.840.1.113883.3.88.11.83.2\"/>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.2.1\"/>\n               <languageCode code=\"eng\"/>\n               <preferenceInd value=\"true\"/>\n            </languageCommunication>\n         </patient>\n         <providerOrganization>\n            <id extension=\"135498\" root=\"1.3.6.1.4.1.22812.3.8296802.135498\"/>\n            <name>North Hollywood</name>\n            <telecom value=\"tel:+1-(818)596-5400\" use=\"WP\"/>\n            <addr use=\"WP\">\n               <streetAddressLine>6350 Laurel Canyon Blvd</streetAddressLine>\n               <streetAddressLine>Suite 100</streetAddressLine>\n               <city>North Hollywood</city>\n               <state>CA</state>\n               <postalCode>91606</postalCode>\n               <country>US</country>\n            </addr>\n         </providerOrganization>\n      </patientRole>\n   </recordTarget>\n   <author>\n      <time value=\"20190314025506-0700\"/>\n      <assignedAuthor>\n         <id extension=\"0\" root=\"1.3.6.1.4.1.22812.3.8296802.135498\"/>\n         <addr use=\"H\">\n            <streetAddressLine nullFlavor=\"UNK\"/>\n            <city nullFlavor=\"UNK\"/>\n            <state nullFlavor=\"UNK\"/>\n            <postalCode nullFlavor=\"UNK\"/>\n            <country>US</country>\n         </addr>\n         <telecom value=\"tel:+1-(310)630-2300\" use=\"WP\"/>\n         <assignedPerson>\n            <name>\n               <suffix>RN</suffix>\n            </name>\n         </assignedPerson>\n      </assignedAuthor>\n   </author>\n   <author>\n      <time value=\"20190314025506-0700\"/>\n      <assignedAuthor>\n         <id extension=\"135498\" root=\"1.3.6.1.4.1.22812.3.8296802.135498.3.3\"/>\n         <addr use=\"WP\">\n            <streetAddressLine>6350 Laurel Canyon Blvd</streetAddressLine>\n            <streetAddressLine>Suite 100</streetAddressLine>\n            <city>North Hollywood</city>\n            <state>CA</state>\n            <postalCode>91606</postalCode>\n            <country>US</country>\n         </addr>\n         <telecom value=\"tel:+1-(818)596-5400\" use=\"WP\"/>\n         <assignedAuthoringDevice>\n            <manufacturerModelName>Enterprise EHR 17.100.1206.0</manufacturerModelName>\n            <softwareName>Enterprise EHR 17.100.1206.0</softwareName>\n         </assignedAuthoringDevice>\n         <representedOrganization>\n            <id extension=\"135498\" root=\"1.3.6.1.4.1.22812.3.8296802.135498\"/>\n            <name>North Hollywood</name>\n            <telecom value=\"tel:+1-(818)596-5400\" use=\"WP\"/>\n            <addr use=\"WP\">\n               <streetAddressLine>6350 Laurel Canyon Blvd</streetAddressLine>\n               <streetAddressLine>Suite 100</streetAddressLine>\n               <city>North Hollywood</city>\n               <state>CA</state>\n               <postalCode>91606</postalCode>\n               <country>US</country>\n            </addr>\n         </representedOrganization>\n      </assignedAuthor>\n   </author>\n   <custodian>\n      <assignedCustodian>\n         <representedCustodianOrganization>\n            <id extension=\"135498\" root=\"1.3.6.1.4.1.22812.3.8296802.135498\"/>\n            <name>North Hollywood</name>\n            <telecom value=\"tel:+1-(818)596-5400\" use=\"WP\"/>\n            <addr use=\"WP\">\n               <streetAddressLine>6350 Laurel Canyon Blvd</streetAddressLine>\n               <streetAddressLine>Suite 100</streetAddressLine>\n               <city>North Hollywood</city>\n               <state>CA</state>\n               <postalCode>91606</postalCode>\n               <country>US</country>\n            </addr>\n         </representedCustodianOrganization>\n      </assignedCustodian>\n   </custodian>\n   <informationRecipient>\n      <intendedRecipient>\n         <id extension=\"135498\" root=\"1.3.6.1.4.1.22812.3.8296802.135498.3.1\"/>\n         <addr use=\"WP\">\n            <streetAddressLine>6350 Laurel Canyon Blvd</streetAddressLine>\n            <streetAddressLine>Suite 100</streetAddressLine>\n            <city>North Hollywood</city>\n            <state>CA</state>\n            <postalCode>91606</postalCode>\n            <country>US</country>\n         </addr>\n         <telecom value=\"tel:+1-(818)596-5400\" use=\"WP\"/>\n         <receivedOrganization>\n            <name>North Hollywood</name>\n            <telecom value=\"tel:+1-(818)596-5400\" use=\"WP\"/>\n            <addr use=\"WP\">\n               <streetAddressLine>6350 Laurel Canyon Blvd</streetAddressLine>\n               <streetAddressLine>Suite 100</streetAddressLine>\n               <city>North Hollywood</city>\n               <state>CA</state>\n               <postalCode>91606</postalCode>\n               <country>US</country>\n            </addr>\n         </receivedOrganization>\n      </intendedRecipient>\n   </informationRecipient>\n   <authenticator>\n      <time value=\"20190314025506-0700\"/>\n      <signatureCode code=\"S\"/>\n      <assignedEntity>\n         <id extension=\"0\" root=\"1.3.6.1.4.1.22812.3.8296802.135498\"/>\n         <addr use=\"H\">\n            <streetAddressLine nullFlavor=\"UNK\"/>\n            <city nullFlavor=\"UNK\"/>\n            <state nullFlavor=\"UNK\"/>\n            <postalCode nullFlavor=\"UNK\"/>\n            <country>US</country>\n         </addr>\n         <telecom value=\"tel:+1-(310)630-2300\" use=\"WP\"/>\n         <assignedPerson>\n            <name>\n               <suffix>RN</suffix>\n            </name>\n         </assignedPerson>\n      </assignedEntity>\n   </authenticator>\n   <documentationOf>\n      <serviceEvent classCode=\"PCPR\">\n         <id extension=\"154112630\" root=\"1.3.6.1.4.1.22812.3.8296802.135498.3.8\"/>\n         <effectiveTime>\n            <low value=\"20190314025508+0000\"/>\n            <high nullFlavor=\"UNK\"/>\n         </effectiveTime>\n         <performer typeCode=\"PRF\">\n            <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.2.3\"/>\n            <templateId root=\"2.16.840.1.113883.3.88.11.32.4\"/>\n            <templateId root=\"2.16.840.1.113883.3.88.11.83.4\"/>\n            <functionCode codeSystem=\"2.16.840.1.113883.12.443\" code=\"PP\" displayName=\"Primary Care Provider\"/>\n            <time>\n               <low/>\n               <high/>\n            </time>\n            <assignedEntity>\n               <id extension=\"1710031893\" root=\"2.16.840.1.113883.4.6\"/>\n               <code codeSystem=\"2.16.840.1.113883.6.101\" codeSystemName=\"ProviderCodes\" code=\"260000000X\" displayName=\"Ambulatory Health Care Facilities\"/>\n               <addr use=\"WP\">\n                  <streetAddressLine>301 S FAIR OAKS AVE #101</streetAddressLine>\n                  <city>PASADENA</city>\n                  <state nullFlavor=\"UNK\"/>\n                  <postalCode>91105-2562</postalCode>\n                  <country>US</country>\n               </addr>\n               <telecom value=\"tel:+1-(626)585-4500\" use=\"WP\"/>\n               <telecom value=\"mailto:AHSspam@HealthCarePartners.com\" use=\"WP\"/>\n               <assignedPerson>\n                  <name>\n                     <given>ANDREW</given>\n                     <family>MULLER</family>\n                     <suffix>M.D.</suffix>\n                  </name>\n               </assignedPerson>\n            </assignedEntity>\n         </performer>\n      </serviceEvent>\n   </documentationOf>\n   <componentOf>\n      <encompassingEncounter>\n         <id extension=\"154112630\" root=\"1.3.6.1.4.1.22812.3.8296802.135498\"/>\n         <effectiveTime>\n            <low value=\"20190314025508+0000\"/>\n            <high value=\"20190314025506-0700\"/>\n         </effectiveTime>\n      </encompassingEncounter>\n   </componentOf>\n   <component>\n      <structuredBody>\n         <templateId extension=\"IMPL_CDAR2_LEVEL1\" root=\"2.16.840.1.113883.10\"/>\n         <component>\n            <section>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.3.1\"/>\n               <templateId root=\"2.16.840.1.113883.10.20.4.8\"/>\n               <id root=\"1.3.6.1.4.1.22812.3.8296802.135498.5\" extension=\"15\"/>\n               <code code=\"42349-1\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\" displayName=\"Reason for Referral\"/>\n               <title>Reason for Referral</title>\n               <text>No Reason for Referral was given.</text>\n            </section>\n         </component>\n         <component>\n            <section>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.3.4\"/>\n               <id root=\"1.3.6.1.4.1.22812.3.8296802.135498.5\" extension=\"20\"/>\n               <code code=\"10164-2\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\" displayName=\"HPI\"/>\n               <title>History of Present Illness</title>\n               <text>No HPI available.</text>\n            </section>\n         </component>\n         <component>\n            <section>\n               <templateId root=\"2.16.840.1.113883.10.20.1.11\"/>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.3.6\"/>\n               <templateId root=\"2.16.840.1.113883.3.88.11.83.103\"/>\n               <id root=\"1.3.6.1.4.1.22812.3.8296802.135498.5\" extension=\"21\"/>\n               <code code=\"11450-4\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\" displayName=\"Problem list\"/>\n               <title>Problems</title>\n               <text>\n                  <content ID=\"noActiveProb\">No current problems or disability.</content>\n               </text>\n               <entry typeCode=\"DRIV\">\n                  <act classCode=\"ACT\" moodCode=\"EVN\">\n                     <templateId root=\"2.16.840.1.113883.10.20.1.27\"/>\n                     <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.5.1\"/>\n                     <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.5.2\"/>\n                     <templateId root=\"2.16.840.1.113883.3.88.11.83.7\"/>\n                     <id nullFlavor=\"NI\"/>\n                     <code nullFlavor=\"NA\"/>\n                     <statusCode code=\"active\"/>\n                     <effectiveTime>\n                        <low nullFlavor=\"UNK\"/>\n                     </effectiveTime>\n                     <entryRelationship typeCode=\"SUBJ\" inversionInd=\"false\">\n                        <observation classCode=\"OBS\" moodCode=\"EVN\">\n                           <templateId root=\"2.16.840.1.113883.10.20.1.28\"/>\n                           <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.5\"/>\n                           <id nullFlavor=\"NI\"/>\n                           <code codeSystem=\"2.16.840.1.113883.6.96\" codeSystemName=\"SNOMED CT\" code=\"282291009\"/>\n                           <text>\n                              <reference value=\"#noActiveProb\"/>\n                           </text>\n                           <statusCode code=\"completed\"/>\n                           <effectiveTime>\n                              <low nullFlavor=\"UNK\"/>\n                           </effectiveTime>\n                           <value xsi:type=\"CD\" codeSystem=\"2.16.840.1.113883.6.96\" code=\"160245001\"/>\n                           <entryRelationship typeCode=\"REFR\" inversionInd=\"false\">\n                              <observation classCode=\"OBS\" moodCode=\"EVN\">\n                                 <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.1.1\"/>\n                                 <templateId root=\"2.16.840.1.113883.10.20.1.57\"/>\n                                 <templateId root=\"2.16.840.1.113883.10.20.1.50\"/>\n                                 <code code=\"33999-4\" displayName=\"Status\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\"/>\n                                 <text/>\n                                 <statusCode code=\"completed\"/>\n                                 <value xsi:type=\"CE\" codeSystem=\"2.16.840.1.113883.6.96\" codeSystemName=\"SNOMED CT\" code=\"55561003\"/>\n                              </observation>\n                           </entryRelationship>\n                        </observation>\n                     </entryRelationship>\n                  </act>\n               </entry>\n            </section>\n         </component>\n         <component>\n            <section>\n               <templateId root=\"2.16.840.1.113883.10.20.1.8\"/>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.3.19\"/>\n               <templateId root=\"2.16.840.1.113883.3.88.11.83.112\"/>\n               <id root=\"1.3.6.1.4.1.22812.3.8296802.135498.5\" extension=\"14\"/>\n               <code code=\"10160-0\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\" displayName=\"History of medication use\"/>\n               <title>Medications</title>\n               <text>\n                  <content ID=\"noMeds\">No Active Medications</content>\n               </text>\n               <entry typeCode=\"DRIV\">\n                  <substanceAdministration classCode=\"SBADM\" moodCode=\"INT\">\n                     <templateId root=\"2.16.840.1.113883.10.20.1.24\"/>\n                     <templateId extension=\"medication\" root=\"1.3.6.1.4.1.19376.1.5.3.1.4.7\"/>\n                     <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.7.1\"/>\n                     <templateId root=\"2.16.840.1.113883.3.88.11.32.8\"/>\n                     <templateId root=\"2.16.840.1.113883.3.88.11.83.8\"/>\n                     <id nullFlavor=\"NI\"/>\n                     <code code=\"182849000\" codeSystem=\"2.16.840.1.113883.6.96\" codeSystemName=\"SNOMED CT\" displayName=\"No Drug Therapy Prescribed\"/>\n                     <text>\n                        <reference value=\"#noMeds\"/>\n                     </text>\n                     <statusCode code=\"completed\"/>\n                     <effectiveTime xsi:type=\"IVL_TS\">\n                        <low nullFlavor=\"UNK\"/>\n                     </effectiveTime>\n                     <consumable typeCode=\"CSM\">\n                        <manufacturedProduct classCode=\"MANU\">\n                           <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.7.2\"/>\n                           <templateId root=\"2.16.840.1.113883.10.20.1.53\"/>\n                           <templateId root=\"2.16.840.1.113883.3.88.11.83.8.2\"/>\n                           <manufacturedMaterial>\n                              <code nullFlavor=\"UNK\">\n                                 <originalText>\n                                    <reference value=\"#noMeds\"/>\n                                 </originalText>\n                              </code>\n                              <name/>\n                           </manufacturedMaterial>\n                        </manufacturedProduct>\n                     </consumable>\n                     <entryRelationship typeCode=\"REFR\">\n                        <observation classCode=\"OBS\" moodCode=\"EVN\">\n                           <templateId root=\"2.16.840.1.113883.10.20.1.57\"/>\n                           <templateId root=\"2.16.840.1.113883.10.20.1.47\"/>\n                           <code code=\"33999-4\" displayName=\"Status\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\"/>\n                           <statusCode code=\"completed\"/>\n                        </observation>\n                     </entryRelationship>\n                  </substanceAdministration>\n               </entry>\n            </section>\n         </component>\n         <component>\n            <section>\n               <templateId root=\"2.16.840.1.113883.10.20.1.2\"/>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.3.13\"/>\n               <templateId root=\"2.16.840.1.113883.3.88.11.83.102\"/>\n               <id root=\"1.3.6.1.4.1.22812.3.8296802.135498.5\" extension=\"11\"/>\n               <code code=\"48765-2\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\" displayName=\"Allergies, adverse reactions, alerts\"/>\n               <title>Allergies and Adverse Reactions</title>\n               <text>\n                  <content ID=\"noAl\">Not Known</content>\n               </text>\n               <entry>\n                  <act classCode=\"ACT\" moodCode=\"EVN\">\n                     <templateId root=\"2.16.840.1.113883.10.20.1.27\"/>\n                     <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.5.1\"/>\n                     <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.5.3\"/>\n                     <templateId root=\"2.16.840.1.113883.3.88.11.83.6\"/>\n                     <id nullFlavor=\"NI\"/>\n                     <code nullFlavor=\"NA\"/>\n                     <statusCode code=\"completed\"/>\n                     <effectiveTime>\n                        <low nullFlavor=\"UNK\"/>\n                        <high nullFlavor=\"UNK\"/>\n                     </effectiveTime>\n                     <entryRelationship typeCode=\"SUBJ\" inversionInd=\"false\">\n                        <observation classCode=\"OBS\" moodCode=\"EVN\">\n                           <templateId root=\"2.16.840.1.113883.10.20.1.18\"/>\n                           <templateId root=\"2.16.840.1.113883.10.20.1.28\"/>\n                           <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.5\"/>\n                           <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.6\"/>\n                           <id nullFlavor=\"NI\"/>\n                           <code code=\"419199007\" codeSystem=\"2.16.840.1.113883.6.96\" codeSystemName=\"SNOMED CT\"/>\n                           <text>\n                              <reference value=\"#noAl\"/>\n                           </text>\n                           <statusCode code=\"completed\"/>\n                           <effectiveTime>\n                              <low nullFlavor=\"UNK\"/>\n                           </effectiveTime>\n                           <value xsi:type=\"CD\" code=\"160244002\" codeSystem=\"2.16.840.1.113883.6.96\" codeSystemName=\"SNOMED CT\"/>\n                           <participant typeCode=\"CSM\">\n                              <participantRole classCode=\"MANU\">\n                                 <playingEntity classCode=\"MMAT\">\n                                    <code nullFlavor=\"NA\">\n                                       <originalText>\n                                          <reference value=\"#noAl\"/>\n                                       </originalText>\n                                    </code>\n                                    <name>Not Known</name>\n                                 </playingEntity>\n                              </participantRole>\n                           </participant>\n                        </observation>\n                     </entryRelationship>\n                  </act>\n               </entry>\n            </section>\n         </component>\n         <component>\n            <section>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.3.8\"/>\n               <templateId root=\"2.16.840.1.113883.10.20.4.9\"/>\n               <id root=\"1.3.6.1.4.1.22812.3.8296802.135498.5\" extension=\"22\"/>\n               <code code=\"11348-0\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\" displayName=\"Past Medical History\"/>\n               <title>Past Medical History</title>\n               <text>\n                  <content ID=\"noPastProb\">No Significant Medical History.</content>\n               </text>\n               <entry typeCode=\"DRIV\">\n                  <act classCode=\"ACT\" moodCode=\"EVN\">\n                     <templateId root=\"2.16.840.1.113883.10.20.1.27\"/>\n                     <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.5.1\"/>\n                     <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.5.2\"/>\n                     <templateId root=\"2.16.840.1.113883.3.88.11.83.7\"/>\n                     <id nullFlavor=\"NI\"/>\n                     <code nullFlavor=\"NA\"/>\n                     <statusCode code=\"active\"/>\n                     <effectiveTime>\n                        <low nullFlavor=\"UNK\"/>\n                     </effectiveTime>\n                     <entryRelationship typeCode=\"SUBJ\" inversionInd=\"false\">\n                        <observation classCode=\"OBS\" moodCode=\"EVN\">\n                           <templateId root=\"2.16.840.1.113883.10.20.1.28\"/>\n                           <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.5\"/>\n                           <id nullFlavor=\"NI\"/>\n                           <code codeSystem=\"2.16.840.1.113883.6.96\" codeSystemName=\"SNOMED CT\" code=\"282291009\"/>\n                           <text>\n                              <reference value=\"#noPastProb\"/>\n                           </text>\n                           <statusCode code=\"completed\"/>\n                           <effectiveTime>\n                              <low nullFlavor=\"UNK\"/>\n                           </effectiveTime>\n                           <value xsi:type=\"CD\" codeSystem=\"2.16.840.1.113883.6.96\" code=\"160243008\"/>\n                           <entryRelationship typeCode=\"REFR\" inversionInd=\"false\">\n                              <observation classCode=\"OBS\" moodCode=\"EVN\">\n                                 <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.1.1\"/>\n                                 <templateId root=\"2.16.840.1.113883.10.20.1.57\"/>\n                                 <templateId root=\"2.16.840.1.113883.10.20.1.50\"/>\n                                 <code code=\"33999-4\" displayName=\"Status\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\"/>\n                                 <text/>\n                                 <statusCode code=\"completed\"/>\n                                 <value xsi:type=\"CE\" codeSystem=\"2.16.840.1.113883.6.96\" codeSystemName=\"SNOMED CT\" code=\"55561003\"/>\n                              </observation>\n                           </entryRelationship>\n                        </observation>\n                     </entryRelationship>\n                  </act>\n               </entry>\n            </section>\n         </component>\n         <component>\n            <section>\n               <templateId root=\"2.16.840.1.113883.10.20.1.14\"/>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.3.28\"/>\n               <templateId root=\"2.16.840.1.113883.3.88.11.83.122\"/>\n               <id root=\"1.3.6.1.4.1.22812.3.8296802.135498.5\" extension=\"17\"/>\n               <code code=\"30954-2\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\" displayName=\"Relevant diagnostic tests and/or laboratory data\"/>\n               <title>Results</title>\n               <text>\n                  <content ID=\"noRsl\">No Known Results</content>\n               </text>\n               <entry typeCode=\"DRIV\">\n                  <organizer classCode=\"BATTERY\" moodCode=\"EVN\">\n                     <templateId root=\"2.16.840.1.113883.10.20.1.32\" assigningAuthorityName=\"HL7 CCD\"/>\n                     <id nullFlavor=\"NI\"/>\n                     <code nullFlavor=\"NI\"/>\n                     <statusCode code=\"completed\"/>\n                     <component>\n                        <procedure classCode=\"PROC\" moodCode=\"EVN\">\n                           <templateId root=\"2.16.840.1.113883.3.88.11.83.17\" assigningAuthorityName=\"HITSP C83\"/>\n                           <templateId root=\"2.16.840.1.113883.10.20.1.29\" assigningAuthorityName=\"CCD\"/>\n                           <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.19\" assigningAuthorityName=\"IHE PCC\"/>\n                           <id nullFlavor=\"NI\"/>\n                           <code nullFlavor=\"NI\">\n                              <originalText>\n                                 <reference value=\"#noRsl\"/>\n                              </originalText>\n                           </code>\n                           <text>\n                              <reference value=\"#noRsl\"/>\n                           </text>\n                           <statusCode code=\"completed\"/>\n                           <effectiveTime nullFlavor=\"NA\"/>\n                        </procedure>\n                     </component>\n                     <component>\n                        <observation classCode=\"OBS\" moodCode=\"EVN\">\n                           <templateId root=\"2.16.840.1.113883.3.88.11.83.15.1\" assigningAuthorityName=\"HITSP C83\"/>\n                           <templateId root=\"2.16.840.1.113883.10.20.1.31\" assigningAuthorityName=\"CCD\"/>\n                           <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.13\" assigningAuthorityName=\"IHE PCC\"/>\n                           <id nullFlavor=\"NI\"/>\n                           <code code=\"NI\"/>\n                           <text>\n                              <reference value=\"#noRsl\"/>\n                           </text>\n                           <statusCode code=\"completed\"/>\n                           <effectiveTime nullFlavor=\"NA\"/>\n                           <value xsi:type=\"CD\">\n                              <originalText>\n                                 <reference value=\"#noRsl\"/>\n                              </originalText>\n                           </value>\n                        </observation>\n                     </component>\n                  </organizer>\n               </entry>\n            </section>\n         </component>\n         <component>\n            <section>\n               <templateId root=\"2.16.840.1.113883.10.20.1.1\"/>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.3.34\"/>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.3.35\"/>\n               <id root=\"1.3.6.1.4.1.22812.3.8296802.135498.5\" extension=\"19\"/>\n               <code code=\"42348-3\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\" displayName=\"Advance Directives\"/>\n               <title>Advance Directives</title>\n               <text>\n                  <content ID=\"noDirectives\">No Advance Directives available.</content>\n               </text>\n               <entry>\n                  <observation moodCode=\"EVN\" classCode=\"OBS\">\n                     <templateId root=\"2.16.840.1.113883.10.20.1.17\"/>\n                     <templateId root=\"2.16.840.1.113883.3.88.11.83.12\"/>\n                     <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.13\"/>\n                     <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.13.7\"/>\n                     <id nullFlavor=\"NI\"/>\n                     <code codeSystem=\"2.16.840.1.113883.6.96\" codeSystemName=\"SNOMED CT\" code=\"78823007\">\n                        <originalText>\n                           <reference value=\"#noDirectives\"/>\n                        </originalText>\n                     </code>\n                     <text>\n                        <reference value=\"#noDirectives\"/>\n                     </text>\n                     <statusCode code=\"completed\"/>\n                     <effectiveTime nullFlavor=\"UNK\">\n                        <low nullFlavor=\"UNK\"/>\n                        <high nullFlavor=\"UNK\"/>\n                     </effectiveTime>\n                     <value xsi:type=\"BL\"/>\n                     <participant typeCode=\"CST\">\n                        <participantRole classCode=\"AGNT\">\n                           <playingEntity>\n                              <name>ALPHA OPTUM</name>\n                           </playingEntity>\n                        </participantRole>\n                     </participant>\n                     <entryRelationship typeCode=\"REFR\">\n                        <observation classCode=\"OBS\" moodCode=\"EVN\">\n                           <templateId root=\"2.16.840.1.113883.10.20.1.37\"/>\n                           <code code=\"33999-4\" codeSystem=\"2.16.840.1.113883.6.1\" displayName=\"Status\"/>\n                           <statusCode code=\"completed\"/>\n                           <value xsi:type=\"CE\" code=\"15240007\" codeSystem=\"2.16.840.1.113883.6.96\" displayName=\"Current and verified\"/>\n                        </observation>\n                     </entryRelationship>\n                  </observation>\n               </entry>\n            </section>\n         </component>\n         <component>\n            <section>\n               <templateId root=\"2.16.840.1.113883.3.88.11.83.127\"/>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.1.5.3\"/>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.1.5.3.3\"/>\n               <templateId root=\"2.16.840.1.113883.10.20.1.3\"/>\n               <id root=\"1.3.6.1.4.1.22812.3.8296802.135498.5\" extension=\"8\"/>\n               <code code=\"46240-8\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\" displayName=\"History of encounters\"/>\n               <title>Encounters</title>\n               <text>\n                  <table>\n                     <tbody>\n                        <tr>\n                           <td styleCode=\"xmain\">\n                              <content styleCode=\"xdiv\">\n                                 <content styleCode=\"Bold\" ID=\"enc154112630\">AUDIT</content>\n                              </content>\n                              <content styleCode=\"xasIgnore\">\n                                 <br/>\n                              </content>\n                           </td>\n                           <td styleCode=\"xdates\">\n                              <content styleCode=\"xLabel Italics\">On:</content>\n                              <content styleCode=\"Bold\">14-Mar-2019 2:55</content>\n                              <br/>\n                           </td>\n                        </tr>\n                     </tbody>\n                  </table>\n               </text>\n               <entry>\n                  <encounter classCode=\"ENC\" moodCode=\"EVN\">\n                     <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.14\"/>\n                     <templateId root=\"2.16.840.1.113883.10.20.1.21\"/>\n                     <templateId root=\"2.16.840.1.113883.3.88.11.83.16\"/>\n                     <templateId root=\"2.16.840.1.113883.3.88.11.32.17\"/>\n                     <id extension=\"154112630\" root=\"1.3.6.1.4.1.22812.3.8296802.135498.3.4\"/>\n                     <code codeSystem=\"2.16.840.1.113883.5.4\" codeSystemName=\"ActEncounterCode\">\n                        <originalText>\n                           <reference value=\"#enc154112630\"/>\n                        </originalText>\n                     </code>\n                     <text>\n                        <reference value=\"#enc154112630\"/>\n                     </text>\n                     <effectiveTime>\n                        <low value=\"20190314025508+0000\"/>\n                        <high value=\"20190314025506-0700\"/>\n                     </effectiveTime>\n                  </encounter>\n               </entry>\n            </section>\n         </component>\n         <component>\n            <section>\n               <templateId root=\"2.16.840.1.113883.10.20.1.9\"/>\n               <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.1.5.3.7\"/>\n               <id root=\"1.3.6.1.4.1.22812.3.8296802.135498.5\" extension=\"9\"/>\n               <code code=\"48768-6\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\" displayName=\"Payment sources\"/>\n               <title>Insurance</title>\n               <text>\n                  <list>\n                     <item>\n                        <content styleCode=\"xHeaderGuarantor\" ID=\"guar1\">ALPHA OPTUM</content>\n                        ; a guarantor\n                     </item>\n                     <item>\n                        <content styleCode=\"xHeaderInsurer\" ID=\"ins1\">HCPMG HCP SELF INSURED PLAN</content>\n                     </item>\n                  </list>\n               </text>\n               <entry>\n                  <act classCode=\"ACT\" moodCode=\"DEF\">\n                     <templateId root=\"2.16.840.1.113883.10.20.1.20\"/>\n                     <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.17\"/>\n                     <id/>\n                     <code code=\"48768-6\" displayName=\"Payment Sources\" codeSystem=\"2.16.840.1.113883.6.1\" codeSystemName=\"LOINC\"/>\n                     <statusCode code=\"completed\"/>\n                     <entryRelationship typeCode=\"COMP\">\n                        <act classCode=\"ACT\" moodCode=\"EVN\">\n                           <templateId root=\"2.16.840.1.113883.10.20.1.26\"/>\n                           <templateId root=\"2.16.840.1.113883.3.88.11.83.5\"/>\n                           <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.18\"/>\n                           <id extension=\"UNK\"/>\n                           <code code=\"OT\" displayName=\"Other\" codeSystem=\"2.16.840.1.113883.6.255.1336\" codeSystemName=\"X12N-1336\"/>\n                           <statusCode code=\"completed\"/>\n                           <performer typeCode=\"PRF\">\n                              <assignedEntity>\n                                 <id/>\n                                 <code codeSystem=\"2.16.840.1.113883.5.110\" codeSystemName=\"RoleClass\" code=\"PAYOR\"/>\n                                 <addr use=\"H\">\n                                    <streetAddressLine nullFlavor=\"UNK\"/>\n                                    <city nullFlavor=\"UNK\"/>\n                                    <state>AL</state>\n                                    <postalCode nullFlavor=\"UNK\"/>\n                                    <country>US</country>\n                                 </addr>\n                                 <telecom nullFlavor=\"UNK\"/>\n                                 <representedOrganization>\n                                    <name/>\n                                    <telecom nullFlavor=\"UNK\"/>\n                                    <addr use=\"H\">\n                                       <streetAddressLine nullFlavor=\"UNK\"/>\n                                       <city nullFlavor=\"UNK\"/>\n                                       <state>AL</state>\n                                       <postalCode nullFlavor=\"UNK\"/>\n                                       <country>US</country>\n                                    </addr>\n                                 </representedOrganization>\n                              </assignedEntity>\n                           </performer>\n                           <participant typeCode=\"COV\">\n                              <time/>\n                              <participantRole classCode=\"PAT\">\n                                 <code codeSystem=\"2.16.840.1.113883.5.111\" code=\"SPON\" displayName=\"Sponsored dependent\"/>\n                                 <addr nullFlavor=\"NA\"/>\n                                 <telecom nullFlavor=\"NA\"/>\n                                 <playingEntity>\n                                    <name/>\n                                    <birthTime nullFlavor=\"UNK\" xmlns=\"urn:hl7-org:sdtc\"/>\n                                 </playingEntity>\n                              </participantRole>\n                           </participant>\n                           <entryRelationship typeCode=\"REFR\">\n                              <act classCode=\"ACT\" moodCode=\"DEF\">\n                                 <id/>\n                                 <code/>\n                                 <text>\n                                    <reference value=\"#ins1\"/>\n                                 </text>\n                              </act>\n                           </entryRelationship>\n                        </act>\n                     </entryRelationship>\n                     <entryRelationship typeCode=\"COMP\">\n                        <act classCode=\"ACT\" moodCode=\"EVN\">\n                           <templateId root=\"2.16.840.1.113883.10.20.1.26\"/>\n                           <templateId root=\"2.16.840.1.113883.3.88.11.83.5\"/>\n                           <templateId root=\"1.3.6.1.4.1.19376.1.5.3.1.4.18\"/>\n                           <id extension=\"1\" root=\"1.3.6.1.4.1.22812.3.8296802.135498.3.2.2\"/>\n                           <code code=\"PP\" displayName=\"Personal Payment\" codeSystem=\"2.16.840.1.113883.6.255.1336\" codeSystemName=\"X12N-1336\"/>\n                           <statusCode code=\"completed\"/>\n                           <performer typeCode=\"PRF\">\n                              <assignedEntity>\n                                 <id extension=\"1\" root=\"1.3.6.1.4.1.22812.3.8296802.135498.3.2.2\"/>\n                                 <code codeSystem=\"2.16.840.1.113883.5.110\" codeSystemName=\"RoleClass\" code=\"GUAR\"/>\n                                 <addr use=\"H\">\n                                    <streetAddressLine>12345 ROSE BOWL LN</streetAddressLine>\n                                    <city>PASADENA</city>\n                                    <state>CA</state>\n                                    <postalCode>91104</postalCode>\n                                    <country>US</country>\n                                 </addr>\n                                 <telecom nullFlavor=\"UNK\"/>\n                                 <assignedPerson>\n                                    <name>\n                                       <family>ALPHA OPTUM</family>\n                                    </name>\n                                 </assignedPerson>\n                                 <representedOrganization>\n                                    <name nullFlavor=\"NA\"/>\n                                    <telecom nullFlavor=\"NA\"/>\n                                    <addr nullFlavor=\"NA\"/>\n                                 </representedOrganization>\n                              </assignedEntity>\n                           </performer>\n                           <participant typeCode=\"COV\">\n                              <time/>\n                              <participantRole classCode=\"PAT\">\n                                 <id extension=\"1\" root=\"1.3.6.1.4.1.22812.3.8296802.135498.3.2.2\"/>\n                                 <code code=\"SELF\" codeSystem=\"2.16.840.1.113883.5.111\"/>\n                                 <addr nullFlavor=\"NA\"/>\n                                 <telecom nullFlavor=\"NA\"/>\n                                 <playingEntity>\n                                    <name/>\n                                    <birthTime xmlns=\"urn:hl7-org:sdtc\"/>\n                                 </playingEntity>\n                              </participantRole>\n                           </participant>\n                        </act>\n                     </entryRelationship>\n                  </act>\n               </entry>\n            </section>\n         </component>\n      </structuredBody>\n   </component>\n</ClinicalDocument>]]>\n                </payload>\n            </documentList>\n        </result>\n    </searchResults>\n</documentSearchResponse>"
+                missingAuthorizationSection:
+                  description: Failed response due to missing the authorization section.
+                  value: "<DocumentSearchResponse>\n  <responseStatus>\n    <responseState>REQUEST_VALIDATION_ERROR</responseState>\n    <responseCode>3219</responseCode>\n    <responseCodeDescription>Authorization is not present.</responseCodeDescriptio>\n  </responseStatus>\n</DocumentSearchResponse>"
+                userNotAssociated:
+                  description: Failed  response due to user not having associated organizations.
+                  value: "<DocumentSearchResponse>\n    <responseStatus>\n        <responseState>REQUEST_VALIDATION_ERROR</responseState>\n        <responseCode>3214</responseCode>\n        <responseCodeDescription>Retrieved user is either null or does not have associated organizations.</responseCodeDescription>\n    </responseStatus>\n</DocumentSearchResponse>"
+                invalidTenantOid:
+                  description: Failed response due to missing tenantOid in the authorization section.
+                  value: "<DocumentSearchResponse>\n  <responseStatus>\n    <responseState>REQUEST_VALIDATION_ERROR</responseState>\n    <responseCode>3211</responseCode>\n    <responseCodeDescription>Tenant OID not present.</responseCodeDescription>\n  </responseStatus>\n</DocumentSearchResponse>"
+                invalidOrganizationId:
+                  description: Failed response due to missing the organization in the authorization section.
+                  value: "<DocumentSearchResponse>\n  <responseStatus>\n      <responseState>REQUEST_VALIDATION_ERROR</responseState>\n      <responseCode>3213</responseCode>\n      <responseCodeDescription>Organization ID not present.</responseCodeDescription>\n  </responseStatus>\n</DocumentSearchResponse>"
+                invalidClientId:
+                  description: Failed response due to missing clienId in the authorization section.
+                  value: "<DocumentSearchResponse>\n  <responseStatus>\n    <responseState>REQUEST_VALIDATION_ERROR</responseState>\n    <responseCode>3212</responseCode>\n    <responseCodeDescription>Client ID(User ID/Optum ID) not present.</responseCodeDescription>\n  </responseStatus>\n</DocumentSearchResponse>"
+                invalidPurposeOfUse:
+                  description: Failed response due to invalid purposeOfUse in the authorization section.
+                  value: "<DocumentSearchResponse>\n    <responseStatus>\n        <responseState>REQUEST_VALIDATION_ERROR</responseState>\n        <responseCode>3218</responseCode>\n        <responseCodeDescription>Purposeofuse is null or invalid.</responseCodeDescription>\n    </responseStatus>\n</DocumentSearchResponse>"
+                missingPatientDemographics:
+                  description: Failed response due to missing the patient demographics section.
+                  value: "<DocumentSearchResponse>\n  <responseStatus>\n    <responseState>REQUEST_VALIDATION_ERROR</responseState>\n    <responseCode>3230</responseCode>\n    <responseCodeDescription> Patient demographics not present.</responseCodeDescription>\n  </responseStatus>\n</DocumentSearchResponse>"
+                missingGivenSection:
+                  description: Failed response due to missing the patient demographics section.
+                  value: "<DocumentSearchResponse>\n    <responseStatus>\n        <responseState>REQUEST_VALIDATION_ERROR</responseState>\n        <responseCode>3236</responseCode>\n        <responseCodeDescription> Given section not present in document search request.</responseCodeDescription>\n    </responseStatus>\n</DocumentSearchResponse>"
+                missingFamilyName:
+                  description: Failed response due to missing the family name in the patient demographics section.
+                  value: "<DocumentSearchResponse>\n    <responseStatus>\n        <responseState>REQUEST_VALIDATION_ERROR</responseState>\n        <responseCode>3232</responseCode>\n        <responseCodeDescription> Patient family(last) name is not present in the document search request.</responseCodeDescription>\n    </responseStatus>\n</DocumentSearchResponse>"
+                missingFirstName:
+                  description: Failed response due to missing the first name in the patient demographics section.
+                  value: "<DocumentSearchResponse>\n    <responseStatus>\n        <responseState>REQUEST_VALIDATION_ERROR</responseState>\n        <responseCode>3232</responseCode>\n        <responseCodeDescription> Patient first name not present in document search request.</responseCodeDescription>\n    </responseStatus>\n</DocumentSearchResponse>"
+                missingLivingSubjectBirthTime:
+                  description: Failed response due to missing birth information in the patient demographics section.
+                  value: "<DocumentSearchResponse>\n    <responseStatus>\n        <responseState>REQUEST_VALIDATION_ERROR</responseState>\n        <responseCode>3233</responseCode>\n        <responseCodeDescription> Patient date of birth is not present in the document search request.</responseCodeDescription>\n    </responseStatus>\n</DocumentSearchResponse>"
+                missingLivingSubjectAdministrativeGender:
+                  description: Failed response due to missing the LivingSubjectAdministrativeGender information in the patient demographics section.
+                  value: "<DocumentSearchResponse>\n    <responseStatus>\n        <responseState>REQUEST_VALIDATION_ERROR</responseState>\n        <responseCode>3234</responseCode>\n        <responseCodeDescription> Patient gender is not present in the document search request.</responseCodeDescription>\n    </responseStatus>\n</DocumentSearchResponse>"
+                invalidLivingSubjectAdministrativeGender:
+                  description: Failed response due to missing the gender information in the patient demographics section.
+                  value: "<DocumentSearchResponse>\n    <responseStatus>\n        <responseState>REQUEST_VALIDATION_ERROR</responseState>\n        <responseCode>3238</responseCode>\n        <responseCodeDescription> Invalid gender is received in the document search request.</responseCodeDescription>\n    </responseStatus>\n</DocumentSearchResponse>"
+        '401':
+          description: Response when the missing token/token is expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpClientServerError'
+              examples:
+                missingToken:
+                  value:
+                    timestamp: '2023-11-10T22:53:39.611+00:00'
+                    status: 401
+                    error: Missing token
+                    path: /xc-services/api/xc/v1/clinical/documents/search
+                expiredToken:
+                  value:
+                    timestamp: '2023-11-10T22:53:39.611+00:00'
+                    status: 401
+                    error: Token is expired
+                    path: /xc-services/api/xc/v1/clinical/documents/search
+        '403':
+          description: Response when forbidden access.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpClientServerError'
+              example:
+                timestamp: '2023-11-10T22:53:39.611+00:00'
+                status: 403
+                error: 'Forbidden: Missing service access'
+                path: /xc-services/api/xc/v1/clinical/documents/search
+        '404':
+          description: Response when path is not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpClientServerError'
+              example:
+                timestamp: '2023-11-10T22:53:39.611+00:00'
+                status: 404
+                error: Not found
+                path: /xc-services/api/xc/v1/clinical/documents/search1
+        '500':
+          description: Response when an internal server error occurs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpClientServerError'
+              examples:
+                internalServerError:
+                  value:
+                    timestamp: '2023-11-10T22:53:39.611+00:00'
+                    status: 500
+                    error: Internal Server Error
+                    path: /xc-services/api/xc/v1/clinical/documents/search
+        '503':
+          description: Response when service is not available.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: no healthy upstream
+      tags:
+      - documentSearch
+components:
+  schemas:
+    SearchResults:
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/Result'
+    PrincipalCareProviderId:
+      type: object
+      properties:
+        extension:
+          type: string
+        root:
+          type: string
+        assigningAuthorityName:
+          type: string
+    DeceasedTime:
+      type: object
+      properties:
+        value:
+          type: string
+    Authorization:
+      type: object
+      required:
+      - tenantOid
+      - organizationId
+      - clientId
+      - purposeOfUse
+      properties:
+        purposeOfUse:
+          type: string
+        tenantOid:
+          type: string
+        subjectId:
+          type: string
+        role:
+          type: string
+        organizationId:
+          type: string
+        clientId:
+          type: string
+        clientUUId:
+          type: string
+    Address:
+      type: object
+      properties:
+        postalCode:
+          type: string
+        streetAddressLine:
+          type: string
+        state:
+          type: string
+        use:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+    Documents:
+      type: object
+      properties:
+        document:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+    DocumentSearchResponse:
+      properties:
+        searchResults:
+          $ref: '#/components/schemas/SearchResults'
+        responseStatus:
+          $ref: '#/components/schemas/ResponseStatus'
+    PatientInformation:
+      type: object
+      properties:
+        id:
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+        patientPerson:
+          $ref: '#/components/schemas/PatientPerson'
+        classCode:
+          type: string
+    Birthplace:
+      type: object
+      properties:
+        place:
+          $ref: '#/components/schemas/Place'
+    LivingSubjectTelecommunication:
+      type: array
+      items:
+        $ref: '#/components/schemas/Phone'
+    LivingSubjectName:
+      type: object
+      properties:
+        given:
+          type: array
+          items:
+            $ref: '#/components/schemas/Given'
+        family:
+          type: string
+        prefix:
+          type: string
+        use:
+          type: string
+          description: Supported values L, Null Flavor=NAV for, ASGN, A, I, C, ASGN, R, ASGN, Null Flavor=NAV, Null Flavor=UNK
+        suffix:
+          type: string
+    ResponseStatus:
+      type: object
+      properties:
+        responseState:
+          type: string
+        responseCode:
+          type: string
+        responseCodeDescription:
+          type: string
+        message:
+          type: string
+    PatientDemographics:
+      type: object
+      required:
+      - livingSubjectName
+      - livingSubjectBirthTime
+      - livingSubjectAdministrativeGender
+      properties:
+        livingSubjectBirthPlaceName:
+          type: string
+        livingSubjectName:
+          $ref: '#/components/schemas/LivingSubjectName'
+        livingSubjectBirthTime:
+          type: string
+        livingSubjectAddress:
+          $ref: '#/components/schemas/LivingSubjectAddress'
+        livingSubjectBirthPlaceAddress:
+          $ref: '#/components/schemas/Address'
+        livingSubjectTelecommunication:
+          $ref: '#/components/schemas/LivingSubjectTelecommunication'
+        livingSubjectMothersMaidenName:
+          type: string
+        livingSubjectAdministrativeGender:
+          type: string
+          description: Supported values for LivingSubjectAdministrativeGender values can be M for male, F for female, UN for unknown, OTH for other, UNK for unknown.
+        livingSubjectDeceasedTime:
+          type: string
+        livingSubjectId:
+          type: array
+          items:
+            $ref: '#/components/schemas/LivingSubjectId'
+        principalCareProviderId:
+          $ref: '#/components/schemas/PrincipalCareProviderId'
+    DocumentSearchRequest:
+      type: object
+      description: Request object model for document search.
+      properties:
+        authorization:
+          $ref: '#/components/schemas/Authorization'
+        patientDemographics:
+          $ref: '#/components/schemas/PatientDemographics'
+        additionalSearchParameters:
+          $ref: '#/components/schemas/AdditionalSearchParameters'
+    DocumentMetadataList:
+      type: object
+      properties:
+        documentMetadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentMetadata'
+    LivingSubjectAddress:
+      type: array
+      items:
+        $ref: '#/components/schemas/Address'
+    DocumentMetadata:
+      type: object
+      properties:
+        authorInstitution:
+          type: string
+        authorPerson:
+          type: string
+        classCode:
+          type: string
+        classCodeDescription:
+          type: string
+        classCodeScheme:
+          type: string
+        creationTime:
+          type: string
+          format: date
+        documentUniqueId:
+          type: string
+        homeCommunityId:
+          type: string
+        homeCommunityName:
+          type: string
+          format: string
+        repositoryUniqueId:
+          type: string
+        typeCode:
+          type: string
+        typeCodeDescription:
+          type: string
+        typeCodeScheme:
+          type: string
+    AdministrativeGenderCode:
+      type: object
+      properties:
+        code:
+          type: string
+        codeSystem:
+          type: string
+        codeSystemName:
+          type: string
+        codeSystemVersion:
+          type: string
+        displayName:
+          type: string
+    Document:
+      type: object
+      properties:
+        payLoad:
+          type: string
+    Phone:
+      type: object
+      properties:
+        value:
+          type: string
+        use:
+          type: string
+          description: 'Supported values for LivingSubjectAddress are: HP, H, WP, HV, AS, EC'
+    HttpClientServerError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date
+        status:
+          type: integer
+        error:
+          type: string
+        path:
+          type: string
+    Result:
+      type: object
+      properties:
+        organizationId:
+          type: string
+        organizationName:
+          type: string
+        patientSearchResult:
+          type: object
+          properties:
+            responseStatus:
+              $ref: '#/components/schemas/ResponseStatus'
+            patientInformation:
+              $ref: '#/components/schemas/PatientInformation'
+        documentSearchResult:
+          type: object
+          properties:
+            responseStatus:
+              $ref: '#/components/schemas/ResponseStatus'
+            documentMetadataList:
+              $ref: '#/components/schemas/DocumentMetadataList'
+        documentList:
+          $ref: '#/components/schemas/Documents'
+    Given:
+      type: object
+      properties:
+        name:
+          type: string
+    Name:
+      type: object
+      properties:
+        use:
+          type: array
+          items:
+            type: string
+        given:
+          type: array
+          items:
+            type: string
+        family:
+          type: string
+        prefix:
+          type: string
+        sufix:
+          type: string
+    Telecom:
+      type: object
+      properties:
+        value:
+          type: string
+        use:
+          type: array
+          items:
+            type: string
+    AdditionalSearchParameters:
+      type: object
+      properties:
+        daysToSearchBack:
+          type: string
+        includeODD:
+          type: string
+    Addr:
+      type: object
+      properties:
+        postalCode:
+          type: string
+        streetAddressLine:
+          type: string
+        state:
+          type: string
+        use:
+          type: array
+          items:
+            type: string
+        city:
+          type: string
+        country:
+          type: string
+    LivingSubjectId:
+      type: object
+      properties:
+        extension:
+          type: string
+        root:
+          type: string
+    BirthTime:
+      type: object
+      properties:
+        value:
+          type: string
+    Id:
+      type: object
+      properties:
+        root:
+          type: string
+        extension:
+          type: string
+        assigningAuthorityName:
+          type: string
+    PatientPerson:
+      type: object
+      properties:
+        birthplace:
+          $ref: '#/components/schemas/Birthplace'
+        name:
+          type: array
+          items:
+            $ref: '#/components/schemas/Name'
+        telecom:
+          type: array
+          items:
+            $ref: '#/components/schemas/Telecom'
+        administrativeGenderCode:
+          $ref: '#/components/schemas/AdministrativeGenderCode'
+        addr:
+          type: array
+          items:
+            $ref: '#/components/schemas/Addr'
+        birthTime:
+          $ref: '#/components/schemas/BirthTime'
+        deceasedTime:
+          $ref: '#/components/schemas/DeceasedTime'
+    Place:
+      type: object
+      properties:
+        placeName:
+          type: string
+        addr:
+          $ref: '#/components/schemas/Addr'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

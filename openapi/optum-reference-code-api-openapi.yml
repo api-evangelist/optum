@@ -1,0 +1,826 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services Reference Code API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: Reference Code
+paths:
+  /codetype/{codetype}:
+    get:
+      tags:
+      - Reference Code
+      summary: Return the first 100 codes for the given 'codetype' parameter
+      operationId: getCodes
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd9v3
+          - icd10cm
+          - icd10pcs
+      - name: start
+        in: query
+        description: The starting index for code list
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      responses:
+        '200':
+          description: Successful Response - codetype - cpt
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Link'
+              example:
+              - href: /ws/codetype/cpt/0001A
+                value: 0001A
+              - href: /ws/codetype/cpt/0001F
+                value: 0001F
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/range:
+    get:
+      tags:
+      - Reference Code
+      summary: Return code range
+      operationId: findRange
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd9v3
+          - icd10cm
+          - icd10pcs
+      - name: code
+        in: path
+        description: Code to find the range
+        required: true
+        schema:
+          pattern: '[^/]+'
+          type: string
+        example: 99213
+      - name: rangeId
+        in: query
+        description: 'Internal use: used for finding next/previous range'
+        schema:
+          type: integer
+          format: int32
+        example: 1
+      - name: direction
+        in: query
+        description: 'Internal use: one of<UL><LI>next: next range</LI><LI>previous: previous range</LI></UL>'
+        schema:
+          type: string
+        example: next
+      - name: data
+        in: query
+        description: 'Comma seperated list of any of the following<UL><LI>desc-full        : full description </LI><LI>headers          : Headers from the Code Book separated by ^</LI><LI>tabulardata : Tabular data from the Code Book separated by ^.  It shown in the pattern of ^<&lt;Tab Name&gt;>^<&lt;Indent Level 1&gt;>^<&lt;Indent Level 2&gt;>^<&lt;Tabular Text&gt;>^<&lt;Links&gt;>^.  For Example, One of the Tabular data for ICD-9-V1 code ''474.1'' is rendered as ''^Excludes A^4.3^null^adenoiditis^ |[474.01]^''.  Here, Tab Name=Excludes A; Indent Level 1=4.3; Indent Level 2=null; Tabular Text=adenoiditis; Links=|[474.01].   </LI><LI>billableonly: to request return of billable codes only (no  digit color code edit exists for that code)    </LI></UL>'
+        schema:
+          type: string
+          default: desc-full
+        example: desc-full
+      - name: yyyy-mm-dd
+        in: header
+        description: Historical Application Content(HAC) is not applicable here. This RangeResource webservice accepts Current or Future date only. For Current date, date is optional. For Future date, date must be provided
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeRange'
+              example:
+                rangeId: 1
+                rangeItem:
+                - code: '99202'
+                  description: Office or other outpatient visit for the evaluation and management of a new patient, which requires a medically appropriate history and/or examination and straightforward medical decision making. When using time for code selection, 15-29 minutes of total time is spent on the date of the encounter.
+                  href: /ws/codetype/cpt/99202
+                - code: '99203'
+                  description: Office or other outpatient visit for the evaluation and management of a new patient, which requires a medically appropriate history and/or examination and low level of medical decision making. When using time for code selection, 30-44 minutes of total time is spent on the date of the encounter.
+                  href: /ws/codetype/cpt/99203
+                link:
+                - href: /ws/codetype/cpt/99202/range?rangeId=1&direction=next&data=desc-full
+                  value: Next
+        '400':
+          description: Not a valid 'codetype' code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeRange'
+              example:
+                error:
+                - The code provided ('250.02') in this web service request is not a valid 'cpt' code.
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/termsearch/{terms}:
+    get:
+      tags:
+      - Reference Code
+      summary: Return codes that match given terms sorted by ranking
+      operationId: termSearch
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd9v3
+          - icd10cm
+          - icd10pcs
+          - all
+      - name: terms
+        in: path
+        description: Terms to search for
+        required: true
+        schema:
+          pattern: '[^/]+'
+          type: string
+        example: conjunctivitis
+      - name: data
+        in: query
+        description: 'Comma seperated list of<UL><LI>rank : To return a numeric rank. More relevant results have a higher rank</LI><LI>desc: To show the 255 character description</LI><LI>desc-full: To show the full character description</LI><LI>billableonly: to request return of billable codes only (no digit color code edit exists for that code)</LI></UL>'
+        schema:
+          type: string
+        example: desc,rank,desc-full
+      - name: start
+        in: query
+        description: The zero relative row to start at
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: maxresults
+        in: query
+        description: The number of rows be returned
+        schema:
+          type: integer
+          format: int32
+          default: 100
+      - name: suggest
+        in: query
+        description: 'Suggest alternate spellings? : true/false'
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermSearchResults'
+              example:
+                termSearchResult:
+                - code: H10.89
+                  rank: 6081463
+                  href: /ws/codetype/icd10cm/H10.89
+                  codeType: 16384
+                - code: H10.9
+                  rank: 6076765
+                  href: /ws/codetype/icd10cm/H10.9
+                  codeType: 16384
+                link: []
+        '300':
+          description: Multiple Choices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermSearchResults'
+              example:
+                target:
+                - choice:
+                  - BROKEN
+                  - BRAKING
+                  - PROKINOGENASE
+                  - PROGEN
+                  - BARKAN'S
+                  - PREGNACY
+                  - PRKNS
+                  - BARKING
+                  input: BRIKEN
+                - choice:
+                  - CHEST
+                  - CHEST4
+                  - CHESTER
+                  - CHESTERMANI
+                  - SCHISTOCELIA
+                  - SCHISTOGLOSSIA
+                  - SCHISTOSOMA
+                  - SCHISTOSOME
+                  - SCHISTOSOMAL
+                  - SCHISTOSOMES
+                  - SCHISTOSOMIASIS
+                  - SCHIZOTHYMIA
+                  - SCHIZOTYPAL
+                  - SCHIZOID
+                  - SCHIZODONTIA
+                  input: CHIST
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/termsearchgroups/{terms}:
+    get:
+      tags:
+      - Reference Code
+      summary: Return the terms by ranking for all the available code types
+      operationId: termSearchGroups
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - icd9v1
+          - icd9v3
+          - icd10cm
+          - icd10pcs
+          - all
+      - name: terms
+        in: path
+        description: Terms to search for
+        required: true
+        schema:
+          pattern: '[^/]+'
+          type: string
+        example: conjunctivitis
+      - name: data
+        in: query
+        description: 'Comma seperated list of<UL><LI>rank : Return a numeric rank. More relevant results have a higher rank</LI><LI>desc: Return 255 character description</LI><LI>desc-full: Return Full description</LI></UL>'
+        schema:
+          type: string
+        example: rank,desc,desc-full
+      - name: maxresults
+        in: query
+        description: The number of results to be returned
+        schema:
+          type: string
+          default: '100'
+      - name: yyyy-mm-dd
+        in: header
+        description: Historical Application Content(HAC) is not applicable here. This Term Search Group webservice accepts Current or Future date only. For Current date, date is optional. For Future date, date must be provided
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermSearchGroups'
+              example:
+                termSearchGroup:
+                - node:
+                  - node: []
+                    code: V74.4
+                    rank: 5050897
+                    hrefBeg: /ws/codetype/icd9v1/V74.4
+                  code: V74
+                  rank: 5050897
+                  hrefBeg: /ws/codetype/icd9v1/V74
+                - node:
+                  - node: []
+                    code: '130.1'
+                    rank: 5028176
+                    hrefBeg: /ws/codetype/icd9v1/130.1
+                  code: '130'
+                  rank: 5028176
+                  hrefBeg: /ws/codetype/icd9v1/130
+        '300':
+          description: Multiple Choices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermSearchGroups'
+              example:
+                target:
+                - choice:
+                  - BROKEN
+                  - BRAKING
+                  - PROKINOGENASE
+                  - PROGEN
+                  - BARKAN'S
+                  - PREGNACY
+                  input: BRIKEN
+                - choice:
+                  - CHEST
+                  - CHEST4
+                  - CHESTER
+                  - CHESTERMANI
+                  - SCHISTOCELIA
+                  - SCHISTOGLOSSIA
+                  - SCHISTOSOMA
+                  - SCHISTOSOME
+                  - SCHISTOSOMAL
+                  - SCHISTOSOMES
+                  - SCHISTOSOMIASIS
+                  - SCHIZOTHYMIA
+                  - SCHIZOTYPAL
+                  - SCHIZOID
+                  - SCHIZODONTIA
+                  input: CHIST
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/annotations:
+    get:
+      tags:
+      - Reference Code
+      summary: Return Annotations for the given hcpcs/icd9v1 {code}
+      operationId: getAnnotations
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - hcpcs
+          - icd9v1
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: A0021
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Items'
+              example:
+                item:
+                - This code represents a per mile charge for ambulance transportation outside of the state where the ambulance provider is based and is reported only for Medicaid claims. Consult the local Medicaid office in the state that the provider is located for further definition and usage requirements.
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /codetype/{codetype}/{code}/includesexcludesnotes:
+    get:
+      tags:
+      - Reference Code
+      summary: Return includes/excludes notes for the given code {code}
+      operationId: getIncludesExcludesNotes
+      parameters:
+      - name: codetype
+        in: path
+        description: The codetype needed to identify the type of code
+        required: true
+        schema:
+          type: string
+          enum:
+          - icd9v1
+          - icd9v3
+          - icd10cm
+      - name: code
+        in: path
+        description: The code value for the respective codetype
+        required: true
+        schema:
+          type: string
+        example: 210
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IncludesExcludesNotes'
+              example:
+                includesNotes:
+                  note: []
+                excludesNotes:
+                  excludesHeader: 'cyst (of):'
+                  note:
+                  - content: oral soft tissue (528.4)
+                    indentation: 1
+                  - content: radicular (522.8)
+                    indentation: 1
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    IncludesNotes:
+      required:
+      - note
+      type: object
+      properties:
+        includesHeader:
+          type: string
+          xml:
+            name: includes-header
+        note:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
+    Items:
+      type: object
+      properties:
+        item:
+          type: array
+          items:
+            type: string
+      xml:
+        name: items
+    ExcludesNotes1:
+      required:
+      - note
+      type: object
+      properties:
+        excludesHeader1:
+          type: string
+          xml:
+            name: excludes-header-1
+        note:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
+    TermSearchResults:
+      type: object
+      properties:
+        termSearchResult:
+          type: array
+          xml:
+            name: term-search-result
+          items:
+            $ref: '#/components/schemas/TermSearchResult'
+        link:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+      xml:
+        name: term-search-results
+    TermSearchResult:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+        rank:
+          type: integer
+          format: int64
+        desc:
+          type: string
+        descFull:
+          type: string
+          xml:
+            name: desc-full
+        href:
+          type: string
+          xml:
+            attribute: true
+        codeType:
+          type: integer
+          format: int32
+    TermSearchGroups:
+      type: object
+      properties:
+        termSearchGroup:
+          type: array
+          xml:
+            name: term-search-group
+          items:
+            $ref: '#/components/schemas/Node'
+      xml:
+        name: term-search-groups
+    Tabulardata:
+      type: object
+      properties:
+        dataLine:
+          type: array
+          xml:
+            name: data-line
+          items:
+            type: string
+            xml:
+              name: data-line
+    CodeRange:
+      type: object
+      properties:
+        headers:
+          type: string
+        rangeId:
+          type: integer
+          format: int32
+          xml:
+            name: range-id
+        rangeItem:
+          type: array
+          xml:
+            name: range-item
+          items:
+            $ref: '#/components/schemas/RangeItem'
+        link:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+      xml:
+        name: code-range
+    Node:
+      required:
+      - code
+      type: object
+      properties:
+        node:
+          type: array
+          items:
+            $ref: '#/components/schemas/Node'
+        code:
+          type: string
+        rank:
+          type: integer
+          format: int64
+        desc:
+          type: string
+        descFull:
+          type: string
+          xml:
+            name: desc-full
+        href:
+          type: string
+          xml:
+            attribute: true
+        hrefBeg:
+          type: string
+          xml:
+            name: href-beg
+            attribute: true
+        hrefEnd:
+          type: string
+          xml:
+            name: href-end
+            attribute: true
+    ExcludesNotes:
+      required:
+      - note
+      type: object
+      properties:
+        excludesHeader:
+          type: string
+          xml:
+            name: excludes-header
+        note:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
+    Note:
+      type: object
+      properties:
+        content:
+          type: string
+        indentation:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+    RangeItem:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+        tabulardata:
+          $ref: '#/components/schemas/Tabulardata'
+        href:
+          type: string
+          xml:
+            attribute: true
+    ExcludesNotes2:
+      required:
+      - note
+      type: object
+      properties:
+        excludesHeader2:
+          type: string
+          xml:
+            name: excludes-header-2
+        note:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
+    IncludesExcludesNotes:
+      type: object
+      properties:
+        includesNotes:
+          $ref: '#/components/schemas/IncludesNotes'
+        excludesNotes:
+          $ref: '#/components/schemas/ExcludesNotes'
+        excludesNotes1:
+          $ref: '#/components/schemas/ExcludesNotes1'
+        excludesNotes2:
+          $ref: '#/components/schemas/ExcludesNotes2'
+      xml:
+        name: includes-excludes-notes
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

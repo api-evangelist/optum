@@ -1,0 +1,151 @@
+openapi: 3.2.0
+info:
+  title: Real Provider Access Provider Access Bulk Member Match Status API
+  description: FHIR Provider Access APIs
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: ProviderAccessBulkMemberMatchStatus
+paths:
+  /oihub/fhirprovideraccess/v1/R4/{payerId}/{lob}/$bulk-member-match-status/{jobId}:
+    get:
+      operationId: bulkMemberMatchStatus
+      tags:
+      - ProviderAccessBulkMemberMatchStatus
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: bh
+      - name: jobId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 6875735d-61dc-4703-84c9-bc7f48356225
+      - name: x-optum-consumer-correlation-id
+        in: header
+        schema:
+          type: string
+          description: Unique transaction identifier
+          example: uuid-123
+      - name: environment
+        in: header
+        schema:
+          type: string
+          example: sandbox
+      security:
+      - oAuth:
+        - read_healthcheck
+      responses:
+        '200':
+          description: Bulk Member Match status response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkMemberMatchStatusResponse'
+              example:
+                transactionTime: '2021-01-01T00:00:00Z'
+                request: https://sandbox-apigw.optum.com/Provider/fhir/R4/87726/ph/Group/provider-group-123/$davinci-data-export
+                requiresAccessToken: true
+                output:
+                - type: Patient
+                  url: https://sandbox-apigw.optum.com/.../Patient_file_1.ndjson
+                error:
+                - type: OperationOutcome
+                  url: https://sandbox-apigw.optum.com/.../error_file_1.ndjson
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: UnAuthorized
+          content:
+            application/json:
+              example:
+                message: UnAuthorized
+                statusCode: 401
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+components:
+  schemas:
+    BulkExportOutput:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Patient
+        url:
+          type: string
+          description: NDJSON file download URL
+    BulkExportError:
+      type: object
+      properties:
+        type:
+          type: string
+          example: OperationOutcome
+        url:
+          type: string
+          description: Error file URL
+    BulkMemberMatchStatusResponse:
+      type: object
+      description: FHIR Bulk Export style response for member match status
+      properties:
+        transactionTime:
+          type: string
+          description: The time when the response was generated
+          example: '2021-01-01T00:00:00Z'
+        request:
+          type: string
+          description: Original export request URL
+        requiresAccessToken:
+          type: boolean
+          description: Indicates if access token is required to download files
+        output:
+          type: array
+          items:
+            $ref: '#/components/schemas/BulkExportOutput'
+        error:
+          type: array
+          items:
+            $ref: '#/components/schemas/BulkExportError'
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

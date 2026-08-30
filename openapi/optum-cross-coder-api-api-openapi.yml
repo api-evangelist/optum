@@ -1,0 +1,358 @@
+openapi: 3.2.0
+info:
+  title: Optum Cross Coder API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged Cross Coder API across 2 of this provider''s published API definitions: optum-optum-common-facility-openapi.yml, optum-optum-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Cross Coder API
+paths:
+  /api/optum/common/cross-coder/list/hcpcs/{code}/i10_cm:
+    post:
+      tags:
+      - Cross Coder API
+      summary: Fetches cross coder table data
+      operationId: getCrossCoderDataListI10CM
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: K0001
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these (code,-code, description, -description) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrossCodesRequest'
+        required: true
+      responses:
+        '200':
+          description: Fetch columns for cross coder I10cm tab
+          content:
+            application/json:
+              example:
+                content:
+                - code: G43.001
+                  rangeCodeType: 0
+                  codeType: 0
+                  description: Migraine without aura, not intractable, with status migrainosus
+                  baseUnitValue: 0
+                  source: Subject-Matter Expert Assigned
+                  associatedCodeLinkList: []
+                - code: G43.009
+                  rangeCodeType: 0
+                  codeType: 0
+                  description: Migraine without aura, not intractable, without status migrainosus
+                  baseUnitValue: 0
+                  associatedCodeLinkList:
+                  - value: A56273
+                    href: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=56273&ver=26&bc=0
+                totalCount: 2
+                ncw: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [code, description]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.UnsupportedOperationException: Unsupported codetype in Method getFindListQuery.'
+                path: /optumcommonms/api/optum/facility/cross-coder/list
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /api/optum/common/cross-coder/list/cpt/{code}/i10_cm:
+    post:
+      tags:
+      - Cross Coder API
+      summary: Fetches Cross Coder table data
+      operationId: getCrossCoderDataListI10CMFromCPT
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 17000
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these (code,-code, description, -description, primaryVol, -primaryVol, secondaryVol, -secondaryVol, tertiaryVol, -tertiaryVol, associatedCodeLinkList, -associatedCodeLinkList, isSme, -isSme) are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrossCodesRequest'
+        required: true
+      responses:
+        '200':
+          description: Fetch Columns for Cross Coder I10cm tab
+          content:
+            application/json:
+              example:
+                content:
+                - code: G43.001
+                  rangeCodeType: 0
+                  codeType: 0
+                  description: Migraine without aura, not intractable, with status migrainosus
+                  baseUnitValue: 0
+                  source: Subject-Matter Expert Assigned
+                  associatedCodeLinkList: []
+                - code: G43.009
+                  rangeCodeType: 0
+                  codeType: 0
+                  description: Migraine without aura, not intractable, without status migrainosus
+                  baseUnitValue: 0
+                  associatedCodeLinkList:
+                  - value: A56273
+                    href: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=56273&ver=26&bc=0
+                totalCount: 2
+                ncw: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [code, description]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.UnsupportedOperationException: Unsupported codetype in Method getFindListQuery.'
+                path: /optumcommonms/api/optum/facility/cross-coder/list
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+  /api/optum/common/cross-coder/list/{codetype}/{code}/{tab}:
+    get:
+      tags:
+      - Cross Coder API
+      summary: Fetches cross coder table data
+      operationId: getCrossCoderDataList
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 17000
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - i10_pcs
+          - i10_cm
+          - i9v1
+          - i9v3
+        example: cpt
+      - name: tab
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - anesthesia_codes
+          - i10_pcs
+          - medicine_codes
+          - dental
+        example: hcpcs
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these values (code,-code, description, -description) are allowed.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch columns for cross coder
+          content:
+            application/json:
+              example:
+                content:
+                - code: A9270
+                  rangeCodeType: 0
+                  codeType: 0
+                  description: Noncovered item or service
+                  baseUnitValue: 0
+                - code: V2632
+                  rangeCodeType: 0
+                  codeType: 0
+                  description: Posterior chamber intraocular lens
+                  baseUnitValue: 0
+                totalCount: 2
+                ncw: false
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [code, description]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-27T08:10:07.573+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.UnsupportedOperationException: Unsupported codetype in Method getFindListQuery.'
+                path: /optumcommonms/api/optum/facility/cross-coder/list
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/optumcommonms
+components:
+  schemas:
+    CrossCodesRequest:
+      type: object
+      properties:
+        isLcdNcdData:
+          type: string
+        isSmeaData:
+          type: string
+        isClaimsData:
+          type: string
+        macType:
+          type: string
+        contractorId:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-optum-common-facility-openapi.yml
+- optum-optum-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

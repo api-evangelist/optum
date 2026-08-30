@@ -1,0 +1,705 @@
+openapi: 3.2.0
+info:
+  title: Optum Real-Time eContent Web services LCD API
+  description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: 1.0.0
+servers:
+- url: sandbox-apigw.optum.com/ci/rtec/v1/ws
+security:
+- bearerAuth: []
+tags:
+- name: LCD
+paths:
+  /contractors:
+    get:
+      tags:
+      - LCD
+      summary: List of medicare contractors who have policies
+      operationId: getContractors
+      parameters:
+      - name: contractor-type
+        in: query
+        description: 'Comma seperated list of <UL><LI>ALL : All of the following types of contractors</LI><LI>CA  : Carriers</LI><LI>DA  : DME MAC</LI><LI>DP  : DME PSC</LI><LI>FI  : Fiscal Intermediary</LI><LI>MA  : MAC Part A</LI><LI>MB  : MAC Part B</LI><LI>NA  : National Part A</LI><LI>NB  : National Part B</LI><LI>ND  : National DME</LI></UL>'
+        schema:
+          type: string
+          default: CA,FI,MA,MB
+      - name: contractor-part
+        in: query
+        description: 'Comma seperated list of <UL><LI>ALL : Contractors for all of the parts below</LI><LI>A : Contractor for Part A policies</LI><LI>B : Contractor for Part B policies</LI><LI>DME : Contractor for DME policies</LI></UL>'
+        schema:
+          type: string
+          default: A,B
+      - name: region-code
+        in: query
+        description: The region code for policies
+        schema:
+          type: string
+          default: ALL
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractorList'
+              example:
+                contractor:
+                - regionCode: AK
+                  regionName: Alaska
+                  contractorName: BlueCross BlueShield of Tennessee (Riverbend Government Benefits Administrator)
+                  contractorPart: A
+                  contractorType: FI
+                  contractorNumber: 00390
+                - regionCode: AK
+                  regionName: Alaska
+                  contractorName: Noridian Administrative Services
+                  contractorPart: A
+                  contractorType: FI
+                  contractorNumber: '00322'
+        '400':
+          description: Not a valid 'codetype' code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractorList'
+              example:
+                error:
+                - Invalid value 'X' for parameter 'contractor-part'.  Valid values are a comma seperated list of ALL,A,B,DME,HM,MP,NR,PI,RI
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /contractors/{contractorNum}/policies:
+    get:
+      tags:
+      - LCD
+      summary: Policies of a Medicare Contractor
+      operationId: getPolicies
+      parameters:
+      - name: contractorNum
+        in: path
+        description: The Contractor number (max 5 chars)
+        required: true
+        schema:
+          type: string
+        example: '04111'
+      - name: cms-id
+        in: query
+        description: The CMS Policy ID (Max 10 characters)
+        schema:
+          type: string
+      - name: contractor-part
+        in: query
+        description: 'Comma seperated list of <UL><LI>ALL : Contractors for all of the parts below</LI><LI>A : Contractor for Part A policies</LI><LI>B : Contractor for Part B policies</LI><LI>DME : Contractor for DME policies</LI></UL>'
+        schema:
+          type: string
+          default: ALL
+        example: ALL
+      - name: contractor-type
+        in: query
+        description: 'Comma seperated list of <UL><LI>ALL : All of the following types of contractors</LI><LI>CA  : Carriers</LI><LI>DA  : DME MAC</LI><LI>DP  : DME PSC</LI><LI>FI  : Fiscal Intermediary</LI><LI>MA  : MAC Part A</LI><LI>MB  : MAC Part B</LI><LI>NA  : National Part A</LI><LI>NB  : National Part B</LI><LI>ND  : National DME</LI></UL>'
+        schema:
+          type: string
+          default: ALL
+        example: ALL
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractorPolicies'
+              example:
+                policy:
+                - title: 'Billing and Coding: Acute Care: Inpatient, Observation and Treatment Room Services'
+                  effectiveDate: '2015-10-01T00:00:00.000Z'
+                  url: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=52985&ver=44&bc=0
+                  cmsId: A52985
+                  contractorNum: '04111'
+                  contractorPart: A
+                  contractorType: MA
+                - title: 'Billing and Coding: Information Regarding Uses, Including Off-Label Uses, of Anti-Vascular Endothelial Growth Factor (anti-VEGF), for The Treatment of Ophthalmological Diseases'
+                  effectiveDate: '2016-07-11T00:00:00.000Z'
+                  url: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=53121&ver=35&bc=0
+                  cmsId: A53121
+                  contractorNum: '04111'
+                  contractorPart: A
+                  contractorType: MA
+        '400':
+          description: ContractorNum is larger than 5 characters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractorPolicies'
+              example:
+                error:
+                - ContractorNum is larger than 5 characters
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /contractors/{contractorNum}/policy/{cmspolicyid}:
+    get:
+      tags:
+      - LCD
+      summary: Medicare Policiy Details
+      operationId: getPolicyDetails
+      parameters:
+      - name: contractorNum
+        in: path
+        description: The Contractor number (max 5 chars)
+        required: true
+        schema:
+          type: string
+        example: '04111'
+      - name: cmspolicyid
+        in: path
+        description: The CMS Policy ID (Max 10 characters)
+        required: true
+        schema:
+          type: string
+        example: A52985
+      - name: categories
+        in: query
+        description: 'Comma seperated list of <UL><LI>all  : All Categories below</LI><LI>tob  : Type of Bill Codes for lcd policies</LI><LI>rev  : Revenue Codes for lcd policies</LI><LI>proc : Procedure codes for ncd/lcd policies</LI><LI>diag : All Diagnostic codes for ncd/lcd policies</LI><LI>supp : Supported Diagnostic codes for lcd policies</LI><LI>cov  : Covered Diagnostic Codes for ncd policies</LI><LI>deny : Denied Diagnostic Codes for ncd policies</LI><LI>nots : Not Supported Diagnostic codes for ncd/lcd policies</LI></UL>'
+        schema:
+          type: string
+          default: all
+        example: all
+      - name: icdtypes
+        in: query
+        description: 'Comma seperated list of <UL><LI>all   : all icd types below</LI><LI>icd9  : exclude icd10cm and icd10pcs</LI><LI>icd10 : exclude icd9v1 and icd9v3</LI></UL>'
+        schema:
+          type: string
+          default: all
+        example: all
+      - name: maxproc
+        in: query
+        description: The maximum number of procedure codes to be returned
+        schema:
+          type: integer
+          format: int32
+          default: 200
+      - name: maxcov
+        in: query
+        description: The maximum number of diagnostic codes to be returned under 'covered' for ncd policies
+        schema:
+          type: integer
+          format: int32
+          default: 200
+      - name: maxnots
+        in: query
+        description: The maximum number of diagnostic codes to be returned under 'not-supporting-medical-necessity' for ncd/lcd policies
+        schema:
+          type: integer
+          format: int32
+          default: 200
+      - name: maxdeny
+        in: query
+        description: The maximum number of diagnostic codes to be returned under 'denied'
+        schema:
+          type: integer
+          format: int32
+          default: 200
+      - name: maxtob
+        in: query
+        description: The maximum number of codes to be returned under 'type-of-bill-codes' for lcd policies
+        schema:
+          type: integer
+          format: int32
+          default: 200
+      - name: maxrev
+        in: query
+        description: The maximum number of codes to be returned under 'revenue-codes for lcd policies'
+        schema:
+          type: integer
+          format: int32
+          default: 200
+      - name: maxsupp
+        in: query
+        description: The maximum number of diagnostic codes to be returned under 'supporting-medical-necessity' for lcd policies
+        schema:
+          type: integer
+          format: int32
+          default: 200
+      - name: contractor-part
+        in: query
+        description: 'Comma seperated list of <UL><LI>ALL : Contractors for all of the parts below</LI><LI>A : Contractor for Part A policies</LI><LI>B : Contractor for Part B policies</LI><LI>DME : Contractor for DME policies</LI></UL>'
+        schema:
+          type: string
+          default: ALL
+        example: ALL
+      - name: contractor-type
+        in: query
+        description: 'Comma seperated list of <UL><LI>ALL : All of the following types of contractors</LI><LI>CA  : Carriers</LI><LI>DA  : DME MAC</LI><LI>DP  : DME PSC</LI><LI>FI  : Fiscal Intermediary</LI><LI>MA  : MAC Part A</LI><LI>MB  : MAC Part B</LI><LI>NA  : National Part A</LI><LI>NB  : National Part B</LI><LI>ND  : National DME</LI></UL>'
+        schema:
+          type: string
+          default: ALL
+        example: ALL
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractorPolicyDetails'
+              example:
+                policyInfo:
+                  title: NCD for Injection Sclerotherapy for Esophageal Variceal Bleeding (100.10)
+                  effectiveDate: '1984-10-29T00:00:00.000Z'
+                  url: http://www.cms.gov/medicare-coverage-database/details/ncd-details.aspx?ncdid=95&ver=1
+                  contractorNum: '0'
+                  cmsId: '100.10'
+                  contractorPart: A
+                  contractorType: NA
+                  icpPolicyId: 258971
+                  policyType: NCD
+                ncdCodingInformation:
+                  procedureCodes:
+                    codeInfo:
+                    - code: '43204'
+                      description: Esophagoscopy, flexible, transoral; with injection sclerosis of esophageal varices
+                      type: cpt
+                    - code: '43243'
+                      description: Esophagogastroduodenoscopy, flexible, transoral; with injection sclerosis of esophageal/gastric varices
+                      type: cpt
+                    numcodes: 2
+                    toomanycodes: false
+                  diagnosticCodes:
+                    covered:
+                      codeInfo: []
+                    denied:
+                      codeInfo: []
+                    notSupportingMedicalNecessity:
+                      codeInfo: []
+        '400':
+          description: ContractorNum is larger than 5 characters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractorPolicyDetails'
+              example:
+                error:
+                - ContractorNum is larger than 5 characters
+                warning: []
+                info: []
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Policy 'A9999' does not exist for Contractor '%04111'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractorPolicyDetails'
+              example:
+                error:
+                - Policy 'A9999' does not exist for Contractor '04111'
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+  /contractors/regions:
+    get:
+      tags:
+      - LCD
+      summary: Medicare contractor region list
+      operationId: getRegions
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Regions'
+              example:
+                region:
+                - value: Alaska
+                  regionCode: AK
+                - value: Alabama
+                  regionCode: AL
+        '401':
+          description: Not Authorized
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T16:34:39.385Z'
+                error: Unauthorized
+                status: 401
+        '404':
+          description: Not Found - the data was not found
+          content:
+            application/json:
+              example:
+                error:
+                - The requested resource does not exist.
+                warning: []
+                info: []
+        '405':
+          description: Method Not Allowed - Request method not supported
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-07T15:28:34.152Z'
+                status: 405
+                error: Method Not Allowed
+        '503':
+          description: Service Unavailable
+components:
+  schemas:
+    RevenueCodes:
+      type: object
+      properties:
+        codeInfo:
+          type: array
+          xml:
+            name: code-info
+          items:
+            $ref: '#/components/schemas/CodeInfo'
+    Contractor:
+      required:
+      - contractorName
+      - contractorNumber
+      - contractorPart
+      - contractorType
+      - regionCode
+      - regionName
+      type: object
+      properties:
+        regionCode:
+          type: string
+          xml:
+            name: region-code
+        regionName:
+          type: string
+          xml:
+            name: region-name
+        contractorName:
+          type: string
+          xml:
+            name: contractor-name
+        contractorPart:
+          type: string
+          xml:
+            name: contractor-part
+        contractorType:
+          type: string
+          xml:
+            name: contractor-type
+        contractorNumber:
+          type: string
+          xml:
+            name: contractor-number
+    Regions:
+      type: object
+      properties:
+        region:
+          type: array
+          items:
+            $ref: '#/components/schemas/Region'
+      xml:
+        name: regions
+    TypeOfBillCodes:
+      type: object
+      properties:
+        codeInfo:
+          type: array
+          xml:
+            name: code-info
+          items:
+            $ref: '#/components/schemas/CodeInfo'
+    ContractorPolicies:
+      type: object
+      properties:
+        policy:
+          type: array
+          items:
+            $ref: '#/components/schemas/Policy'
+      xml:
+        name: contractor-policies
+    LcdCodingInformation:
+      type: object
+      properties:
+        typeOfBillCodes:
+          $ref: '#/components/schemas/TypeOfBillCodes'
+        revenueCodes:
+          $ref: '#/components/schemas/RevenueCodes'
+        procedureCodes:
+          $ref: '#/components/schemas/ProcedureCodes'
+        diagnosticCodes:
+          $ref: '#/components/schemas/DiagnosticCodes'
+    Region:
+      type: object
+      properties:
+        value:
+          type: string
+        regionCode:
+          type: string
+          xml:
+            name: region-code
+            attribute: true
+    Policy:
+      type: object
+      properties:
+        status:
+          type: string
+        effectiveDate:
+          type: string
+          xml:
+            name: effective_date
+        endDate:
+          type: string
+          xml:
+            name: end_date
+        title:
+          type: string
+        url:
+          type: string
+        code:
+          type: string
+        cmsId:
+          type: string
+          xml:
+            attribute: true
+    DiagnosticCodes:
+      type: object
+      properties:
+        supportingMedicalNecessity:
+          $ref: '#/components/schemas/SupportingMedicalNecessity'
+        notSupportingMedicalNecessity:
+          $ref: '#/components/schemas/NotSupportingMedicalNecessity'
+    PolicyInfo:
+      required:
+      - effectiveDate
+      - title
+      - url
+      type: object
+      properties:
+        title:
+          type: string
+        effectiveDate:
+          type: string
+          xml:
+            name: effective-date
+        expirationDate:
+          type: string
+          xml:
+            name: expiration-date
+        url:
+          type: string
+        contractorNum:
+          type: string
+          xml:
+            name: contractor-num
+            attribute: true
+        cmsId:
+          type: string
+          xml:
+            name: cms-id
+            attribute: true
+        contractorPart:
+          type: string
+          xml:
+            name: contractor-part
+            attribute: true
+        contractorType:
+          type: string
+          xml:
+            name: contractor-type
+            attribute: true
+        icpPolicyId:
+          type: integer
+          format: int32
+        policyType:
+          type: string
+    SupportingMedicalNecessity:
+      type: object
+      properties:
+        codeGroup:
+          type: array
+          xml:
+            name: code-group
+          items:
+            $ref: '#/components/schemas/CodeGroup'
+        numcodes:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        toomanycodes:
+          type: boolean
+          xml:
+            attribute: true
+    CodeGroup:
+      type: object
+      properties:
+        paragraph:
+          type: string
+        codeInfo:
+          type: array
+          xml:
+            name: code-info
+          items:
+            $ref: '#/components/schemas/CodeInfo'
+    ContractorPolicyDetails:
+      required:
+      - policyInfo
+      type: object
+      properties:
+        policyInfo:
+          $ref: '#/components/schemas/PolicyInfo'
+        ncdCodingInformation:
+          $ref: '#/components/schemas/NcdCodingInformation'
+        lcdCodingInformation:
+          $ref: '#/components/schemas/LcdCodingInformation'
+      xml:
+        name: contractor-policy-details
+    ContractorList:
+      required:
+      - contractor
+      type: object
+      properties:
+        contractor:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contractor'
+      xml:
+        name: contractor-list
+    NcdCodingInformation:
+      type: object
+      properties:
+        procedureCodes:
+          $ref: '#/components/schemas/ProcedureCodes'
+        diagnosticCodes:
+          $ref: '#/components/schemas/DiagnosticCodes'
+    NotSupportingMedicalNecessity:
+      type: object
+      properties:
+        codeGroup:
+          type: array
+          xml:
+            name: code-group
+          items:
+            $ref: '#/components/schemas/CodeGroup'
+        numcodes:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        toomanycodes:
+          type: boolean
+          xml:
+            attribute: true
+    ProcedureCodes:
+      type: object
+      properties:
+        codeGroup:
+          type: array
+          xml:
+            name: code-group
+          items:
+            $ref: '#/components/schemas/CodeGroup'
+        numcodes:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        toomanycodes:
+          type: boolean
+          xml:
+            attribute: true
+    CodeInfo:
+      required:
+      - code
+      - description
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          xml:
+            attribute: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+    ws_auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://idx.linkhealth.com/auth
+          tokenUrl: https://idx.linkhealth.com/auth/token
+          scopes:
+            scope-1: required scope for API access
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

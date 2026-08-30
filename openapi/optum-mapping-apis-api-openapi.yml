@@ -1,0 +1,443 @@
+openapi: 3.2.0
+info:
+  title: Core Service Mapping APIs API
+  description: Code Search Service provides the APIs for searching codes related information.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/codesearchms
+tags:
+- name: Mapping APIs
+paths:
+  /api/coding/code/{codetype}/{code}/mapping/i10_pcs:
+    get:
+      tags:
+      - Mapping APIs
+      summary: ' Fetches I10PCS to I9V3 mappings on requested codetype and code'
+      operationId: i9v3Toi10pcsMapping
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i9v3
+      - name: code
+        in: path
+        description: 'i9v3 code '
+        required: true
+        schema:
+          type: string
+        example: 87.01
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetching I10PCS to I9V3 mappings
+          content:
+            application/json:
+              example:
+                code:
+                  fullDescription: Pneumoencephalogram
+                  code: '87.01'
+                mappedCodes:
+                - fullDescription: Computerized Tomography (CT Scan) of Brain using Other Contrast, Unenhanced and Enhanced
+                  codeId: 3638761
+                  mappingInformation: []
+                  backwardMappingCodes:
+                  - '87.01'
+                  - '87.03'
+                  code: B020Y0Z
+                - fullDescription: Computerized Tomography (CT Scan) of Brain using Other Contrast
+                  codeId: 3638762
+                  mappingInformation: []
+                  backwardMappingCodes:
+                  - '87.01'
+                  - '87.03'
+                  code: B020YZZ
+                - fullDescription: Computerized Tomography (CT Scan) of Cerebral Ventricle(s) using Other Contrast, Unenhanced and Enhanced
+                  codeId: 3638775
+                  mappingInformation: []
+                  backwardMappingCodes:
+                  - '87.03'
+                  code: B028Y0Z
+                - fullDescription: Computerized Tomography (CT Scan) of Cerebral Ventricle(s) using Other Contrast
+                  codeId: 3638776
+                  mappingInformation: []
+                  backwardMappingCodes:
+                  - '87.03'
+                  code: B028YZZ
+                - fullDescription: Computerized Tomography (CT Scan) of Cerebral Ventricle(s)
+                  codeId: 3638777
+                  mappingInformation: []
+                  backwardMappingCodes:
+                  - '87.03'
+                  code: B028ZZZ
+                - fullDescription: Computerized Tomography (CT Scan) of Sella Turcica/Pituitary Gland using Other Contrast, Unenhanced and Enhanced
+                  codeId: 3638782
+                  mappingInformation: []
+                  backwardMappingCodes:
+                  - '87.01'
+                  - '87.03'
+                  code: B029Y0Z
+                - fullDescription: Computerized Tomography (CT Scan) of Sella Turcica/Pituitary Gland using Other Contrast
+                  codeId: 3638783
+                  mappingInformation: []
+                  backwardMappingCodes:
+                  - '87.01'
+                  - '87.03'
+                  code: B029YZZ
+                - fullDescription: Magnetic Resonance Imaging (MRI) of Brain using Other Contrast, Unenhanced and Enhanced
+                  codeId: 3638792
+                  mappingInformation: []
+                  backwardMappingCodes:
+                  - '88.91'
+                  - '88.96'
+                  code: B030Y0Z
+                - fullDescription: Magnetic Resonance Imaging (MRI) of Brain using Other Contrast
+                  codeId: 3638793
+                  mappingInformation: []
+                  backwardMappingCodes:
+                  - '88.91'
+                  - '88.96'
+                  code: B030YZZ
+                - fullDescription: Magnetic Resonance Imaging (MRI) of Sella Turcica/Pituitary Gland using Other Contrast, Unenhanced and Enhanced
+                  codeId: 3638795
+                  mappingInformation: []
+                  backwardMappingCodes:
+                  - '88.97'
+                  code: B039Y0Z
+                - fullDescription: Magnetic Resonance Imaging (MRI) of Sella Turcica/Pituitary Gland using Other Contrast
+                  codeId: 3638796
+                  mappingInformation: []
+                  backwardMappingCodes:
+                  - '88.97'
+                  code: B039YZZ
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '99213' in this web service request is not a valid 'i9v3' code.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-01-01T07:22:01.017+00:00'
+                path: api/coding/code/i9v3/87.01/mapping/i10_pcs
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{code}/mapping/i10_cm:
+    get:
+      tags:
+      - Mapping APIs
+      summary: ' Fetches I9v1 To I10CM CodeMapping on requested codetype and code'
+      operationId: i9v1Toi10cmMapping
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i9v1
+      - name: code
+        in: path
+        description: 'i9v1 to i10_cm mapped codes '
+        required: true
+        schema:
+          type: string
+        example: 999.9
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetching I9V1 to I10CM mappings
+          content:
+            application/json:
+              example:
+                code:
+                  fullDescription: Other and unspecified complications of medical care, not elsewhere classified
+                  code: '999.9'
+                mappedCodes:
+                - fullDescription: Complication of inhalation therapy, initial encounter
+                  codeId: 3548956
+                  mappingInformation:
+                  - value: Gem Map
+                    href: '#'
+                  backwardMappingCodes:
+                  - '999.9'
+                  code: T81.81XA
+                - fullDescription: Failed or difficult intubation, initial encounter
+                  codeId: 3551039
+                  mappingInformation:
+                  - value: Gem Map
+                    href: '#'
+                  backwardMappingCodes:
+                  - '999.9'
+                  code: T88.4XXA
+                - fullDescription: Unspecified adverse effect of drug or medicament, initial encounter
+                  codeId: 3551051
+                  mappingInformation:
+                  - value: Gem Map
+                    href: '#'
+                  backwardMappingCodes:
+                  - '995.20'
+                  - '999.9'
+                  code: T88.7XXA
+                - shortDescription: Best code alternative based on exact code description match
+                  fullDescription: Other specified complications of surgical and medical care, not elsewhere classified, initial encounter
+                  codeId: 3551138
+                  mappingInformation:
+                  - value: Gem Map
+                    href: '#'
+                  - value: Premier Pick
+                    href: '#'
+                  backwardMappingCodes:
+                  - '998.13'
+                  - '998.2'
+                  - '999.9'
+                  code: T88.8XXA
+                - fullDescription: Complication of surgical and medical care, unspecified, initial encounter
+                  codeId: 3551141
+                  mappingInformation:
+                  - value: Gem Map
+                    href: '#'
+                  backwardMappingCodes:
+                  - '999.9'
+                  code: T88.9XXA
+        '400':
+          description: 'Bad request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '99213' in this web service request is not a valid 'i9v1' code.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-01-01T07:22:01.017+00:00'
+                path: /api/coding/code/i9v1/999/mapping/i10_cm
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{code}/mapping/i9v3:
+    get:
+      tags:
+      - Mapping APIs
+      summary: ' Fetches I10PCS to I9V3 mappings on requested Codetype and code'
+      operationId: i10pcsToi9v3Mapping
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_pcs
+      - name: code
+        in: path
+        description: 'i10pcs code '
+        required: true
+        schema:
+          type: string
+        example: 4A13053
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetching I10PCS to I9V3 mappings
+          content:
+            application/json:
+              example:
+                code:
+                  fullDescription: Biofeedback
+                  code: GZC9ZZZ
+                mappedCodes:
+                - shortDescription: Single code alternative based in GEMs - approximate
+                  fullDescription: Other individual psychotherapy
+                  mappingInformation:
+                  - value: Gem Map
+                    href: '#'
+                  - value: Premier Pick
+                    href: '#'
+                  backwardMappingCodes:
+                  - GZ50ZZZ
+                  - GZ52ZZZ
+                  - GZ53ZZZ
+                  - GZC9ZZZ
+                  code: '94.39'
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided 'T43.221A' in this web service request is not a valid 'i10_pcs' code.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-01-01T07:22:01.017+00:00'
+                path: /api/coding/code/i10_pcs/T43.221A/mapping/i9v3
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{code}/mapping/i9v1:
+    get:
+      tags:
+      - Mapping APIs
+      summary: ' Fetches I10CM to I9V1 mappings on requested Codetype and code'
+      operationId: i10cmToi9v1Mapping
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_cm
+      - name: code
+        in: path
+        description: 'i10cm code '
+        required: true
+        schema:
+          type: string
+        example: E11.01
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetching I10CM to I9V1 mappings
+          content:
+            application/json:
+              example:
+                code:
+                  fullDescription: Poisoning by selective serotonin reuptake inhibitors, accidental (unintentional), initial encounter
+                  code: T43.221A
+                mappedCodes:
+                - shortDescription: Single code alternative based on Forward and Backward GEM
+                  fullDescription: Poisoning by selective serotonin reuptake inhibitors
+                  mappingInformation:
+                  - value: Combo Map
+                    href: '#'
+                  - value: Gem Map
+                    href: '#'
+                  - value: Premier Pick
+                    href: '#'
+                  backwardMappingCodes:
+                  - T43.221A
+                  - T43.222A
+                  - T43.223A
+                  - T43.224A
+                  code: '969.03'
+                - fullDescription: Accidental poisoning by antidepressants
+                  mappingInformation:
+                  - value: Combo Map
+                    href: '#'
+                  - value: Gem Map
+                    href: '#'
+                  backwardMappingCodes:
+                  - T43.011A
+                  - T43.021A
+                  - T43.1X1A
+                  - T43.201A
+                  - T43.211A
+                  - T43.221A
+                  - T43.291A
+                  code: E854.0
+        '400':
+          description: 'Bad request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '99213' in this web service request is not a valid 'i10_cm' code.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-01-01T07:22:01.017+00:00'
+                path: /api/coding/code/i10_cm/T43.221A/mapping/i9v1
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

@@ -1,0 +1,309 @@
+openapi: 3.2.0
+info:
+  title: Real Prior Authorization Submit Attachment API
+  description: FHIR Prior Authorization APIs (CDS, DTR, PAS)
+  version: 1.0.0
+servers:
+- url: https://sandbox-apigw.optum.com
+tags:
+- name: SubmitAttachment
+paths:
+  /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/Claim/$submit-attachment:
+    post:
+      operationId: submitAttachment
+      tags:
+      - SubmitAttachment
+      security:
+      - oAuth:
+        - read_healthcheck
+      parameters:
+      - name: payerId
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '87726'
+      - name: lob
+        in: path
+        required: true
+        schema:
+          type: string
+          example: pa
+      - name: environment
+        in: header
+        schema:
+          type: string
+          example: sandbox
+      - name: reference-srn
+        in: header
+        required: true
+        schema:
+          type: string
+          description: Reference SRN for prior authorization
+          example: '123456789'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttachmentRequest'
+            example:
+              parameter:
+              - name: TrackingId
+                valueIdentifier:
+                  system: http://example.org/cdex/acn
+                  value: '123456'
+              - name: AttachTo
+                valueCode: preauthorization
+              - name: PayerId
+                valueIdentifier:
+                  system: http://example.org/cdex/payer-ids
+                  value: '123456'
+              - name: OrganizationId
+                valueIdentifier:
+                  system: http://hl7.org/fhir/sid/us-npi
+                  value: '123456'
+              - name: ProviderId
+                valueIdentifier:
+                  system: http://hl7.org/fhir/sid/us-npi
+                  value: '123456'
+              - name: MemberId
+                valueIdentifier:
+                  system: http://example.org/cdex/member-ids
+                  value: '123456'
+              - name: Attachment
+                part:
+                - name: Content
+                  resource:
+                    content:
+                    - attachment:
+                        contentType: application/pdf
+                        creation: '2025-11-05T10:25:00-05:00'
+                        data: PHN0c
+                        url: attachment_url
+                        title: History and Physical data
+                    date: '2025-11-05T10:30:00-05:00'
+                    id: docref-hp-002
+                    resourceType: DocumentReference
+                    status: current
+              resourceType: Parameters
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttachmentResponse'
+              example:
+                id: '23345435456574'
+                issue:
+                - code: informational
+                  details:
+                    text: AttachmentsacceptedandassociatedwiththereferencedpriorauthorizationforDocumentReferenceID:DocumentReference/docref-hp-002
+                  diagnostics: TrackingId=123456;ReferenceSRN=AL26082223;AttachTo=preauthorization;AttachmentTransactionId=98ef77d2-798f-45b7-9925-ba59856574dc
+                  location:
+                  - Parameters.Attachment.part.Content/DocumentReference/docref-hp-002
+                  severity: information
+                meta:
+                  lastUpdated: '2026-01-09T11:49:17.146+00:00'
+                  versionId: '1'
+                resourceType: OperationOutcome
+                text:
+                  div: <divxmlns="http://www.w3.org/1999/xhtml"><p>AttachmentsassociatedwithTrackingId=123456andReferenceId=AL26082223isprocessed.Totalnumberofattachments=1.Pleasereferto'issue'sectionfordetails.</p></div>
+                  status: generated
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              example:
+                message: Bad Request
+                statusCode: 400
+        '401':
+          description: UnAuthorized
+          content:
+            application/json:
+              example:
+                message: UnAuthorized
+                statusCode: 401
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              example:
+                message: Not Acceptable
+                statusCode: 406
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              example:
+                message: Internal server error
+                statusCode: 500
+components:
+  schemas:
+    Parameter:
+      type: object
+      description: Parameter entry in Parameters resource
+      properties:
+        name:
+          type: string
+          example: TrackingId
+        valueIdentifier:
+          $ref: '#/components/schemas/Identifier'
+        valueCode:
+          type: string
+          example: preauthorization
+        part:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParameterPart'
+    ParameterPart:
+      type: object
+      description: Nested parameter part (used for Attachment)
+      properties:
+        name:
+          type: string
+          example: Content
+        resource:
+          $ref: '#/components/schemas/DocumentReference'
+    Content:
+      type: object
+      properties:
+        attachment:
+          $ref: '#/components/schemas/Attachment'
+    Attachment:
+      type: object
+      description: Attachment content details
+      properties:
+        contentType:
+          type: string
+          example: application/pdf
+        creation:
+          type: string
+          example: '2025-11-05T10:25:00-05:00'
+        data:
+          type: string
+          example: PHN0c
+        url:
+          type: string
+          example: attachment_url
+        title:
+          type: string
+          example: History and Physical data
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    Narrative:
+      type: object
+      properties:
+        status:
+          type: string
+          example: generated
+        div:
+          type: string
+          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
+    AttachmentResponse:
+      type: object
+      description: FHIR OperationOutcome response
+      properties:
+        resourceType:
+          type: string
+          example: OperationOutcome
+        id:
+          type: string
+          example: '23345435456574'
+        meta:
+          $ref: '#/components/schemas/Meta'
+        issue:
+          type: array
+          items:
+            $ref: '#/components/schemas/Issue'
+        text:
+          $ref: '#/components/schemas/Narrative'
+    Issue:
+      type: object
+      description: OperationOutcome issue details
+      properties:
+        severity:
+          type: string
+          example: information
+        code:
+          type: string
+          example: informational
+        details:
+          type: object
+          properties:
+            text:
+              type: string
+              example: Attachments accepted and associated...
+        diagnostics:
+          type: string
+          example: TrackingId=123456;ReferenceSRN=AL26082223...
+        location:
+          type: array
+          items:
+            type: string
+            example: Parameters.Attachment.part.Content/DocumentReference/docref-hp-002
+    AttachmentRequest:
+      type: object
+      description: FHIR Parameters resource for attachment submission
+      properties:
+        resourceType:
+          type: string
+          example: Parameters
+        parameter:
+          type: array
+          items:
+            $ref: '#/components/schemas/Parameter'
+    DocumentReference:
+      type: object
+      description: FHIR DocumentReference used inside attachment
+      properties:
+        resourceType:
+          type: string
+          example: DocumentReference
+        id:
+          type: string
+          example: docref-hp-002
+        status:
+          type: string
+          example: current
+        date:
+          type: string
+          example: '2025-11-05T10:30:00-05:00'
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Content'
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

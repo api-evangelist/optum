@@ -1,0 +1,480 @@
+openapi: 3.2.0
+info:
+  title: Optum Policy Lookup APIs API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged Policy Lookup APIs across 2 of this provider''s published API definitions: optum-cms-common-facility-openapi.yml, optum-cms-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: Policy Lookup APIs
+paths:
+  /api/cms/common/policy-lookup/:
+    post:
+      tags:
+      - Policy Lookup APIs
+      summary: Fetches all the policies of a given policy type and given code and/or term
+      operationId: searchPolicyLookup
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these (contractorType,-contractorType,serviceAreas,-serviceAreas) are allowed values, default is -contractorType
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - contractorType
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicySearchRequest'
+      responses:
+        '200':
+          description: 'POST-for-GET - Search Policy Lookup '
+          content:
+            application/json:
+              example:
+                content:
+                - icpContractorId: 176
+                  icpPolicyId: 535110
+                  determinationNum: A59355
+                  contractorType: MA
+                  contractorName: CGS Administrators, LLC
+                  policyType: LCD
+                  cms: A59355
+                  policyTitle: 'Response to Comments: Positron Emission Tomography (PET) for Inflammation and Infection'
+                  effectiveDate: '2023-06-29'
+                  url: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=59355&ver=6&bc=0
+                  serviceAreas: KY
+                  contractorNum: '15101'
+                  hasArticles: '0'
+                  displayName: 'Response to Comments: Positron Emission Tomography (PET) for Inflammation and Infection'
+                  scrubbedTitle: 'Response to Comments: Positron Emission Tomography (PET) for Inflammation and Infection'
+                  contractorServiceAreas: 15101 - CGS Administrators, LLC (KY)
+                  contractorTypeDisplayName: Part A - FI
+                - icpContractorId: 177
+                  icpPolicyId: 535111
+                  determinationNum: A59355
+                  contractorType: MA
+                  contractorName: CGS Administrators, LLC
+                  policyType: LCD
+                  cms: A59355
+                  policyTitle: 'Response to Comments: Positron Emission Tomography (PET) for Inflammation and Infection'
+                  effectiveDate: '2023-06-29'
+                  url: https://www.cms.gov/medicare-coverage-database/view/article.aspx?articleid=59355&ver=6&bc=0
+                  serviceAreas: OH
+                  contractorNum: '15201'
+                  hasArticles: '0'
+                  displayName: 'Response to Comments: Positron Emission Tomography (PET) for Inflammation and Infection'
+                  scrubbedTitle: 'Response to Comments: Positron Emission Tomography (PET) for Inflammation and Infection'
+                  contractorServiceAreas: 15201 - CGS Administrators, LLC (OH)
+                  contractorTypeDisplayName: Part A - FI
+                totalCount: 2
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/policy-lookuppp
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/policy-lookup
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /app/cms/common/policy-lookup/{policy-id}/related-articles:
+    get:
+      tags:
+      - Policy Lookup APIs
+      summary: Fetches LCD related articles of a given LCD policy id
+      operationId: fetchRelatedLCDPolicyByPolicyById
+      parameters:
+      - name: policy-id
+        in: path
+        description: Policy Id
+        required: true
+        schema:
+          type: string
+        example: 497873
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PolicyValue'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/common/policy-lookup/{policy-type}/{policy-number}:
+    get:
+      tags:
+      - Policy Lookup APIs
+      summary: Fetches all the policies of a given policy type and policy id
+      operationId: fetchPolicyByIdValue
+      parameters:
+      - name: sort
+        in: query
+        description: Any of these (contractorType,-contractorType,serviceAreas,-serviceAreas) are allowed values, default is -contractorType
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - contractorType
+      - name: policy-type
+        in: path
+        description: Policy Number
+        required: true
+        schema:
+          type: string
+          enum:
+          - NCD_PART_A
+          - NCD_PART_B
+          - LCD_DME
+          - NCD_DME
+          - LCD_PART_A
+          - LCD_PART_B
+          - NCD_LAB
+        example: LCD
+      - name: policy-number
+        in: path
+        description: Policy Number
+        required: true
+        schema:
+          type: string
+        example: L39314
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Search Policies by policy Id
+          content:
+            application/json:
+              example:
+                content:
+                - icpContractorId: 222
+                  icpPolicyId: 532655
+                  determinationNum: L39314
+                  contractorType: MB
+                  contractorName: National Government Services, Inc.
+                  policyType: LCD
+                  cms: L39314
+                  policyTitle: Off-Label Use of Intravenous Immune Globulin (IVIG)
+                  effectiveDate: '2022-11-01'
+                  url: https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=39314&ver=7&bc=0
+                  serviceAreas: IL
+                  contractorNum: '06102'
+                  hasArticles: '2'
+                  displayName: Off-Label Use of Intravenous Immune Globulin (IVIG)
+                  scrubbedTitle: Off-Label Use of Intravenous Immune Globulin (IVIG)
+                  contractorServiceAreas: 06102 - National Government Services, Inc. (IL)
+                  contractorTypeDisplayName: Part B
+                - icpContractorId: 223
+                  icpPolicyId: 532656
+                  determinationNum: L39314
+                  contractorType: MB
+                  contractorName: National Government Services, Inc.
+                  policyType: LCD
+                  cms: L39314
+                  policyTitle: Off-Label Use of Intravenous Immune Globulin (IVIG)
+                  effectiveDate: '2022-11-01'
+                  url: https://www.cms.gov/medicare-coverage-database/view/lcd.aspx?lcdid=39314&ver=7&bc=0
+                  serviceAreas: MN
+                  contractorNum: '06202'
+                  hasArticles: '2'
+                  displayName: Off-Label Use of Intravenous Immune Globulin (IVIG)
+                  scrubbedTitle: Off-Label Use of Intravenous Immune Globulin (IVIG)
+                  contractorServiceAreas: 06202 - National Government Services, Inc. (MN)
+                  contractorTypeDisplayName: Part B
+                totalCount: 22
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/common/policy-lookupp/L39313
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/policy-lookup
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+  /api/cms/common/medicare-contractors:
+    get:
+      tags:
+      - Policy Lookup APIs
+      summary: Fetches medicare contractors list for a given contractor part.
+      operationId: fetchMedicareContractors
+      parameters:
+      - name: contractor-part
+        in: query
+        description: Any of these contractor parts (A or B or DME) are allowed, default is A.
+        required: false
+        schema:
+          type: string
+          enum:
+          - A
+          - B
+          - DME
+        example: A
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContractorValue'
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+components:
+  schemas:
+    PolicyValue:
+      type: object
+      properties:
+        icpContractorId:
+          type: integer
+          format: int64
+        icpPolicyId:
+          type: integer
+          format: int64
+        determinationNum:
+          type: string
+        contractorType:
+          type: string
+        contractorName:
+          type: string
+        policyType:
+          type: string
+        cms:
+          type: string
+        policyTitle:
+          type: string
+        effectiveDate:
+          type: string
+          format: date-time
+        expirationDate:
+          type: string
+          format: date-time
+        url:
+          type: string
+        contractorURL:
+          type: string
+        activeRetiredStatus:
+          type: string
+        serviceAreas:
+          type: string
+        contractorNum:
+          type: string
+        hasArticles:
+          type: string
+        titleShort:
+          type: string
+        userDefinedEffectiveDate:
+          type: string
+        scrubbedTitle:
+          type: string
+        displayName:
+          type: string
+        contractorServiceAreas:
+          type: string
+        contractorTypeDisplayName:
+          type: string
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+    Lcd:
+      type: object
+      properties:
+        carrierId:
+          type: integer
+          format: int32
+        fiId:
+          type: integer
+          format: int32
+        dmeId:
+          type: integer
+          format: int32
+        retiredPolicies:
+          type: boolean
+    ContractorValue:
+      type: object
+      properties:
+        contractorNum:
+          type: string
+        stateAbbr:
+          type: string
+        contractorName:
+          type: string
+        regionCode:
+          type: string
+        contractorType:
+          type: string
+        url:
+          type: string
+        contractorEid:
+          type: string
+        icpContractorId:
+          type: string
+    DiagnosisCode:
+      type: object
+      properties:
+        code:
+          type: string
+        codeType:
+          type: string
+    TermSearch:
+      type: object
+      properties:
+        keyword:
+          type: string
+        searchBy:
+          type: string
+        searchLogic:
+          type: string
+    PolicySearchRequest:
+      type: object
+      properties:
+        policyType:
+          type: string
+          enum:
+          - NCD_PART_A
+          - NCD_PART_B
+          - LCD_DME
+          - NCD_DME
+          - LCD_PART_A
+          - LCD_PART_B
+          - NCD_LAB
+        searchType:
+          type: string
+        procedureCode:
+          type: string
+        termSearch:
+          $ref: '#/components/schemas/TermSearch'
+        diagnosisCode:
+          $ref: '#/components/schemas/DiagnosisCode'
+        effectiveDate:
+          type: string
+          format: date-time
+        lcd:
+          $ref: '#/components/schemas/Lcd'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-cms-common-facility-openapi.yml
+- optum-cms-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

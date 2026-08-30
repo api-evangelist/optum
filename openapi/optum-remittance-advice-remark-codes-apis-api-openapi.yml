@@ -1,0 +1,108 @@
+openapi: 3.2.0
+info:
+  title: CMS Common Facility Remittance Advice Remark Codes APIs API
+  description: MicroService that contains CMS related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: Remittance Advice Remark Codes APIs
+paths:
+  /api/cms/facility/remittance-advice-remark-codes/:
+    get:
+      tags:
+      - Remittance Advice Remark Codes APIs
+      summary: Fetches the remittance advice remark codes for facility
+      operationId: getRemittanceAdviceCodes
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these (code, -code )are allowed values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch complete list of remittance advice remark codes
+          content:
+            application/json:
+              example:
+                content:
+                - code: M1
+                  codeDescription: 'X-ray not taken within the past 12 months or near enough to the start of treatment. Note: New as of: 01/01/1997'
+                - code: M10
+                  codeDescription: 'Equipment purchases are limited to the first or the tenth month of medical necessity. Note: New as of: 01/01/1997'
+                - code: M100
+                  codeDescription: 'We do not pay for an oral anti-emetic drug that is not administered for use immediately before, at, or within 48 hours of administration of a covered chemotherapy drug. Note: New as of: 01/01/1997'
+                totalCount: 9
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - sort parameter value should be from list of [code]
+                warning: null
+                info: null
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

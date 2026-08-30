@@ -1,0 +1,382 @@
+openapi: 3.2.0
+info:
+  title: CMS Common Facility I-OCE Edits APIs API
+  description: MicroService that contains CMS related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: I-OCE Edits APIs
+paths:
+  /api/cms/facility/{codeType}/diagnosis/{code}/ioce-edits:
+    get:
+      tags:
+      - I-OCE Edits APIs
+      summary: Facility - Fetch I-OCE associated with diagnosis i10cm/i9v1 code
+      operationId: getIOCEAssociatedForICD10CmI9V1Code
+      parameters:
+      - name: codeType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_cm
+          - i9v1
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: A18.14
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Facility - Detail associated with diagnosis i10cm/i9v1 code
+          content:
+            application/json:
+              example:
+                loAge: 15
+                hiAge: 124
+                validSex: 0
+                mspAlert: null
+                ecode: 0
+                ismentalhealthdx: 0
+                ismalignancy: null
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/facility/{codeType:i10_cm|i9v1}/diagnosis/{code}/ioce-edits/invalid
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/facility/{codeType:i10_cm|i9v1}/diagnosis/{code}/ioce-edit
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/facility/{codeType}/procedure/{code}/ioce-edits:
+    get:
+      tags:
+      - I-OCE Edits APIs
+      summary: Facility - Fetch I-OCE associated with specified cpt hcpcs code
+      operationId: getIOCEAssociatedForCptHcpcsCode
+      parameters:
+      - name: codeType
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 11920
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Facility - detail associated with specified I-OCE cpt/hcpcs codecode
+          content:
+            application/json:
+              example:
+                code: '15832'
+                apc: '5073'
+                statusIndicator:
+                  code: J1
+                  description: Hospital Part B services paid through a comprehensive APC
+                paymentIndicator:
+                  id: 1
+                  description: Paid standard hospital OPPS amount (status indicators J1, J2, R, S, T, U, V, X)
+                oceMap:
+                  code: '12'
+                  description: Questionable covered service
+                  editResult: "This edit occurs when the procedure code reported has a questionable covered service indicator. It identifies procedures that are only covered by the Medicare program under certain medical circumstances.\nEXAMPLES:\n 5833 Exc Lipectomy Leg is covered by Medicare only when medically necessary.\n 36469 Injection Spider Veins Face is covered by Medicare only when medically necessary.\n\nThe claim will be suspended."
+                  provideAction: A suspended claim is not returned to the provider but will not be processed for payment until the FI makes a determination or obtains further information.
+                deductibleNA: false
+                maxUnitsAllowed: null
+                condBilateral: false
+                inBilateral: false
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/facility/{codeType:cpt|hcpcs}/procedure/{code}/ioce-edits/invalid
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/facility/{codeType:cpt|hcpcs}/procedure/{code}/ioce-edit
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/facility/ioce-edits:
+    get:
+      tags:
+      - I-OCE Edits APIs
+      summary: 'Facility - fetch I-OCE edits '
+      operationId: getIOCEEdits
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Facility - fetch I-OCE edits
+          content:
+            application/json:
+              example:
+                content:
+                - editNumber: '1'
+                  editHospitalType: Both OPPS and non-OPPS edit
+                  editDescription: Invalid diagnosis code
+                  editResults: 'This edit occurs when the principal diagnosis field is blank, there are
+
+                    no diagnoses listed, or the diagnosis code is not valid for the selected
+
+                    version of the program. Each ICD-9-CM diagnosis code is edited for
+
+                    completeness and validity. Codes without a required fourth or fifth
+
+                    digit are considered invalid. Codes are also checked to insure that they
+
+                    were valid at the time of the patient''s visit. Date validity is tested
+
+                    using the "from date" on the claim. If the claim does not
+
+                    contain at least one diagnosis code, this error is also generated.
+
+                    EXAMPLES: 2785 is an invalid code;  2780 needs a fifthdigit.; and 5678
+
+                    Peritonitis NEC is invalid for service dates on or after October 1,2005.
+
+                    Return claim to provider (RTP).'
+                  providerAction: 'The provider should resubmit the claim once the problem(s) is/are
+
+                    corrected.'
+                - editNumber: '2'
+                  editHospitalType: Both OPPS and non-OPPS edit
+                  editDescription: Diagnosis and age conflict
+                  editResults: 'This edit occurs when the diagnosis code includes an age range, and the
+
+                    age reported is outside the range.  It indicates that the diagnosis code is inconsistent with the patient''s age. Age categories are as
+
+                    follows:Newborn (age = 0) Pediatric (age = 0 to 17 years) Maternity (age
+
+                    = 12 to 55 years) Adult (age=15 to 124) All ages (age 0 to 124 )
+
+                    EXAMPLES: G0466  Abnormal Fetal Heart Rate Pre-Labor is appropriate only
+
+                    for newborn patients. 33181 Reyes Syndrome is appropriate for pediatric
+
+                    patients only. 63390 Ectopic Pregnancy without intrauterine pregnancy is
+
+                    appropriate for maternity patients only. 501 Asbestosis is appropriate
+
+                    only for adults.Return claim to provider (RTP).'
+                  providerAction: The provider should resubmit the claim once the problem(s) is/are corrected.
+                  editNumberLink:
+                    value: '2'
+                    href: /api/cms/facility/ioce-edits/codes-associated-with-edit/2
+                totalCount: 2
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/facility/ioce-edits/99213
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/facility/ioce-edits
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/cms/facility/ioce-edits/codes-associated-with-edit/{edit-number}:
+    get:
+      tags:
+      - I-OCE Edits APIs
+      summary: 'Facility - fetch codes associated with specified I-OCE edit number '
+      operationId: getCodesAssociatedForEdit
+      parameters:
+      - name: edit-number
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+        example: 2
+      - name: sort
+        in: query
+        description: Any of these (code,-code) are allowed values, default is -code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Facility - codes associated with specified fetch I-OCE edit number
+          content:
+            application/json:
+              example:
+                content:
+                - code: A18.14
+                  codeDescription: Tuberculosis of prostate
+                - code: A18.15
+                  codeDescription: Tuberculosis of other male genital organs
+                totalCount: 2
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /cmscommonms/api/cms/facility/ioce-edits/codes-associated-with-edit/test
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/facility/ioce-edits/codes-associated-with-edit/2
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

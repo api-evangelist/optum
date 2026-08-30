@@ -1,0 +1,112 @@
+openapi: 3.2.0
+info:
+  title: Optum State List Fee Schedule APIs API
+  version: v1.0
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  description: 'Operations tagged State List Fee Schedule APIs across 2 of this provider''s published API definitions: optum-cms-common-facility-openapi.yml, optum-cms-common-physician-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: State List Fee Schedule APIs
+paths:
+  /api/cms/common/fee-schedule/states/state-list:
+    get:
+      tags:
+      - State List Fee Schedule APIs
+      summary: Fetches state list for fee schedule
+      operationId: getStateList
+      parameters:
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches state list for fee schedule
+          content:
+            application/json:
+              example:
+              - AK
+              - AL
+              - AR
+              - AZ
+              - CA
+              - CO
+              - CT
+              - DC
+              - DE
+              - FL
+              - GA
+              - HI
+              - IA
+              - ID
+              - IL
+              - IN
+              - KS
+              - KY
+              - LA
+              - MA
+              - MD
+              - ME
+              - MI
+              - MN
+              - MO
+              - MS
+              - MT
+              - NC
+              - ND
+              - NE
+              - NH
+              - NJ
+              - NM
+              - NV
+              - NY
+              - OH
+              - OK
+              - OR
+              - PA
+              - PR
+              - RI
+              - SC
+              - SD
+              - TN
+              - TX
+              - UT
+              - VA
+              - VI
+              - VT
+              - WA
+              - WI
+              - WV
+              - WY
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-13T06:36:22.518+00:00'
+                path: /cmscommonms/api/cms/common/fee-schedule/states/state-list
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+    servers:
+    - url: /v1/cmscommonms
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- optum-cms-common-facility-openapi.yml
+- optum-cms-common-physician-openapi.yml
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

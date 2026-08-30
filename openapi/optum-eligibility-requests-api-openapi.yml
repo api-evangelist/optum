@@ -1,0 +1,2613 @@
+openapi: 3.2.0
+info:
+  title: Enhanced Eligibility Eligibility Requests API
+  description: 'Enhanced Eligibility provides real-time eligibility verification for medical benefit inquiries and optional Coverage Discovery workflows when additional coverage needs to be researched asynchronously.
+
+
+    Timing guidance:
+
+    - Real-Time Eligibility is synchronous, but payer and clearinghouse response time dominate the end-to-end latency.
+
+    - The OI Enterprise gateway times out at 110 seconds for this API.
+
+    - Request deduplication is customer-configurable and determines whether a request is sent to the clearinghouse or short-circuited by replaying a prior transaction response.
+
+    - RTCOB and Coverage Insight also use a separate non-configurable 72-hour request cache. When that cache is hit, the path is marked as skipped instead of creating a new downstream submission.
+
+    - Coverage Discovery is asynchronous because some paths involve chained clearinghouse work and additional connected workflow dependencies.
+
+    - Most non-Coverage-Insight discovery paths are near real time relative to traditional discovery workflows.
+
+    - Customers with strict turnaround sensitivity should evaluate Coverage Insight enrollment carefully.
+
+    - Coverage Discovery paths and add-ons are enabled per customer and are not included automatically.
+
+
+    Primary integration patterns:
+
+    1. Submit a real-time eligibility request as normalized JSON or as a JSON request body with `x12` set to the X12 270 payload, and receive a normalized JSON response.
+
+    2. If enrolled in Coverage Discovery, inspect the real-time response `link` header for related discovery task resources when discovery is automatically triggered from the real-time request/response.
+
+    3. For advanced use cases, submit Coverage Discovery requests directly when you already possess a processed canonical eligibility request and, when needed, a processed eligibility response, and want asynchronous follow-up processing using a callback URL or by polling the discovery task resource.
+
+    4. When using direct discovery, the X12 workflow is often easier than the canonical JSON workflow because it accepts the processed `x12-270` and `x12-271` rather than requiring mapping into both canonical models.
+
+    '
+  version: v0.2.0
+servers:
+- url: https://sandbox-apigw.optum.com
+  description: Sandbox server (uses test data)
+- url: https://apigw.optum.com
+  description: Production server (uses live data)
+tags:
+- name: Eligibility Requests
+  description: 'Submit new real-time eligibility transactions. These endpoints accept either a normalized JSON request or a JSON request body with `x12` set to the X12 270 payload, and return a normalized JSON eligibility response. When a customer is enrolled in integrated Coverage Discovery, these operations may also return related discovery task links in the response headers.
+
+    '
+paths:
+  /rcm/eligibility/v1:
+    post:
+      operationId: postEligibility
+      tags:
+      - Eligibility Requests
+      summary: Submit a new eligibility request
+      security:
+      - oAuth:
+        - create_txn
+      description: "## Overview\nProvided a valid request, this endpoint submits a new real-time transaction for processing.\nThe submitted provider NPI must be a valid NPI and follow standard NPI validation rules. If no valid NPI is identified for the request, the transaction returns `status.value` of `processing_error` with this message: `No valid NPI identified for this request. Please reach out to the Enhanced Eligibility team if assistance is needed.`\nThe response is JSON and includes the raw `x12-271` response string so clients can extract the payer's original EDI response if needed.\nReal-time response time is driven primarily by payer and clearinghouse latency. The OI Enterprise gateway times out at 110 seconds for this API.\nIf your organization is enrolled in deduplication, that feature is evaluated before clearinghouse submission. Deduplication is customer-configurable, including the lookback window and whether prior-month requests are excluded. When a duplicate is found, the clearinghouse is skipped and the transaction `sourceType` is `duplicate`.\n## Coverage Discovery Integration\nIf you are enrolled in Coverage Discovery at the time of the request and your configured discovery conditions are met, the Coverage Discovery workflow will be started automatically. Common examples include real-time responses with `status.value` of `ineligible` or `patient_unknown`, or response-side HMO plan information that qualifies an HMO discovery path. In this scenario, the response `link` header contains one or more related Coverage Discovery task resource paths, e.g.:\n`</coverage-discovery/0716e3e8-87ee-11ee-b9d1-0242ac120002>; title=\"coverage discovery - Task 1\"; rel=\"related\", </coverage-discovery/0e565a58-87ee-11ee-b9d1-0242ac120002>; title=\"coverage discovery - Task 2\"; rel=\"related\"`\nParse this header as RFC 8288-style link values. When more than one discovery task is created, multiple related links may be returned in the same header.\nWhen discovery is triggered from this JSON real-time endpoint, the submitted request body is used as the `canonicalEligibilityRequest` later referenced by Coverage Discovery. If response-side facts are needed, the normalized real-time response body is used as `canonicalEligibilityResponse`.\nEach related resource can be retrieved through the `/coverage-discovery/{id}` endpoint.\nIf conditions are not met, the `link` response header will not contain any related `/coverage-discovery` references.\n### Callback Solution With Consolidated Real-Time Eligibility and Coverage Discovery Responses\nIf you are enrolled in the consolidated callback capability, you may receive the **Real-Time Eligibility (RTE)** response together with the **Coverage Discovery** response.\nWhen enabled, the abbreviated eligibility transaction will be included in the corresponding Coverage Discovery record.\n\n ⚠️ **Note:** This integrated response is **only available via callback** and **only if your organization is enrolled in this capability**.\n\nRefer to the `/coverage-discovery/{id}` response examples for data model references.\nFor predictable Sandbox canned-response testing, use the Sandbox Mock Scenarios guidance. JSON Sandbox requests continue to use the normal supported Sandbox request values."
+      parameters:
+      - $ref: '#/components/parameters/header-correlation-id'
+      - $ref: '#/components/parameters/header-subtenant-id'
+      - in: header
+        name: x-optum-eligibility-disable-value-add
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - deduplication
+            example: deduplication
+          example: deduplication
+        description: (Optional) A comma-delimited list of strings that disable value-added features on a request-by-request basis. `deduplication` disables the customer-configured request deduplication feature for that request only. If you specify a value-added feature that you are not enrolled in, it will be ignored.
+      requestBody:
+        $ref: '#/components/requestBodies/EligibilityRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/EligibilityResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/PermissionDeniedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        5XX:
+          $ref: '#/components/responses/UnexpectedError'
+  /rcm/eligibility/v1/real-time/x12:
+    post:
+      operationId: postEligibilityX12
+      tags:
+      - Eligibility Requests
+      summary: Submit a new X12 270 eligibility request
+      security:
+      - oAuth:
+        - create_txn
+      description: "## Overview\nProvided a valid request, this endpoint accepts a JSON body whose `x12` field contains the raw EDI X12 270 payload and submits a new real-time transaction for processing.\nThe provider NPI sent in the X12 270 must be a valid NPI and follow standard NPI validation rules. If no valid NPI is identified for the request, the transaction returns `status.value` of `processing_error` with this message: `No valid NPI identified for this request. Please reach out to the Enhanced Eligibility team if assistance is needed.`\nThe response uses the same normalized JSON model returned by the JSON real-time endpoint. Both real-time endpoints return JSON, and that JSON includes the raw `x12-271` response string so clients can extract the payer's original EDI response if needed.\nReal-time response time is driven primarily by payer and clearinghouse latency. The OI Enterprise gateway times out at 110 seconds for this API.\nIf your organization is enrolled in deduplication, that feature is evaluated before clearinghouse submission. Deduplication is customer-configurable, including the lookback window and whether prior-month requests are excluded. When a duplicate is found, the clearinghouse is skipped and the transaction `sourceType` is `duplicate`.\n## Coverage Discovery Integration\nIf you are enrolled in Coverage Discovery at the time of the request and your configured discovery conditions are met, the Coverage Discovery workflow will be started automatically. Common examples include real-time responses with `status.value` of `ineligible` or `patient_unknown`, or response-side HMO plan information parsed from the returned `x12-271`. In this scenario, the response `link` header contains one or more related Coverage Discovery task resource paths, e.g.:\n`</coverage-discovery/0716e3e8-87ee-11ee-b9d1-0242ac120002>; title=\"coverage discovery - Task 1\"; rel=\"related\", </coverage-discovery/0e565a58-87ee-11ee-b9d1-0242ac120002>; title=\"coverage discovery - Task 2\"; rel=\"related\"`\nParse this header as RFC 8288-style link values. When more than one discovery task is created, multiple related links may be returned in the same header.\nWhen discovery is triggered from this X12 real-time endpoint, the submitted `x12` value is used to derive the `canonicalEligibilityRequest` used by Coverage Discovery. If response-side facts are needed, the normalized JSON response and its embedded `x12-271` are used as `canonicalEligibilityResponse`.\nEach related resource can be retrieved through the `/coverage-discovery/{id}` endpoint.\nIf conditions are not met, the `link` response header will not contain any related `/coverage-discovery` references.\n### Callback Solution With Consolidated Real-Time Eligibility and Coverage Discovery Responses\nIf you are enrolled in the consolidated callback capability, you may receive the **Real-Time Eligibility (RTE)** response together with the **Coverage Discovery** response.\nWhen enabled, the abbreviated eligibility transaction will be included in the corresponding Coverage Discovery record.\n\n ⚠️ **Note:** This integrated response is **only available via callback** and **only if your organization is enrolled in this capability**.\n\nRefer to the `/coverage-discovery/{id}` response examples for data model references.\n## Sandbox Mock Testing\nIn the Sandbox environment, you can optionally send `x-optum-rcmelig-mock-scenarios` to trigger a canned X12 mock response. This header is Sandbox-only, the value must be an exact case-sensitive match, and the payer id in `NM1*PR*2 ... PI*` must align to the selected scenario."
+      parameters:
+      - $ref: '#/components/parameters/header-correlation-id'
+      - $ref: '#/components/parameters/header-subtenant-id'
+      - in: header
+        name: x-optum-rcmelig-mock-scenarios
+        required: false
+        schema:
+          type: string
+        description: (Sandbox only) Optional canned-response selector for X12 mock testing. The value must be an exact case-sensitive scenario string.
+      - in: header
+        name: x-optum-eligibility-disable-value-add
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - deduplication
+            example: deduplication
+          example: deduplication
+        description: (Optional) A comma-delimited list of strings that disable value-added features on a request-by-request basis. `deduplication` disables the customer-configured request deduplication feature for that request only. If you specify a value-added feature that you are not enrolled in, it will be ignored.
+      requestBody:
+        $ref: '#/components/requestBodies/EligibilityRequestX12'
+      responses:
+        '200':
+          $ref: '#/components/responses/EligibilityResponseX12'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/PermissionDeniedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        5XX:
+          $ref: '#/components/responses/UnexpectedError'
+components:
+  schemas:
+    EligibilityRequest:
+      type: object
+      description: Standalone JSON representation of a standard 270 eligibility request. This schema is fully inlined into this spec so the API definition stands on its own.
+      required:
+      - subscriber
+      - encounter
+      properties:
+        submitterTransactionIdentifier:
+          type: string
+          description: BHT03
+        controlNumber:
+          type: string
+          minLength: 9
+          maxLength: 9
+          description: 'Segment: ISA, Element: ISA13, Notes: Optional. If omitted, Enhanced Eligibility generates the Interchange Control Number. When supplied, it must be exactly 9 positive unsigned numeric characters.'
+          example: '123456789'
+        tradingPartnerServiceId:
+          type: string
+          minLength: 0
+          maxLength: 80
+          description: 'Loop: 2100A Segment: NM1, Element: NM109, Notes: we send this as MN108 as PI'
+          example: serviceId
+        tradingPartnerName:
+          type: string
+          minLength: 0
+          maxLength: 80
+          description: 'Loop: 2100A, Segment: NM1, Element: NM103, Notes: organizational name'
+        provider:
+          type: object
+          properties:
+            organizationName:
+              type: string
+              minLength: 0
+              maxLength: 60
+              description: 'Loop: 2100B Segment: NM1, Element: NM103'
+              example: provider_name
+            firstName:
+              type: string
+              minLength: 0
+              maxLength: 35
+              description: 'Loop: 2100B Segment: NM1, Element: NM104'
+            lastName:
+              type: string
+              minLength: 0
+              maxLength: 60
+              description: 'Loop: 2100B Segment: NM1, Element: NM103'
+            npi:
+              type: string
+              minLength: 0
+              maxLength: 80
+              description: 'Loop: 2100B Segment: NM1, Element: NM109, Notes: NM108=XX Centers for Medicare and Medicaid Services National Provider Identifier. The submitted value must be a valid NPI and follow standard NPI validation rules.'
+              example: '1234567893'
+            serviceProviderNumber:
+              type: string
+              minLength: 0
+              maxLength: 80
+              description: 'Loop: 2100B Segment: NM1, Element: NM109, Notes: NM108=SV Service Provider Number'
+              example: '54321'
+            payorId:
+              type: string
+              minLength: 0
+              maxLength: 80
+              description: 'Loop: 2100B Segment: NM1, Element: NM109, Notes: NM108=PI Payor Identification'
+            taxId:
+              type: string
+              minLength: 0
+              maxLength: 80
+              description: 'Loop: 2100B Segment: NM1, Element: NM109, Notes: NM108=FI Federal Taxpayer''s Identification Number'
+            ssn:
+              type: string
+              minLength: 0
+              maxLength: 80
+              description: 'Loop: 2100B Segment: NM1, Element: NM109, Notes: NM108=34 Social Security Number'
+            pharmacyProcessorNumber:
+              type: string
+              minLength: 0
+              maxLength: 80
+              description: 'Loop: 2100B Segment: NM1, Element: NM109, Notes: NM108=PP Pharmacy Processor Number'
+            servicesPlanID:
+              type: string
+              minLength: 0
+              maxLength: 80
+              description: 'Loop: 2100B Segment: NM1, Element: NM109, Notes: NM108=XV Centers for Medicare and Medicaid Services PlanID'
+            employersId:
+              type: string
+              minLength: 0
+              maxLength: 80
+              description: 'Loop: 2100B Segment: NM1, Element: NM109, Notes: NM108=24 Employer''s Identification Number'
+            providerCode:
+              type: string
+              description: 'Loop: 2100B Segment: PRV, Element: PRV01'
+              example: AD
+              enum:
+              - AD
+              - AT
+              - BI
+              - CO
+              - CV
+              - H
+              - HH
+              - LA
+              - OT
+              - P1
+              - P2
+              - PC
+              - PE
+              - R
+              - RF
+              - SB
+              - SK
+              - SU
+            referenceIdentification:
+              type: string
+              description: 'Loop: 2100B Segment: PRV, Element: PRV03'
+              example: 54321g
+            providerType:
+              type: string
+              description: 'Loop: 2100B Segment: NM1, Element: NM101'
+              enum:
+              - payer
+              - third-party administrator
+              - employer
+              - hospital
+              - facility
+              - gateway provider
+              - plan sponsor
+              - provider
+        portalUsername:
+          type: string
+          minLength: 0
+          maxLength: 50
+          description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: User Identification REF01=JD'
+        portalPassword:
+          type: string
+          minLength: 0
+          maxLength: 50
+          description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: Personal Identification Number (PIN) REF01=4A'
+        informationReceiverName:
+          type: object
+          properties:
+            stateLicenceNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=0B State License Number'
+            medicareProviderNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=1C Medicare Provider Number'
+            medicaidProviderNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=1D Medicaid Provider Number'
+            facilityIdNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=1J Facility ID Number'
+            contactNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=CT Contact Number'
+            devicePinNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=EL Electronic Device Pin Number'
+            submitterIdNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=EO Submitter Identification Number'
+            nationalProviderIdentifier:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=HPI Centers for Medicare and Medicaid Services National Provider Identifier'
+            providerPlanNetworkIdNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=N5 Provider Plan Network Identification Number'
+            facilityNetworkIdNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=N7 Facility Network Identification Number'
+            priorIdentifierNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=Q4 Prior Identifier Number'
+            socialSecurityNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=SY Social Security Number'
+            federalTaxpayerIdentificationNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: REF01=TJ Federal Taxpayer''s Identification Number'
+            informationReceiverAdditionalIdentifierState:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100B, Segment: REF, Element: REF03, Notes: REF01=0B REF02=stateLicenceNumber'
+            address:
+              type: object
+              properties:
+                address1:
+                  type: string
+                  minLength: 0
+                  maxLength: 55
+                  description: 'Segment: N3, Element: N301, Notes: Required, Address Information'
+                  example: 123 address1
+                address2:
+                  type: string
+                  minLength: 0
+                  maxLength: 55
+                  description: 'Segment: N3, Element: N302, Notes: Address Information'
+                city:
+                  type: string
+                  minLength: 0
+                  maxLength: 30
+                  description: 'Segment: N4, Element: N401, Notes: Required, city'
+                  example: city1
+                state:
+                  type: string
+                  minLength: 0
+                  maxLength: 2
+                  description: 'Segment: N4, Element: N402, Notes: state example: TN, WA'
+                  example: wa
+                postalCode:
+                  type: string
+                  minLength: 0
+                  maxLength: 15
+                  description: 'Segment: N4, Element: N403'
+                  example: '981010000'
+                countryCode:
+                  type: string
+                  description: 'Segment: N4, Element: N404'
+                locationIdentifier:
+                  type: string
+                  description: 'Segment: N4, Element: N406'
+                countrySubDivisionCode:
+                  type: string
+                  description: 'Segment: N4, Element: N407, Notes: Country SubDivision Code'
+        subscriber:
+          type: object
+          properties:
+            birthSequenceNumber:
+              type: string
+              minLength: 0
+              maxLength: 9
+              pattern: ^[0-9]+$
+              description: 'Loop: 2100C Segment: INS, Element: INS17, Notes: Birth Sequence Number'
+            caseNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              pattern: ^[A-Za-z0-9]+$
+              description: 'Loop: 2100C Segment: REF, Element: REF02, Notes: REF01=3H Case Number'
+            medicaidRecipientIdentificationNumber:
+              type: string
+              minLength: 0
+              maxLength: 80
+              pattern: ^[A-Za-z0-9]+$
+              description: 'Loop: 2110C Segment: REF, Element: REF02, Notes: REF01=NQ Medicaid Recipient Identification Number'
+            spendDownAmount:
+              type: string
+              minLength: 0
+              maxLength: 18
+              description: 'Loop: 2110C Segment: ATM, Element: ATM02, Notes: ATM01=R Spend Down'
+            spendDownTotalBilledAmount:
+              type: string
+              minLength: 0
+              maxLength: 18
+              description: 'Loop: 2110C Segment: ATM, Element: ATM02, Notes: ATM01=PB Billed Amount'
+            coverageLevelCode:
+              type: string
+              minLength: 0
+              maxLength: 3
+              description: 'Loop: 2110C Segment: EQ, Element: EQ03, Notes: Retired, Not Used'
+            memberId:
+              type: string
+              minLength: 0
+              maxLength: 80
+              pattern: ^[A-Za-z0-9-]+$
+              description: 'Loop: 2100C and 2100D, Segment: NM1, Element: NM109, Notes: NM108=MI'
+              example: '0000000000'
+            firstName:
+              type: string
+              minLength: 0
+              maxLength: 35
+              description: 'Loop: 2100C and 2100D, Segment: NM1, Element: NM104'
+              example: johnOne
+            middleName:
+              type: string
+              minLength: 0
+              maxLength: 25
+              description: 'Loop: 2100C and 2100D, Segment: NM1, Element: NM105'
+            lastName:
+              type: string
+              minLength: 0
+              maxLength: 60
+              description: 'Loop: 2100C and 2100D, Segment: NM1, Element: NM103'
+              example: doeOne
+            suffix:
+              type: string
+              minLength: 0
+              maxLength: 10
+              description: 'Loop: 2100C and 2100D, Segment: NM1, Element: NM107'
+            gender:
+              type: string
+              minLength: 0
+              maxLength: 1
+              description: 'Loop: 2100C and 2100D, Segment: DMG, Element: DMG03'
+              example: M
+              enum:
+              - M
+              - F
+            dateOfBirth:
+              type: string
+              description: 'Loop: 2100C and 2100D, Segment: DMG, Element: DMG02, Notes: date of birth in YYYYMMDD'
+              example: '18800102'
+            ssn:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=SY Social Security Number'
+            groupNumber:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=6P Group Number'
+              example: '1111111111'
+            idCard:
+              type: string
+              minLength: 0
+              maxLength: 50
+              description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=HJ Identity Card Number'
+            providerCode:
+              type: string
+              description: 'Loop: 2100C and 2100D, Segment: PRV, Element: PRV01'
+              enum:
+              - AD
+              - AT
+              - BI
+              - CO
+              - CV
+              - H
+              - HH
+              - LA
+              - OT
+              - P1
+              - P2
+              - PC
+              - PE
+              - R
+              - RF
+              - SK
+              - SU
+            referenceIdentificationQualifier:
+              type: string
+              description: 'Loop: 2100C and 2100D, Segment: PRV, Element: PRV02'
+              enum:
+              - 9K
+              - D3
+              - EI
+              - HPI
+              - PXC
+              - SY
+              - TJ
+            providerIdentifier:
+              type: string
+              minLength: 0
+              maxLength: 50
+              pattern: ^[A-Za-z0-9]+$
+              description: 'Loop: 2100C and 2100D, Segment: PRV, Element: PRV03, Notes: Provider Identifier'
+            beginningCardIssueDate:
+              type: string
+              description: 'Loop: 2110C and 2110D, Segment: DTP, Element: DTP03, Notes: DTP01=102, DTP02=RD8 Retired'
+            endCardIssueDate:
+              type: string
+              description: 'Loop: 2110C and 2110D, Segment: DTP, Element: DTP03, Notes: DTP01=102, DTP02=RD8 Retired'
+            idCardIssueDate:
+              type: string
+              description: 'Loop: 2110C and 2110D, Segment: DTP, Element: DTP03, Notes: DTP01=102, DTP02=D8 Retired'
+            planIssueDate:
+              type: string
+              description: 'Loop: 2110C and 2110D, Segment: DTP, Element: DTP03, Notes: DTP01=291, DTP02=D8 Retired'
+            beginningPlanIssueDate:
+              type: string
+              description: 'Loop: 2110C and 2110D, Segment: DTP, Element: DTP03, Notes: DTP01=291, DTP02=RD8 Retired'
+            endPlanIssueDate:
+              type: string
+              description: 'Loop: 2110C and 2110D, Segment: DTP, Element: DTP03, Notes: DTP01=291, DTP02=RD8 Retired'
+            healthCareCodeInformation:
+              type: array
+              minItems: 0
+              maxItems: 8
+              description: 'Loop: 2100C and 2100D, Segment: HI, Notes: Health Care Diagnosis'
+              items:
+                type: object
+                properties:
+                  diagnosisTypeCode:
+                    type: string
+                    description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-1, Notes: Diagnosis Type Code'
+                    enum:
+                    - BK
+                    - ABK
+                    - BF
+                    - ABF
+                  diagnosisCode:
+                    type: string
+                    minLength: 0
+                    maxLength: 30
+                    pattern: ^[A-Za-z0-9]+$
+                    description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-2, Notes: Diagnosis Code'
+            address:
+              type: object
+              properties:
+                address1:
+                  type: string
+                  minLength: 0
+                  maxLength: 55
+                  description: 'Segment: N3, Element: N301, Notes: Required, Address Information'
+                  example: 123 address1
+                address2:
+                  type: string
+                  minLength: 0
+                  maxLength: 55
+                  description: 'Segment: N3, Element: N302, Notes: Address Information'
+                city:
+                  type: string
+                  minLength: 0
+                  maxLength: 30
+                  description: 'Segment: N4, Element: N401, Notes: Required, city'
+                  example: city1
+                state:
+                  type: string
+                  minLength: 0
+                  maxLength: 2
+                  description: 'Segment: N4, Element: N402, Notes: state example: TN, WA'
+                  example: wa
+                postalCode:
+                  type: string
+                  minLength: 0
+                  maxLength: 15
+                  description: 'Segment: N4, Element: N403'
+                  example: '981010000'
+                countryCode:
+                  type: string
+                  description: 'Segment: N4, Element: N404'
+                locationIdentifier:
+                  type: string
+                  description: 'Segment: N4, Element: N406'
+                countrySubDivisionCode:
+                  type: string
+                  description: 'Segment: N4, Element: N407, Notes: Country SubDivision Code'
+            additionalIdentification:
+              type: object
+              properties:
+                planNumber:
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                  description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=18 Plan Number'
+                policyNumber:
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                  description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=1L Group or Policy Number'
+                memberIdentificationNumber:
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                  description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=1W Member Identification Number'
+                contractNumber:
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                  description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=CT Contract Number'
+                medicalRecordIdentificationNumber:
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                  description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=EA Medical Record Identification Number'
+                patientAccountNumber:
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                  description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=EJ Patient Account Number'
+                healthInsuranceClaimNumber:
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                  description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=F6 Health Insurance (HIC) Number'
+                identificationCardSerialNumber:
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                  description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=GH Identification Card Serial Number'
+                insurancePolicyNumber:
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                  description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=IG Insurance Policy Number'
+                planNetworkIdentificationNumber:
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                  description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=N6 Plan Network Identification Number'
+                agencyClaimNumber:
+                  type: string
+                  minLength: 0
+                  maxLength: 50
+                  description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=Y4 Agency Claim Number'
+        dependents:
+          type: array
+          minItems: 1
+          description: 'Loop: 2000D, Notes: Dependent Detail'
+          items:
+            type: object
+            properties:
+              birthSequenceNumber:
+                type: string
+                minLength: 0
+                maxLength: 9
+                pattern: ^[0-9]+$
+                description: 'Loop: 2100D Segment: INS, Element: INS17, Notes: Birth Sequence Number'
+              individualRelationshipCode:
+                type: string
+                description: 'Loop: 2100D Segment: INS, Element: INS02'
+                enum:
+                - '01'
+                - '19'
+                - '34'
+              issueNumber:
+                type: string
+                minLength: 0
+                maxLength: 50
+                description: 'Loop: 2100D Segment: REF, Element: REF02, Notes: REF01=IF Issue Number'
+              eligibilityCategory:
+                type: string
+                minLength: 0
+                maxLength: 50
+                description: 'Loop: 2100D Segment: REF, Element: REF02, Notes: REF01=MRC Eligibility Category'
+              memberId:
+                type: string
+                minLength: 2
+                maxLength: 80
+                pattern: ^[A-Za-z0-9-]+$
+                description: 'Loop: 2100C and 2100D, Segment: NM1, Element: NM109, Notes: NM108=MI'
+                example: '0000000000'
+              firstName:
+                type: string
+                minLength: 0
+                maxLength: 35
+                description: 'Loop: 2100C and 2100D, Segment: NM1, Element: NM104'
+                example: janeOne
+              middleName:
+                type: string
+                minLength: 0
+                maxLength: 25
+                description: 'Loop: 2100C and 2100D, Segment: NM1, Element: NM105'
+              lastName:
+                type: string
+                minLength: 0
+                maxLength: 60
+                description: 'Loop: 2100C and 2100D, Segment: NM1, Element: NM103'
+                example: doeOne
+              suffix:
+                type: string
+                minLength: 0
+                maxLength: 10
+                description: 'Loop: 2100C and 2100D, Segment: NM1, Element: NM107'
+              gender:
+                type: string
+                minLength: 0
+                maxLength: 1
+                description: 'Loop: 2100C and 2100D, Segment: DMG, Element: DMG03'
+                example: F
+                enum:
+                - M
+                - F
+              dateOfBirth:
+                type: string
+                description: 'Loop: 2100C and 2100D, Segment: DMG, Element: DMG02, Notes: date of birth in YYYYMMDD'
+                example: '18160421'
+              ssn:
+                type: string
+                minLength: 0
+                maxLength: 50
+                description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=SY Social Security Number'
+              groupNumber:
+                type: string
+                minLength: 0
+                maxLength: 50
+                description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=6P Group Number'
+                example: '1111111111'
+              idCard:
+                type: string
+                minLength: 0
+                maxLength: 50
+                description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=HJ Identity Card Number'
+              providerCode:
+                type: string
+                description: 'Loop: 2100C and 2100D, Segment: PRV, Element: PRV01'
+                enum:
+                - AD
+                - AT
+                - BI
+                - CO
+                - CV
+                - H
+                - HH
+                - LA
+                - OT
+                - P1
+                - P2
+                - PC
+                - PE
+                - R
+                - RF
+                - SK
+                - SU
+              referenceIdentificationQualifier:
+                type: string
+                description: 'Loop: 2100C and 2100D, Segment: PRV, Element: PRV02'
+                enum:
+                - 9K
+                - D3
+                - EI
+                - HPI
+                - PXC
+                - SY
+                - TJ
+              providerIdentifier:
+                type: string
+                minLength: 0
+                maxLength: 50
+                pattern: ^[A-Za-z0-9]+$
+                description: 'Loop: 2100C and 2100D, Segment: PRV, Element: PRV03, Notes: Provider Identifier'
+              beginningCardIssueDate:
+                type: string
+                description: 'Loop: 2110C and 2110D, Segment: DTP, Element: DTP03, Notes: DTP01=102, DTP02=RD8 Retired'
+              endCardIssueDate:
+                type: string
+                description: 'Loop: 2110C and 2110D, Segment: DTP, Element: DTP03, Notes: DTP01=102, DTP02=RD8 Retired'
+              idCardIssueDate:
+                type: string
+                description: 'Loop: 2110C and 2110D, Segment: DTP, Element: DTP03, Notes: DTP01=102, DTP02=D8 Retired'
+              planIssueDate:
+                type: string
+                description: 'Loop: 2110C and 2110D, Segment: DTP, Element: DTP03, Notes: DTP01=291, DTP02=D8 Retired'
+              beginningPlanIssueDate:
+                type: string
+                description: 'Loop: 2110C and 2110D, Segment: DTP, Element: DTP03, Notes: DTP01=291, DTP02=RD8 Retired'
+              endPlanIssueDate:
+                type: string
+                description: 'Loop: 2110C and 2110D, Segment: DTP, Element: DTP03, Notes: DTP01=291, DTP02=RD8 Retired'
+              healthCareCodeInformation:
+                type: array
+                minItems: 0
+                maxItems: 8
+                description: 'Loop: 2100C and 2100D, Segment: HI, Notes: Health Care Diagnosis'
+                items:
+                  type: object
+                  properties:
+                    diagnosisTypeCode:
+                      type: string
+                      description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-1, Notes: Diagnosis Type Code'
+                      enum:
+                      - BK
+                      - ABK
+                      - BF
+                      - ABF
+                    diagnosisCode:
+                      type: string
+                      minLength: 0
+                      maxLength: 30
+                      pattern: ^[A-Za-z0-9]+$
+                      description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-2, Notes: Diagnosis Code'
+              address:
+                type: object
+                properties:
+                  address1:
+                    type: string
+                    minLength: 0
+                    maxLength: 55
+                    description: 'Segment: N3, Element: N301, Notes: Required, Address Information'
+                    example: 123 address1
+                  address2:
+                    type: string
+                    minLength: 0
+                    maxLength: 55
+                    description: 'Segment: N3, Element: N302, Notes: Address Information'
+                  city:
+                    type: string
+                    minLength: 0
+                    maxLength: 30
+                    description: 'Segment: N4, Element: N401, Notes: Required, city'
+                    example: city1
+                  state:
+                    type: string
+                    minLength: 0
+                    maxLength: 2
+                    description: 'Segment: N4, Element: N402, Notes: state example: TN, WA'
+                    example: wa
+                  postalCode:
+                    type: string
+                    minLength: 0
+                    maxLength: 15
+                    description: 'Segment: N4, Element: N403'
+                    example: '981010000'
+                  countryCode:
+                    type: string
+                    description: 'Segment: N4, Element: N404'
+                  locationIdentifier:
+                    type: string
+                    description: 'Segment: N4, Element: N406'
+                  countrySubDivisionCode:
+                    type: string
+                    description: 'Segment: N4, Element: N407, Notes: Country SubDivision Code'
+              additionalIdentification:
+                type: object
+                properties:
+                  planNumber:
+                    type: string
+                    minLength: 0
+                    maxLength: 50
+                    description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=18 Plan Number'
+                  policyNumber:
+                    type: string
+                    minLength: 0
+                    maxLength: 50
+                    description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=1L Group or Policy Number'
+                  memberIdentificationNumber:
+                    type: string
+                    minLength: 0
+                    maxLength: 50
+                    description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=1W Member Identification Number'
+                  contractNumber:
+                    type: string
+                    minLength: 0
+                    maxLength: 50
+                    description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=CT Contract Number'
+                  medicalRecordIdentificationNumber:
+                    type: string
+                    minLength: 0
+                    maxLength: 50
+                    description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=EA Medical Record Identification Number'
+                  patientAccountNumber:
+                    type: string
+                    minLength: 0
+                    maxLength: 50
+                    description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=EJ Patient Account Number'
+                  healthInsuranceClaimNumber:
+                    type: string
+                    minLength: 0
+                    maxLength: 50
+                    description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=F6 Health Insurance (HIC) Number'
+                  identificationCardSerialNumber:
+                    type: string
+                    minLength: 0
+                    maxLength: 50
+                    description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=GH Identification Card Serial Number'
+                  insurancePolicyNumber:
+                    type: string
+                    minLength: 0
+                    maxLength: 50
+                    description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=IG Insurance Policy Number'
+                  planNetworkIdentificationNumber:
+                    type: string
+                    minLength: 0
+                    maxLength: 50
+                    description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=N6 Plan Network Identification Number'
+                  agencyClaimNumber:
+                    type: string
+                    minLength: 0
+                    maxLength: 50
+                    description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=Y4 Agency Claim Number'
+        encounter:
+          type: object
+          required:
+          - dateOfService
+          properties:
+            beginningDateOfService:
+              type: string
+              description: 'Loop: 2100C and 2100D, Segment: DTP, Element: DTP03, Notes: DTP01=291 and DTP02=RD8, Date Expressed in Format YYYYMMDD.'
+            endDateOfService:
+              type: string
+              description: 'Loop: 2100C and 2100D, Segment: DTP, Element: DTP03, Notes: DTP01=291 and DTP02=RD8, Date Expressed in Format YYYYMMDD.'
+            dateOfService:
+              type: string
+              description: 'Loop: 2100C and 2100D, Segment: DTP, Element: DTP03, Notes: DTP01=291 and DTP02=D8, Date Expressed in Format YYYYMMDD.'
+            serviceTypeCodes:
+              type: array
+              minItems: 0
+              maxItems: 99
+              description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ01, Notes: Service Type Codes.'
+              items:
+                type: string
+                enum:
+                - '1'
+                - '2'
+                - '3'
+                - '4'
+                - '5'
+                - '6'
+                - '7'
+                - '8'
+                - '9'
+                - '10'
+                - '11'
+                - '12'
+                - '13'
+                - '14'
+                - '15'
+                - '16'
+                - '17'
+                - '18'
+                - '19'
+                - '20'
+                - '21'
+                - '22'
+                - '23'
+                - '24'
+                - '25'
+                - '26'
+                - '27'
+                - '28'
+                - '30'
+                - '32'
+                - '33'
+                - '34'
+                - '35'
+                - '36'
+                - '37'
+                - '38'
+                - '39'
+                - '40'
+                - '41'
+                - '42'
+                - '43'
+                - '44'
+                - '45'
+                - '46'
+                - '47'
+                - '48'
+                - '49'
+                - '50'
+                - '51'
+                - '52'
+                - '53'
+                - '54'
+                - '55'
+                - '56'
+                - '57'
+                - '58'
+                - '59'
+                - '60'
+                - '61'
+                - '62'
+                - '63'
+                - '64'
+                - '65'
+                - '66'
+                - '67'
+                - '68'
+                - '69'
+                - '70'
+                - '71'
+                - '72'
+                - '73'
+                - '74'
+                - '75'
+                - '76'
+                - '77'
+                - '78'
+                - '79'
+                - '80'
+                - '81'
+                - '82'
+                - '83'
+                - '84'
+                - '85'
+                - '86'
+                - '87'
+                - '88'
+                - '89'
+                - '90'
+                - '91'
+                - '92'
+                - '93'
+                - '94'
+                - '95'
+                - '96'
+                - '97'
+                - '98'
+                - '99'
+                - A0
+                - A1
+                - A2
+                - A3
+                - A4
+                - A5
+                - A6
+                - A7
+                - A8
+                - A9
+                - AA
+                - AB
+                - AC
+                - AD
+                - AE
+                - AF
+                - AG
+                - AH
+                - AI
+                - AJ
+                - AK
+                - AL
+                - AM
+                - AN
+                - AO
+                - AQ
+                - AR
+                - B1
+                - B2
+                - B3
+                - BA
+                - BB
+                - BC
+                - BD
+                - BE
+                - BF
+                - BG
+                - BH
+                - BI
+                - BJ
+                - BK
+                - BL
+                - BM
+                - BN
+                - BP
+                - BQ
+                - BR
+                - BS
+                - BT
+                - BU
+                - BV
+                - BW
+                - BX
+                - BY
+                - BZ
+                - C1
+                - CA
+                - CB
+                - CC
+                - CD
+                - CE
+                - CF
+                - CG
+                - CH
+                - CI
+                - CJ
+                - CK
+                - CL
+                - CM
+                - CN
+                - CO
+                - CP
+                - CQ
+                - DG
+                - DM
+                - DS
+                - GF
+                - GN
+                - GY
+                - IC
+                - MH
+                - NI
+                - 'ON'
+                - PT
+                - PU
+                - RN
+                - RT
+                - TC
+                - TN
+                - UC
+            priorAuthorizationOrReferralNumber:
+              type: string
+              description: 'Loop: 2110C and 2110D, Segment: REF, Element: REF02, Notes: Prior Authorization or Referral Number'
+            referenceIdentificationQualifier:
+              type: string
+              description: 'Loop: 2110C and 2110D, Segment: REF, Element: REF01, Notes: Prior Authorization or Referral Number'
+              enum:
+              - 9F
+              - G1
+            industryCode:
+              type: string
+              description: 'Loop: 2110C and 2110D, Segment: III, Element: III02, Notes: III01=ZZ Industry Code'
+              enum:
+              - '01'
+              - '02'
+              - '03'
+              - '04'
+              - '05'
+              - '06'
+              - '07'
+              - 08
+              - 09
+              - '10'
+              - '11'
+              - '12'
+              - '13'
+              - '14'
+              - '15'
+              - '16'
+              - '17'
+              - '18'
+              - '19'
+              - '20'
+              - '21'
+              - '22'
+              - '23'
+              - '24'
+              - '25'
+              - '26'
+              - '31'
+              - '32'
+              - '33'
+              - '34'
+              - '41'
+              - '42'
+              - '49'
+              - '50'
+              - '51'
+              - '52'
+              - '53'
+              - '54'
+              - '55'
+              - '56'
+              - '57'
+              - '58'
+              - '60'
+              - '61'
+              - '62'
+              - '65'
+              - '71'
+              - '72'
+              - '81'
+              - '99'
+            productOrServiceIDQualifier:
+              type: string
+              description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-1, Notes: Composite Medical Procedure Identifier - Product or Service ID Qualifier'
+              enum:
+              - AD
+              - CJ
+              - HC
+              - ID
+              - IV
+              - N4
+              - ZZ
+            procedureCode:
+              type: string
+              minLength: 0
+              maxLength: 48
+              description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-2, Notes: Composite Medical Procedure Identifier - Procedure Code'
+            procedureModifiers:
+              type: array
+              minItems: 0
+              maxItems: 4
+              description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-3, Notes: Composite Medical Procedure Identifier - Procedure Modifier'
+              items:
+                type: string
+                description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-3, Notes: Composite Medical Procedure Identifier - Procedure Modifier'
+            diagnosisCodePointer:
+              type: array
+              minItems: 0
+              maxItems: 4
+              description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ05, Notes: Composite Diagnosis Code Pointer'
+              items:
+                type: string
+                description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ05, Notes: Composite Diagnosis Code Pointer'
+            medicalProcedures:
+              type: array
+              minItems: 0
+              maxItems: 98
+              description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-1-3, Notes: Composite Medical Procedure Identifier'
+              items:
+                type: object
+                properties:
+                  productOrServiceIDQualifier:
+                    type: string
+                    description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-1, Notes: Composite Medical Procedure Identifier - Product or Service ID Qualifier'
+                    enum:
+                    - AD
+                    - CJ
+                    - HC
+                    - ID
+                    - IV
+                    - N4
+                    - ZZ
+                  procedureCode:
+                    type: string
+                    minLength: 0
+                    maxLength: 48
+                    description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-2, Notes: Composite Medical Procedure Identifier - Procedure Code'
+                  procedureModifiers:
+                    type: array
+                    minItems: 0
+                    maxItems: 4
+                    description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-3, Notes: Composite Medical Procedure Identifier - Procedure Modifier'
+                    items:
+                      type: string
+                      description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-3, Notes: Composite Medical Procedure Identifier - Procedure Modifier'
+                  diagnosisCodePointer:
+                    type: array
+                    minItems: 0
+                    maxItems: 4
+                    description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ05, Notes: Composite Diagnosis Code Pointer'
+                    items:
+                      type: string
+                      description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ05, Notes: Composite Diagnosis Code Pointer'
+    TransactionMedicare:
+      type: object
+      description: 'Medicare eligibility transaction derived from an X12 271 response (005010X279A1). This model represents the normalized API view of the payer response.
+
+        '
+      properties:
+        id:
+          type: string
+          description: System-generated transaction identifier
+          example: 9fb77454-8c58-4345-aa50-43f133e06d20
+        correlationId:
+          type: string
+          description: 'Correlation identifier provided by the consumer in the request header and echoed back in the response. Not derived from X12.
+
+            '
+          example: corr-8b7c2f3a-1c9e-4d3b-a6f5-112233445566
+        sourceType:
+          type: string
+          enum:
+          - new
+          - historical
+          - duplicate
+          - autosubmit
+          description: How the transaction was created. `new` means the transaction was submitted through the Real-Time Eligibility flow. `duplicate` means customer-configured deduplication found a prior matching request, skipped clearinghouse submission, and returned the previous response. `autosubmit` means the transaction was generated by Coverage Discovery path execution. `historical` means the record originated from historical retrieval rather than a newly created request.
+          example: new
+        processedDate:
+          type: string
+          format: date-time
+          description: Time the 271 response was processed by the system
+          example: '2022-03-04T03:43:00Z'
+        status:
+          type: object
+          description: Normalized eligibility outcome derived from the X12 271.
+          properties:
+            value:
+              type: string
+              enum:
+              - eligible
+              - ineligible
+              - payer_unavailable
+              - payer_not_in_system
+              - processing_error
+              - patient_unknown
+              example: eligible
+            description:
+              type: string
+        patient:
+          type: object
+          description: Subscriber/patient information from NM1*IL, DMG, N3, N4
+          properties:
+            firstName:
+              type: string
+              example: JOHNONE
+            lastName:
+              type: string
+              example: DOEONE
+            middleName:
+              type: string
+              example: M
+            memberId:
+              type: string
+              description: Medicare beneficiary identifier
+              example: '0000000000'
+            gender:
+              type: string
+              example: F
+            dateOfBirth:
+              type: string
+              format: date
+              example: '1880-01-02'
+            relationship:
+              type: string
+              description: Normalized patient relationship when present on the transaction response.
+              example: CHILD
+            address:
+              type: object
+              properties:
+                lines:
+                  type: array
+                  items:
+                    type: string
+                  example:
+                  - 123 address1
+                city:
+                  type: string
+                  example: SEATTLE
+                state:
+                  type: string
+                  example: WA
+                zip:
+                  type: string
+                  example: '98101'
+        subscriber:
+          type: object
+          description: 'Subscriber details. For Medicare responses, the subscriber is the patient, so this object mirrors `patient` when both are present.
+
+            '
+          properties:
+            firstName:
+              type: string
+              example: JOHNONE
+            lastName:
+              type: string
+              example: DOEONE
+            memberId:
+              type: string
+              example: '0000000000'
+            gender:
+              type: string
+              example: F
+            dateOfBirth:
+              type: string
+              format: date
+              example: '1880-01-02'
+        payer:
+          type: object
+          description: Primary and additional payer information from the 271
+          properties:
+            chcId:
+              type: string
+              description: Normalized CHC payer identifier returned on the real-time transaction response.
+              example: '60054'
+            name:
+              type: string
+              example: CMSMED
+            phone:
+              type: string
+              example: '0000000000'
+            url:
+              type: string
+              example: www.testwebsite.com
+            otherPayer:
+              type: object
+              description: Additional payer from LS/2120 loop
+              properties:
+                name:
+                  type: string
+                  example: extra healthy insurance
+                address:
+                  type: object
+                  properties:
+                    lines:
+                      type: array
+                      items:
+                        type: string
+                      example:
+                      - 123 address1
+                    city:
+                      type: string
+                      example: Nashville
+                    state:
+                      type: string
+                      example: TN
+                    zip:
+                      type: string
+                      example: '37203'
+        plan:
+          type: object
+          description: Medicare plan and pharmacy information
+          properties:
+            insuranceType:
+              type: string
+              enum:
+              - Medicare
+              example: Medicare
+            beginDate:
+              type: string
+              format: date
+              description: Coverage start date (DTP*291)
+              example: '2004-11-01'
+            endDate:
+              type: string
+              format: date
+              description: Coverage end date (DTP*291 RD8)
+              example: '2021-12-31'
+            number:
+              type: string
+              description: Plan identifier from REF*18
+              example: S5601
+            description:
+              type: string
+              description: Plan description from REF*N6
+              example: SilverScript SmartRx
+        benefits:
+          type: array
+          description: Benefits derived from EB, DTP, and MSG segments
+          items:
+            type: object
+            properties:
+              service:
+                type: string
+                description: Service type derived from EB03
+                example: Health Coverage
+              name:
+                type: string
+                description: Benefit name derived from EB01
+                example: copay
+              value:
+                type: string
+                example: '1484'
+              type:
+                type: string
+                enum:
+                - string
+                - date
+                - number
+                - percent
+                - monetary
+                example: monetary
+              insuranceType:
+                type: string
+                enum:
+                - Medicare
+                example: Medicare
+              benefitQualifier:
+                type: string
+                description: EB segment qualifiers (EB01 / EB06 / EB09)
+                example: EB01=C
+        x12-271:
+          type: string
+          description: Raw X12 271 eligibility response payload.
+          example: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000       *220304*0343*^*00501*123456789*0*T*:~GS*HB*MTEXE*LLX1210001*20131015*2219*123456789*X*005010X279A1~ST*271*0001*005010X279A1~BHT*0022*11*1-622233a9-6fca5eb41ae6862b269452c9*20220304*0343~HL*1**20*1~NM1*PR*2*CMS*****PI*CMSMED~HL*2*1*21*1~NM1*1P*2*HAPPY DOCTORS GROUP PRACTICE*****XX*1234567893~HL*3*2*22*0~TRN*2*123456789*9877281234~TRN*2*1266798199*9MCK-TSHRT~NM1*IL*1*DOEONE*JOHNONE*M***MI*0000000000~N3*123 address1~N4*SEATTLE*WA*981010000~DMG*D8*18800102*F~INS*Y*18*001*25~DTP*307*RD8*20211020-20211020~EB*I**41^54~EB*1**88~EB*1**30^42^45^48^49^69^76^83^A5^A7^AG^BT^BU^BV*MA~DTP*291*D8*20041101~MSG*0-Beneficiary insured due to age OASI~EB*C**30*MA**26*1484~DTP*291*RD8*20210101-20211231~EB*C**30*MA**29*1484~DTP*291*RD8*20210101-20211231~EB*C**42^45*MA**26*0~DTP*292*RD8*20210101-20211231~EB*1**30^2^23^24^25^26^27^28^3^33^36^37^38^39^4^40^42^50^51^52^53^62^67^69^73^76^83^86^98^A4^A6^A8^AI^AJ^AK^AL^BT^BU^BV^DM^UC*MB~DTP*291*D8*20041101~MSG*0-Beneficiary insured due to age OASI~EB*C**30*MB**23*203~DTP*291*RD8*20210101-20211231~EB*C**30*MB**29*0~DTP*291*RD8*20210101-20211231~EB*A**30*MB**27**0.2~DTP*291*RD8*20210101-20211231~EB*C**42^67^AJ*MB**23*0~DTP*292*RD8*20210101-20211231~EB*A**42^67^AJ*MB**27**0~DTP*292*RD8*20210101-20211231~EB*R**88*OT~REF*18*S5601~REF*N6*203*SilverScript SmartRx~DTP*292*D8*20210101~LS*2120~NM1*PR*2*extra healthy insurance~N3*123 address1~N4*Nashville*TN*37203~PER*IC**TE*0000000000*UR*www.testwebsite.com~LE*2120~SE*50*0001~GE*1*123456789~IEA*1*123456789~
+    Error:
+      description: The base object model for errors returned from the workflow
+      type: array
+      items:
+        type: string
+        example: Internal - An unknown error occurred
+    Transaction:
+      type: object
+      description: The base object model for the `/transactions` endpoints and the canonical model for Enhanced Eligibility
+      properties:
+        id:
+          type: string
+          example: 9fb77454-8c58-4345-aa50-43f133e06d20
+          description: The unique ID of the transaction
+        sourceId:
+          type: string
+          example: 9fb77454-8c58-4345-aa50-43f133e06d20
+          description: The id of the transaction that spawned this record. If empty, this transaction has no parent.
+        sourceType:
+          type: string
+          enum:
+          - new
+          - historical
+          - duplicate
+          - autosubmit
+          example: new
+          description: How the transaction was created. `new` means the transaction was submitted through the Real-Time Eligibility flow. `duplicate` means customer-configured deduplication found a prior matching request, skipped clearinghouse submission, and returned the previous response. `autosubmit` means the transaction was generated by Coverage Discovery path execution. `historical` means the record originated from historical retrieval rather than a newly created request.
+        correlationId:
+          type: string
+          description: An ID provided by the consumer at the time of transaction processing
+        processedDate:
+          type: string
+          example: '2017-07-21T17:32:28Z'
+          description: The time the transaction was processed by the system
+        status:
+          type: object
+          description: The outcome of the transaction
+          properties:
+            value:
+              type: string
+              enum:
+              - eligible
+              - ineligible
+              - payer_unavailable
+              - payer_not_in_system
+              - processing_error
+              - patient_unknown
+              example: eligible
+            description:
+              type: string
+              example: Eligible with insurance
+              description: A human readable representation of the 'value' field.
+        errors:
+          type: array
+          items:
+            type: string
+          description: A list of errors that occurred during process
+        benefits:
+          type: array
+          items:
+            type: object
+            example:
+              service: Urgent Care
+              networkClass: inNetwork
+              benefitType: family
+              name: copay
+              type: string
+              scope: common
+              benefitQualifier: DY
+            properties:
+              service:
+                type: string
+                example: Urgent Care
+                description: Text description of service type code
+              networkClass:
+                type: string
+                enum:
+                - inNetwork
+                - outNetwork
+                example: inNetwork
+                description: Whether the benefit conditions apply to 'in' or 'out' of network
+              benefitType:
+                type: string
+                enum:
+                - individual
+                - family
+                example: individual
+                description: Benefit type maps to either individual or family
+              name:
+                type: string
+                example: copay
+                description: Benefit field name
+              value:
+                type: string
+                description: Benefit field value
+              type:
+                type: string
+                enum:
+                - string
+                - date
+                - number
+                - percent
+                - monetary
+                - phone
+                description: Benefit field data type
+              scope:
+                type: string
+                enum:
+                - common
+                - service
+                example: common
+                description: Benefit field relates either to a service type or is common (not related to a service type)
+              insuranceType:
+                type: string
+                enum:
+                - AllPayers
+                - Medicaid
+                - Medicare
+                example: AllPayers
+                description: 'Insurance classification: Medicare, Medicaid, or AllPayers'
+              benefitQualifier:
+                type: string
+                example: DY (value of the benefit is in days)
+                description: Benefit field code identifying type or source
+          description: Detailed benefit information for each service returned by the payer
+        patient:
+          type: object
+          properties:
+            dateOfBirth:
+              type: string
+              format: date
+              example: '1880-01-02'
+            dateOfDeath:
+              type: string
+              format: date
+              example: '1880-01-02'
+            eligibilityCategory:
+              type: string
+              description: Expresses the eligibility category of the member to properly administer health benefits and coverage (from Department of Defense)
+            firstName:
+              type: string
+              example: John
+            gender:
+              type: string
+              example: M
+            lastName:
+              type: string
+              example: Doe
+            memberId:
+              type: string
+              example: '4784784'
+            middleName:
+              type: string
+              example: Dave
+            militaryPersonnel:
+              type: boolean
+              example: false
+            mrn:
+              type: string
+              example: '657883'
+            phone:
+              type: string
+              example: '1234567890'
+            relationship:
+              type: string
+              example: child
+            ssn:
+              type: string
+              example: '555443333'
+            suffix:
+              type: string
+              example: Mr.
+            agencyClaimNumber:
+              type: string
+              example: WC1234567
+            address:
+              type: object
+              properties:
+                lines:
+                  type: array
+                  items:
+                    type: string
+                    example:
+                    - 1234 Main Street
+                city:
+                  type: string
+                  example: Dallas
+                county:
+                  type: string
+                  example: Harris County
+                state:
+                  type: string
+                  example: TX
+                subdivisionCode:
+                  type: string
+                  example: TX
+                zip:
+                  type: string
+                  example: '77001'
+          description: The patient details captured on the eligibility response
+        payer:
+          type: object
+          properties:
+            aaaSource:
+              type: string
+              example: Additional Text From Payer
+            certificationNumber:
+              type: string
+              example: '9999999999'
+              description: 10 digits
+            contactExtension:
+              type: string
+              example: '7657'
+            contactName:
+              type: string
+              example: Contact Example
+            description:
+              type: string
+              example: HEALTHFIRST-MANAGED MEDICAID
+            email:
+              type: string
+              example: payer.email@email.com
+            fax:
+              type: string
+              example: '8009999999'
+            name:
+              type: string
+              example: HEALTHFIRST
+            phone:
+              type: string
+              example: '8009252272'
+            thirdPartyAdminstrator:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: BCBSM TPA
+                phone:
+                  type: string
+                  example: '8009252272'
+            url:
+              type: string
+              example: payerwebsite.com
+            address:
+              type: object
+              properties:
+                lines:
+                  type: array
+                  items:
+                    type: string
+                    example:
+                    - 1234 Main Street
+                city:
+                  type: string
+                  example: Dallas
+                county:
+                  type: string
+                  example: Harris County
+                state:
+                  type: string
+                  example: TX
+                subdivisionCode:
+                  type: string
+                  example: TX
+                zip:
+                  type: string
+                  example: '77001'
+            chcId:
+              type: string
+              example: 09876z5y-43x2-1w09-v8u7-tr6543s210qp
+          description: Represents data about the payer that is on record for the eligibility request
+        plan:
+          type: object
+          description: Detailed information about the Subscriber’s plan, group, and policy
+          properties:
+            beginDate:
+              type: string
+              format: date
+              example: '2008-01-02'
+            dateOfDecision:
+              type: string
+              format: date
+              example: '2008-01-02'
+            endDate:
+              type: string
+              format: date
+              example: '2008-01-02'
+            benefitFirstBilledDate:
+              type: string
+              format: date
+              example: '2008-01-02'
+            groupOrPolicyNumber:
+              type: string
+              example: '8888888888'
+            insuranceType:
+              type: string
+              example: Health Maintenance Organization (HMO)
+            lastBilledDate:
+              type: string
+              format: date
+              example: '2008-01-02'
+            medicalAssistanceCategory:
+              type: string
+              example: '999'
+            otherAdditionalCoverageQualifier:
+              type: string
+              example: PHARMACY
+            otherCoverage:
+              type: string
+              example: FIRST HEALTH LIFE & HEALTH INSURANCE COMPANY
+            otherProductDescription:
+              type: string
+              example: HealthPlan
+            planBeginDate:
+              type: string
+              format: date
+              example: '2008-01-02'
+            planCoverageDescription:
+              type: string
+              example: HEALTHFIRST-MANAGED MEDICAID
+            description:
+              type: string
+              example: Plan Description
+            name:
+              type: string
+              example: Cigna PPO
+            number:
+              type: string
+              example: S5768 135
+            ppo:
+              type: string
+              example: Dr. T Test
+              description: Preferred provider organization
+            productDescription:
+              type: string
+              example: HEALTHFIRST-MANAGED MEDICAID
+            dependentMemberID:
+              type: string
+              example: M20220314
+            familyUnitNumber:
+              type: string
+              example: '01'
+            identificationCardSerialNumber:
+              type: string
+              example: ICSN0001
+            insurancePolicyNumber:
+              type: string
+              example: ICSN0001
+            subscriberPremiumPaidEndDate:
+              type: string
+              format: date
+              example: '2008-01-01'
+            aca:
+              type: object
+              properties:
+                hixMessage:
+                  type: string
+                  example: HIX Grace Period
+                periodStart:
+                  type: string
+                  format: date
+                  example: '2008-01-01'
+                periodEnd:
+                  type: string
+                  format: date
+                  example: '2008-01-01'
+            case:
+              type: object
+              description: Used to clarify plan level details
+              properties:
+                type:
+                  type: string
+                  description: Reference Information as defined for a Reference Identification Qualifier
+                description:
+                  type: string
+                  example: Free form text
+            gatewayProvider:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Gateway Provider A
+                address:
+                  type: object
+                  properties:
+                    lines:
+                      type: array
+                      items:
+                        type: string
+                        example:
+                        - 1234 Main Street
+                    city:
+                      type: string
+                      example: Dallas
+                    county:
+                      type: string
+                      example: Harris County
+                    state:
+                      type: string
+                      example: TX
+                    subdivisionCode:
+                      type: string
+                      example: TX
+                    zip:
+                      type: string
+                      example: '77001'
+            group:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: FLORIDA MEDICAID
+                number:
+                  type: string
+                  example: FLMCD000
+                policyName:
+                  type: string
+                  example: FLMPOL256
+            hmo:
+              type: object
+              description: Health maintenance organization details
+              properties:
+                name:
+                  type: string
+                  example: Cigna HMO
+                planNumber:
+                  type: string
+                  example: CIG991122
+            hra:
+              type: object
+              description: Health reimbursement arrangement details
+              properties:
+                balance:
+                  type: string
+                  example: '90'
+                employerPledge:
+                  type: string
+                  example: '500'
+                paid:
+                  type: string
+                  example: '400'
+                priorCarryover:
+                  type: string
+                  example: '100'
+            hsa:
+              type: object
+              description: Health savings account details
+              properties:
+                balance:
+                  type: string
+                  example: '500'
+                employerPledge:
+                  type: string
+                  example: '800'
+                paid:
+                  type: string
+                  example: '200'
+                priorCarryover:
+                  type: string
+                  example: '0'
+            ipa:
+              type: object
+              description: Individual practice association details
+              properties:
+                name:
+                  type: string
+                  example: AETNA CHOICE POS II
+                contactName:
+                  type: string
+                  example: MERITAIN HEALTH CUSTOMER SERVICE
+                id:
+                  type: string
+                  example: IPAID
+                phone:
+                  type: string
+                  example: '8009252272'
+                address:
+                  type: object
+                  properties:
+                    lines:
+                      type: array
+                      items:
+                        type: string
+                        example:
+                        - 1234 Main Street
+                    city:
+                      type: string
+                      example: Dallas
+                    county:
+                      type: string
+                      example: Harris County
+                    state:
+                      type: string
+                      example: TX
+                    subdivisionCode:
+                      type: string
+                      example: TX
+                    zip:
+                      type: string
+                      example: '77001'
+            otherPayer:
+              type: object
+              description: Additional Payer Associated with Patient
+              properties:
+                groupNumber:
+                  type: string
+                  example: CIG998877
+                policyNumber:
+                  type: string
+                  example: CIGNA PPO
+            planNetworkIdentification:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: Free form qualifier
+                number:
+                  type: string
+                  example: PNIN08549
+            policy:
+              type: object
+              description: Information about the plan policy
+              properties:
+                name:
+                  type: string
+                  example: Cigna PPO
+                  description: Plan description from the payer
+                number:
+                  type: string
+                  example: S5768 135
+                  description: Group or policy number associated with the plan mapping to the policy reference identifier from the payer
+            preferredProviderOrg:
+              type: object
+              description: Details about the preferred provider organization
+              properties:
+                name:
+                  type: string
+                  example: Dr. T Test
+                contactName:
+                  type: string
+                  example: Test Contact Name
+                id:
+                  type: string
+                  example: '452114586'
+                phone:
+                  type: string
+                  example: '8009252272'
+                address:
+                  type: object
+                  properties:
+                    lines:
+                      type: array
+                      items:
+                        type: string
+                        example:
+                        - 1234 Main Street
+                    city:
+                      type: string
+                      example: Dallas
+                    county:
+                      type: string
+                      example: Harris County
+                    state:
+                      type: string
+                      example: TX
+                    subdivisionCode:
+                      type: string
+                      example: TX
+                    zip:
+                      type: string
+                      example: '77001'
+            primaryCareProvider:
+              type: object
+              properties:
+                providerName:
+                  type: string
+                  example: Provider Name
+                physician:
+                  type: string
+                  example: ALBERTO BRIZUELA-DUCHARNE
+                npi:
+                  type: string
+                  example: '1234567893'
+                phoneNumber:
+                  type: string
+                  example: '8009252272'
+                dateRange:
+                  type: string
+                  example: '2022-01-01'
+                address:
+                  type: object
+                  properties:
+                    lines:
+                      type: array
+                      items:
+                        type: string
+                        example:
+                        - 1234 Main Street
+                    city:
+                      type: string
+                      example: Dallas
+                    county:
+                      type: string
+                      example: Harris County
+                    state:
+                      type: string
+                      example: TX
+                    subdivisionCode:
+                      type: string
+                      example: TX
+                    zip:
+                      type: string
+                      example: '77001'
+        subscriber:
+          type: object
+          properties:
+            agencyNumber:
+              type: string
+              example: WC1234567
+            anniversaryDate:
+              type: string
+              format: date
+              example: '1880-01-02'
+            dateOfBirth:
+              type: string
+              format: date
+              example: '1880-01-02'
+            employer:
+              type: string
+              example: Optum
+            firstName:
+              type: string
+              example: johnOne
+            gender:
+              type: string
+              example: M
+            idCardNumber:
+              type: string
+              example: 5678 1234-A
+            lastName:
+              type: string
+              example: doeOne
+            memberId:
+              type: string
+              example: '12345921601'
+            middleName:
+              type: string
+              example: mOne
+            militaryPersonnel:
+              type: boolean
+              example: false
+            mrn:
+              type: string
+              example: '657883'
+            priorIdNumber:
+              type: string
+              example: '4784784'
+              description: The prior identification number (memberId)
+            ssn:
+              type: string
+              example: '555443333'
+            suffix:
+              type: string
+              example: Mr.
+            premiumPaidEndDate:
+              type: string
+              format: date
+              example: '2020-01-02'
+            address:
+              type: object
+              properties:
+                lines:
+                  type: array
+                  items:
+                    type: string
+                    example:
+                    - 1234 Main Street
+                city:
+                  type: string
+                  example: Dallas
+                county:
+                  type: string
+                  example: Harris County
+                state:
+                  type: string
+                  example: TX
+                subdivisionCode:
+                  type: string
+                  example: TX
+                zip:
+                  type: string
+                  example: '77001'
+          description: Subscriber data that originated from the Payer
+        x12-271:
+          type: string
+          description: Raw X12 271 eligibility response payload returned for the transaction.
+          example: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000       *220304*0343*^*00501*123456789*0*T*:~GS*HB*MTEXE*LLX1210001*20131015*2219*123456789*X*005010X279A1~ST*271*0001*005010X279A1~BHT*0022*11*1-622233a9-6fca5eb41ae6862b269452c9*20220304*0343~HL*1**20*1~NM1*PR*2*CMS*****PI*CMSMED~HL*2*1*21*1~NM1*1P*2*HAPPY DOCTORS GROUP PRACTICE*****XX*1234567893~HL*3*2*22*0~TRN*2*123456789*9877281234~TRN*2*1266798199*9MCK-TSHRT~NM1*IL*1*DOEONE*JOHNONE*M***MI*0000000000~N3*123 address1~N4*SEATTLE*WA*981010000~DMG*D8*18800102*F~INS*Y*18*001*25~DTP*307*RD8*20211020-20211020~EB*I**41^54~EB*1**88~EB*1**30^42^45^48^49^69^76^83^A5^A7^AG^BT^BU^BV*MA~DTP*291*D8*20041101~MSG*0-Beneficiary insured due to age OASI~EB*C**30*MA**26*1484~DTP*291*RD8*20210101-20211231~EB*C**30*MA**29*1484~DTP*291*RD8*20210101-20211231~EB*C**42^45*MA**26*0~DTP*292*RD8*20210101-20211231~EB*1**30^2^23^24^25^26^27^28^3^33^36^37^38^39^4^40^42^50^51^52^53^62^67^69^73^76^83^86^98^A4^A6^A8^AI^AJ^AK^AL^BT^BU^BV^DM^UC*MB~DTP*291*D8*20041101~MSG*0-Beneficiary insured due to age OASI~EB*C**30*MB**23*203~DTP*291*RD8*20210101-20211231~EB*C**30*MB**29*0~DTP*291*RD8*20210101-20211231~EB*A**30*MB**27**0.2~DTP*291*RD8*20210101-20211231~EB*C**42^67^AJ*MB**23*0~DTP*292*RD8*20210101-20211231~EB*A**42^67^AJ*MB**27**0~DTP*292*RD8*20210101-20211231~EB*R**88*OT~REF*18*S5601~REF*N6*203*SilverScript SmartRx~DTP*292*D8*20210101~LS*2120~NM1*PR*2*extra healthy insurance~N3*123 address1~N4*Nashville*TN*37203~PER*IC**TE*0000000000*UR*www.testwebsite.com~LE*2120~SE*50*0001~GE*1*123456789~IEA*1*123456789~
+    EligibilityRequestX12:
+      type: object
+      description: Real-time X12 request payload. The JSON field name is `x12`, and its value is the raw X12 270 request payload. The provider NPI in the X12 270 must be valid and follow standard NPI validation rules. The corresponding response is returned as normalized JSON, not as raw X12.
+      required:
+      - x12
+      properties:
+        x12:
+          type: string
+          description: Raw X12 270 eligibility inquiry payload. The provider NPI in the X12 270 must be valid and follow standard NPI validation rules.
+          example: ISA*00*          *01*SomePwd   *ZZ*TPG00000       *ZZ*EMDEON         *220304*0343*^*00501*123456789*0*T*:~GS*HS*LLX1210001*MTEXE*20131015*2219*123456789*X*005010X279A1~ST*270*0001*005010X279A1~BHT*0022*13*1-622233a9-6fca5eb41ae6862b269452c9*20220304*0343~HL*1**20*1~NM1*PR*2*CMS*****PI*CMSMED~HL*2*1*21*1~NM1*1P*2*HAPPY DOCTORS GROUP PRACTICE*****XX*1234567893~HL*3*2*22*0~TRN*1*123456789*9877281234~NM1*IL*1*DOEONE*JOHNONE*M***MI*0000000000~N3*123 address1~N4*SEATTLE*WA*981010000~DMG*D8*18800102*F~DTP*291*RD8*20210101-20211231~EQ*30~SE*20*0001~GE*1*123456789~IEA*1*123456789~
+  headers:
+    correlationid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
+    rte-link:
+      schema:
+        type: string
+        example: </coverage-discovery/0716e3e8-87ee-11ee-b9d1-0242ac120002>; title="coverage discovery - Default Discovery Task"; rel="related", </coverage-discovery/0e565a58-87ee-11ee-b9d1-0242ac120002>; title="coverage discovery - Chained Discovery Task"; rel="related"
+      description: (Optional) RFC 8288-style related-resource link header returned by real-time eligibility POST responses when Coverage Discovery task(s) are spawned. The header may include one or more related task paths. Each related path can be used with `GET /coverage-discovery/{id}` to retrieve task status. If you are enrolled in Coverage Discovery and this header is absent, no Coverage Discovery task was initiated for that transaction.
+    traceid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: A unique identifier value that is attached to the response that allow reference to the original request.
+    tenantid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: The unique ID of the tenant that invoking user belongs to. Used to enforce data tenancy.
+    subtenantid:
+      schema:
+        type: string
+        example: 5e2f9f4f-6f1d-4b37-92b5-6c5a9d1f8a21
+      description: (Optional) Identifies an Optum-assigned sub-tenant configuration for your organization. Include this header only when Optum has provided a value for a specific enabled customer configuration. Clients must not generate or infer this value.
+  examples:
+    EligibilityRequestMinimal:
+      value:
+        tradingPartnerServiceId: CIGNA
+        provider:
+          organizationName: Example Medical Center
+          npi: '1234567893'
+        subscriber:
+          memberId: '12313423'
+          firstName: johnOne
+          lastName: doeOne
+          dateOfBirth: '18800102'
+          ssn: '144334555'
+        encounter:
+          dateOfService: '20250115'
+          serviceTypeCodes:
+          - '30'
+    RTEEligibilityResponseHMO:
+      value:
+        id: rte-hmo-123
+        sourceType: new
+        correlationId: corr-8b7c2f3a-1c9e-4d3b-a6f5-112233445566
+        payer:
+          chcId: CIGNA
+        processedDate: '2024-07-22T17:05:00Z'
+        status:
+          value: eligible
+        plan:
+          hmo:
+            name: Cigna HMO
+            planNumber: CIG991122
+        subscriber:
+          memberId: HMO123456
+          dateOfBirth: '1980-01-01'
+        x12-271: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000    *240722*1705*^*00501*000000002*0*T*:~GS*HB*CIGNA*PROVIDERID*20240722*1705*2*X*005010X279A1~ST*271*0002*005010X279A1~BHT*0022*11*2233445566*20240722*1705~HL*1**20*1~NM1*PR*2*CIGNA*****PI*62308~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*2*2233445566*1234567893~NM1*IL*1*DOE*JOHN****MI*HMO123456~N3*123 MAIN ST~N4*HARTFORD*CT*06103~DMG*D8*19800101*M~INS*Y*18*030*25~DTP*291*D8*20240722~EB*1**30*HMO PLAN~MSG*Eligibility confirmed for CIGNA HMO plan.~SE*25*0002~GE*1*2~IEA*1*000000002~
+    RTEEligibilityRequestHMOCandidate:
+      value:
+        controlNumber: '2233445566'
+        tradingPartnerServiceId: CIGNA
+        provider:
+          organizationName: Example Medical Center
+          npi: '1234567893'
+        subscriber:
+          memberId: HMO123456
+          firstName: JOHN
+          lastName: DOE
+          dateOfBirth: '19800101'
+          address:
+            address1: 123 Main St
+            city: Hartford
+            state: CT
+            postalCode: '06103'
+        encounter:
+          dateOfService: '20240722'
+          serviceTypeCodes:
+          - '30'
+    RTEEligibilityResponseIneligible:
+      value:
+        id: rte-ineligible-123
+        sourceType: new
+        correlationId: corr-8b7c2f3a-1c9e-4d3b-a6f5-112233445566
+        payer:
+          chcId: CIGNA
+        processedDate: '2025-01-15T16:05:10Z'
+        status:
+          value: ineligible
+        subscriber:
+          memberId: SUB123
+          dateOfBirth: '1950-01-02'
+        x12-271: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000       *250115*1605*^*00501*000000011*0*T*:~GS*HB*CIGNA*PROVIDERID*20250115*1605*11*X*005010X279A1~ST*271*0011*005010X279A1~BHT*0022*11*1234567891*20250115*1605~HL*1**20*1~NM1*PR*2*CIGNA*****PI*62308~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*2*1234567891*9876543210~NM1*IL*1*DOE*JOHN****MI*SUB123~DTP*291*D8*20250115~EB*6**30~MSG*Coverage not active for requested date of service.~SE*13*0011~GE*1*11~IEA*1*000000011~
+    RTEEligibilityResponsePatientUnknown:
+      value:
+        id: rte-patient-unknown-123
+        sourceType: new
+        correlationId: corr-8b7c2f3a-1c9e-4d3b-a6f5-112233445566
+        payer:
+          chcId: AETNA
+        processedDate: '2025-01-15T16:02:28Z'
+        status:
+          value: patient_unknown
+        subscriber:
+          memberId: SUB123
+          dateOfBirth: '1950-01-02'
+        x12-271: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000       *250115*1602*^*00501*000000010*0*T*:~GS*HB*AETNA*PROVIDERID*20250115*1602*10*X*005010X279A1~ST*271*0010*005010X279A1~BHT*0022*11*1234567890*20250115*1602~HL*1**20*1~NM1*PR*2*AETNA*****PI*60054~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*2*1234567890*9876543210~NM1*IL*1*DOE*JOHN****MI*SUB123~DTP*291*D8*20250115~EB*I**30~MSG*Patient not found.~SE*13*0010~GE*1*10~IEA*1*000000010~
+    RTEEligibilityRequestX12CoverageDiscoveryCandidate:
+      value:
+        x12: ISA*00*          *01*SomePwd   *ZZ*TPG00000       *ZZ*EMDEON         *240722*1617*^*00501*000000001*0*T*:~GS*HS*AETNA*PROVIDERID*20240722*1617*1*X*005010X279A1~ST*270*0001*005010X279A1~BHT*0022*13*1234567890*20240722*1617~HL*1**20*1~NM1*PR*2*AETNA*****PI*60054~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*1*1234567890*9876543210~NM1*IL*1*DOE*JOHN****MI*123456789~N3*123 MAIN ST~N4*DALLAS*TX*75001~DMG*D8*19500102*M~DTP*291*D8*20240722~EQ*30~SE*13*0001~GE*1*1~IEA*1*000000001~
+    RTEEligibilityRequestCoverageDiscoveryCandidate:
+      value:
+        controlNumber: '123456789'
+        tradingPartnerServiceId: AETNA
+        provider:
+          organizationName: Example Medical Center
+          npi: '1234567893'
+        informationReceiverName:
+          address:
+            state: TX
+        subscriber:
+          memberId: SUB123
+          firstName: JOHN
+          lastName: DOE
+          dateOfBirth: '19500102'
+          ssn: '111223333'
+          additionalIdentification:
+            patientAccountNumber: PAN-1001
+          address:
+            address1: 123 Main St
+            city: Dallas
+            state: TX
+            postalCode: '75001'
+        encounter:
+          dateOfService: '20250115'
+          serviceTypeCodes:
+          - '30'
+    EligibilityRequestExpanded:
+      value:
+        submitterTransactionIdentifier: 1-622233a9-6fca5eb41ae6862b269452c9
+        controlNumber: '123456789'
+        tradingPartnerServiceId: CIGNA
+        tradingPartnerName: CIGNA
+        provider:
+          organizationName: Example Medical Center
+          npi: '1234567893'
+          serviceProviderNumber: '54321'
+          providerCode: AD
+          referenceIdentification: 54321g
+          providerType: provider
+        portalUsername: portal-user
+        portalPassword: portal-password
+        informationReceiverName:
+          submitterIdNumber: SUBMITTER01
+          nationalProviderIdentifier: '1234567893'
+          informationReceiverAdditionalIdentifierState: WA
+          address:
+            address1: 123 address1
+            city: SEATTLE
+            state: WA
+            postalCode: '981010000'
+        subscriber:
+          birthSequenceNumber: '1'
+          caseNumber: CASE12345
+          medicaidRecipientIdentificationNumber: MCD1234567
+          spendDownAmount: '25.00'
+          spendDownTotalBilledAmount: '100.00'
+          memberId: '0000000000'
+          firstName: johnOne
+          middleName: M
+          lastName: doeOne
+          suffix: Jr
+          gender: M
+          dateOfBirth: '18800102'
+          ssn: '555443333'
+          groupNumber: '1111111111'
+          idCard: card123
+          providerCode: AD
+          referenceIdentificationQualifier: PXC
+          providerIdentifier: '54321'
+          idCardIssueDate: '20210101'
+          planIssueDate: '20210101'
+          healthCareCodeInformation:
+          - diagnosisTypeCode: BK
+            diagnosisCode: A123
+          address:
+            address1: 123 address1
+            address2: APT 4
+            city: SEATTLE
+            state: WA
+            postalCode: '981010000'
+          additionalIdentification:
+            planNumber: PLAN001
+            policyNumber: POL123456
+            memberIdentificationNumber: MID998877
+            patientAccountNumber: PAT445566
+            insurancePolicyNumber: INS123456
+            planNetworkIdentificationNumber: NET9001
+        dependents:
+        - individualRelationshipCode: '19'
+          memberId: DEP0000001
+          firstName: janeOne
+          middleName: Q
+          lastName: doeOne
+          gender: F
+          dateOfBirth: '18160421'
+          groupNumber: '1111111111'
+          healthCareCodeInformation:
+          - diagnosisTypeCode: BF
+            diagnosisCode: B456
+          address:
+            address1: 123 address1
+            city: SEATTLE
+            state: WA
+            postalCode: '981010000'
+          additionalIdentification:
+            planNumber: PLAN001
+            policyNumber: POL123456
+        encounter:
+          beginningDateOfService: '20100101'
+          endDateOfService: '20100102'
+          dateOfService: '20100101'
+          serviceTypeCodes:
+          - '30'
+          - '35'
+          priorAuthorizationOrReferralNumber: AUTH123
+          referenceIdentificationQualifier: 9F
+          industryCode: '01'
+          productOrServiceIDQualifier: HC
+          procedureCode: '99213'
+          procedureModifiers:
+          - '25'
+          diagnosisCodePointer:
+          - '1'
+          medicalProcedures:
+          - productOrServiceIDQualifier: HC
+            procedureCode: '99214'
+            procedureModifiers:
+            - '59'
+            diagnosisCodePointer:
+            - '1'
+    RTEEligibilityRequestX12HMOCandidate:
+      value:
+        x12: ISA*00*          *01*SomePwd   *ZZ*TPG00000       *ZZ*EMDEON         *240722*1705*^*00501*000000002*0*T*:~GS*HS*CIGNA*PROVIDERID*20240722*1705*2*X*005010X279A1~ST*270*0002*005010X279A1~BHT*0022*13*2233445566*20240722*1705~HL*1**20*1~NM1*PR*2*CIGNA*****PI*62308~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*1*2233445566*1234567893~NM1*IL*1*DOE*JOHN****MI*HMO123456~N3*123 MAIN ST~N4*HARTFORD*CT*06103~DMG*D8*19800101*M~DTP*291*D8*20240722~EQ*30~SE*13*0002~GE*1*2~IEA*1*000000002~
+  responses:
+    ForbiddenError:
+      description: Forbidden.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+          - invalid tenant id
+    UnexpectedError:
+      description: Unexpected error.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    EligibilityResponse:
+      description: OK. Returns the normalized real-time eligibility response. If Coverage Discovery was automatically started, the response `link` header contains related discovery task resource path(s).
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+        link:
+          $ref: '#/components/headers/rte-link'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Transaction'
+          examples:
+            RTE Response Patient Unknown:
+              $ref: '#/components/examples/RTEEligibilityResponsePatientUnknown'
+            RTE Response Ineligible:
+              $ref: '#/components/examples/RTEEligibilityResponseIneligible'
+            RTE Response HMO:
+              $ref: '#/components/examples/RTEEligibilityResponseHMO'
+    BadRequestError:
+      description: Bad request.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+          - Failed Precondition - Field 'example' is required
+    PermissionDeniedError:
+      description: Unauthorized.
+      headers:
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: invalid_product
+              error_description:
+                type: string
+                example: Permission Denied.
+              traceId:
+                type: string
+                example: 942537e6-d544-ed7c-469b-a27efc4a6cff
+    EligibilityResponseX12:
+      description: OK. Returns a normalized JSON representation of the X12 271 response, not a raw X12 payload.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+        link:
+          $ref: '#/components/headers/rte-link'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TransactionMedicare'
+          examples:
+            RTE Response Patient Unknown:
+              $ref: '#/components/examples/RTEEligibilityResponsePatientUnknown'
+            RTE Response Ineligible:
+              $ref: '#/components/examples/RTEEligibilityResponseIneligible'
+            RTE Response HMO:
+              $ref: '#/components/examples/RTEEligibilityResponseHMO'
+  parameters:
+    header-subtenant-id:
+      in: header
+      name: x-optum-subtenant-id
+      schema:
+        type: string
+        example: 5e2f9f4f-6f1d-4b37-92b5-6c5a9d1f8a21
+      required: false
+      description: (Optional) Identifies an Optum-assigned sub-tenant configuration for your organization. Include this header only when Optum has provided a value for a specific enabled customer configuration. Clients must not generate or infer this value.
+    header-correlation-id:
+      in: header
+      name: x-optum-correlation-id
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      required: false
+      description: (Optional) A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
+  requestBodies:
+    EligibilityRequestX12:
+      description: New real-time eligibility transaction request using a JSON body whose `x12` field contains an X12 270 payload. The provider NPI in the X12 270 must be valid and follow standard NPI validation rules.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EligibilityRequestX12'
+          examples:
+            RTE X12 Request Feeding Coverage Discovery:
+              $ref: '#/components/examples/RTEEligibilityRequestX12CoverageDiscoveryCandidate'
+            RTE X12 Request Feeding HMO Discovery:
+              $ref: '#/components/examples/RTEEligibilityRequestX12HMOCandidate'
+      required: true
+    EligibilityRequest:
+      description: New real-time eligibility transaction request. `controlNumber` is optional; when omitted, Enhanced Eligibility generates one. `encounter.dateOfService` is required. The submitted provider NPI must be valid and follow standard NPI validation rules.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EligibilityRequest'
+          examples:
+            Eligibility Request Minimal:
+              $ref: '#/components/examples/EligibilityRequestMinimal'
+            Eligibility Request Expanded:
+              $ref: '#/components/examples/EligibilityRequestExpanded'
+            RTE JSON Request Feeding Coverage Discovery:
+              $ref: '#/components/examples/RTEEligibilityRequestCoverageDiscoveryCandidate'
+            RTE JSON Request Feeding HMO Discovery:
+              $ref: '#/components/examples/RTEEligibilityRequestHMOCandidate'
+      required: true
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: This API uses OAuth 2 with the client_credentials grant flow. [More info](https://api.example.com/docs/auth)
+      flows:
+        clientCredentials:
+          tokenUrl: /apip/auth/v2/token
+          scopes:
+            read_txn: read transactions
+            create_txn: submit a new transaction request
+            read_coveragediscovery: read coverage discovery tasks
+            create_coveragediscovery: submit a new coverage discovery task
+            read_healthcheck: check the status of the system

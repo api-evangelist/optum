@@ -1,0 +1,110 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Physician Anesthesia Fee APIs API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Anesthesia Fee APIs
+paths:
+  /api/optum/physician/anesthesia-fee/{codetype}/{code}:
+    get:
+      tags:
+      - Anesthesia Fee APIs
+      summary: Fetches anesthesia fee carrier localities and units information for a given anesthesia code
+      operationId: fetchAnesthesiaFee
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: '00100'
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch anesthesia fee carrier localities and units information for a given anesthesia code
+          content:
+            application/json:
+              example:
+                anesCarrierLocalityList:
+                - carrier: '10112'
+                  locality: '00'
+                  state: Alabama
+                  conversionFactor: '19.77'
+                - carrier: '02102'
+                  locality: '01'
+                  state: Alaska
+                  conversionFactor: '28.54'
+                anesPhysicalStatusUnitsList:
+                - status: P1
+                  description: A normal healthy patient
+                  units: 0
+                - status: P2
+                  description: A patient with mild systemic disease
+                  units: 0
+                anesQualifyingCircumstancesUnitsList:
+                - code: '99100 '
+                  description: Anesthesia for patient of extreme age, younger than 1 year and older than 70 (List separately in addition to code for primary anesthesia procedure)
+                  units: 1
+                - code: '99116 '
+                  description: Anesthesia complicated by utilization of total body hypothermia (List separately in addition to code for primary anesthesia procedure)
+                  units: 5
+                anesASABaseUnit: '05'
+                anesCMSBaseUnit: '05'
+                anesTimeUnit: '11.10'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided 'E11.01' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

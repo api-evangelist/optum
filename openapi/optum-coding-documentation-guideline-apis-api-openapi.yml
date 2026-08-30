@@ -1,0 +1,157 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Facility Coding Documentation Guideline APIs API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: Coding Documentation Guideline APIs
+paths:
+  /api/optum/facility/{codetype}/cdg:
+    get:
+      tags:
+      - Coding Documentation Guideline APIs
+      summary: Fetches the list of clinical documentation guidelines
+      operationId: fetchCDGList
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i9v1
+          - i9v3
+          - i10_cm
+          - i10_pcs
+          - hcpcs
+          - cpt
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches the list of clinical documentation guidelines
+          content:
+            application/json:
+              example:
+              - rangeBegCode: '001'
+                rangeEndCode: '139.8'
+                rangeHeader: 1. Infectious And Parasitic Diseases (001-139)
+                cdgInfoList:
+                - code: '003.0'
+                  fullDescription: Salmonella gastroenteritis
+                  cdgAttachmentId: 59275
+                - code: '005.0'
+                  fullDescription: Staphylococcal food poisoning
+                  cdgAttachmentId: 59275
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-14T06:37:03.741+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /optumcommonms/api/optum/facility/cdeg
+        '500':
+          description: Interal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:36:22.518+00:00'
+                path: /optumcommonms/api/optum/facility/cdg
+                status: 500
+                error: Internal Server Error
+                requestId: e36d239e-324
+      security:
+      - bearerAuth: []
+  /api/optum/facility/cdg/{code}/document:
+    get:
+      tags:
+      - Coding Documentation Guideline APIs
+      summary: Fetches the file content for clinical coding guidelines
+      operationId: fetchCDGPDF
+      parameters:
+      - name: code
+        in: path
+        description: code
+        required: true
+        schema:
+          type: string
+        example: '003.0'
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetches the file content in the form of byte array, response headers and media type as FileType
+          content:
+            application/pdf:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example: "  access-control-expose-headers: Content-Disposition\n  cache-control: no-cache,no-store,max-age=0,must-revalidate\n  connection: keep-alive\n  content-disposition: attachment; filename=cdg22.pdf\n  content-length: 254685\n  content-type: application/pdf\n  date: Thu,16 May 2024 06:49:56 GMT\n  expires: 0\n  pragma: no-cache\n  vary: Origin,Access-Control-Request-Method,Access-Control-Request-Headers\n  x-content-type-options: nosniff\n  x-frame-options: DENY\n  x-xss-protection: 0\n"
+        '404':
+          description: 'Not found: Sub terms not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                status: 404
+                error: Not Found
+                message: Not Found
+                path: /optumcommonms/api/optum/facility/cdg/{code}d
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2023-07-28T06:19:48.666+00:00'
+                path: /optumcommonms/api/optum/facility/cdg/{code}/document
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

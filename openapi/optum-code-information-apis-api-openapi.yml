@@ -1,0 +1,1245 @@
+openapi: 3.2.0
+info:
+  title: Core Service Code Information APIs API
+  description: Code Search Service provides the APIs for searching codes related information.
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/codesearchms
+tags:
+- name: Code Information APIs
+paths:
+  /api/coding/code/codetype:
+    post:
+      tags:
+      - Code Information APIs
+      summary: Fetches the code type for the requested code
+      operationId: codeType
+      parameters:
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      requestBody:
+        description: Fetch code types for given codes
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+            examples:
+              codes:
+                description: codes
+                value:
+                - C9084
+                - 0097U
+                - '718.60'
+                - '84.58'
+                - T40.7X1
+                - 30230AZ
+        required: true
+      responses:
+        '200':
+          description: Fetch code types for given codes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Code'
+              example:
+              - codeType: HCPCS
+                code: C9084
+              - codeType: CPT
+                codeStatus: DELETED
+                code: 0097U
+              - codeType: I9V1
+                code: '718.60'
+              - codeType: I9V3
+                code: '84.58'
+              - codeType: I10_CM
+                code: T40.7X1
+              - codeType: I10_PCS
+                code: 30230AZ
+        '400':
+          description: 'Bad request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - Number of codes limited to 100
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/codetype
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{code}/validate:
+    get:
+      tags:
+      - Code Information APIs
+      summary: Validate if the given code is valid or deleted or invalid
+      operationId: validateCode
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: codeType
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - cpt
+            - hcpcs
+            - i10_pcs
+            - i10_cm
+            - i9v1
+            - i9v3
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch lay descriptions for given code and codetype
+          content:
+            application/json:
+              example:
+              - fullDescription: Code "0001t" is a deleted code. Deleted date "01/01/05". To report, see code  34803
+                codeStatus: DELETED
+                code: 0001t
+        '404':
+          description: Not Found - lay descriptions were not found for given code and codetype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2024-02-05T12:40:33.399+00:00'
+                status: 404
+                error: Not Found
+                path: /codesearchms/api/coding/code/0001t/validat
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2024-02-05T07:22:01.017+00:00'
+                path: /codesearchms/api/coding/code/0001t/validate
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{code}/detail:
+    get:
+      tags:
+      - Code Information APIs
+      summary: Fetches the details of the code based on codetype
+      operationId: codeDetail
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - i10_pcs
+          - i10_cm
+          - i9v1
+          - i9v3
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - prev
+          - next
+      - name: data
+        in: query
+        description: 'Allows to request only specific attributes data. Available specific data to request are "fullDescription,edits,references,char48Desc". eg: To get only full description, add "fullDescription" in the list'
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default: []
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch code details for given code and codetype
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Code'
+              example:
+                fullDescription: Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and low level of medical decision making. When using time for code selection, 20-29 minutes of total time is spent on the date of the encounter.
+                image:
+                  value: null
+                  href: null
+                notes:
+                - value: range-notes
+                  href: /codesearchms/api/coding/code/cpt/99213/range-notes
+                - value: section-notes
+                  href: /codesearchms/api/coding/code/cpt/99213/section-notes
+                prev:
+                  value: prev
+                  href: api/coding/code/cpt/99213/detail?direction=prev
+                next:
+                  value: next
+                  href: api/coding/code/cpt/99213/detail?direction=next
+                indent1: 0
+                indent2: 0
+                code: '99213'
+        '400':
+          description: 'Bad request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '992131' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: codesearchms/api/coding/code/cpt/17000/detail
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{code}/range:
+    get:
+      tags:
+      - Code Information APIs
+      summary: Returns the complete code range
+      operationId: range
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i9v1
+          - i9v3
+          - cpt
+          - hcpcs
+          - i10_cm
+      - name: code
+        in: path
+        description: Code for which range is required
+        required: true
+        schema:
+          type: string
+        example: 804.45
+      - name: rangeid
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Complete code range for code
+          content:
+            application/json:
+              example:
+                countInRange: 9
+                rangeId: 1
+                rangeHeader: Evaluation and Management^Outpatient and Other Visits
+                rangeCodeBeg: '99202'
+                rangeCodeEnd: '99215'
+                next:
+                  value: next
+                  href: api/coding/code/cpt/99202/range?rangeid=1&direction=next
+                codes:
+                - codeType: cpt
+                  fullDescription: Office or other outpatient visit for the evaluation and management of a new patient, which requires a medically appropriate history and/or examination and straightforward medical decision making. When using time for code selection, 15-29 minutes of total time is spent on the date of the encounter.
+                  edits:
+                  - value: MUE_PRACTITIONER set to 1 FROM MUE_1 ICON_TYPE_ID = 165
+                    href: ''
+                  - value: CCI_1 set to 1 FROM CCI_1 COMP
+                    href: ''
+                  - value: ANSWER BOOK set to 1 FROM ARTICLE CODE_X_ARTICLETYPR ID 3
+                    href: ''
+                  - value: ASC_INDICATOR SET FROM ASC_INDICATOR AND FED_REG
+                    href: ''
+                  indent1: 0
+                  indent2: 0
+                  codeNotes: {}
+                  code: '99202'
+                - codeType: cpt
+                  fullDescription: Office or other outpatient visit for the evaluation and management of a new patient, which requires a medically appropriate history and/or examination and low level of medical decision making. When using time for code selection, 30-44 minutes of total time is spent on the date of the encounter.
+                  edits:
+                  - value: MUE_PRACTITIONER set to 1 FROM MUE_1 ICON_TYPE_ID = 165
+                    href: ''
+                  - value: CCI_1 set to 1 FROM CCI_1 COMP
+                    href: ''
+                  - value: ANSWER BOOK set to 1 FROM ARTICLE CODE_X_ARTICLETYPR ID 3
+                    href: ''
+                  - value: ASC_INDICATOR SET FROM ASC_INDICATOR AND FED_REG
+                    href: ''
+                  indent1: 0
+                  indent2: 0
+                  codeNotes: {}
+                  code: '99203'
+                - codeType: cpt
+                  fullDescription: Office or other outpatient visit for the evaluation and management of a new patient, which requires a medically appropriate history and/or examination and moderate level of medical decision making. When using time for code selection, 45-59 minutes of total time is spent on the date of the encounter.
+                  edits:
+                  - value: MUE_PRACTITIONER set to 1 FROM MUE_1 ICON_TYPE_ID = 165
+                    href: ''
+                  - value: CCI_1 set to 1 FROM CCI_1 COMP
+                    href: ''
+                  - value: ANSWER BOOK set to 1 FROM ARTICLE CODE_X_ARTICLETYPR ID 3
+                    href: ''
+                  - value: ASC_INDICATOR SET FROM ASC_INDICATOR AND FED_REG
+                    href: ''
+                  indent1: 0
+                  indent2: 0
+                  codeNotes: {}
+                  code: '99204'
+                - codeType: cpt
+                  fullDescription: Office or other outpatient visit for the evaluation and management of a new patient, which requires a medically appropriate history and/or examination and high level of medical decision making. When using time for code selection, 60-74 minutes of total time is spent on the date of the encounter.
+                  edits:
+                  - value: MUE_PRACTITIONER set to 1 FROM MUE_1 ICON_TYPE_ID = 165
+                    href: ''
+                  - value: CCI_1 set to 1 FROM CCI_1 COMP
+                    href: ''
+                  - value: ANSWER BOOK set to 1 FROM ARTICLE CODE_X_ARTICLETYPR ID 3
+                    href: ''
+                  - value: ASC_INDICATOR SET FROM ASC_INDICATOR AND FED_REG
+                    href: ''
+                  indent1: 0
+                  indent2: 0
+                  codeNotes:
+                    notes:
+                    - noteType: CPT Excludes Header
+                      content:
+                      - Excludes Prolonged services (lasting 75 minutes or more) ([99417])
+                  code: '99205'
+                - codeType: cpt
+                  fullDescription: Office or other outpatient visit for the evaluation and management of an established patient that may not require the presence of a physician or other qualified health care professional
+                  edits:
+                  - value: MUE_PRACTITIONER set to 1 FROM MUE_1 ICON_TYPE_ID = 165
+                    href: ''
+                  - value: CCI_1 set to 1 FROM CCI_1 COMP
+                    href: ''
+                  - value: ANSWER BOOK set to 1 FROM ARTICLE CODE_X_ARTICLETYPR ID 3
+                    href: ''
+                  - value: ASC_INDICATOR SET FROM ASC_INDICATOR AND FED_REG
+                    href: ''
+                  indent1: 0
+                  indent2: 0
+                  codeNotes: {}
+                  code: '99211'
+                - codeType: cpt
+                  fullDescription: Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and straightforward medical decision making. When using time for code selection, 10-19 minutes of total time is spent on the date of the encounter.
+                  edits:
+                  - value: MUE_PRACTITIONER set to 1 FROM MUE_1 ICON_TYPE_ID = 165
+                    href: ''
+                  - value: CCI_1 set to 1 FROM CCI_1 COMP
+                    href: ''
+                  - value: ANSWER BOOK set to 1 FROM ARTICLE CODE_X_ARTICLETYPR ID 3
+                    href: ''
+                  - value: ASC_INDICATOR SET FROM ASC_INDICATOR AND FED_REG
+                    href: ''
+                  indent1: 0
+                  indent2: 0
+                  codeNotes: {}
+                  code: '99212'
+                - codeType: cpt
+                  fullDescription: Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and low level of medical decision making. When using time for code selection, 20-29 minutes of total time is spent on the date of the encounter.
+                  edits:
+                  - value: MUE_PRACTITIONER set to 1 FROM MUE_1 ICON_TYPE_ID = 165
+                    href: ''
+                  - value: CCI_1 set to 1 FROM CCI_1 COMP
+                    href: ''
+                  - value: ANSWER BOOK set to 1 FROM ARTICLE CODE_X_ARTICLETYPR ID 3
+                    href: ''
+                  - value: ASC_INDICATOR SET FROM ASC_INDICATOR AND FED_REG
+                    href: ''
+                  indent1: 0
+                  indent2: 0
+                  codeNotes: {}
+                  code: '99213'
+                - codeType: cpt
+                  fullDescription: Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and moderate level of medical decision making. When using time for code selection, 30-39 minutes of total time is spent on the date of the encounter.
+                  edits:
+                  - value: MUE_PRACTITIONER set to 1 FROM MUE_1 ICON_TYPE_ID = 165
+                    href: ''
+                  - value: CCI_1 set to 1 FROM CCI_1 COMP
+                    href: ''
+                  - value: ANSWER BOOK set to 1 FROM ARTICLE CODE_X_ARTICLETYPR ID 3
+                    href: ''
+                  - value: ASC_INDICATOR SET FROM ASC_INDICATOR AND FED_REG
+                    href: ''
+                  indent1: 0
+                  indent2: 0
+                  codeNotes: {}
+                  code: '99214'
+                - codeType: cpt
+                  fullDescription: Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and high level of medical decision making. When using time for code selection, 40-54 minutes of total time is spent on the date of the encounter.
+                  edits:
+                  - value: MUE_PRACTITIONER set to 1 FROM MUE_1 ICON_TYPE_ID = 165
+                    href: ''
+                  - value: CCI_1 set to 1 FROM CCI_1 COMP
+                    href: ''
+                  - value: ANSWER BOOK set to 1 FROM ARTICLE CODE_X_ARTICLETYPR ID 3
+                    href: ''
+                  - value: ASC_INDICATOR SET FROM ASC_INDICATOR AND FED_REG
+                    href: ''
+                  indent1: 0
+                  indent2: 0
+                  codeNotes:
+                    notes:
+                    - noteType: CPT Excludes Header
+                      content:
+                      - Excludes Prolonged services (lasting 55 minutes or more) ([99417])
+                  code: '99215'
+        '400':
+          description: Bad Request - some parameters were invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '99' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/99213/range
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{term}/root-operation-definition-term:
+    get:
+      tags:
+      - Code Information APIs
+      summary: Fetches the root operation definition for a code and term.
+      operationId: rootOperationDefinitionTerm
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_pcs
+      - name: code
+        in: query
+        description: Code for which root operation definition is optional
+        required: false
+        schema:
+          type: string
+        example: '001'
+      - name: term
+        in: path
+        description: Term for which root operation definition is required
+        required: true
+        schema:
+          type: string
+        example: Bypass
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Complete root operation definition of the code and term
+          content:
+            application/json:
+              example:
+              - definition: Altering the route of passage of the contents of a tubular body part
+                explanation: Rerouting contents of a body part to a downstream area of the normal route, to a similar route and body part, or to an abnormal route and dissimilar body part. Includes one or more anastomoses, with or without the use of a device
+                includesExamples: Coronary artery bypass, colostomy formation
+        '400':
+          description: 'Bad request: some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - 'rootOperationDefinition.code: length must be between 3 and 7'
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/Bypass/rootOperationDefinition-term
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{code}/root-operation-definition:
+    get:
+      tags:
+      - Code Information APIs
+      summary: Fetches the root operation definition for a code.
+      operationId: rootOperationDefinition
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - i10_pcs
+      - name: code
+        in: path
+        description: Code for which root operation definition is required
+        required: true
+        schema:
+          type: string
+        example: 0QPP04Z
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Complete root operation definition of the code
+          content:
+            application/json:
+              example:
+              - definition: Taking out or off a device from a body part
+                explanation: If a device is taken out and a similar device put in without cutting or puncturing the skin or mucous membrane, the procedure is coded to the root operation CHANGE. Otherwise, the procedure for taking out a device is coded to the root operation REMOVAL
+                includesExamples: Drainage tube removal, cardiac pacemaker removal
+        '400':
+          description: 'Bad Request: some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - 'rootOperationDefinition.code: length must be between 3 and 7'
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/cpt/11000/rootOperationDefinition
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/{codetype}/{code}/lay-description:
+    get:
+      tags:
+      - Code Information APIs
+      summary: Fetches the LayDescription based on the codetype and code
+      operationId: layDescription
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - cpt
+          - hcpcs
+          - i10_cm
+          - i10_pcs
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Fetch lay descriptions for given code and codetype
+          content:
+            application/json:
+              example:
+                CODE:
+                  header: Code
+                  annotations:
+                  - header: '99213'
+                    descriptions:
+                    - Providers report these codes for established patients being seen in the doctor's office, a multispecialty group clinic, or other outpatient environment. All require a medically appropriate history and/or examination excluding the most basic service represented by 99211 that describes an encounter that may not require the presence of a physician or other qualified health care professional. For the remainder of codes within this range, code selection is based on the level of medical decision making (MDM) or total time personally spent by the physician and/or other qualified health care professional(s) on the date of the encounter. Factors to be considered in MDM include the number and complexity of problems addressed during the encounter, amount and complexity of data requiring review and analysis, and the risk of complications and/or morbidity or mortality associated with patient management. Report 99212 for a visit that entails straightforward MDM. If time is used for code selection, 10 to 19 minutes of total time is spent on the day of encounter. Report 99213 for a visit requiring a low level of MDM or 20 to 29 minutes of total time; 99214 for a moderate level of MDM or 30 to 39 minutes of total time; and 99215 for a high level of MDM or 40 to 54 minutes of total time.
+        '400':
+          description: 'Bad Request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - The code provided '992133' in this web service request is not a valid 'cpt' code.
+                warning: null
+                info: null
+        '404':
+          description: 'Not found: Lay descriptions were not found for given code and codetype'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                timestamp: '2022-12-08T11:18:00.755+00:00'
+                path: /api/coding/code/i9v1/99213/lay-description
+                status: 404
+                error: Not Found
+                message: null
+                requestId: 7262ac83-9
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/i10_cm/D68.2/lay-description
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/multi-codes/{code}:
+    get:
+      tags:
+      - Code Information APIs
+      summary: Multi code search results
+      operationId: fetchMultiCodeDetails
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 99213,99215,A0021
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+        example: 150
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Multi code results for searched codes
+          content:
+            application/json:
+              example:
+                content:
+                - code:
+                  - codeType: cpt
+                    fullDescription: Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and low level of medical decision making. When using time for code selection, 20-29 minutes of total time is spent on the date of the encounter.
+                    edits:
+                    - value: MUE_PRACTITIONER set to 1 FROM MUE_1 ICON_TYPE_ID = 165
+                      href: ''
+                    - value: CCI_1 set to 1 FROM CCI_1 COMP
+                      href: ''
+                    - value: ANSWER BOOK set to 1 FROM ARTICLE CODE_X_ARTICLETYPR ID 3
+                      href: ''
+                    - value: ASC_INDICATOR SET FROM ASC_INDICATOR AND FED_REG
+                      href: ''
+                    codeStatus: ACTIVE
+                    indent1: 0
+                    indent2: 0
+                    codeNotes: {}
+                    code: '99213'
+                  - codeType: cpt
+                    fullDescription: Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and high level of medical decision making. When using time for code selection, 40-54 minutes of total time is spent on the date of the encounter.
+                    edits:
+                    - value: MUE_PRACTITIONER set to 1 FROM MUE_1 ICON_TYPE_ID = 165
+                      href: ''
+                    - value: CCI_1 set to 1 FROM CCI_1 COMP
+                      href: ''
+                    - value: ANSWER BOOK set to 1 FROM ARTICLE CODE_X_ARTICLETYPR ID 3
+                      href: ''
+                    - value: ASC_INDICATOR SET FROM ASC_INDICATOR AND FED_REG
+                      href: ''
+                    codeStatus: ACTIVE
+                    indent1: 0
+                    indent2: 0
+                    codeNotes:
+                      notes:
+                      - noteType: CPT Excludes Header
+                        content:
+                        - Excludes Prolonged services (lasting 55 minutes or more) ([99417])
+                    code: '99215'
+                  - codeType: hcpcs
+                    fullDescription: Invalid Code
+                    codeStatus: INVALID
+                    indent1: 0
+                    indent2: 0
+                    code: '99213'
+                  - codeType: hcpcs
+                    fullDescription: Invalid Code
+                    codeStatus: INVALID
+                    indent1: 0
+                    indent2: 0
+                    code: '99215'
+                  - codeType: hcpcs
+                    fullDescription: Ambulance service, outside state per mile, transport (Medicaid only)
+                    edits:
+                    - value: ANSWER BOOK set to 1 FROM ARTICLE CODE_X_ARTICLETYPR ID 3
+                      href: ''
+                    codeStatus: ACTIVE
+                    indent1: 0
+                    indent2: 0
+                    code: A0021
+                  msg: []
+                totalCount: 5
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: codesearchms/api/coding/code/cpt/17000/detail
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+  /api/coding/code/i10_pcs/{code}/range:
+    get:
+      tags:
+      - Code Information APIs
+      summary: Returns the complete pcs code range
+      operationId: rangePcs
+      parameters:
+      - name: code
+        in: path
+        description: Code for which range is required
+        required: true
+        schema:
+          type: string
+        example: 0DJD8ZZ
+      - name: rangeid
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: direction
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-mm-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-mm-dd
+      responses:
+        '200':
+          description: Complete code range for pcs code
+          content:
+            application/json:
+              example:
+                countInRange: 36
+                rangeId: 0
+                rangeHeader: 0DJ
+                prev:
+                  value: prev
+                  href: api/coding/code/i10_pcs/0DJD8ZZ/range?direction=prev
+                next:
+                  value: next
+                  href: api/coding/code/i10_pcs/0DJD8ZZ/range?direction=next
+                pcsChar1Description: 0 Medical and Surgical
+                pcsChar2Description: D Gastrointestinal System
+                pcsChar3Description: J Inspection:&nbsp;&nbsp;Visually and/or manually exploring a body part
+                codes:
+                - fullDescription: Inspection / Upper Intestinal Tract
+                  codes:
+                  - fullDescription: Inspection of Upper Intestinal Tract, Open Approach
+                    edits: []
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJ00ZZ
+                  - fullDescription: Inspection of Upper Intestinal Tract, Percutaneous Approach
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJ03ZZ
+                  - fullDescription: Inspection of Upper Intestinal Tract, Percutaneous Endoscopic Approach
+                    edits: []
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJ04ZZ
+                  - fullDescription: Inspection of Upper Intestinal Tract, Via Natural or Artificial Opening
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJ07ZZ
+                  - fullDescription: Inspection of Upper Intestinal Tract, Via Natural or Artificial Opening Endoscopic
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJ08ZZ
+                  - fullDescription: Inspection of Upper Intestinal Tract, External Approach
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJ0XZZ
+                  code: 0DJ0
+                - fullDescription: Inspection / Stomach
+                  codes:
+                  - fullDescription: Inspection of Stomach, Open Approach
+                    edits: []
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJ60ZZ
+                  - fullDescription: Inspection of Stomach, Percutaneous Approach
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJ63ZZ
+                  - fullDescription: Inspection of Stomach, Percutaneous Endoscopic Approach
+                    edits: []
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJ64ZZ
+                  - fullDescription: Inspection of Stomach, Via Natural or Artificial Opening
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJ67ZZ
+                  - fullDescription: Inspection of Stomach, Via Natural or Artificial Opening Endoscopic
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJ68ZZ
+                  - fullDescription: Inspection of Stomach, External Approach
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJ6XZZ
+                  code: 0DJ6
+                - fullDescription: Inspection / Lower Intestinal Tract
+                  codes:
+                  - fullDescription: Inspection of Lower Intestinal Tract, Open Approach
+                    edits: []
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJD0ZZ
+                  - fullDescription: Inspection of Lower Intestinal Tract, Percutaneous Approach
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJD3ZZ
+                  - fullDescription: Inspection of Lower Intestinal Tract, Percutaneous Endoscopic Approach
+                    edits: []
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJD4ZZ
+                  - fullDescription: Inspection of Lower Intestinal Tract, Via Natural or Artificial Opening
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJD7ZZ
+                  - fullDescription: Inspection of Lower Intestinal Tract, Via Natural or Artificial Opening Endoscopic
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJD8ZZ
+                  - fullDescription: Inspection of Lower Intestinal Tract, External Approach
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJDXZZ
+                  code: 0DJD
+                - fullDescription: Inspection / Omentum
+                  codes:
+                  - fullDescription: Inspection of Omentum, Open Approach
+                    edits: []
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJU0ZZ
+                  - fullDescription: Inspection of Omentum, Percutaneous Approach
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJU3ZZ
+                  - fullDescription: Inspection of Omentum, Percutaneous Endoscopic Approach
+                    edits: []
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJU4ZZ
+                  - fullDescription: Inspection of Omentum, External Approach
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJUXZZ
+                  code: 0DJU
+                - fullDescription: Inspection / Mesentery
+                  codes:
+                  - fullDescription: Inspection of Mesentery, Open Approach
+                    edits: []
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJV0ZZ
+                  - fullDescription: Inspection of Mesentery, Percutaneous Approach
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJV3ZZ
+                  - fullDescription: Inspection of Mesentery, Percutaneous Endoscopic Approach
+                    edits: []
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJV4ZZ
+                  - fullDescription: Inspection of Mesentery, External Approach
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJVXZZ
+                  code: 0DJV
+                - fullDescription: Inspection / Peritoneum
+                  codes:
+                  - fullDescription: Inspection of Peritoneum, Open Approach
+                    edits: []
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJW0ZZ
+                  - fullDescription: Inspection of Peritoneum, Percutaneous Approach
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJW3ZZ
+                  - fullDescription: Inspection of Peritoneum, Percutaneous Endoscopic Approach
+                    edits: []
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJW4ZZ
+                  - fullDescription: Inspection of Peritoneum, External Approach
+                    edits:
+                    - value: NON OR PROC AFFECTS MS_DRG OR DOES NOT AFFECT DRG FROM CODE_X_ICON ICON_TYPE_ID = 121 AND  VALUE = 3
+                      href: ''
+                    references:
+                    - value: ICD-9 Mapping
+                      href: null
+                    code: 0DJWXZZ
+                  code: 0DJW
+        '400':
+          description: 'Bad request: Some parameters were invalid'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                error:
+                - 'rangePcs.code: length must be between 3 and 7'
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2022-07-06T07:22:01.017+00:00'
+                path: /api/coding/code/i10_pcs/0DJD8ZZ/range
+                status: 500
+                error: Internal Server Error
+                requestId: a4796cc7-1
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Link:
+      type: object
+      properties:
+        value:
+          type: string
+        href:
+          type: string
+        iconName:
+          type: string
+        routerLink:
+          type: string
+        type:
+          type: string
+        tag:
+          type: string
+        label:
+          type: string
+        addonName:
+          type: string
+        addonId:
+          type: string
+    CodeGroup:
+      type: object
+      properties:
+        codes:
+          type: array
+          items:
+            type: string
+        desc:
+          type: array
+          items:
+            type: string
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+    Code:
+      type: object
+      properties:
+        codeType:
+          type: string
+        shortDescription:
+          type: string
+        fullDescription:
+          type: string
+        fullDictionaryTerms:
+          type: object
+          additionalProperties:
+            type: string
+        image:
+          $ref: '#/components/schemas/Link'
+        edits:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        prev:
+          $ref: '#/components/schemas/Link'
+        next:
+          $ref: '#/components/schemas/Link'
+        pcsChar1Description:
+          type: string
+        pcsChar2Description:
+          type: string
+        pcsChar3Description:
+          type: string
+        codes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Code'
+        codeNote:
+          type: string
+        codeStatus:
+          type: string
+          enum:
+          - ACTIVE
+          - DELETED
+          - INVALID
+        indent1:
+          type: integer
+          format: int32
+        indent2:
+          type: integer
+          format: int32
+        codeInfo:
+          type: string
+        mappingInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        backwardMappingCodes:
+          type: array
+          items:
+            type: string
+        references:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+        billedTogether:
+          type: array
+          items:
+            $ref: '#/components/schemas/CodeGroup'
+        favorite:
+          type: boolean
+        nonBillable:
+          type: boolean
+        nextCode:
+          type: boolean
+        code:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

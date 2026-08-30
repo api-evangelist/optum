@@ -1,0 +1,118 @@
+openapi: 3.2.0
+info:
+  version: v1
+  description: 275 Attachments Transaction
+  title: Medical Network Attachments Submission v1 Attachment Submission API
+servers:
+- url: https://sandbox-apigw.optum.com/medicalnetwork/attachments/submission/v1/
+  description: Optum
+tags:
+- name: Attachment Submission
+  description: Attachment Submission
+paths:
+  /uploads:
+    post:
+      responses:
+        '200':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: OK
+        '400':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bad Request
+        '500':
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/InternalErrorResponse'
+          description: Internal Server
+      description: 275 JSON and File, see OpenAPI components for Request schema.
+      parameters:
+      - schema:
+          type: string
+        description: 'Bearer Your-Access-Token<br/>Example: <b>Bearer eyJraWQiOiIxIiwid…</b>'
+        required: true
+        name: Authorization
+        in: header
+      tags:
+      - Attachment Submission
+      summary: Attachment Submission
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - files
+              type: object
+              properties:
+                files:
+                  items:
+                    type: string
+                    format: binary
+                  type: array
+                request:
+                  type: string
+      operationId: upload
+components:
+  schemas:
+    InternalErrorResponse:
+      type: object
+      $ref: '#/components/schemas/InternalError'
+    InternalError:
+      type: object
+      properties:
+        status:
+          type: string
+          example: '500'
+        timestamp:
+          type: string
+          example: '2022-04-06T15:58:17.478+00:00'
+        message:
+          type: string
+          example: NullPointerException
+        path:
+          type: string
+          example: attachments/uploads
+        error:
+          type: string
+          example: Internal Server Error
+      description: Error
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+    Error:
+      type: object
+      properties:
+        followupAction:
+          type: string
+        field:
+          type: string
+        code:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+      description: Error
+    Response:
+      type: object
+      properties:
+        status:
+          type: string
+        implementationTransactionSetSyntaxError:
+          type: string
+        attachmentId:
+          type: string
+        transactionSetAcknowledgement:
+          type: string

@@ -1,0 +1,215 @@
+openapi: 3.2.0
+info:
+  title: CMS Common Facility CC/MCC Code and Excludes List for I10CM and I9V1 APIs API
+  description: MicroService that contains CMS related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/cmscommonms
+tags:
+- name: CC/MCC Code and Excludes List for I10CM and I9V1 APIs
+paths:
+  /api/cms/facility/{codetype}/{code}/{conditiontype}/cc-mcc:
+    get:
+      tags:
+      - CC/MCC Code and Excludes List for I10CM and I9V1 APIs
+      summary: Fetches the CC MCC codes excludes table data for I10CM and I9V1 codetype
+      operationId: getCCMCCCodeExcludesList
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          description: codetypes
+          enum:
+          - i9v1
+          - i10_cm
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+          description: code
+      - name: conditiontype
+        in: path
+        required: true
+        schema:
+          type: string
+          description: conditiontype
+          enum:
+          - '1'
+          - '2'
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch code, codeDescription and details.
+          content:
+            application/json:
+              example:
+                content:
+                - code: '011.00'
+                  description: Tuberculosis of lung, infiltrative, confirmation unspecified
+                - code: '011.01'
+                  description: Tuberculosis of lung, infiltrative, bacteriological or histological examination not done
+                - code: '011.02'
+                  description: Tuberculosis of lung, infiltrative, bacteriological or histological examination unknown (at present)
+                - code: '011.03'
+                  description: Tuberculosis of lung, infiltrative, tubercle bacilli found (in sputum) by microscopy
+                - code: '011.04'
+                  description: Tuberculosis of lung, infiltrative, tubercle bacilli not found (in sputum) by microscopy, but found by bacterial culture
+                - code: '011.05'
+                  description: Tuberculosis of lung, infiltrative, tubercle bacilli not found by bacteriological examination, but tuberculosis confirmed histologically
+                - code: '011.06'
+                  description: Tuberculosis of lung, infiltrative, tubercle bacilli not found bacteriological or histological examination, but tuberculosis confirmed by other methods (inoculation of animals)
+                totalCount: 7
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2024-09-10T09:19:11.084+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page index must not be less than zero'
+                path: /cmscommonms/api/cms/facility/i9v1/011.04/1/cc-mcc
+      security:
+      - bearerAuth: []
+  /api/cms/facility/{codetype}/cc-mcc/code-list:
+    get:
+      tags:
+      - CC/MCC Code and Excludes List for I10CM and I9V1 APIs
+      summary: Fetches the CC MCC codes table data for I10CM and I9V1 codetype
+      operationId: getCCMCCCodeList
+      parameters:
+      - name: codetype
+        in: path
+        required: true
+        schema:
+          type: string
+          description: codetypes
+          enum:
+          - i9v1
+          - i10_cm
+      - name: conditiontype
+        in: query
+        required: false
+        schema:
+          type: string
+          description: conditiontype
+          enum:
+          - '1'
+          - '2'
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: sort
+        in: query
+        description: Any of these values (code,-code) are allowed.The default is code
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - code
+      - name: filter
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: Fetch code, codeDescription and details.
+          content:
+            application/json:
+              example:
+                content:
+                - code: '001.0'
+                  description: Cholera due to Vibrio cholerae
+                  conditionType: '1'
+                  excludeCodes: <b>001.0-001.9</b>
+                - code: '001.1'
+                  description: Cholera due to Vibrio cholerae el tor
+                  conditionType: '1'
+                  excludeCodes: <b>001.0-001.9</b>
+                - code: '001.9'
+                  description: Unspecified cholera
+                  conditionType: '1'
+                  excludeCodes: <b>001.0-001.9</b>
+                totalCount: 3
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error:
+                - sort parameter value should be from list of [code]
+                warning: null
+                info: null
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              example:
+                timestamp: '2024-09-10T09:19:11.084+00:00'
+                status: 500
+                error: Internal Server Error
+                message: 'Request processing failed: java.lang.IllegalArgumentException: Page index must not be less than zero'
+                path: /cmscommonms/api/cms/facility/i9v1/cc-mcc/code-list
+      security:
+      - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true

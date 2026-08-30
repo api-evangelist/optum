@@ -1,0 +1,88 @@
+openapi: 3.2.0
+info:
+  title: Optum Common Facility UB04 Code Lists API
+  description: MicroService that contains Optum module-related information
+  contact:
+    name: Ken Kracker
+    email: ken.kracker@optum.com
+  version: v1.0
+servers:
+- url: /v1/optumcommonms
+tags:
+- name: UB04 Code Lists
+paths:
+  /api/optum/facility/ub04/{codetype}/list:
+    get:
+      tags:
+      - UB04 Code Lists
+      summary: Fetches the list of UB04 codes on codetype
+      operationId: getUb04Codes
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: codetype
+        in: path
+        description: UB04 Code Type
+        required: true
+        schema:
+          type: string
+          enum:
+          - value-codes
+          - occurrence-date-codes
+          - condition-codes
+          - occurrence-span-codes
+      - name: yyyy-MM-dd
+        in: header
+        description: Date for which historical data is required
+        required: false
+        schema:
+          type: string
+          format: yyyy-MM-dd
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OptumPageImplCode'
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    OptumPageImplCode:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Code'
+        totalCount:
+          type: integer
+          format: int64
+    Code:
+      type: object
+      properties:
+        codeValue:
+          type: string
+        description:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-readme:
+  explorer-enabled: true
+  proxy-enabled: true
