@@ -48,7 +48,7 @@ accessModel:
 image: https://www.optum.com/content/dam/optum4/images/logos/optum-logo.svg
 specificationVersion: '0.23'
 created: '2026-07-17'
-modified: '2026-08-14'
+modified: '2026-09-16'
 tags:
 - Company
 - Healthcare
@@ -72,12 +72,11 @@ tags:
 - Payer Directory
 apis:
 - name: Optum Real (Medical) API
-  description: >-
-    Optum Real point-of-care APIs on the oihub gateway: pre-service eligibility, claim pre-check, claim
-    actions, claim inquiry, patient benefit check, document search, auth referral submission, plus HL7
-    FHIR R4 Da Vinci implementations — Prior Authorization Support (PAS $submit/$inquire/$submit-attachment),
+  description: 'Optum Real point-of-care APIs on the oihub gateway: pre-service eligibility, claim pre-check,
+    claim actions, claim inquiry, patient benefit check, document search, auth referral submission, plus
+    HL7 FHIR R4 Da Vinci implementations — Prior Authorization Support (PAS $submit/$inquire/$submit-attachment),
     Documentation Templates and Rules (DTR questionnaire package and adaptive $next-question), Coverage
-    Requirements Discovery over CDS Hooks, and Provider Access with $bulk-member-match and $davinci-data-export.
+    Requirements Discovery over CDS Hooks, and Provider Access with $bulk-member-match and $davinci-data-export.'
   humanURL: https://developer.optum.com/optumreal-medical
   baseURL: https://apigw.optum.com/oihub/
   tags:
@@ -105,12 +104,12 @@ apis:
   - type: OpenAPI
     url: openapi/optum-document-search-api-openapi.yml
 - name: Optum Interoperability APIs (CMS Patient Access)
-  description: >-
-    Optum's payer-side CMS Interoperability and Patient Access (CMS-9115-F) surface — Patient Access,
-    Provider Directory and Payer-to-Payer exchange for the Optum behavioral and physical health plans.
-    The former developer.optum.com/dataaccessandinteroperability ReadMe project no longer resolves (every
-    path returned the portal shell when probed on 2026-08-14); the developer information is now published
-    as per-plan PDF packets on optum.com, so there is no machine-readable contract for this surface.
+  description: Optum's payer-side CMS Interoperability and Patient Access (CMS-9115-F) surface — Patient
+    Access, Provider Directory and Payer-to-Payer exchange for the Optum behavioral and physical health
+    plans. The former developer.optum.com/dataaccessandinteroperability ReadMe project no longer resolves
+    (every path returned the portal shell when probed on 2026-08-14); the developer information is now
+    published as per-plan PDF packets on optum.com, so there is no machine-readable contract for this
+    surface.
   humanURL: https://www.optum.com/en/interoperability-apis.html
   baseURL: https://apigw.optum.com/
   tags:
@@ -124,8 +123,8 @@ apis:
     url: https://www.optum.com/en/interoperability-apis.html
 - aid: optum:optum-ambulance-fee-schedule-apis-api
   name: Optum Ambulance Fee Schedule APIs API
-  description: >-
-    The Ambulance Fee Schedule APIs API from Optum — 2 operation(s) for ambulance fee schedule apis.
+  description: The Ambulance Fee Schedule APIs API from Optum — 2 operation(s) for ambulance fee schedule
+    apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -499,8 +498,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-authorization-orchestration-api
   name: Optum Authorization (Orchestration) API
-  description: >-
-    The Authorization (Orchestration) API from Optum — 2 operation(s) for authorization (orchestration).
+  description: The Authorization (Orchestration) API from Optum — 2 operation(s) for authorization (orchestration).
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -534,8 +532,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-average-sales-price-apis-api
   name: Optum Average Sales Price APIs API
-  description: >-
-    The Average Sales Price APIs API from Optum — 1 operation(s) for average sales price apis.
+  description: The Average Sales Price APIs API from Optum — 1 operation(s) for average sales price apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -569,9 +566,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-cc-mcc-code-and-excludes-list-for-i10cm-and-i9v1-apis-api
   name: Optum CC/MCC Code and Excludes List for I10CM and I9V1 APIs API
-  description: >-
-    The CC/MCC Code and Excludes List for I10CM and I9V1 APIs API from Optum — 2 operation(s) for cc/mcc
-    code and excludes list for i10cm and i9v1 apis.
+  description: The CC/MCC Code and Excludes List for I10CM and I9V1 APIs API from Optum — 2 operation(s)
+    for cc/mcc code and excludes list for i10cm and i9v1 apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags: []
@@ -640,8 +636,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-cci-edits-code-validator-api-api
   name: Optum CCI Edits Code Validator API
-  description: >-
-    The CCI Edits Code Validator API API from Optum — 1 operation(s) for cci edits code validator api.
+  description: The CCI Edits Code Validator API API from Optum — 1 operation(s) for cci edits code validator
+    api.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -675,9 +671,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-cdi-and-coding-support-pdf-information-api
   name: Optum CDI and Coding Support PDF Information API
-  description: >-
-    The CDI and Coding Support PDF Information API from Optum — 1 operation(s) for cdi and coding support
-    pdf information.
+  description: The CDI and Coding Support PDF Information API from Optum — 1 operation(s) for cdi and
+    coding support pdf information.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -745,8 +740,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-check-enhanced-dental-eligibility-api
   name: Optum Check Enhanced Dental Eligibility API
-  description: >-
-    The Check Enhanced Dental Eligibility API from Optum — 1 operation(s) for check enhanced dental eligibility.
+  description: The Check Enhanced Dental Eligibility API from Optum — 1 operation(s) for check enhanced
+    dental eligibility.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -780,9 +775,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-claim-adjustment-reasons-codes-apis-api
   name: Optum Claim Adjustment Reasons Codes APIs API
-  description: >-
-    The Claim Adjustment Reasons Codes APIs API from Optum — 1 operation(s) for claim adjustment reasons
-    codes apis.
+  description: The Claim Adjustment Reasons Codes APIs API from Optum — 1 operation(s) for claim adjustment
+    reasons codes apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -952,9 +946,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-claim-status-category-code-apis-api
   name: Optum Claim Status Category Code APIs API
-  description: >-
-    The Claim Status Category Code APIs API from Optum — 1 operation(s) for claim status category code
-    apis.
+  description: The Claim Status Category Code APIs API from Optum — 1 operation(s) for claim status category
+    code apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -1056,9 +1049,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-clinical-diagnostic-laboratory-apis-api
   name: Optum Clinical Diagnostic Laboratory APIs API
-  description: >-
-    The Clinical Diagnostic Laboratory APIs API from Optum — 1 operation(s) for clinical diagnostic laboratory
-    apis.
+  description: The Clinical Diagnostic Laboratory APIs API from Optum — 1 operation(s) for clinical diagnostic
+    laboratory apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -1398,8 +1390,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-code-specific-guidelines-api
   name: Optum Code Specific Guidelines API
-  description: >-
-    The Code Specific Guidelines API from Optum — 2 operation(s) for code specific guidelines.
+  description: The Code Specific Guidelines API from Optum — 2 operation(s) for code specific guidelines.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -1433,8 +1424,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-code-specific-guidelines-apis-api
   name: Optum Code Specific Guidelines APIs API
-  description: >-
-    The Code Specific Guidelines APIs API from Optum — 2 operation(s) for code specific guidelines apis.
+  description: The Code Specific Guidelines APIs API from Optum — 2 operation(s) for code specific guidelines
+    apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -1468,9 +1459,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-coding-documentation-guideline-apis-api
   name: Optum Coding Documentation Guideline APIs API
-  description: >-
-    The Coding Documentation Guideline APIs API from Optum — 2 operation(s) for coding documentation guideline
-    apis.
+  description: The Coding Documentation Guideline APIs API from Optum — 2 operation(s) for coding documentation
+    guideline apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -1674,8 +1664,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-consumer-code-manager-api-api
   name: Optum Consumer Code Manager API
-  description: >-
-    The Consumer Code Manager API API from Optum — 1 operation(s) for consumer code manager api.
+  description: The Consumer Code Manager API API from Optum — 1 operation(s) for consumer code manager
+    api.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -1709,12 +1699,11 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-coverage-discovery-api
   name: Optum Coverage Discovery API
-  description: >-
-    Create and retrieve asynchronous Coverage Discovery tasks. Coverage Discovery paths and add-ons are
-    enabled per customer and are not included automatically. These endpoints support direct submission
-    using either normalized eligibility data or JSON bodies containing X12 payloads, dry-run validation
-    of enrolled discovery paths, polling for task status, and callback-based delivery of completed discovery
-    results.
+  description: Create and retrieve asynchronous Coverage Discovery tasks. Coverage Discovery paths and
+    add-ons are enabled per customer and are not included automatically. These endpoints support direct
+    submission using either normalized eligibility data or JSON bodies containing X12 payloads, dry-run
+    validation of enrolled discovery paths, polling for task status, and callback-based delivery of completed
+    discovery results.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -1850,8 +1839,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-decisionsupportrecordservice-api
   name: Optum Decision Support Record Service API
-  description: >-
-    The DecisionSupportRecordService API from Optum — 2 operation(s) for decisionsupportrecordservice.
+  description: The DecisionSupportRecordService API from Optum — 2 operation(s) for decisionsupportrecordservice.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -1987,8 +1975,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-device-offset-codes-pair-apis-api
   name: Optum Device Offset Codes Pair APIs API
-  description: >-
-    The Device Offset Codes Pair APIs API from Optum — 1 operation(s) for device offset codes pair apis.
+  description: The Device Offset Codes Pair APIs API from Optum — 1 operation(s) for device offset codes
+    pair apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -2022,9 +2010,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-diagnostic-related-groups-drg-indicators-apis-api
   name: Optum Diagnostic Related Groups (DRG) Indicators APIs API
-  description: >-
-    The Diagnostic Related Groups (DRG) Indicators APIs API from Optum — 1 operation(s) for diagnostic
-    related groups (drg) indicators apis.
+  description: The Diagnostic Related Groups (DRG) Indicators APIs API from Optum — 1 operation(s) for
+    diagnostic related groups (drg) indicators apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -2092,8 +2079,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-dme-and-pen-fee-schedule-apis-api
   name: Optum DME and PEN Fee Schedule APIs API
-  description: >-
-    The DME and PEN Fee Schedule APIs API from Optum — 3 operation(s) for dme and pen fee schedule apis.
+  description: The DME and PEN Fee Schedule APIs API from Optum — 3 operation(s) for dme and pen fee schedule
+    apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -2402,11 +2389,10 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-eligibility-requests-api
   name: Optum Eligibility Requests API
-  description: >-
-    Submit new real-time eligibility transactions. These endpoints accept either a normalized JSON request
-    or a JSON request body with `x12` set to the X12 270 payload, and return a normalized JSON eligibility
-    response. When a customer is enrolled in integrated Coverage Discovery, these operations may also
-    return related discovery task links in the response headers.
+  description: Submit new real-time eligibility transactions. These endpoints accept either a normalized
+    JSON request or a JSON request body with `x12` set to the X12 270 payload, and return a normalized
+    JSON eligibility response. When a customer is enrolled in integrated Coverage Discovery, these operations
+    may also return related discovery task links in the response headers.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -2440,10 +2426,9 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-eligibility-transactions-api
   name: Optum Eligibility Transactions API
-  description: >-
-    Retrieve previously processed real-time eligibility transactions. Use these endpoints to list transactions,
-    filter by status, date range, patient details, or correlation metadata, and fetch a single transaction
-    record by id for audit, troubleshooting, and downstream workflows.
+  description: Retrieve previously processed real-time eligibility transactions. Use these endpoints to
+    list transactions, filter by status, date range, patient details, or correlation metadata, and fetch
+    a single transaction record by id for audit, troubleshooting, and downstream workflows.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -2547,8 +2532,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-facility-compliance-apis-api
   name: Optum Facility Compliance APIs API
-  description: >-
-    The Facility Compliance APIs API from Optum — 12 operation(s) for facility compliance apis.
+  description: The Facility Compliance APIs API from Optum — 12 operation(s) for facility compliance apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -2582,9 +2566,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-federal-register-addendum-b-api-api
   name: Optum Federal Register Addendum B API
-  description: >-
-    The Federal Register Addendum B API API from Optum — 1 operation(s) for federal register addendum
-    b api.
+  description: The Federal Register Addendum B API API from Optum — 1 operation(s) for federal register
+    addendum b api.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -2618,9 +2601,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-federal-register-addendum-b-history-api-api
   name: Optum Federal Register Addendum B History API
-  description: >-
-    The Federal Register Addendum B History API API from Optum — 1 operation(s) for federal register addendum
-    b history api.
+  description: The Federal Register Addendum B History API API from Optum — 1 operation(s) for federal
+    register addendum b history api.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -2960,8 +2942,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-hcpcs-table-of-drugs-api-api
   name: Optum HCPCS Table of Drugs API
-  description: >-
-    The HCPCS Table of Drugs API API from Optum — 1 operation(s) for hcpcs table of drugs api.
+  description: The HCPCS Table of Drugs API API from Optum — 1 operation(s) for hcpcs table of drugs api.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -2995,9 +2976,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-health-care-decision-reason-api-api
   name: Optum Health Care Decision Reason API
-  description: >-
-    The Health Care Decision Reason API API from Optum — 1 operation(s) for health care decision reason
-    api.
+  description: The Health Care Decision Reason API API from Optum — 1 operation(s) for health care decision
+    reason api.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -3135,8 +3115,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-i10pcs-code-builder-apis-api
   name: Optum I10PCS Code Builder APIs API
-  description: >-
-    The I10PCS Code Builder APIs API from Optum — 3 operation(s) for i10pcs code builder apis.
+  description: The I10PCS Code Builder APIs API from Optum — 3 operation(s) for i10pcs code builder apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -3408,8 +3387,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-mce-associated-icd10-apis-api
   name: Optum MCE Associated ICD10 APIs API
-  description: >-
-    The MCE Associated ICD10 APIs API from Optum — 3 operation(s) for mce associated icd10 apis.
+  description: The MCE Associated ICD10 APIs API from Optum — 3 operation(s) for mce associated icd10
+    apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -3443,8 +3422,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-mce-associated-icd9-apis-api
   name: Optum MCE Associated ICD9 APIs API
-  description: >-
-    The MCE Associated ICD9 APIs API from Optum — 1 operation(s) for mce associated icd9 apis.
+  description: The MCE Associated ICD9 APIs API from Optum — 1 operation(s) for mce associated icd9 apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -3478,8 +3456,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-mce-edits-icd9-and-icd10-api-api
   name: Optum MCE Edits ICD9 and ICD10 API
-  description: >-
-    The MCE Edits ICD9 and ICD10 API API from Optum — 3 operation(s) for mce edits icd9 and icd10 api.
+  description: The MCE Edits ICD9 and ICD10 API API from Optum — 3 operation(s) for mce edits icd9 and
+    icd10 api.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -3513,8 +3491,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-mdc-optimizing-tips-apis-api
   name: Optum MDC Optimizing Tips APIs API
-  description: >-
-    The MDC Optimizing Tips APIs API from Optum — 2 operation(s) for mdc optimizing tips apis.
+  description: The MDC Optimizing Tips APIs API from Optum — 2 operation(s) for mdc optimizing tips apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -3548,9 +3525,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-medically-unlikely-edits-mues-apis-api
   name: Optum Medically Unlikely Edits(MUEs) APIs API
-  description: >-
-    The Medically Unlikely Edits(MUEs) APIs API from Optum — 1 operation(s) for medically unlikely edits(mues)
-    apis.
+  description: The Medically Unlikely Edits(MUEs) APIs API from Optum — 1 operation(s) for medically unlikely
+    edits(mues) apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -3584,8 +3560,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-medicare-carrier-localities-api
   name: Optum Medicare Carrier Localities API
-  description: >-
-    The Medicare Carrier Localities API from Optum — 1 operation(s) for medicare carrier localities.
+  description: The Medicare Carrier Localities API from Optum — 1 operation(s) for medicare carrier localities.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -3619,9 +3594,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-medicare-coverage-policy-for-part-a-and-part-b-apis-api
   name: Optum Medicare Coverage Policy for part A and Part B APIs API
-  description: >-
-    The Medicare Coverage Policy for part A and Part B APIs API from Optum — 4 operation(s) for medicare
-    coverage policy for part a and part b apis.
+  description: The Medicare Coverage Policy for part A and Part B APIs API from Optum — 4 operation(s)
+    for medicare coverage policy for part a and part b apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags: []
@@ -3656,8 +3630,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-medicare-fee-schedule-apis-api
   name: Optum Medicare Fee Schedule APIs API
-  description: >-
-    The Medicare Fee Schedule APIs API from Optum — 10 operation(s) for medicare fee schedule apis.
+  description: The Medicare Fee Schedule APIs API from Optum — 10 operation(s) for medicare fee schedule
+    apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -3861,9 +3835,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-mpfs-national-payment-table-facility-apis-api
   name: Optum MPFS National Payment Table Facility APIs API
-  description: >-
-    The MPFS National Payment Table Facility APIs API from Optum — 1 operation(s) for mpfs national payment
-    table facility apis.
+  description: The MPFS National Payment Table Facility APIs API from Optum — 1 operation(s) for mpfs
+    national payment table facility apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -3897,8 +3870,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-national-charge-data-api-api
   name: Optum National Charge Data API
-  description: >-
-    The National Charge Data API API from Optum — 1 operation(s) for national charge data api.
+  description: The National Charge Data API API from Optum — 1 operation(s) for national charge data api.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -4034,9 +4006,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-not-otherwise-classified-noc-drug-pricing-apis-api
   name: Optum Not Otherwise Classified (NOC) Drug Pricing APIs API
-  description: >-
-    The Not Otherwise Classified (NOC) Drug Pricing APIs API from Optum — 1 operation(s) for not otherwise
-    classified (noc) drug pricing apis.
+  description: The Not Otherwise Classified (NOC) Drug Pricing APIs API from Optum — 1 operation(s) for
+    not otherwise classified (noc) drug pricing apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags: []
@@ -4274,9 +4245,8 @@ apis:
   - type: Documentation
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-optum-specialty-articles-api
-  name: Optum Optum Specialty Articles API
-  description: >-
-    The Optum Specialty Articles API from Optum — 1 operation(s) for optum specialty articles.
+  name: Optum Specialty Articles API
+  description: The Optum Specialty Articles API from Optum — 1 operation(s) for optum specialty articles.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -4650,8 +4620,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-print-code-detail-summary-api-api
   name: Optum Print Code Detail Summary API
-  description: >-
-    The Print Code Detail Summary API API from Optum — 1 operation(s) for print code detail summary api.
+  description: The Print Code Detail Summary API API from Optum — 1 operation(s) for print code detail
+    summary api.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -4821,8 +4791,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-provider-participation-list-api
   name: Optum Provider Participation List API
-  description: >-
-    The Provider Participation List API from Optum — 1 operation(s) for provider participation list.
+  description: The Provider Participation List API from Optum — 1 operation(s) for provider participation
+    list.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -4856,8 +4826,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-provideraccessbulkmembermatch-api
   name: Optum Provider Access Bulk Member Match API
-  description: >-
-    The ProviderAccessBulkMemberMatch API from Optum — 1 operation(s) for provideraccessbulkmembermatch.
+  description: The ProviderAccessBulkMemberMatch API from Optum — 1 operation(s) for provideraccessbulkmembermatch.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -4891,8 +4860,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-provideraccessbulkmembermatchstatus-api
   name: Optum Provider Access Bulk Member Match Status API
-  description: >-
-    The ProviderAccessBulkMemberMatchStatus API from Optum — 1 operation(s) for provideraccessbulkmembermatchstatus.
+  description: The ProviderAccessBulkMemberMatchStatus API from Optum — 1 operation(s) for provideraccessbulkmembermatchstatus.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -4926,8 +4894,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-provideraccessdavinciexport-api
   name: Optum Provider Access Da Vinci Export API
-  description: >-
-    The ProviderAccessDaVinciExport API from Optum — 1 operation(s) for provideraccessdavinciexport.
+  description: The ProviderAccessDaVinciExport API from Optum — 1 operation(s) for provideraccessdavinciexport.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -4961,8 +4928,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-provideraccessdavinciexportdownload-api
   name: Optum Provider Access Da Vinci Export Download API
-  description: >-
-    The ProviderAccessDaVinciExportDownload API from Optum — 1 operation(s) for provideraccessdavinciexportdownload.
+  description: The ProviderAccessDaVinciExportDownload API from Optum — 1 operation(s) for provideraccessdavinciexportdownload.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -5166,9 +5132,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-remittance-advice-remark-codes-apis-api
   name: Optum Remittance Advice Remark Codes APIs API
-  description: >-
-    The Remittance Advice Remark Codes APIs API from Optum — 1 operation(s) for remittance advice remark
-    codes apis.
+  description: The Remittance Advice Remark Codes APIs API from Optum — 1 operation(s) for remittance
+    advice remark codes apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -5406,8 +5371,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-state-list-fee-schedule-apis-api
   name: Optum State List Fee Schedule APIs API
-  description: >-
-    The State List Fee Schedule APIs API from Optum — 1 operation(s) for state list fee schedule apis.
+  description: The State List Fee Schedule APIs API from Optum — 1 operation(s) for state list fee schedule
+    apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -5543,8 +5508,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-submitter-api-request-http-controller-api
   name: Optum Submitter API Request HTTP Controller API
-  description: >-
-    The submitter-api-request-http-controller API from Optum — 1 operation(s) for submitter-api-request-http-controller.
+  description: The submitter-api-request-http-controller API from Optum — 1 operation(s) for submitter-api-request-http-controller.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -5578,8 +5542,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-supporting-documentation-apis-api
   name: Optum Supporting Documentation APIs API
-  description: >-
-    The Supporting Documentation APIs API from Optum — 2 operation(s) for supporting documentation apis.
+  description: The Supporting Documentation APIs API from Optum — 2 operation(s) for supporting documentation
+    apis.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -5647,8 +5611,8 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-type-of-bill-i-oce-edit-opps-api
   name: Optum Type of Bill I/OCE Edit OPPS API
-  description: >-
-    The Type of Bill I/OCE Edit OPPS API from Optum — 2 operation(s) for type of bill i/oce edit opps.
+  description: The Type of Bill I/OCE Edit OPPS API from Optum — 2 operation(s) for type of bill i/oce
+    edit opps.
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
@@ -5716,8 +5680,7 @@ apis:
     url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-v3-ingestion-api
   name: Optum V3 Ingestion API
-  description: >-
-    ODX V3 Ingestion Service API for processing XDR Request in P&R request with HL7 V3 payload
+  description: ODX V3 Ingestion Service API for processing XDR Request in P&R request with HL7 V3 payload
   humanURL: https://developer.optum.com/eligibilityandclaims
   baseURL: https://apigw.optum.com/medicalnetwork/
   tags:
