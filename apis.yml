@@ -2091,40 +2091,6 @@ apis:
     url: https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
   - type: Documentation
     url: https://developer.optum.com/apitools/docs/getting-started
-- aid: optum:optum-documentreference-api
-  name: Optum Document Reference API
-  description: The DocumentReference API from Optum — 1 operation(s) for documentreference.
-  humanURL: https://developer.optum.com/eligibilityandclaims
-  baseURL: https://apigw.optum.com/medicalnetwork/
-  tags:
-  - DocumentReference
-  properties:
-  - type: OpenAPI
-    url: openapi/optum-documentreference-api-openapi.yml
-  - type: APIReference
-    url: https://developer.optum.com/eligibilityandclaims/reference/api-overview
-  - type: GettingStarted
-    url: https://developer.optum.com/eligibilityandclaims/docs/get-started-with-optum-api
-  - type: Authentication
-    url: https://developer.optum.com/eligibilityandclaims/docs/optum-security-and-authorization
-  - type: ChangeLog
-    url: https://developer.optum.com/eligibilityandclaims/docs/eligibility-release-notes
-  - type: APIReference
-    url: https://developer.optum.com/optumreal-dental/reference/overview-real-dental
-  - type: GettingStarted
-    url: https://developer.optum.com/optumreal-dental/reference/get-started
-  - type: APIReference
-    url: https://developer.optum.com/pharmacysolutions/reference
-  - type: APIReference
-    url: https://developer.optum.com/paymentandreimbursement/reference
-  - type: APIReference
-    url: https://developer.optum.com/platformandinteroperability/reference
-  - type: APIReference
-    url: https://developer.optum.com/analyticsandinsights/reference
-  - type: APIReference
-    url: https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
-  - type: Documentation
-    url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-documentretrieve-api
   name: Optum Document Retrieve API
   description: The documentRetrieve API from Optum — 1 operation(s) for documentretrieve.
@@ -2136,42 +2102,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/optum-documentretrieve-api-openapi.yml
-  - type: APIReference
-    url: https://developer.optum.com/eligibilityandclaims/reference/api-overview
-  - type: GettingStarted
-    url: https://developer.optum.com/eligibilityandclaims/docs/get-started-with-optum-api
-  - type: Authentication
-    url: https://developer.optum.com/eligibilityandclaims/docs/optum-security-and-authorization
-  - type: ChangeLog
-    url: https://developer.optum.com/eligibilityandclaims/docs/eligibility-release-notes
-  - type: APIReference
-    url: https://developer.optum.com/optumreal-dental/reference/overview-real-dental
-  - type: GettingStarted
-    url: https://developer.optum.com/optumreal-dental/reference/get-started
-  - type: APIReference
-    url: https://developer.optum.com/pharmacysolutions/reference
-  - type: APIReference
-    url: https://developer.optum.com/paymentandreimbursement/reference
-  - type: APIReference
-    url: https://developer.optum.com/platformandinteroperability/reference
-  - type: APIReference
-    url: https://developer.optum.com/analyticsandinsights/reference
-  - type: APIReference
-    url: https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
-  - type: Documentation
-    url: https://developer.optum.com/apitools/docs/getting-started
-- aid: optum:optum-documentsearch-api
-  name: Optum Document Search API
-  description: The documentSearch API from Optum — 1 operation(s) for documentsearch.
-  humanURL: https://developer.optum.com/eligibilityandclaims
-  baseURL: https://apigw.optum.com/medicalnetwork/
-  tags:
-  - Document Search
-  tags_raw:
-  - documentSearch
-  properties:
-  - type: OpenAPI
-    url: openapi/optum-documentsearch-api-openapi.yml
   - type: APIReference
     url: https://developer.optum.com/eligibilityandclaims/reference/api-overview
   - type: GettingStarted
@@ -3005,42 +2935,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/optum-health-check-api-openapi.yml
-  - type: APIReference
-    url: https://developer.optum.com/eligibilityandclaims/reference/api-overview
-  - type: GettingStarted
-    url: https://developer.optum.com/eligibilityandclaims/docs/get-started-with-optum-api
-  - type: Authentication
-    url: https://developer.optum.com/eligibilityandclaims/docs/optum-security-and-authorization
-  - type: ChangeLog
-    url: https://developer.optum.com/eligibilityandclaims/docs/eligibility-release-notes
-  - type: APIReference
-    url: https://developer.optum.com/optumreal-dental/reference/overview-real-dental
-  - type: GettingStarted
-    url: https://developer.optum.com/optumreal-dental/reference/get-started
-  - type: APIReference
-    url: https://developer.optum.com/pharmacysolutions/reference
-  - type: APIReference
-    url: https://developer.optum.com/paymentandreimbursement/reference
-  - type: APIReference
-    url: https://developer.optum.com/platformandinteroperability/reference
-  - type: APIReference
-    url: https://developer.optum.com/analyticsandinsights/reference
-  - type: APIReference
-    url: https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
-  - type: Documentation
-    url: https://developer.optum.com/apitools/docs/getting-started
-- aid: optum:optum-healthcheck-api
-  name: Optum Health Check API
-  description: The HealthCheck API from Optum — 14 operation(s) for healthcheck.
-  humanURL: https://developer.optum.com/eligibilityandclaims
-  baseURL: https://apigw.optum.com/medicalnetwork/
-  tags:
-  - Health Check
-  tags_raw:
-  - HealthCheck
-  properties:
-  - type: OpenAPI
-    url: openapi/optum-healthcheck-api-openapi.yml
   - type: APIReference
     url: https://developer.optum.com/eligibilityandclaims/reference/api-overview
   - type: GettingStarted
@@ -4994,40 +4888,6 @@ apis:
     url: https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
   - type: Documentation
     url: https://developer.optum.com/apitools/docs/getting-started
-- aid: optum:optum-queryservice-api
-  name: Optum Query Service API
-  description: The QueryService API from Optum — 1 operation(s) for queryservice.
-  humanURL: https://developer.optum.com/eligibilityandclaims
-  baseURL: https://apigw.optum.com/medicalnetwork/
-  tags:
-  - QueryService
-  properties:
-  - type: OpenAPI
-    url: openapi/optum-queryservice-api-openapi.yml
-  - type: APIReference
-    url: https://developer.optum.com/eligibilityandclaims/reference/api-overview
-  - type: GettingStarted
-    url: https://developer.optum.com/eligibilityandclaims/docs/get-started-with-optum-api
-  - type: Authentication
-    url: https://developer.optum.com/eligibilityandclaims/docs/optum-security-and-authorization
-  - type: ChangeLog
-    url: https://developer.optum.com/eligibilityandclaims/docs/eligibility-release-notes
-  - type: APIReference
-    url: https://developer.optum.com/optumreal-dental/reference/overview-real-dental
-  - type: GettingStarted
-    url: https://developer.optum.com/optumreal-dental/reference/get-started
-  - type: APIReference
-    url: https://developer.optum.com/pharmacysolutions/reference
-  - type: APIReference
-    url: https://developer.optum.com/paymentandreimbursement/reference
-  - type: APIReference
-    url: https://developer.optum.com/platformandinteroperability/reference
-  - type: APIReference
-    url: https://developer.optum.com/analyticsandinsights/reference
-  - type: APIReference
-    url: https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
-  - type: Documentation
-    url: https://developer.optum.com/apitools/docs/getting-started
 - aid: optum:optum-questionnairepackage-api
   name: Optum Questionnaire Package API
   description: The QuestionnairePackage API from Optum — 1 operation(s) for questionnairepackage.
@@ -5725,6 +5585,74 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/optum-wage-index-api-api-openapi.yml
+  - type: APIReference
+    url: https://developer.optum.com/eligibilityandclaims/reference/api-overview
+  - type: GettingStarted
+    url: https://developer.optum.com/eligibilityandclaims/docs/get-started-with-optum-api
+  - type: Authentication
+    url: https://developer.optum.com/eligibilityandclaims/docs/optum-security-and-authorization
+  - type: ChangeLog
+    url: https://developer.optum.com/eligibilityandclaims/docs/eligibility-release-notes
+  - type: APIReference
+    url: https://developer.optum.com/optumreal-dental/reference/overview-real-dental
+  - type: GettingStarted
+    url: https://developer.optum.com/optumreal-dental/reference/get-started
+  - type: APIReference
+    url: https://developer.optum.com/pharmacysolutions/reference
+  - type: APIReference
+    url: https://developer.optum.com/paymentandreimbursement/reference
+  - type: APIReference
+    url: https://developer.optum.com/platformandinteroperability/reference
+  - type: APIReference
+    url: https://developer.optum.com/analyticsandinsights/reference
+  - type: APIReference
+    url: https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
+  - type: Documentation
+    url: https://developer.optum.com/apitools/docs/getting-started
+- aid: optum:optum-document-reference-api
+  name: Optum Document Reference API
+  description: The Document Reference API from Optum — 1 operation(s) for document reference.
+  humanURL: https://developer.optum.com/optumreal-medical
+  baseURL: https://apigw.optum.com/oihub/
+  tags:
+  - Document Reference
+  properties:
+  - type: OpenAPI
+    url: openapi/optum-document-reference-api-openapi.yml
+  - type: APIReference
+    url: https://developer.optum.com/eligibilityandclaims/reference/api-overview
+  - type: GettingStarted
+    url: https://developer.optum.com/eligibilityandclaims/docs/get-started-with-optum-api
+  - type: Authentication
+    url: https://developer.optum.com/eligibilityandclaims/docs/optum-security-and-authorization
+  - type: ChangeLog
+    url: https://developer.optum.com/eligibilityandclaims/docs/eligibility-release-notes
+  - type: APIReference
+    url: https://developer.optum.com/optumreal-dental/reference/overview-real-dental
+  - type: GettingStarted
+    url: https://developer.optum.com/optumreal-dental/reference/get-started
+  - type: APIReference
+    url: https://developer.optum.com/pharmacysolutions/reference
+  - type: APIReference
+    url: https://developer.optum.com/paymentandreimbursement/reference
+  - type: APIReference
+    url: https://developer.optum.com/platformandinteroperability/reference
+  - type: APIReference
+    url: https://developer.optum.com/analyticsandinsights/reference
+  - type: APIReference
+    url: https://developer.optum.com/apitools/reference/security-and-authorization-v2-overview
+  - type: Documentation
+    url: https://developer.optum.com/apitools/docs/getting-started
+- aid: optum:optum-query-service-api
+  name: Optum Query Service API
+  description: The Query Service API from Optum — 1 operation(s) for query service.
+  humanURL: https://developer.optum.com/optumreal-medical
+  baseURL: https://apigw.optum.com/oihub/
+  tags:
+  - Query Service
+  properties:
+  - type: OpenAPI
+    url: openapi/optum-query-service-api-openapi.yml
   - type: APIReference
     url: https://developer.optum.com/eligibilityandclaims/reference/api-overview
   - type: GettingStarted
