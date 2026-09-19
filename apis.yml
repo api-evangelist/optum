@@ -67,6 +67,27 @@ tags:
 - Dental
 - Da Vinci
 - Patient Access
+- Remittances
+- Attachments
+- Payer Directory
+tags_raw:
+- Company
+- Healthcare
+- Health Insurance
+- Claims
+- Eligibility
+- FHIR
+- Interoperability
+- Pharmacy
+- EDI
+- X12
+- Payments
+- Prior Authorization
+- Clearinghouse
+- Revenue Cycle
+- Dental
+- Da Vinci
+- Patient Access
 - Remittance
 - Attachments
 - Payer Directory
@@ -5615,6 +5636,8 @@ apis:
   humanURL: https://developer.optum.com/optumreal-medical
   baseURL: https://apigw.optum.com/oihub/
   tags:
+  - DocumentReference
+  tags_raw:
   - Document Reference
   properties:
   - type: OpenAPI
@@ -5649,6 +5672,8 @@ apis:
   humanURL: https://developer.optum.com/optumreal-medical
   baseURL: https://apigw.optum.com/oihub/
   tags:
+  - QueryService
+  tags_raw:
   - Query Service
   properties:
   - type: OpenAPI
