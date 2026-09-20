@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 61
+edge_count: 68
 edges:
 - tag: Institutional Claims
   spec_file: optum-institutional-claims-api-openapi.yml
@@ -262,6 +262,29 @@ edges:
   evidence: '"Returns the list of codes associated with a modifier"; "GET /api/coding/code/modifier/{modifier}/validate"'
   reason: Modifier listing, crosswalk and validation operations on CPT/HCPCS codes — coding production
     and compliance support.
+- tag: Revenue Code
+  spec_file: optum-revenue-code-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.8
+  evidence: getRevenueCodes  Return CPT/HCPCS to Revenue code crosswalk for the given cpt/hcpcs {code};
+    "on-demand medical coding data"
+  reason: Serves medical coding reference content — revenue code properties and CPT/HCPCS-to-revenue-code
+    crosswalks used by coders and billers, mapping to Medical Coding Management. Some overlap with chargemaster
+    stewardship keeps this below 0.9.
+  recovered_from: healthcare-vertical-edges.json
+- tag: Revenue Codes API
+  spec_file: optum-revenue-codes-api-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.8
+  evidence: getProcCodesForRevenueCode  Fetches procedure codes for corresponding revenue code; getCptHcpcsRequiredRevenueCodes  Fetches
+    revenue codes requiring CPT HCPCS
+  reason: Facility revenue-code and procedure-code crosswalk lookups supporting institutional coding and
+    billing edits, i.e. medical coding management within provider revenue cycle.
+  recovered_from: healthcare-vertical-edges.json
 - tag: Claim Actions
   spec_file: optum-claim-actions-api-openapi.yml
   capability_id: BC-2870.30
@@ -359,6 +382,16 @@ edges:
   reason: Cross-walks HCPCS and CPT procedure codes to ICD-10-CM diagnosis codes — medical coding production
     support for provider billing. Could alternatively sit under BC-2900.20 coding operations; chose revenue-cycle
     coding as the primary use of cross-coder content.
+- tag: DRG Codes
+  spec_file: optum-drg-codes-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.75
+  evidence: Optum Real-Time eContent web services provides access to both ondemand medical coding data
+    ... GET /codetype/drg/{code}/properties
+  reason: On-demand medical coding content lookup for DRG codes — supports medical coding production.
+  recovered_from: healthcare-vertical-edges.json
 - tag: DRG Information APIs
   spec_file: optum-drg-information-apis-api-openapi.yml
   capability_id: BC-2870.20
@@ -398,6 +431,18 @@ edges:
   evidence: '"FHIR Provider Access APIs"; POST /oihub/fhirprovideraccess/v1/R4/{payerId}/{lob}/Group/{groupId}/$davinci-data-export'
   reason: Da Vinci bulk data export of patient/member records over FHIR R4 — operation of FHIR endpoints
     and provider-payer data sharing, i.e. healthcare interoperability operations.
+- tag: APC Cross Codes APIs
+  spec_file: optum-apc-cross-codes-apis-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.72
+  evidence: GET /api/cms/facility/{apctype}/{code} 'Facility - Fetches CPT/HCPCS Code Specific APC Cross
+    Codes'
+  reason: CMS Ambulatory Payment Classification cross-walks between CPT/HCPCS codes and APC groups — reference
+    content used for facility outpatient coding and reimbursement grouping, i.e. medical coding within
+    revenue cycle.
+  recovered_from: healthcare-vertical-edges.json
 - tag: DRG Calculator APIs
   spec_file: optum-drg-calculator-apis-api-openapi.yml
   capability_id: BC-2870.20
@@ -507,6 +552,17 @@ edges:
     authorisation, which the candidate list places under Eligibility & Benefits Verification ("authorisation
     requirements before service delivery"). Some ambiguity with Utilisation Management (BC-2820.50), which
     is why confidence is moderate.
+- tag: HCPCS Table of Drugs API
+  spec_file: optum-hcpcs-table-of-drugs-api-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.7
+  evidence: GET /api/optum/facility/hcpcs-drugs  getHCPCSDrugsList  Fetches HCPCS drugs table data
+  reason: Serves HCPCS (Healthcare Common Procedure Coding System) Table of Drugs reference content, which
+    is coding reference data used to assign billing codes for drugs — supporting medical coding within
+    the provider revenue cycle. Reference-data-only nature keeps confidence moderate.
+  recovered_from: healthcare-vertical-edges.json
 - tag: MCE Associated ICD10 APIs
   spec_file: optum-mce-associated-icd10-apis-api-openapi.yml
   capability_id: BC-2870.20
@@ -575,6 +631,18 @@ edges:
   reason: Da Vinci DTR questionnaire-package retrieval used to satisfy payer prior-authorisation documentation
     requirements before service — authorisation/coverage requirement verification. Some chance it belongs
     with claims/coding instead, hence 0.7.
+- tag: Reference Code
+  spec_file: optum-reference-code-api-openapi.yml
+  capability_id: BC-2870.20
+  capability_id_l1: BC-2870
+  capability_name: Medical Coding Management
+  confidence: 0.7
+  evidence: '"provides access to both ondemand medical coding data and Optum coding tool logic"; getAnnotations
+    "Return Annotations for the given hcpcs/icd9v1 {code}"'
+  reason: Delivers ICD/HCPCS code sets, ranges, annotations and includes/excludes notes used by coders,
+    supporting medical coding production and compliance; it is reference content rather than coding workflow,
+    so not fully certain of the sub-capability.
+  recovered_from: healthcare-vertical-edges.json
 - tag: Reports
   spec_file: optum-reports-api-openapi.yml
   capability_id: BC-2870
@@ -594,6 +662,17 @@ edges:
   reason: X12 278 prior-authorisation submission is pre-service authorisation of coverage, which the frame
     places under eligibility/benefits and authorisation verification; could alternatively be read as utilisation
     management, hence 0.7.
+- tag: Telecom Format
+  spec_file: optum-telecom-format-api-openapi.yml
+  capability_id: BC-2870.30
+  capability_id_l1: BC-2870
+  capability_name: Claim Production & Submission
+  confidence: 0.7
+  evidence: '"NCPDP Format Request Data" with schemas ClaimV1, PharmacyV1, InsuranceV1, NCPDPRequestConverterV1Response'
+  reason: Formats pharmacy claim request/response data into the NCPDP Telecommunication standard — i.e.
+    production and formatting of claims for submission to payers, part of healthcare revenue cycle claim
+    production. Some ambiguity as it is a pure format converter.
+  recovered_from: healthcare-vertical-edges.json
 - tag: UB04 Code Lists
   spec_file: optum-ub04-code-lists-api-openapi.yml
   capability_id: BC-2870
