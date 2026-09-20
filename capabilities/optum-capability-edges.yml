@@ -143,7 +143,8 @@ edges:
   reason: Cross-community (XCA-style) retrieval of clinical documents from external organisations is operation
     of health information exchange connections.
 - tag: documentSearch
-  spec_file: optum-documentsearch-api-openapi.yml
+  spec_file: optum-document-search-api-openapi.yml
+  reanchored_from: optum-documentsearch-api-openapi.yml
   capability_id: BC-2900.60
   capability_id_l1: BC-2900
   capability_name: Healthcare Interoperability Operations
