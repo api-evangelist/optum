@@ -1,42 +1,44 @@
-# Kin Score artifact — optum — 2026-08-21T110057
+# Kin Score artifact — optum — 2026-09-21T233935
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: optum
-  schema_version: 0.12.0
-  scored_at: '2026-08-21'
-  run_ts: 2026-08-21T110057
-  composite: 63.1
+  schema_version: 0.22.0
+  scored_at: '2026-09-21'
+  run_ts: 2026-09-21T233935
+  composite: 61.7
   band: strong
   facets:
-    discoverability: 92.6
-    contract_quality: 59.9
-    governance: 30.3
+    discoverability: 87.0
+    contract_quality: 65.0
+    contract_governance: 18.2
     operational_transparency: 44.7
     developer_ergonomics: 45.8
-    commercial_clarity: 52.6
-    contract_governance: 30.3
     access_clarity: 52.6
   agent_readiness:
-    score: 56.2
+    score: 40.8
     band: agent-ready
     band_gated_from: agent-native
     dimensions:
       spec_presence: true
       agentic_access: derived
-      reversibility_documented: verified
+      reversibility_documented: false
       mcp_server: false
-      auth_clarity: true
+      auth_clarity: bearer
       idempotency: false
       error_semantics: verified
-      openapi_examples: partial
+      openapi_examples: verified
       rate_limit_signal: documented
       event_surface_described: true
       agent_skills: derived
       well_known_catalog: true
-      consent_identity: true
+      consent_identity: false
       agent_card: false
       dry_run_mode: false
+      delegated_identity: documented
+      protected_resource_metadata: false
+      dynamic_client_registration: false
+      agentic_commerce: false
   regulatory:
     applies: true
     regime: Health
@@ -49,7 +51,7 @@ kin_score:
     agentic_access: derived
     conformance: first-party
     contracts:
-      total: 59
+      total: 166
       derived: 0
       coverage: 0.0
-      callable: 88.1
+      callable: 56.6
