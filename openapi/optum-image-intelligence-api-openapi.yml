@@ -56,7 +56,108 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: A problem occurred.
-      description: "Create Attachments by uploading files along with required metadata in a single request. All attachments will be associated with a new Attachment Control Number and ClaimId and will be considered Closed upon completion of the request.\n\n**Request Format:**\n- Content-Type: `multipart/form-data`\n- The request consists of three parts:\n  1. `request` (JSON): Contains claim metadata\n  2. `files` (binary): One or more attachment files (1-10 files)\n  3. `fileMetadata` (JSON): **Required for Image Intelligence** service information for the documents being uploaded as attachments. \n\n In order to enable Optum Image Intelligence on the attachments, each file MUST match fileName and mimeType as defined in the metadata object. \n- `procedureCodes`: Comma-separated list of alphanumeric procedure codes (max 25 chars each). Pattern: `([a-zA-Z0-9]{1,25})(,[a-zA-Z0-9]{1,25})` \n- `serviceDate`: Date in YYYY-MM-DD format. Pattern: `\\\\d{4}-\\\\d{2}-\\\\d{2}`\n- `toothNumbers`: Comma-separated list of tooth identifiers. Image Intelligence will further validate these values to numerical values. Pattern: `[A-Za-z0-9]{2}(,[A-Za-z0-9]{2})` \n\n**Example Request:**\n```\n--boundary\nContent-Disposition: form-data; name=\\\"request\\\"\nContent-Type: application/json\n\n{\n  \\\"claimId\\\": \\\"CLM-2024-001234\\\",\n  \\\"payerId\\\": \\\"ABC12\\\",\n  \\\"providerNPI\\\": \\\"1234567890\\\",\n  \\\"dateOfService\\\": \\\"2024-01-15\\\",\n  \\\"patientLastName\\\": \\\"Atreides\\\",\n  \\\"patientFirstName\\\": \\\"Paul\\\",\n  \\\"patientDateOfBirth\\\": \\\"2000-01-01\\\",\n  \\\"memberId\\\": \\\"44444444\\\"\n}\n\n--boundary\nContent-Disposition: form-data; name=\\\"fileMetadata\\\"\nContent-Type: application/json\n\n[ \n {\n  \\\"fileName\\\": \\\"xray_image.pdf\\\",\n  \\\"mimeType\\\": \\\"application/pdf\\\",\n  \\\"dateOfService\\\": \\\"2026-01-01\\\",\n  \\\"procedureCodes\\\": \\\"D0101\\\",\n  \\\"toothNumbers\\\": \\\"14, 16\\\"\n }\n]\n\n--boundary\nContent-Disposition: form-data; name=\\\"files\\\"; filename=\\\"xray_image.pdf\\\"; \nContent-Type: application/pdf\n\n[binary file content]\n\n--boundary--\n```\n\n**Supported File Types:** BMP, JPG/JPEG, TIFF, PNG, PDF, TXT, DOC/DOCX, DICOM, GIF, RTF\n\n**File Limits:** 1-10 files per request."
+      description: 'Create Attachments by uploading files along with required metadata in a single request. All attachments will be associated with a new Attachment Control Number and ClaimId and will be considered Closed upon completion of the request.
+
+
+        **Request Format:**
+
+        - Content-Type: `multipart/form-data`
+
+        - The request consists of three parts:
+
+        1. `request` (JSON): Contains claim metadata
+
+        2. `files` (binary): One or more attachment files (1-10 files)
+
+        3. `fileMetadata` (JSON): **Required for Image Intelligence** service information for the documents being uploaded as attachments.
+
+
+        In order to enable Optum Image Intelligence on the attachments, each file MUST match fileName and mimeType as defined in the metadata object.
+
+        - `procedureCodes`: Comma-separated list of alphanumeric procedure codes (max 25 chars each). Pattern: `([a-zA-Z0-9]{1,25})(,[a-zA-Z0-9]{1,25})`
+
+        - `serviceDate`: Date in YYYY-MM-DD format. Pattern: `\\d{4}-\\d{2}-\\d{2}`
+
+        - `toothNumbers`: Comma-separated list of tooth identifiers. Image Intelligence will further validate these values to numerical values. Pattern: `[A-Za-z0-9]{2}(,[A-Za-z0-9]{2})`
+
+
+        **Example Request:**
+
+        ```
+
+        --boundary
+
+        Content-Disposition: form-data; name=\"request\"
+
+        Content-Type: application/json
+
+
+        {
+
+        \"claimId\": \"CLM-2024-001234\",
+
+        \"payerId\": \"ABC12\",
+
+        \"providerNPI\": \"1234567890\",
+
+        \"dateOfService\": \"2024-01-15\",
+
+        \"patientLastName\": \"Atreides\",
+
+        \"patientFirstName\": \"Paul\",
+
+        \"patientDateOfBirth\": \"2000-01-01\",
+
+        \"memberId\": \"44444444\"
+
+        }
+
+
+        --boundary
+
+        Content-Disposition: form-data; name=\"fileMetadata\"
+
+        Content-Type: application/json
+
+
+        [
+
+        {
+
+        \"fileName\": \"xray_image.pdf\",
+
+        \"mimeType\": \"application/pdf\",
+
+        \"dateOfService\": \"2026-01-01\",
+
+        \"procedureCodes\": \"D0101\",
+
+        \"toothNumbers\": \"14, 16\"
+
+        }
+
+        ]
+
+
+        --boundary
+
+        Content-Disposition: form-data; name=\"files\"; filename=\"xray_image.pdf\";
+
+        Content-Type: application/pdf
+
+
+        [binary file content]
+
+
+        --boundary--
+
+        ```
+
+
+        **Supported File Types:** BMP, JPG/JPEG, TIFF, PNG, PDF, TXT, DOC/DOCX, DICOM, GIF, RTF
+
+
+        **File Limits:** 1-10 files per request.'
       operationId: createAttachmentsImageIntel
       requestBody:
         content:
@@ -135,6 +236,37 @@ paths:
       - bearerAuth: []
 components:
   schemas:
+    ImageIntelligenceMetadata:
+      type: object
+      required:
+      - fileName
+      - mimeType
+      - procedureCodes
+      - serviceDate
+      - toothNumbers
+      properties:
+        fileName:
+          type: string
+          example: xray_image.pdf
+          description: Original filename of the attachment file being uploaded. This is used for reference in Optum Image Intelligence processing and is not required to match the actual filename of the uploaded file.
+        mimeType:
+          type: string
+          example: application/pdf
+          description: MIME type of the attachment file being uploaded. This is used for reference in Optum Image Intelligence processing and is not required to match the actual MIME type of the uploaded file.
+        serviceDate:
+          type: string
+          pattern: ^\\d{4}-\\d{2}-\\d{2}$
+          description: Service date associated with the attachment in YYYY-MM-DD format. This is used for reference in Optum Image Intelligence processing.
+        toothNumbers:
+          type: string
+          example: 12, 14, 08
+          pattern: ^[A-Za-z0-9]{2}(,[A-Za-z0-9]{2})
+          description: List of tooth numbers associated with the attachment. These are used for reference in Optum Image Intelligence processing and will be further validated to ensure they conform to valid tooth identifiers.
+        procedureCodes:
+          type: string
+          example: D0120,D0150
+          pattern: ^([a-zA-Z0-9]{1,25})(,[a-zA-Z0-9]{1,25})$
+          description: List of procedure codes associated with the attachment. These are used for reference in Optum Image Intelligence processing.
     CreateAttachmentResponse:
       type: object
       required:
@@ -220,37 +352,6 @@ components:
               description: A collection that gives specifics about the errors that occurred.
           description: A map of additional, non-standard properties.
       description: Representation for an RFC 9457 problem detail.
-    ImageIntelligenceMetadata:
-      type: object
-      required:
-      - fileName
-      - mimeType
-      - procedureCodes
-      - serviceDate
-      - toothNumbers
-      properties:
-        fileName:
-          type: string
-          example: xray_image.pdf
-          description: Original filename of the attachment file being uploaded. This is used for reference in Optum Image Intelligence processing and is not required to match the actual filename of the uploaded file.
-        mimeType:
-          type: string
-          example: application/pdf
-          description: MIME type of the attachment file being uploaded. This is used for reference in Optum Image Intelligence processing and is not required to match the actual MIME type of the uploaded file.
-        serviceDate:
-          type: string
-          pattern: ^\\d{4}-\\d{2}-\\d{2}$
-          description: Service date associated with the attachment in YYYY-MM-DD format. This is used for reference in Optum Image Intelligence processing.
-        toothNumbers:
-          type: string
-          example: 12, 14, 08
-          pattern: ^[A-Za-z0-9]{2}(,[A-Za-z0-9]{2})
-          description: List of tooth numbers associated with the attachment. These are used for reference in Optum Image Intelligence processing and will be further validated to ensure they conform to valid tooth identifiers.
-        procedureCodes:
-          type: string
-          example: D0120,D0150
-          pattern: ^([a-zA-Z0-9]{1,25})(,[a-zA-Z0-9]{1,25})$
-          description: List of procedure codes associated with the attachment. These are used for reference in Optum Image Intelligence processing.
   securitySchemes:
     bearerAuth:
       type: http

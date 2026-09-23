@@ -75,7 +75,7 @@ paths:
     get:
       tags:
       - Color codes APIs
-      summary: 'Fetches the I10CM for the requested SEX code type '
+      summary: Fetches the I10CM for the requested SEX code type
       operationId: getSexColorCodes
       parameters:
       - name: codetype
@@ -310,7 +310,7 @@ paths:
     get:
       tags:
       - Color codes APIs
-      summary: 'Fetches manifestation color codes of  facility and physician '
+      summary: Fetches manifestation color codes of facility and physician
       operationId: fetchManifestationCodes
       parameters:
       - name: codetype
@@ -713,7 +713,7 @@ paths:
     get:
       tags:
       - Color codes APIs
-      summary: 'Fetches pac color codes of I9v1 '
+      summary: Fetches pac color codes of I9v1
       operationId: getPacColorCodes_1
       parameters:
       - name: pac-icon-type
@@ -781,7 +781,7 @@ paths:
     get:
       tags:
       - Color codes APIs
-      summary: 'Fetches manifestation color codes '
+      summary: Fetches manifestation color codes
       operationId: fetchManifestationCodes_1
       parameters:
       - name: sort
@@ -938,7 +938,7 @@ paths:
     get:
       tags:
       - Color codes APIs
-      summary: Fetches  Valid-OR, DRG-Non-OR, Non-OR, C-Hac or Coverage color codes
+      summary: Fetches Valid-OR, DRG-Non-OR, Non-OR, C-Hac or Coverage color codes
       operationId: fetchI10SepecificCodes
       parameters:
       - name: color-code-type
@@ -1659,6 +1659,27 @@ components:
         totalCount:
           type: integer
           format: int64
+    Link:
+      type: object
+      properties:
+        value:
+          type: string
+        href:
+          type: string
+        iconName:
+          type: string
+        routerLink:
+          type: string
+        type:
+          type: string
+        tag:
+          type: string
+        label:
+          type: string
+        addonName:
+          type: string
+        addonId:
+          type: string
     ColorCodes:
       type: object
       properties:
@@ -1683,27 +1704,6 @@ components:
         hacDescription:
           type: string
         coverage:
-          type: string
-    Link:
-      type: object
-      properties:
-        value:
-          type: string
-        href:
-          type: string
-        iconName:
-          type: string
-        routerLink:
-          type: string
-        type:
-          type: string
-        tag:
-          type: string
-        label:
-          type: string
-        addonName:
-          type: string
-        addonId:
           type: string
   securitySchemes:
     bearerAuth:

@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: ABM Care Decision Support Decision Support Record Service API
+  title: ABM Care Decision Support Decision Support Record Service…
   version: 1.7.0
 servers:
 - url: https://sandbox-apigw.optum.com
@@ -27,11 +27,13 @@ paths:
       responses:
         '200':
           description: OK
+      operationId: postAbmDsrserviceV1
+      x-operation-id-source: derived
   /abm/dsrservicesearch/v1/{decisionSupportNumber}:
     get:
       tags:
       - DecisionSupportRecordService
-      summary: Retrieve a Decision Support Record by decisionSupportNumber (GET /abm/dsrservicesearch/v1/{decisionSupportNumber})
+      summary: Retrieve a Decision Support Record by decisionSupportNumber (GET…
       parameters:
       - name: decisionSupportNumber
         in: path
@@ -41,10 +43,12 @@ paths:
       responses:
         '200':
           description: OK
+      operationId: getAbmDsrservicesearchV1ByDecisionSupportNumber
+      x-operation-id-source: derived
     delete:
       tags:
       - DecisionSupportRecordService
-      summary: Delete a Decision Support Record by decisionSupportNumber (DELETE /abm/dsrservicesearch/v1/{decisionSupportNumber})
+      summary: Delete a Decision Support Record by decisionSupportNumber (DELETE…
       parameters:
       - name: decisionSupportNumber
         in: path
@@ -54,6 +58,8 @@ paths:
       responses:
         '200':
           description: OK
+      operationId: deleteAbmDsrservicesearchV1ByDecisionSupportNumber
+      x-operation-id-source: derived
 components:
   schemas:
     DecisionSupportRecord:

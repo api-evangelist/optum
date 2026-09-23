@@ -54,7 +54,72 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: A problem occurred.
-      description: "Create Attachments by uploading files along with required metadata in a single request. All attachments will be associated with a new Attachment Control Number and ClaimId and will be considered Closed upon completion of the request.\n\n**Request Format:**\n- Content-Type: `multipart/form-data`\n- The request consists of two parts:\n  1. `request` (JSON): Contains claim metadata\n  2. `files` (binary): One or more attachment files (1-10 files) \n\n**Example Request:**\n```\n--boundary\nContent-Disposition: form-data; name=\\\"request\\\"\nContent-Type: application/json\n\n{\n  \\\"claimId\\\": \\\"CLM-2024-001234\\\",\n  \\\"payerId\\\": \\\"ABC12\\\",\n  \\\"providerNPI\\\": \\\"1234567890\\\",\n  \\\"dateOfService\\\": \\\"2024-01-15\\\",\n  \\\"patientLastName\\\": \\\"Atreides\\\",\n  \\\"patientFirstName\\\": \\\"Paul\\\",\n  \\\"patientDateOfBirth\\\": \\\"2000-01-01\\\",\n  \\\"memberId\\\": \\\"44444444\\\"\n}\n\n--boundary\nContent-Disposition: form-data; name=\\\"files\\\"; filename=\\\"xray_image.pdf\\\";\n \nContent-Type: application/pdf\n\n[binary file content]\n\n--boundary--\n```\n\n**Supported File Types:** BMP, JPG/JPEG, TIFF, PNG, PDF, TXT, DOC/DOCX, DICOM, GIF, RTF\n\n**File Limits:** 1-10 files per request."
+      description: 'Create Attachments by uploading files along with required metadata in a single request. All attachments will be associated with a new Attachment Control Number and ClaimId and will be considered Closed upon completion of the request.
+
+
+        **Request Format:**
+
+        - Content-Type: `multipart/form-data`
+
+        - The request consists of two parts:
+
+        1. `request` (JSON): Contains claim metadata
+
+        2. `files` (binary): One or more attachment files (1-10 files)
+
+
+        **Example Request:**
+
+        ```
+
+        --boundary
+
+        Content-Disposition: form-data; name=\"request\"
+
+        Content-Type: application/json
+
+
+        {
+
+        \"claimId\": \"CLM-2024-001234\",
+
+        \"payerId\": \"ABC12\",
+
+        \"providerNPI\": \"1234567890\",
+
+        \"dateOfService\": \"2024-01-15\",
+
+        \"patientLastName\": \"Atreides\",
+
+        \"patientFirstName\": \"Paul\",
+
+        \"patientDateOfBirth\": \"2000-01-01\",
+
+        \"memberId\": \"44444444\"
+
+        }
+
+
+        --boundary
+
+        Content-Disposition: form-data; name=\"files\"; filename=\"xray_image.pdf\";
+
+
+        Content-Type: application/pdf
+
+
+        [binary file content]
+
+
+        --boundary--
+
+        ```
+
+
+        **Supported File Types:** BMP, JPG/JPEG, TIFF, PNG, PDF, TXT, DOC/DOCX, DICOM, GIF, RTF
+
+
+        **File Limits:** 1-10 files per request.'
       operationId: createAttachments
       requestBody:
         content:

@@ -31,16 +31,6 @@ paths:
           type: string
 components:
   schemas:
-    Meta:
-      title: Meta
-      type: object
-      properties:
-        applicationMode:
-          type: string
-        senderId:
-          type: string
-        traceId:
-          type: string
     Reports:
       title: Reports
       required:
@@ -55,3 +45,13 @@ components:
           default: []
         meta:
           $ref: '#/components/schemas/Meta'
+    Meta:
+      title: Meta
+      type: object
+      properties:
+        applicationMode:
+          type: string
+        senderId:
+          type: string
+        traceId:
+          type: string

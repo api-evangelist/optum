@@ -144,8 +144,41 @@ paths:
               example:
                 message: Internal server error
                 statusCode: 500
+      summary: Get questionnaire package
+      x-summary-source: derived
 components:
   schemas:
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
+    Entry:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Claim'
+    Coding:
+      type: object
+      description: Coding structure for answers
+      properties:
+        code:
+          type: string
+          example: '1'
+        display:
+          type: string
+          example: Age ≥ 50
+    Reference:
+      type: object
+      description: FHIR Reference
+      properties:
+        reference:
+          type: string
+          example: Patient/anonymous
     QuestionnairePackageRequest:
       type: object
       description: FHIR Parameters request for Questionnaire Package
@@ -159,11 +192,20 @@ components:
           description: List of parameters
           items:
             $ref: '#/components/schemas/RequestParameter'
-    Entry:
+    RequestParameter:
       type: object
+      description: Request parameter entry
       properties:
+        name:
+          type: string
+          description: Parameter name
+          example: coverage
         resource:
-          $ref: '#/components/schemas/Claim'
+          $ref: '#/components/schemas/Coverage'
+        valueString:
+          type: string
+          description: Context correlation ID
+          example: 251110121553-uuid
     CareTeam:
       type: object
       properties:
@@ -172,17 +214,6 @@ components:
         responsible:
           type: boolean
           example: true
-    QuestionnairePackageResponse:
-      type: object
-      description: FHIR Parameters response containing Questionnaire package bundle
-      properties:
-        resourceType:
-          type: string
-          example: Parameters
-        parameter:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseParameter'
     CodeableConcept:
       type: object
       description: FHIR CodeableConcept
@@ -191,16 +222,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Coding'
-    Meta:
-      type: object
-      description: FHIR metadata
-      properties:
-        profile:
-          type: array
-          description: FHIR profile URLs
-          items:
-            type: string
-            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
     Bundle:
       type: object
       description: FHIR Bundle resource
@@ -216,6 +237,51 @@ components:
           description: Bundle entries
           items:
             $ref: '#/components/schemas/Entry'
+    QuestionnairePackageResponse:
+      type: object
+      description: FHIR Parameters response containing Questionnaire package bundle
+      properties:
+        resourceType:
+          type: string
+          example: Parameters
+        parameter:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseParameter'
+    ResponseParameter:
+      type: object
+      description: Response parameter entry
+      properties:
+        name:
+          type: string
+          description: Parameter name containing bundle
+          example: PackageBundle
+        resource:
+          $ref: '#/components/schemas/Bundle'
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    Coverage:
+      type: object
+      description: FHIR Coverage resource
+      properties:
+        resourceType:
+          type: string
+          example: Coverage
+        id:
+          type: string
+          example: CoverageExample
+        status:
+          type: string
+          description: Coverage status
+          example: active
     Claim:
       type: object
       description: FHIR Claim Inquiry Request
@@ -250,70 +316,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CareTeam'
-    Identifier:
-      type: object
-      properties:
-        system:
-          type: string
-          example: http://example.org/cdex/acn
-        value:
-          type: string
-          example: '123456'
-    Coding:
-      type: object
-      description: Coding structure for answers
-      properties:
-        code:
-          type: string
-          example: '1'
-        display:
-          type: string
-          example: Age ≥ 50
-    Reference:
-      type: object
-      description: FHIR Reference
-      properties:
-        reference:
-          type: string
-          example: Patient/anonymous
-    Coverage:
-      type: object
-      description: FHIR Coverage resource
-      properties:
-        resourceType:
-          type: string
-          example: Coverage
-        id:
-          type: string
-          example: CoverageExample
-        status:
-          type: string
-          description: Coverage status
-          example: active
-    RequestParameter:
-      type: object
-      description: Request parameter entry
-      properties:
-        name:
-          type: string
-          description: Parameter name
-          example: coverage
-        resource:
-          $ref: '#/components/schemas/Coverage'
-        valueString:
-          type: string
-          description: Context correlation ID
-          example: 251110121553-uuid
-    ResponseParameter:
-      type: object
-      description: Response parameter entry
-      properties:
-        name:
-          type: string
-          description: Parameter name containing bundle
-          example: PackageBundle
-        resource:
-          $ref: '#/components/schemas/Bundle'
   securitySchemes:
     oAuth:
       type: oauth2

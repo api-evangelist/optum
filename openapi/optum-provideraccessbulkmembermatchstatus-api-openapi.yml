@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Real Provider Access Provider Access Bulk Member Match Status API
+  title: Real Provider Access Provider Access Bulk Member Match…
   description: FHIR Provider Access APIs
   version: 1.0.0
 servers:
@@ -91,26 +91,10 @@ paths:
               example:
                 message: Internal server error
                 statusCode: 500
+      summary: Bulk member match status
+      x-summary-source: derived
 components:
   schemas:
-    BulkExportOutput:
-      type: object
-      properties:
-        type:
-          type: string
-          example: Patient
-        url:
-          type: string
-          description: NDJSON file download URL
-    BulkExportError:
-      type: object
-      properties:
-        type:
-          type: string
-          example: OperationOutcome
-        url:
-          type: string
-          description: Error file URL
     BulkMemberMatchStatusResponse:
       type: object
       description: FHIR Bulk Export style response for member match status
@@ -133,6 +117,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BulkExportError'
+    BulkExportOutput:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Patient
+        url:
+          type: string
+          description: NDJSON file download URL
+    BulkExportError:
+      type: object
+      properties:
+        type:
+          type: string
+          example: OperationOutcome
+        url:
+          type: string
+          description: Error file URL
   securitySchemes:
     oAuth:
       type: oauth2

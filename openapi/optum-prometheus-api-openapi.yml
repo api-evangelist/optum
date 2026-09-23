@@ -10,7 +10,7 @@ tags:
 paths:
   /prometheus/jobsubmission/v1:
     post:
-      summary: Triggers a Prometheus job initialization and returns the JobId for users' reference.
+      summary: Triggers a Prometheus job initialization and returns the JobId for users'…
       requestBody:
         description: Sends the control file name and triggers a job initialization
         content:
@@ -40,11 +40,13 @@ paths:
       x-codegen-request-body-name: JobSubmission_Request
       tags:
       - Prometheus
+      operationId: postPrometheusJobsubmissionV1
+      x-operation-id-source: derived
     servers:
     - url: https://sandbox-apigw.optum.com/
   /prometheus/checkjob/v1:
     post:
-      summary: Checks and returns the current status of a job and additional details such as job process completion date and data purging date
+      summary: Checks and returns the current status of a job and additional details such as…
       parameters:
       - name: Authorization
         in: header
@@ -80,6 +82,8 @@ paths:
       x-codegen-request-body-name: CheckJob_Request
       tags:
       - Prometheus
+      operationId: postPrometheusCheckjobV1
+      x-operation-id-source: derived
     servers:
     - url: https://sandbox-apigw.optum.com/
 components:
@@ -131,6 +135,17 @@ components:
         controlFileName:
           type: string
           example: control.tsv.gz
+    CheckJob_Response_Failure_500:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Short description of the error encountered
+          example: Internal error occurred
+        error_description:
+          type: string
+          description: Long description of the error that further explains why the request was unsuccessful
+          example: Internal error occurred. Support has been notified.
     CheckJob_Request:
       type: object
       properties:
@@ -176,17 +191,6 @@ components:
           type: string
           description: Field that provides successful or non-error messages
           example: 'Current batch status: Finished'
-    CheckJob_Response_Failure_500:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Short description of the error encountered
-          example: Internal error occurred
-        error_description:
-          type: string
-          description: Long description of the error that further explains why the request was unsuccessful
-          example: Internal error occurred. Support has been notified.
     CheckJob_Response_Failure_400:
       type: object
       properties:

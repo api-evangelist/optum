@@ -3,10 +3,10 @@ info:
   title: API Evangelist enhancements for the Optum API platform
   version: 1.0.0
 extends: openapi/_original/
-generated: '2026-08-14'
-method: generated
-source: openapi/_original/*.json (59 documents harvested via https://developer.optum.com/.well-known/api-catalog and the ReadMe API registry)
-rationale: >-
+x-generated: '2026-08-14'
+x-method: generated
+x-source: openapi/_original/*.json (59 documents harvested via https://developer.optum.com/.well-known/api-catalog and the ReadMe API registry)
+x-rationale: >-
   Two defects are shared by essentially every Optum OpenAPI document as published, and both are
   fixed here WITHOUT mutating the harvested originals.
 

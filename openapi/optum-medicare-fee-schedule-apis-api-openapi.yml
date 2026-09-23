@@ -122,7 +122,7 @@ paths:
     get:
       tags:
       - Medicare Fee Schedule APIs
-      summary: Fetches MPFS payment indicators and its definitions for particular medicare rule type
+      summary: Fetches MPFS payment indicators and its definitions for particular medicare…
       operationId: getPaymentIndicatorList
       parameters:
       - name: ruletype

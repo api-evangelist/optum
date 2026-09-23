@@ -40,13 +40,15 @@ paths:
                 format: byte
       security:
       - bearerAuth: []
+      summary: Get ABN form
+      x-summary-source: derived
     servers:
     - url: /v1/optumcommonms
   /api/optum/common/{contractor}/medicare-contractors:
     get:
       tags:
       - Compliance APIs
-      summary: Fetches medicare contractors list for a given contractor Type.
+      summary: Fetches medicare contractors list for a given contractor Type
       operationId: fetchMedicareContractors
       parameters:
       - name: sort
@@ -191,55 +193,18 @@ paths:
                   $ref: '#/components/schemas/PlaceOfServiceValue'
       security:
       - bearerAuth: []
+      summary: Get place of service codes
+      x-summary-source: derived
     servers:
     - url: /v1/optumcommonms
 components:
   schemas:
-    PhysicianClaimSourceRationale:
-      type: object
-      properties:
-        ddrId:
-          type: string
-        mnemonic:
-          type: string
-        editMessage:
-          type: string
-        source:
-          type: string
-        editType:
-          type: string
-        sourceInfo:
-          type: string
-        sourceUrl:
-          type: string
-        description:
-          type: string
     ContractorValue:
       type: object
       properties:
         contractorNumber:
           type: string
         contractorName:
-          type: string
-    PlaceOfServiceValue:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
-          type: string
-    ABNItemService:
-      type: object
-      properties:
-        codeItemService:
-          type: string
-        estimatedCost:
-          type: string
-        patientAction:
-          type: string
-        medicareNoPayReason:
-          type: string
-        spanishMedicareReason:
           type: string
     ABNForm:
       type: object
@@ -262,6 +227,45 @@ components:
           type: string
         isEnglishPDF:
           type: boolean
+    ABNItemService:
+      type: object
+      properties:
+        codeItemService:
+          type: string
+        estimatedCost:
+          type: string
+        patientAction:
+          type: string
+        medicareNoPayReason:
+          type: string
+        spanishMedicareReason:
+          type: string
+    PlaceOfServiceValue:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    PhysicianClaimSourceRationale:
+      type: object
+      properties:
+        ddrId:
+          type: string
+        mnemonic:
+          type: string
+        editMessage:
+          type: string
+        source:
+          type: string
+        editType:
+          type: string
+        sourceInfo:
+          type: string
+        sourceUrl:
+          type: string
+        description:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

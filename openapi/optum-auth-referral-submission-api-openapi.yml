@@ -1,11 +1,12 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
-  description: The GraphQL Auth Referral Submission API allows users to search for providers, submit referrals,
-    search referrals, and search prior authorizations using GraphQL queries and mutations.
+  description: The GraphQL Auth Referral Submission API allows users to search for providers, submit referrals, search referrals, and search prior authorizations using GraphQL queries and mutations.
   title: Auth Referral Submission API
   version: 1.0.0
 servers:
 - url: https://sandbox-apigw.optum.com
+tags:
+- name: Auth Referral Submission
 paths:
   /oihub/patient/auth/referral/v1:
     post:
@@ -147,13 +148,11 @@ paths:
                           example: Open
                           type: string
                         startDate:
-                          description: Start date for the service period search (YYYY-MM-DD). Default
-                            will be current date.
+                          description: Start date for the service period search (YYYY-MM-DD). Default will be current date.
                           example: '2025-07-19'
                           type: string
                         endDate:
-                          description: End date for the service period search (YYYY-MM-DD). Default will
-                            be current date.
+                          description: End date for the service period search (YYYY-MM-DD). Default will be current date.
                           example: '2025-10-17'
                           type: string
                         payerId:
@@ -173,12 +172,7 @@ paths:
               SearchProviders:
                 summary: Search Providers
                 value:
-                  query: 'query SearchProviders($providerSearchInput: ProviderSearchInput!) { searchProviders(providerSearchInput:
-                    $providerSearchInput) { providers { name firstName middleName lastName providerOrganizationName
-                    npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2
-                    city state zip zip4 } uniqueProviderIdentifier providerType providerSpeciality { code
-                    description } gender distance handicapAccessible } pagination { totalRecords nextPageToken
-                    } } }'
+                  query: 'query SearchProviders($providerSearchInput: ProviderSearchInput!) { searchProviders(providerSearchInput: $providerSearchInput) { providers { name firstName middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4 } uniqueProviderIdentifier providerType providerSpeciality { code description } gender distance handicapAccessible } pagination { totalRecords nextPageToken } } }'
                   variables:
                     providerSearchInput:
                       searchType: SERVICING
@@ -205,17 +199,7 @@ paths:
               SubmitReferral:
                 summary: Submit Referral
                 value:
-                  query: 'mutation SubmitReferral($referralSubmitInput: ReferralSubmitInput!) { submitReferral(referralSubmitInput:
-                    $referralSubmitInput) { referralId referralStatus payer { id name messages } requestingProvider
-                    { name firstName middleName lastName providerOrganizationName npi taxId contactName
-                    phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4
-                    } } servicingProvider { name firstName middleName lastName providerOrganizationName
-                    npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2
-                    city state zip zip4 } } patient { id firstName middleName lastName dateOfBirth groupNumber
-                    relationshipCode relationshipDesc } decisions { decisionType certificationAction reviewDecisionReason
-                    startDate endDate referralQuantity { quantity qualifier qualifierDesc remaining }
-                    } x12Response rejectionReasons { rejectionLevel reasonDescription rejectionCode followUpAction
-                    rejectionReason validRequestIndicator } } }'
+                  query: 'mutation SubmitReferral($referralSubmitInput: ReferralSubmitInput!) { submitReferral(referralSubmitInput: $referralSubmitInput) { referralId referralStatus payer { id name messages } requestingProvider { name firstName middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4 } } servicingProvider { name firstName middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4 } } patient { id firstName middleName lastName dateOfBirth groupNumber relationshipCode relationshipDesc } decisions { decisionType certificationAction reviewDecisionReason startDate endDate referralQuantity { quantity qualifier qualifierDesc remaining } } x12Response rejectionReasons { rejectionLevel reasonDescription rejectionCode followUpAction rejectionReason validRequestIndicator } } }'
                   variables:
                     referralSubmitInput:
                       requestingProvider:
@@ -266,17 +250,7 @@ paths:
               SubmitReferralRejection:
                 summary: Submit Referral Rejection
                 value:
-                  query: 'mutation SubmitReferral($referralSubmitInput: ReferralSubmitInput!) { submitReferral(referralSubmitInput:
-                    $referralSubmitInput) { referralId referralStatus payer { id name messages } requestingProvider
-                    { name firstName middleName lastName providerOrganizationName npi taxId contactName
-                    phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4
-                    } } servicingProvider { name firstName middleName lastName providerOrganizationName
-                    npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2
-                    city state zip zip4 } } patient { id firstName middleName lastName dateOfBirth groupNumber
-                    relationshipCode relationshipDesc } decisions { decisionType certificationAction reviewDecisionReason
-                    startDate endDate referralQuantity { quantity qualifier qualifierDesc remaining }
-                    } x12Response rejectionReasons { rejectionLevel reasonDescription rejectionCode followUpAction
-                    rejectionReason validRequestIndicator } } }'
+                  query: 'mutation SubmitReferral($referralSubmitInput: ReferralSubmitInput!) { submitReferral(referralSubmitInput: $referralSubmitInput) { referralId referralStatus payer { id name messages } requestingProvider { name firstName middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4 } } servicingProvider { name firstName middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4 } } patient { id firstName middleName lastName dateOfBirth groupNumber relationshipCode relationshipDesc } decisions { decisionType certificationAction reviewDecisionReason startDate endDate referralQuantity { quantity qualifier qualifierDesc remaining } } x12Response rejectionReasons { rejectionLevel reasonDescription rejectionCode followUpAction rejectionReason validRequestIndicator } } }'
                   variables:
                     referralSubmitInput:
                       requestingProvider:
@@ -327,17 +301,7 @@ paths:
               SearchReferrals:
                 summary: Search Referrals
                 value:
-                  query: 'query SearchReferrals($referralSearchInput: ReferralSearchInput!) { searchReferrals(referralSearchInput:
-                    $referralSearchInput) { referrals { referralId referralStatus referralStatusCode requestingProvider
-                    { name firstName middleName lastName providerOrganizationName npi taxId contactName
-                    phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4
-                    } providerSpeciality { code description } } servicingProvider { name firstName middleName
-                    lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus
-                    address { addressLine1 addressLine2 city state zip zip4 } providerSpeciality { code
-                    description } } service { diagnosisCodes referralQuantity { quantity qualifier qualifierDesc
-                    remaining } startDate endDate comment } rejectionResponse { rejectionLevel reasonDescription
-                    rejectionCode followUpAction rejectionReason validRequestIndicator } } pagination
-                    { totalRecords nextPageToken } } }'
+                  query: 'query SearchReferrals($referralSearchInput: ReferralSearchInput!) { searchReferrals(referralSearchInput: $referralSearchInput) { referrals { referralId referralStatus referralStatusCode requestingProvider { name firstName middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4 } providerSpeciality { code description } } servicingProvider { name firstName middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4 } providerSpeciality { code description } } service { diagnosisCodes referralQuantity { quantity qualifier qualifierDesc remaining } startDate endDate comment } rejectionResponse { rejectionLevel reasonDescription rejectionCode followUpAction rejectionReason validRequestIndicator } } pagination { totalRecords nextPageToken } } }'
                   variables:
                     referralSearchInput:
                       patient:
@@ -356,38 +320,7 @@ paths:
               SearchPriorAuths:
                 summary: Search Prior Auths
                 value:
-                  query: 'query SearchPriorAuths($priorAuthSearchInput: PriorAuthSearchInput!) { searchPriorAuths(priorAuthSearchInput:
-                    $priorAuthSearchInput) { caseSummary { serviceReferenceNumber memberID memberFirstName
-                    memberLastName serviceSetting placeOfService serviceDates caseStatus overallCoverageStatus
-                    } caseDescription { caseSearchMessages caseDetail { serviceReferenceNumber caseStatus
-                    caseStatusReason primaryCarePhysician advanceNotifyDateTime admissionNotifyDateTime
-                    expectedServiceStartDate expectedServiceEndDate actualServiceStartDate actualServiceEndDate
-                    } coverageStatus { overallCoverageStatus procedureCode description coverageStatus
-                    decisionDate geneticMolecularTestCode geneticMolecularTestReviewType } clinicalNotes
-                    { createdTime createdBy noteText } patientDetails { id firstName middleName lastName
-                    dateOfBirth groupNumber relationshipCode relationshipDesc product effectiveDate terminationDate
-                    insuranceType verbalLanguagePreference writtenLanguagePreference informationalMessage
-                    } submittingProvider { name firstName middleName lastName providerOrganizationName
-                    npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2
-                    city state zip zip4 } } admittingAttendingProvider { name firstName middleName lastName
-                    providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address
-                    { addressLine1 addressLine2 city state zip zip4 } } orderingProvider { name firstName
-                    middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax
-                    networkStatus address { addressLine1 addressLine2 city state zip zip4 } } facilityDetails
-                    { name firstName middleName lastName providerOrganizationName npi taxId contactName
-                    phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4
-                    } coverage } serviceDetails { placeOfService serviceDescription serviceDetails } facilityServiceDetails
-                    { startDate endDate serviceDescription isPatientAdmitted expectedAdmissionDate expectedDischargeDate
-                    actualAdmissionDateTime isPatientDischarged dischargeDate dischargeLocation } diagnosisDetails
-                    { codePointer code description } procedureCodeDetails { codePointer code description
-                    coverageStatus servicingProvider { name firstName middleName lastName providerOrganizationName
-                    npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2
-                    city state zip zip4 } } serviceDetail expectedFromDate expectedToDate procedureUnitPerFrequencyCount
-                    procedureUnitOfMeasure procedureFrequency procedureUnitCount dmeProcurementType dmeTotalCost
-                    dmeClinicalIllnessDescText dmeSupplyDescText dmeEnternalFeedingSSONutrInd dmeFormulaNameText
-                    dmeMedicalConditionText } expeditedRequestReview initialContact { contactName phoneNumber
-                    fax } followUpContact { contactName phoneNumber fax departmentType contactRoleType
-                    emailAddress medicalRecordNumber memberPhone } } } }'
+                  query: 'query SearchPriorAuths($priorAuthSearchInput: PriorAuthSearchInput!) { searchPriorAuths(priorAuthSearchInput: $priorAuthSearchInput) { caseSummary { serviceReferenceNumber memberID memberFirstName memberLastName serviceSetting placeOfService serviceDates caseStatus overallCoverageStatus } caseDescription { caseSearchMessages caseDetail { serviceReferenceNumber caseStatus caseStatusReason primaryCarePhysician advanceNotifyDateTime admissionNotifyDateTime expectedServiceStartDate expectedServiceEndDate actualServiceStartDate actualServiceEndDate } coverageStatus { overallCoverageStatus procedureCode description coverageStatus decisionDate geneticMolecularTestCode geneticMolecularTestReviewType } clinicalNotes { createdTime createdBy noteText } patientDetails { id firstName middleName lastName dateOfBirth groupNumber relationshipCode relationshipDesc product effectiveDate terminationDate insuranceType verbalLanguagePreference writtenLanguagePreference informationalMessage } submittingProvider { name firstName middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4 } } admittingAttendingProvider { name firstName middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4 } } orderingProvider { name firstName middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4 } } facilityDetails { name firstName middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4 } coverage } serviceDetails { placeOfService serviceDescription serviceDetails } facilityServiceDetails { startDate endDate serviceDescription isPatientAdmitted expectedAdmissionDate expectedDischargeDate actualAdmissionDateTime isPatientDischarged dischargeDate dischargeLocation } diagnosisDetails { codePointer code description } procedureCodeDetails { codePointer code description coverageStatus servicingProvider { name firstName middleName lastName providerOrganizationName npi taxId contactName phoneNumber fax networkStatus address { addressLine1 addressLine2 city state zip zip4 } } serviceDetail expectedFromDate expectedToDate procedureUnitPerFrequencyCount procedureUnitOfMeasure procedureFrequency procedureUnitCount dmeProcurementType dmeTotalCost dmeClinicalIllnessDescText dmeSupplyDescText dmeEnternalFeedingSSONutrInd dmeFormulaNameText dmeMedicalConditionText } expeditedRequestReview initialContact { contactName phoneNumber fax } followUpContact { contactName phoneNumber fax departmentType contactRoleType emailAddress medicalRecordNumber memberPhone } } } }'
                   variables:
                     priorAuthSearchInput:
                       serviceReferenceNumber: AXXXXXX
@@ -418,57 +351,7 @@ paths:
                   operationName: SearchPriorAuths
       responses:
         '200':
-          description: "<strong>SearchProviders</strong>\n<ul>\n  <li><strong>MISSING_REQUIRED_FIELD</strong>\n\
-            \    <ul>\n      <li>Missing mandatory field: XXXX</li>\n    </ul>\n  </li>\n  <li><strong>INVALID_SEARCH</strong>\n\
-            \    <ul>\n      <li>At least one provider detail must be provided</li>\n    </ul>\n  </li>\n\
-            \  <li><strong>BACKEND_VALIDATION_FAILED</strong>\n    <ul>\n      <li>Invalid or missing\
-            \ fields: XXXX</li>\n      <li>PCP not available for this member</li>\n      <li>Requested\
-            \ tin is not matching with Primary care provider tin</li>\n      <li>No provider found for\
-            \ the given search criteria</li>\n      <li>This Service does not support the selected member\
-            \ plan or platform</li>\n      <li>Member lookup failed. Verify input</li>\n      <li>No Member\
-            \ Policy found for the member</li>\n      <li>The member’s plan does not have an active policy</li>\n\
-            \      <li>This service is not supported for NICE-migrated members</li>\n      <li>This service\
-            \ does not support delegated members.</li>\n      <li>Primary care provider is not found for\
-            \ the member</li>\n      <li>Primary care provider Tin is empty or not applicable</li>\n \
-            \     <li>Derived Line of Business is blank</li>\n    </ul>\n  </li>\n</ul>\n\n<strong>SubmitReferral</strong>\n\
-            <ul>\n  <li><strong>MISSING_REQUIRED_FIELD</strong>\n    <ul>\n      <li>Missing mandatory\
-            \ field: XXXX</li>\n    </ul>\n  </li>\n  <li><strong>INVALID_SEARCH</strong>\n    <ul>\n\
-            \      <li>Invalid value for XXXX</li>\n    </ul>\n  </li>\n  <li><strong>BACKEND_VALIDATION_FAILED</strong>\n\
-            \    <ul>\n      <li>Invalid or missing fields: XXXX</li>\n      <li>No Member Policy found\
-            \ for the member</li>\n      <li>The member's plan does not have an active policy</li>\n \
-            \     <li>This member's plan does not require referrals</li>\n      <li>This service is not\
-            \ supported for NICE-migrated members</li>\n      <li>This service does not support delegated\
-            \ members</li>\n      <li>Primary care provider Tin is empty or not applicable</li>\n    \
-            \  <li>Requesting Provider tin is not matching with Pcp tin</li>\n      <li>No Provider found\
-            \ for the requesting provider combination</li>\n      <li>No Unique Provider found for the\
-            \ requesting provider combination</li>\n      <li>Valid address not found for the requesting\
-            \ provider</li>\n      <li>Valid contract not found for the requesting provider</li>\n   \
-            \   <li>No matching policies with plan benefits.</li>\n      <li>Multiple matching policies\
-            \ found.</li>\n      <li>No provider found for the servicing provider combination</li>\n \
-            \     <li>No Unique Provider found for the serving provider combination</li>\n      <li>No\
-            \ exact match found for the diagnosis code: XXXX</li>\n      <li>Invalid diagnosis code provided:\
-            \ XXXX</li>\n      <li>This Service does not support the selected member plan or platform</li>\n\
-            \      <li>Derived Line of Business is  blank</li>\n    </ul>\n  </li>\n</ul>\n\n<strong>SearchReferrals</strong>\n\
-            <ul>\n  <li><strong>MISSING_REQUIRED_FIELD</strong>\n    <ul>\n      <li>Missing mandatory\
-            \ field: XXXX</li>\n    </ul>\n  </li>\n  <li><strong>BACKEND_VALIDATION_FAILED</strong>\n\
-            \    <ul>\n      <li>Invalid or missing fields: XXXXX</li>\n      <li>This Service does not\
-            \ support the selected member plan or platform</li>\n      <li>Member lookup failed. Verify\
-            \ input.</li>\n    </ul>\n  </li>\n</ul>\n\n<strong>PriorAuth Search</strong>\n<ul>\n  <li><strong>MISSING_REQUIRED_FIELD</strong>\n\
-            \    <ul>\n      <li>Missing mandatory header field: XXXX</li>\n      <li>Missing mandatory\
-            \ field: XXXX</li>\n    </ul>\n  </li>\n  <li><strong>BACKEND_VALIDATION_FAILED</strong>\n\
-            \    <ul>\n      <li>Provider not found for the requested corporateTin</li>\n      <li>Provider\
-            \ not found for the requested provider.firstName/provider.lastOrOrgName</li>\n      <li>No\
-            \ records found</li>\n      <li>Member not found</li>\n      <li>Service setting is invalid.\
-            \ Please update your request with one of the following - Inpatient, Outpatient Facility, Outpatient,\
-            \ or All and resubmit your request</li>\n      <li>Status is invalid. Please update your request\
-            \ with one of the following - Cancelled, Open, Closed or All and resubmit your request</li>\n\
-            \      <li>corporateTin/provider.firstName/provider.lastOrOrgName is invalid, please provide\
-            \ a valid input</li>\n      <li>The case search results in excessive number of cases returned.\
-            \ Please refine the search criteria or date range</li>\n      <li>No Case Detail record found</li>\n\
-            \    </ul>\n  </li>\n  <li><strong>CASE_SUMMARY_NOT_FOUND</strong>\n    <ul>\n      <li>Provider\
-            \ and Member SRN not found</li>\n    </ul>\n  </li>\n  <li><strong>INFORMATION</strong>\n\
-            \    <ul>\n      <li>Multiple SRNs found for the requested details. For case details, include\
-            \ a SRN number on the request</li>\n    </ul>\n  </li>\n</ul>\n"
+          description: "<strong>SearchProviders</strong>\n<ul>\n  <li><strong>MISSING_REQUIRED_FIELD</strong>\n    <ul>\n      <li>Missing mandatory field: XXXX</li>\n    </ul>\n  </li>\n  <li><strong>INVALID_SEARCH</strong>\n    <ul>\n      <li>At least one provider detail must be provided</li>\n    </ul>\n  </li>\n  <li><strong>BACKEND_VALIDATION_FAILED</strong>\n    <ul>\n      <li>Invalid or missing fields: XXXX</li>\n      <li>PCP not available for this member</li>\n      <li>Requested tin is not matching with Primary care provider tin</li>\n      <li>No provider found for the given search criteria</li>\n      <li>This Service does not support the selected member plan or platform</li>\n      <li>Member lookup failed. Verify input</li>\n      <li>No Member Policy found for the member</li>\n      <li>The member’s plan does not have an active policy</li>\n      <li>This service is not supported for NICE-migrated members</li>\n      <li>This service does not support delegated members.</li>\n      <li>Primary care provider is not found for the member</li>\n      <li>Primary care provider Tin is empty or not applicable</li>\n      <li>Derived Line of Business is blank</li>\n    </ul>\n  </li>\n</ul>\n\n<strong>SubmitReferral</strong>\n<ul>\n  <li><strong>MISSING_REQUIRED_FIELD</strong>\n    <ul>\n      <li>Missing mandatory field: XXXX</li>\n    </ul>\n  </li>\n  <li><strong>INVALID_SEARCH</strong>\n    <ul>\n      <li>Invalid value for XXXX</li>\n    </ul>\n  </li>\n  <li><strong>BACKEND_VALIDATION_FAILED</strong>\n    <ul>\n      <li>Invalid or missing fields: XXXX</li>\n      <li>No Member Policy found for the member</li>\n      <li>The member's plan does not have an active policy</li>\n      <li>This member's plan does not require referrals</li>\n      <li>This service is not supported for NICE-migrated members</li>\n      <li>This service does not support delegated members</li>\n      <li>Primary care provider Tin is empty or not applicable</li>\n      <li>Requesting Provider tin is not matching with Pcp tin</li>\n      <li>No Provider found for the requesting provider combination</li>\n      <li>No Unique Provider found for the requesting provider combination</li>\n      <li>Valid address not found for the requesting provider</li>\n      <li>Valid contract not found for the requesting provider</li>\n      <li>No matching policies with plan benefits.</li>\n      <li>Multiple matching policies found.</li>\n      <li>No provider found for the servicing provider combination</li>\n      <li>No Unique Provider found for the serving provider combination</li>\n      <li>No exact match found for the diagnosis code: XXXX</li>\n      <li>Invalid diagnosis code provided: XXXX</li>\n      <li>This Service does not support the selected member plan or platform</li>\n      <li>Derived Line of Business is  blank</li>\n    </ul>\n  </li>\n</ul>\n\n<strong>SearchReferrals</strong>\n<ul>\n  <li><strong>MISSING_REQUIRED_FIELD</strong>\n    <ul>\n      <li>Missing mandatory field: XXXX</li>\n    </ul>\n  </li>\n  <li><strong>BACKEND_VALIDATION_FAILED</strong>\n    <ul>\n      <li>Invalid or missing fields: XXXXX</li>\n      <li>This Service does not support the selected member plan or platform</li>\n      <li>Member lookup failed. Verify input.</li>\n    </ul>\n  </li>\n</ul>\n\n<strong>PriorAuth Search</strong>\n<ul>\n  <li><strong>MISSING_REQUIRED_FIELD</strong>\n    <ul>\n      <li>Missing mandatory header field: XXXX</li>\n      <li>Missing mandatory field: XXXX</li>\n    </ul>\n  </li>\n  <li><strong>BACKEND_VALIDATION_FAILED</strong>\n    <ul>\n      <li>Provider not found for the requested corporateTin</li>\n      <li>Provider not found for the requested provider.firstName/provider.lastOrOrgName</li>\n      <li>No records found</li>\n      <li>Member not found</li>\n      <li>Service setting is invalid. Please update your request with one of the following - Inpatient, Outpatient Facility, Outpatient, or All and resubmit your request</li>\n      <li>Status is invalid. Please update your request with one of the following - Cancelled, Open, Closed or All and resubmit your request</li>\n      <li>corporateTin/provider.firstName/provider.lastOrOrgName is invalid, please provide a valid input</li>\n      <li>The case search results in excessive number of cases returned. Please refine the search criteria or date range</li>\n      <li>No Case Detail record found</li>\n    </ul>\n  </li>\n  <li><strong>CASE_SUMMARY_NOT_FOUND</strong>\n    <ul>\n      <li>Provider and Member SRN not found</li>\n    </ul>\n  </li>\n  <li><strong>INFORMATION</strong>\n    <ul>\n      <li>Multiple SRNs found for the requested details. For case details, include a SRN number on the request</li>\n    </ul>\n  </li>\n</ul>\n"
           content:
             application/json:
               examples:
@@ -695,10 +578,8 @@ paths:
                           overallCoverageStatus: Covered/Approved
                         caseDescription:
                           caseSearchMessages:
-                          - A decision has already been rendered on this case, though some updates are
-                            permitted as indicated in the enabled fields below.
-                          - To request an additional service for this member, please submit a new notification/prior
-                            authorization request for the member.
+                          - A decision has already been rendered on this case, though some updates are permitted as indicated in the enabled fields below.
+                          - To request an additional service for this member, please submit a new notification/prior authorization request for the member.
                           caseDetail:
                             serviceReferenceNumber: AXXXXXXXXX
                             caseStatus: Open
@@ -737,9 +618,7 @@ paths:
                             insuranceType: Medicare
                             verbalLanguagePreference: English
                             writtenLanguagePreference: English
-                            informationalMessage: A future timeline may be available for this member.
-                              For future coverage please call the telephone number located on the back
-                              of the member's Medical ID card.
+                            informationalMessage: A future timeline may be available for this member. For future coverage please call the telephone number located on the back of the member's Medical ID card.
                           submittingProvider:
                             name: John J Doe
                             firstName: John
@@ -974,181 +853,168 @@ paths:
                       type: object
                     type: array
                 type: object
+      summary: Auth referral submission
+      x-summary-source: derived
 components:
   schemas:
-    SearchProvidersResponseDataWrapper:
+    PaginationInput:
       type: object
       properties:
-        data:
-          description: Search providers response wrapper
-          $ref: '#/components/schemas/SearchProvidersResponseWrapper'
-      description: Search providers response data wrapper
-    ProviderSearchInput:
+        nextPageToken:
+          description: page identifier for pagination
+          example: '2'
+          type: string
+    DiagnosisDetail:
       type: object
       properties:
-        searchType:
-          description: REQUESTING,SERVICING
-          example: SERVICING
+        codePointer:
+          description: diagnosis code type
+          example: Primary
           type: string
-        provider:
-          $ref: '#/components/schemas/ProviderInput'
-        patient:
-          $ref: '#/components/schemas/PatientInput'
-        pagination:
-          $ref: '#/components/schemas/PaginationInput'
-        payerId:
-          description: payerId
-          example: '87726'
+        code:
+          description: diagnosis code
+          example: J01.90
           type: string
-      required:
-      - patient.firstName
-      - patient.lastName
-      - patient.id
-      - patient.dateOfBirth
-      - patient.groupNumber
-      - searchType
-      - provider
-      - patient
-      - payerId
-    SubmitReferralsResponseDataWrapper:
+        description:
+          description: diagnosis code description
+          example: acute sinusitis
+          type: string
+    Pagination:
       type: object
       properties:
-        data:
-          description: Submit referral response wrapper
-          $ref: '#/components/schemas/SubmitReferralsResponseWrapper'
-      description: Submit referral response data wrapper
-    ReferralSubmitInput:
+        totalRecords:
+          description: total records for the response
+          example: '147'
+          type: string
+        nextPageToken:
+          description: page offset for pagination
+          example: '3'
+          type: string
+    CaseDescription:
       type: object
       properties:
-        requestingProvider:
-          $ref: '#/components/schemas/ReferralSubmitProviderInput'
-        patient:
-          $ref: '#/components/schemas/PatientInput'
-        service:
-          $ref: '#/components/schemas/ServiceInput'
-        servicingProvider:
-          description: Servicing provider information
-          $ref: '#/components/schemas/ReferralSubmitProviderInput'
-        payerId:
-          description: payerId
-          example: '87726'
-          type: string
-      required:
-      - patient.firstName
-      - patient.lastName
-      - patient.id
-      - patient.dateOfBirth
-      - patient.groupNumber
-      - requestingProvider.npi
-      - requestingProvider.taxId
-      - requestingProvider.zip
-      - service.referralQuantity.quantity
-      - service.referralQuantity.qualifier
-      - service.diagnosisCodes
-      - service.referralQuantity
-      - service.startDate
-      - requestingProvider
-      - patient
-      - service
-      - servicingProvider
-      - payerId
-    SearchReferralsResponseDataWrapper:
+        caseSearchMessages:
+          description: payer message(s) related to the case.
+          example: A decision has already been rendered on this case, though some updates are permitted as indicated in the enabled fields below. To request an additional service for this member, please submit a new notification/prior authorization request for the member.
+          type: array
+          items:
+            type: string
+        caseDetail:
+          $ref: '#/components/schemas/CaseDetail'
+        coverageStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/CoverageStatusItem'
+        clinicalNotes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClinicalNote'
+        patientDetails:
+          $ref: '#/components/schemas/PatientDetails'
+        submittingProvider:
+          $ref: '#/components/schemas/Provider'
+        admittingAttendingProvider:
+          $ref: '#/components/schemas/Provider'
+        orderingProvider:
+          $ref: '#/components/schemas/Provider'
+        facilityDetails:
+          $ref: '#/components/schemas/FacilityDetails'
+        serviceDetails:
+          $ref: '#/components/schemas/ServiceDetails'
+        facilityServiceDetails:
+          $ref: '#/components/schemas/FacilityServiceDetails'
+        diagnosisDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiagnosisDetail'
+        procedureCodeDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProcedureCodeDetail'
+        expeditedRequestReview:
+          description: expedited review requirement on the case:- true or false
+          example: true
+          type: boolean
+        initialContact:
+          $ref: '#/components/schemas/ContactBase'
+        followUpContact:
+          description: Follow-up contact information
+          $ref: '#/components/schemas/FollowUpContact'
+      description: Detailed information about a specific prior authorization case.
+    CoverageStatusItem:
       type: object
       properties:
-        data:
-          description: Search referrals response
-          $ref: '#/components/schemas/SearchReferralsResponseWrapper'
-      description: Search referrals response data wrapper
-    ReferralSearchInput:
+        overallCoverageStatus:
+          description: overall coverage status for the member and services
+          example: Covered/Approved
+          type: string
+        procedureCode:
+          description: procedure code for the service
+          example: '99213'
+          type: string
+        description:
+          description: procedure code description
+          example: Established patient office or other outpatient visit
+          type: string
+        coverageStatus:
+          description: coverage status for the service
+          example: Covered
+          type: string
+        decisionDate:
+          description: date on which case decision is amde
+          example: '2025-09-15'
+          type: string
+        geneticMolecularTestCode:
+          description: geneticMolecularTestCode
+          example: 'null'
+          type: string
+        geneticMolecularTestReviewType:
+          description: geneticMolecularTestReviewType
+          example: 'null'
+          type: string
+    FacilityServiceDetails:
       type: object
       properties:
-        patient:
-          $ref: '#/components/schemas/PatientInput'
-        serviceStartDate:
-          example: '2024-01-01'
-          type: string
-        serviceEndDate:
-          example: '2024-12-31'
-          type: string
-        status:
-          description: 'default: APPROVED'
-          example: ALL
-          type: string
-        pagination:
-          $ref: '#/components/schemas/PaginationInput'
-        payerId:
-          description: payerId
-          example: '87726'
-          type: string
-      required:
-      - patient.firstName
-      - patient.lastName
-      - patient.id
-      - patient.dateOfBirth
-      - patient.groupNumber
-      - patient
-      - serviceStartDate
-      - serviceEndDate
-      - payerId
-    SearchPriorAuthsResponseDataWrapper:
-      type: object
-      properties:
-        data:
-          description: Search prior auths response wrapper
-          $ref: '#/components/schemas/SearchPriorAuthsResponseWrapper'
-      description: Search prior auths response data wrapper
-    PriorAuthSearchInput:
-      type: object
-      properties:
-        serviceReferenceNumber:
-          description: PriorAuth unique case Id reference number.
-          example: AXXXXXX
-          type: string
-        corporateTin:
-          description: Corporate Tax Identification Number.
-          example: '123456789'
-          type: string
-        provider:
-          $ref: '#/components/schemas/PriorAuthSearchProviderInput'
-        member:
-          $ref: '#/components/schemas/PatientInput'
-        serviceSetting:
-          description: Filter by service setting type.
-          example: Inpatient
-          type: string
-        status:
-          description: Filter by case status.
-          example: Open
-          type: string
         startDate:
-          description: Start date for the service period search (YYYY-MM-DD). Default will be current
-            date.
-          example: '2025-07-19'
+          description: service start date
+          example: '2025-10-02'
           type: string
         endDate:
-          description: End date for the service period search (YYYY-MM-DD). Default will be current date.
-          example: '2025-10-17'
+          description: service end date
+          example: '2025-10-02'
           type: string
-        payerId:
-          description: payerId
-          example: '87726'
+        serviceDescription:
+          description: service description:- Scheduled, Urgent, Emergent
+          example: Scheduled
           type: string
-      required:
-      - member.firstName
-      - member.lastName
-      - member.id
-      - member.dateOfBirth
-      - member.groupNumber
-      - provider.address.addressLine1
-      - provider.address.state
-      - provider.address.zip
-      - provider.lastOrOrgName
-      - provider.address
-      - corporateTin
-      - provider
-      - member
-      - payerId
-      description: Input structure for the GraphQL search variables for prior-auth.
+        isPatientAdmitted:
+          description: patient admission flag
+          example: 'Yes'
+          type: string
+        expectedAdmissionDate:
+          description: expected admission date
+          example: '2025-10-02'
+          type: string
+        expectedDischargeDate:
+          description: expected discharge date
+          example: '2025-10-02'
+          type: string
+        actualAdmissionDateTime:
+          description: actual admission date
+          example: '2025-10-02'
+          type: string
+        isPatientDischarged:
+          description: patient discharge flag
+          example: 'Yes'
+          type: string
+        dischargeDate:
+          description: actual discharge date
+          example: '2025-10-02'
+          type: string
+        dischargeLocation:
+          description: discharge location
+          example: Home
+          type: string
     ContactBase:
       type: object
       properties:
@@ -1164,6 +1030,321 @@ components:
           description: contact fax number
           example: 555-123-4568
           type: string
+    ProviderAddressInput:
+      type: object
+      properties:
+        addressLine1:
+          description: Address line 1
+          example: 1234 Street
+          type: string
+        addressLine2:
+          description: Address line 2 (optional).
+          example: Building A
+          type: string
+        city:
+          description: City
+          example: Healthcare City
+          type: string
+        state:
+          description: State code (e.g., AZ, CA, NY etc).
+          example: AZ
+          type: string
+        zip:
+          description: Standard ZIP code.
+          example: '90210'
+          type: string
+        zip4:
+          description: ZIP+4 suffix
+          example: '0001'
+          type: string
+      required:
+      - addressLine1
+      - state
+      - zip
+    PatientDetails:
+      type: object
+      properties:
+        id:
+          description: patient/member id
+          example: '123456789'
+          type: string
+        firstName:
+          description: patient first name
+          example: Alice
+          type: string
+        middleName:
+          description: patient middle name
+          example: A
+          type: string
+        lastName:
+          description: patient last name
+          example: Johnson
+          type: string
+        dateOfBirth:
+          description: patient date of birth
+          example: '1990-12-31'
+          type: string
+        groupNumber:
+          description: patient policy number
+          example: GRP321
+          type: string
+        relationshipCode:
+          description: patient relationship code
+          example: '18'
+          type: string
+        relationshipDesc:
+          description: patient relationship description
+          example: SELF
+          type: string
+        product:
+          description: member insurance product type
+          example: PPO  - Options PPO
+          type: string
+        effectiveDate:
+          description: policy effective date
+          example: '2025-03-01'
+          type: string
+        terminationDate:
+          description: policy termination date
+          example: '2025-12-31'
+          type: string
+        insuranceType:
+          description: insurance type
+          example: Medicare
+          type: string
+        verbalLanguagePreference:
+          description: patient preferred verbal language
+          example: English
+          type: string
+        writtenLanguagePreference:
+          description: patient preferred written language
+          example: English
+          type: string
+        informationalMessage:
+          description: informational message
+          example: A future timeline may be available for this member. For future coverage please call the telephone number located on the back of the member's Medical ID card.
+          type: string
+    PriorAuthSearchProviderInput:
+      type: object
+      properties:
+        firstName:
+          description: Provider first name
+          example: Dr. Carlos
+          type: string
+        lastOrOrgName:
+          description: Provider last name or organization
+          example: Rodriguez
+          type: string
+        address:
+          $ref: '#/components/schemas/ProviderAddressInput'
+      required:
+      - address.addressLine1
+      - address.state
+      - address.zip
+      - lastOrOrgName
+      - address
+      description: Search parameters related to the provider
+    AddressExt:
+      type: object
+      properties:
+        addressLine1:
+          description: Address line 1
+          example: 123 Medical Drive
+          type: string
+        addressLine2:
+          description: Address line 2
+          example: Building A
+          type: string
+        city:
+          description: City
+          example: Healthcare City
+          type: string
+        state:
+          description: State code (e.g., AZ, CA, NY etc).
+          example: CA
+          type: string
+        zip:
+          description: Standard ZIP code.
+          example: '90210'
+          type: string
+        zip4:
+          description: ZIP+4 suffix
+          example: '0001'
+          type: string
+    ProviderInput:
+      type: object
+      properties:
+        zip:
+          description: provider zipcode
+          example: '90210'
+          type: string
+        radius:
+          description: provider facility to be searched in radius distance
+          example: 25
+          type: integer
+        firstName:
+          description: provider first name
+          example: Dr. Carlos
+          type: string
+        lastOrOrgName:
+          description: Provider last name or organization name
+          example: Rodriguez
+          type: string
+        npi:
+          description: provider NPI
+          example: '1234567890'
+          type: string
+        taxId:
+          description: provider TIN
+          example: '987654321'
+          type: string
+        preferredLanguage:
+          description: provider language
+          example: SPA
+          type: string
+        specialityCode:
+          description: provider speciality
+          example: CARD
+          type: string
+        gender:
+          description: provider gender
+          example: M
+          type: string
+    ServiceResponse:
+      type: object
+      properties:
+        diagnosisCodes:
+          description: Diagnosis code
+          example: M79.3
+          type: array
+          items:
+            type: string
+        referralQuantity:
+          $ref: '#/components/schemas/ReferralQuantity'
+        startDate:
+          description: diagnosis start date
+          example: '2024-11-01'
+          type: string
+        endDate:
+          description: diagnosis end date
+          example: '2024-11-30'
+          type: string
+        comment:
+          description: diagnosis comments
+          example: Physical therapy for knee pain
+          type: string
+    Patient:
+      type: object
+      properties:
+        id:
+          description: Patient/member ID
+          example: '123456789'
+          type: string
+        firstName:
+          description: patient first name
+          example: Alice
+          type: string
+        middleName:
+          description: patient middle name
+          example: A
+          type: string
+        lastName:
+          description: patient last name
+          example: Johnson
+          type: string
+        dateOfBirth:
+          description: patient date of birth
+          example: '1990-12-31'
+          type: string
+        groupNumber:
+          description: patient policy number
+          example: GRP321
+          type: string
+        relationshipCode:
+          description: patient relationship code
+          example: '18'
+          type: string
+        relationshipDesc:
+          description: patient relationship description
+          example: SELF
+          type: string
+    PriorAuthSearchResponse:
+      type: object
+      properties:
+        caseSummary:
+          description: A list of summarized cases matching the search criteria
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseSummary'
+        caseDescription:
+          $ref: '#/components/schemas/CaseDescription'
+    AddressBase:
+      type: object
+      properties:
+        addressLine1:
+          description: Address line 1
+          example: 123 Healthcare Drive
+          type: string
+        addressLine2:
+          description: Address line 2 (optional).
+          example: Suite 200
+          type: string
+        city:
+          description: City
+          example: Healthcare City
+          type: string
+        state:
+          description: State code (e.g., AZ, CA, NY etc).
+          example: CA
+          type: string
+        zip:
+          description: Standard ZIP code.
+          example: '90210'
+          type: string
+        zip4:
+          description: ZIP+4 suffix
+          example: '0001'
+          type: string
+    CaseSummary:
+      type: object
+      properties:
+        serviceReferenceNumber:
+          description: unique prior auth case identification number
+          example: AXXXXXXXXX
+          type: string
+        memberID:
+          description: unique member identifier
+          example: '953333333'
+          type: string
+        memberFirstName:
+          description: member first name
+          example: Alison
+          type: string
+        memberLastName:
+          description: Member last name
+          example: Johnson
+          type: string
+        serviceSetting:
+          description: case service setting:- Inpatient, Outpatient or Outpatient Facility
+          example: Inpatient
+          type: string
+        placeOfService:
+          description: Place of service
+          example: Acute Hospital
+          type: string
+        serviceDates:
+          description: Service date range (e.g., MM/DD/YYYY-MM/DD/YYYY)
+          example: 10/02/2025-10/03/2025
+          type: string
+        caseStatus:
+          description: current status of the prior auth case
+          example: Open
+          type: string
+        overallCoverageStatus:
+          description: overall coverage status for the member and services on the case
+          example: Covered/Approved
+          type: string
+      description: A brief summary of a single prior authorization case found in the search.
     ExtendedProvider:
       type: object
       properties:
@@ -1237,132 +1418,6 @@ components:
           description: handicap accessibility of provider facility
           example: true
           type: boolean
-    ReferralSubmitResponse:
-      type: object
-      properties:
-        referralId:
-          example: REF123456789
-          type: string
-        referralStatus:
-          example: APPROVED
-          type: string
-        payer:
-          $ref: '#/components/schemas/Payer'
-        requestingProvider:
-          $ref: '#/components/schemas/Provider'
-        servicingProvider:
-          $ref: '#/components/schemas/Provider'
-        patient:
-          $ref: '#/components/schemas/Patient'
-        decisions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Decision'
-        x12Response:
-          example: ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241010*1234*^*00501*000000001*0*P*:~
-          type: string
-        rejectionReasons:
-          type: array
-          items:
-            $ref: '#/components/schemas/RejectionReason'
-    FollowUpContact:
-      type: object
-      properties:
-        contactName:
-          description: full name of the contact for the case
-          example: Bruce Wayne
-          type: string
-        phoneNumber:
-          description: contact phone number
-          example: 555-123-4567
-          type: string
-        fax:
-          description: contact fax number
-          example: 555-123-4568
-          type: string
-        departmentType:
-          description: follow-up contact department
-          example: 'null'
-          type: string
-        contactRoleType:
-          description: follow-up contact role
-          example: Other
-          type: string
-        emailAddress:
-          description: follow-up contact email
-          example: tonystark@avengers.com
-          type: string
-        medicalRecordNumber:
-          description: medical record number
-          example: EPIC 123456 987654
-          type: string
-        memberPhone:
-          description: member phone number
-          example: 555-111-1234
-          type: string
-    PaginationInput:
-      type: object
-      properties:
-        nextPageToken:
-          description: page identifier for pagination
-          example: '2'
-          type: string
-    DiagnosisDetail:
-      type: object
-      properties:
-        codePointer:
-          description: diagnosis code type
-          example: Primary
-          type: string
-        code:
-          description: diagnosis code
-          example: J01.90
-          type: string
-        description:
-          description: diagnosis code description
-          example: acute sinusitis
-          type: string
-    ReferralSearchResponse:
-      type: object
-      properties:
-        referrals:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReferralSearchResult'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-    SearchPriorAuthsResponseWrapper:
-      type: object
-      properties:
-        searchPriorAuths:
-          description: Search prior auths response
-          $ref: '#/components/schemas/PriorAuthSearchResponse'
-      description: Search prior auths response wrapper containing the operation result
-    Decision:
-      type: object
-      properties:
-        decisionType:
-          description: '[ Event, Service ]'
-          example: EVENT
-          type: string
-        certificationAction:
-          description: referral decision certification action
-          example: A1
-          type: string
-        reviewDecisionReason:
-          description: referral decision review reason
-          example: MEETS_CRITERIA
-          type: string
-        startDate:
-          description: referral decision start date
-          example: '2024-11-30'
-          type: string
-        endDate:
-          description: referral decision end date
-          example: '2024-11-30'
-          type: string
-        referralQuantity:
-          $ref: '#/components/schemas/ReferralQuantity'
     ReferralQuantityInput:
       type: object
       properties:
@@ -1376,477 +1431,29 @@ components:
       required:
       - quantity
       - qualifier
-    Patient:
+    ReferralSearchResult:
       type: object
       properties:
-        id:
-          description: Patient/member ID
-          example: '123456789'
-          type: string
-        firstName:
-          description: patient first name
-          example: Alice
-          type: string
-        middleName:
-          description: patient middle name
-          example: A
-          type: string
-        lastName:
-          description: patient last name
-          example: Johnson
-          type: string
-        dateOfBirth:
-          description: patient date of birth
-          example: '1990-12-31'
-          type: string
-        groupNumber:
-          description: patient policy number
-          example: GRP321
-          type: string
-        relationshipCode:
-          description: patient relationship code
-          example: '18'
-          type: string
-        relationshipDesc:
-          description: patient relationship description
-          example: SELF
-          type: string
-    ProviderSpeciality:
-      type: object
-      properties:
-        code:
-          description: provider taxonomy/speciality code
-          example: 207Q00000X
-          type: string
-        description:
-          description: provider taxonomy description
-          example: Family Medicine
-          type: string
-    ServiceResponse:
-      type: object
-      properties:
-        diagnosisCodes:
-          description: Diagnosis code
-          example: M79.3
-          type: array
-          items:
-            type: string
-        referralQuantity:
-          $ref: '#/components/schemas/ReferralQuantity'
-        startDate:
-          description: diagnosis start date
-          example: '2024-11-01'
-          type: string
-        endDate:
-          description: diagnosis end date
-          example: '2024-11-30'
-          type: string
-        comment:
-          description: diagnosis comments
-          example: Physical therapy for knee pain
-          type: string
-    CaseDescription:
-      type: object
-      properties:
-        caseSearchMessages:
-          description: payer message(s) related to the case.
-          example: A decision has already been rendered on this case, though some updates are permitted
-            as indicated in the enabled fields below. To request an additional service for this member,
-            please submit a new notification/prior authorization request for the member.
-          type: array
-          items:
-            type: string
-        caseDetail:
-          $ref: '#/components/schemas/CaseDetail'
-        coverageStatus:
-          type: array
-          items:
-            $ref: '#/components/schemas/CoverageStatusItem'
-        clinicalNotes:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClinicalNote'
-        patientDetails:
-          $ref: '#/components/schemas/PatientDetails'
-        submittingProvider:
-          $ref: '#/components/schemas/Provider'
-        admittingAttendingProvider:
-          $ref: '#/components/schemas/Provider'
-        orderingProvider:
-          $ref: '#/components/schemas/Provider'
-        facilityDetails:
-          $ref: '#/components/schemas/FacilityDetails'
-        serviceDetails:
-          $ref: '#/components/schemas/ServiceDetails'
-        facilityServiceDetails:
-          $ref: '#/components/schemas/FacilityServiceDetails'
-        diagnosisDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/DiagnosisDetail'
-        procedureCodeDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProcedureCodeDetail'
-        expeditedRequestReview:
-          description: expedited review requirement on the case:- true or false
-          example: true
-          type: boolean
-        initialContact:
-          $ref: '#/components/schemas/ContactBase'
-        followUpContact:
-          description: Follow-up contact information
-          $ref: '#/components/schemas/FollowUpContact'
-      description: Detailed information about a specific prior authorization case.
-    CaseSummary:
-      type: object
-      properties:
-        serviceReferenceNumber:
-          description: unique prior auth case identification number
-          example: AXXXXXXXXX
-          type: string
-        memberID:
-          description: unique member identifier
-          example: '953333333'
-          type: string
-        memberFirstName:
-          description: member first name
-          example: Alison
-          type: string
-        memberLastName:
-          description: Member last name
-          example: Johnson
-          type: string
-        serviceSetting:
-          description: case service setting:- Inpatient, Outpatient or Outpatient Facility
-          example: Inpatient
-          type: string
-        placeOfService:
-          description: Place of service
-          example: Acute Hospital
-          type: string
-        serviceDates:
-          description: Service date range (e.g., MM/DD/YYYY-MM/DD/YYYY)
-          example: 10/02/2025-10/03/2025
-          type: string
-        caseStatus:
-          description: current status of the prior auth case
-          example: Open
-          type: string
-        overallCoverageStatus:
-          description: overall coverage status for the member and services on the case
-          example: Covered/Approved
-          type: string
-      description: A brief summary of a single prior authorization case found in the search.
-    FacilityDetails:
-      type: object
-      properties:
-        name:
-          description: provider full name
-          example: John J Doe
-          type: string
-        firstName:
-          description: provider first name
-          example: John
-          type: string
-        middleName:
-          description: provider middle name
-          example: J
-          type: string
-        lastName:
-          description: provider last name
-          example: Doe
-          type: string
-        providerOrganizationName:
-          description: provider org name
-          example: Dr. John Doe Clinic
-          type: string
-        npi:
-          description: provider NPI
-          example: '1234567890'
-          type: string
-        taxId:
-          description: provider TIN
-          example: 12345678
-          type: string
-        contactName:
-          description: provider contact name
-          example: Alison Johnson
-          type: string
-        phoneNumber:
-          description: provider phone number
-          example: 555-123-4567
-          type: string
-        fax:
-          description: provider fax number
-          example: 555-123-4568
-          type: string
-        networkStatus:
-          description: provider network status
-          example: In Network
-          type: string
-        address:
-          $ref: '#/components/schemas/AddressExt'
-        coverage:
-          description: coverage status
-          example: Covered/Approved
-          type: string
-    PriorAuthSearchProviderInput:
-      type: object
-      properties:
-        firstName:
-          description: Provider first name
-          example: Dr. Carlos
-          type: string
-        lastOrOrgName:
-          description: Provider last name or organization
-          example: Rodriguez
-          type: string
-        address:
-          $ref: '#/components/schemas/ProviderAddressInput'
-      required:
-      - address.addressLine1
-      - address.state
-      - address.zip
-      - lastOrOrgName
-      - address
-      description: Search parameters related to the provider
-    ReferralQuantity:
-      type: object
-      properties:
-        quantity:
-          description: quantity limit
-          example: 12
-          type: integer
-        qualifier:
-          description: referral qualifier/unit
-          example: VS
-          type: string
-        qualifierDesc:
-          description: referral qualifier description
-          example: visits
-          type: string
-        remaining:
-          description: referral quantity remaining
-          example: 8
-          type: integer
-    Pagination:
-      type: object
-      properties:
-        totalRecords:
-          description: total records for the response
-          example: '147'
-          type: string
-        nextPageToken:
-          description: page offset for pagination
-          example: '3'
-          type: string
-    AddressExt:
-      type: object
-      properties:
-        addressLine1:
-          description: Address line 1
-          example: 123 Medical Drive
-          type: string
-        addressLine2:
-          description: Address line 2
-          example: Building A
-          type: string
-        city:
-          description: City
-          example: Healthcare City
-          type: string
-        state:
-          description: State code (e.g., AZ, CA, NY etc).
-          example: CA
-          type: string
-        zip:
-          description: Standard ZIP code.
-          example: '90210'
-          type: string
-        zip4:
-          description: ZIP+4 suffix
-          example: '0001'
-          type: string
-    ProviderAddressInput:
-      type: object
-      properties:
-        addressLine1:
-          description: Address line 1
-          example: 1234 Street
-          type: string
-        addressLine2:
-          description: Address line 2 (optional).
-          example: Building A
-          type: string
-        city:
-          description: City
-          example: Healthcare City
-          type: string
-        state:
-          description: State code (e.g., AZ, CA, NY etc).
-          example: AZ
-          type: string
-        zip:
-          description: Standard ZIP code.
-          example: '90210'
-          type: string
-        zip4:
-          description: ZIP+4 suffix
-          example: '0001'
-          type: string
-      required:
-      - addressLine1
-      - state
-      - zip
-    CoverageStatusItem:
-      type: object
-      properties:
-        overallCoverageStatus:
-          description: overall coverage status for the member and services
-          example: Covered/Approved
-          type: string
-        procedureCode:
-          description: procedure code for the service
-          example: '99213'
-          type: string
-        description:
-          description: procedure code description
-          example: Established patient office or other outpatient visit
-          type: string
-        coverageStatus:
-          description: coverage status for the service
-          example: Covered
-          type: string
-        decisionDate:
-          description: date on which case decision is amde
-          example: '2025-09-15'
-          type: string
-        geneticMolecularTestCode:
-          description: geneticMolecularTestCode
-          example: 'null'
-          type: string
-        geneticMolecularTestReviewType:
-          description: geneticMolecularTestReviewType
-          example: 'null'
-          type: string
-    AddressBase:
-      type: object
-      properties:
-        addressLine1:
-          description: Address line 1
-          example: 123 Healthcare Drive
-          type: string
-        addressLine2:
-          description: Address line 2 (optional).
-          example: Suite 200
-          type: string
-        city:
-          description: City
-          example: Healthcare City
-          type: string
-        state:
-          description: State code (e.g., AZ, CA, NY etc).
-          example: CA
-          type: string
-        zip:
-          description: Standard ZIP code.
-          example: '90210'
-          type: string
-        zip4:
-          description: ZIP+4 suffix
-          example: '0001'
-          type: string
-    ServiceDetails:
-      type: object
-      properties:
-        placeOfService:
-          description: Place of service
-          example: Acute Hospital
-          type: string
-        serviceDescription:
-          description: service description:- Scheduled, Urgent, Emergent
-          example: Scheduled
-          type: string
-        serviceDetails:
-          description: service detail:- Surgical, Medical etc
-          example: Surgical
-          type: string
-    ProviderInput:
-      type: object
-      properties:
-        zip:
-          description: provider zipcode
-          example: '90210'
-          type: string
-        radius:
-          description: provider facility to be searched in radius distance
-          example: 25
-          type: integer
-        firstName:
-          description: provider first name
-          example: Dr. Carlos
-          type: string
-        lastOrOrgName:
-          description: Provider last name or organization name
-          example: Rodriguez
-          type: string
-        npi:
-          description: provider NPI
-          example: '1234567890'
-          type: string
-        taxId:
-          description: provider TIN
-          example: '987654321'
-          type: string
-        preferredLanguage:
-          description: provider language
-          example: SPA
-          type: string
-        specialityCode:
-          description: provider speciality
-          example: CARD
-          type: string
-        gender:
-          description: provider gender
-          example: M
-          type: string
-    ServiceInput:
-      type: object
-      properties:
-        diagnosisCodes:
-          description: diagnosis codes
-          example: M79.3
-          type: array
-          items:
-            type: string
-        referralQuantity:
-          $ref: '#/components/schemas/ReferralQuantityInput'
-        startDate:
-          description: referral start date
-          example: '2025-01-01'
-          type: string
-        endDate:
-          description: referral end date
-          example: '2025-01-01'
-          type: string
-        comment:
-          description: referral comments
-          example: Patient requires physical therapy for knee pain
-          type: string
-      required:
-      - referralQuantity.quantity
-      - referralQuantity.qualifier
-      - diagnosisCodes
-      - referralQuantity
-      - startDate
-    SubmitReferralsResponseWrapper:
-      type: object
-      properties:
-        submitReferral:
-          description: Submit referral response
-          $ref: '#/components/schemas/ReferralSubmitResponse'
-      description: Submit referral response wrapper containing the operation result
+        referralId:
+          description: referral unique identifier
+          example: REF123456789
+          type: string
+        referralStatus:
+          description: Referral status
+          example: APPROVED
+          type: string
+        referralStatusCode:
+          description: referral status code
+          example: A1
+          type: string
+        requestingProvider:
+          $ref: '#/components/schemas/SearchProvider'
+        servicingProvider:
+          $ref: '#/components/schemas/SearchProvider'
+        service:
+          $ref: '#/components/schemas/ServiceResponse'
+        rejectionResponse:
+          $ref: '#/components/schemas/RejectionReason'
     Payer:
       type: object
       properties:
@@ -1864,20 +1471,6 @@ components:
           type: array
           items:
             type: string
-    SearchProvidersResponseWrapper:
-      type: object
-      properties:
-        searchProviders:
-          description: Search providers response
-          $ref: '#/components/schemas/ProviderSearchResponse'
-      description: Search providers response wrapper containing the operation result
-    SearchReferralsResponseWrapper:
-      type: object
-      properties:
-        searchReferrals:
-          description: Search referrals response
-          $ref: '#/components/schemas/ReferralSearchResponse'
-      description: Search referrals response wrapper containing the operation result
     PatientInput:
       type: object
       properties:
@@ -1915,6 +1508,21 @@ components:
       - id
       - dateOfBirth
       - groupNumber
+    ServiceDetails:
+      type: object
+      properties:
+        placeOfService:
+          description: Place of service
+          example: Acute Hospital
+          type: string
+        serviceDescription:
+          description: service description:- Scheduled, Urgent, Emergent
+          example: Scheduled
+          type: string
+        serviceDetails:
+          description: service detail:- Surgical, Medical etc
+          example: Surgical
+          type: string
     ProcedureCodeDetail:
       type: object
       properties:
@@ -1986,65 +1594,148 @@ components:
         dmeMedicalConditionText:
           example: durable medical equipment condition text
           type: string
-    ReferralSubmitProviderInput:
+    FollowUpContact:
       type: object
       properties:
-        npi:
-          description: provider NPI
-          example: '1234567890'
-          type: string
-        taxId:
-          description: provider TIN#
-          example: '98765432'
-          type: string
-        zip:
-          description: provider zip code
-          example: '90201'
-          type: string
-        firstName:
-          description: provider first name
-          example: Carlos
-          type: string
-        lastOrOrgName:
-          description: provider last name or organization name
-          example: Dr. Carlos Clinic
-          type: string
-        specialityCode:
-          description: provider speciality
-          example: CARD
-          type: string
-        gender:
-          description: provider gender
-          example: M
-          type: string
-        city:
-          description: Provider city
-          example: Healthcare City
-          type: string
-        state:
-          description: Provider state code
-          example: CA
-          type: string
-        radius:
-          description: provider search radius
-          example: 50
-          type: integer
         contactName:
-          description: contact name for provider
-          example: Carlos Benito
+          description: full name of the contact for the case
+          example: Bruce Wayne
           type: string
         phoneNumber:
-          description: provider phone number
-          example: 555-222-3333
+          description: contact phone number
+          example: 555-123-4567
           type: string
-        preferredLanguage:
-          description: preferred language (SPA, ENG etc)
-          example: SPA
+        fax:
+          description: contact fax number
+          example: 555-123-4568
           type: string
-      required:
-      - npi
-      - taxId
-      - zip
+        departmentType:
+          description: follow-up contact department
+          example: 'null'
+          type: string
+        contactRoleType:
+          description: follow-up contact role
+          example: Other
+          type: string
+        emailAddress:
+          description: follow-up contact email
+          example: tonystark@avengers.com
+          type: string
+        medicalRecordNumber:
+          description: medical record number
+          example: EPIC 123456 987654
+          type: string
+        memberPhone:
+          description: member phone number
+          example: 555-111-1234
+          type: string
+    Decision:
+      type: object
+      properties:
+        decisionType:
+          description: '[ Event, Service ]'
+          example: EVENT
+          type: string
+        certificationAction:
+          description: referral decision certification action
+          example: A1
+          type: string
+        reviewDecisionReason:
+          description: referral decision review reason
+          example: MEETS_CRITERIA
+          type: string
+        startDate:
+          description: referral decision start date
+          example: '2024-11-30'
+          type: string
+        endDate:
+          description: referral decision end date
+          example: '2024-11-30'
+          type: string
+        referralQuantity:
+          $ref: '#/components/schemas/ReferralQuantity'
+    ProviderSpeciality:
+      type: object
+      properties:
+        code:
+          description: provider taxonomy/speciality code
+          example: 207Q00000X
+          type: string
+        description:
+          description: provider taxonomy description
+          example: Family Medicine
+          type: string
+    ReferralSubmitResponse:
+      type: object
+      properties:
+        referralId:
+          example: REF123456789
+          type: string
+        referralStatus:
+          example: APPROVED
+          type: string
+        payer:
+          $ref: '#/components/schemas/Payer'
+        requestingProvider:
+          $ref: '#/components/schemas/Provider'
+        servicingProvider:
+          $ref: '#/components/schemas/Provider'
+        patient:
+          $ref: '#/components/schemas/Patient'
+        decisions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Decision'
+        x12Response:
+          example: ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241010*1234*^*00501*000000001*0*P*:~
+          type: string
+        rejectionReasons:
+          type: array
+          items:
+            $ref: '#/components/schemas/RejectionReason'
+    ReferralSearchResponse:
+      type: object
+      properties:
+        referrals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReferralSearchResult'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    ClinicalNote:
+      type: object
+      properties:
+        createdTime:
+          description: date time for clinical note entry
+          example: 2025-01-01:00:00:01
+          type: string
+        createdBy:
+          description: clinical entry note created by
+          example: doctor
+          type: string
+        noteText:
+          description: clinical note text
+          example: note text detail
+          type: string
+    ReferralQuantity:
+      type: object
+      properties:
+        quantity:
+          description: quantity limit
+          example: 12
+          type: integer
+        qualifier:
+          description: referral qualifier/unit
+          example: VS
+          type: string
+        qualifierDesc:
+          description: referral qualifier description
+          example: visits
+          type: string
+        remaining:
+          description: referral quantity remaining
+          example: 8
+          type: integer
     Provider:
       type: object
       properties:
@@ -2094,59 +1785,88 @@ components:
           type: string
         address:
           $ref: '#/components/schemas/AddressExt'
-    FacilityServiceDetails:
+    ServiceInput:
       type: object
       properties:
-        startDate:
-          description: service start date
-          example: '2025-10-02'
-          type: string
-        endDate:
-          description: service end date
-          example: '2025-10-02'
-          type: string
-        serviceDescription:
-          description: service description:- Scheduled, Urgent, Emergent
-          example: Scheduled
-          type: string
-        isPatientAdmitted:
-          description: patient admission flag
-          example: 'Yes'
-          type: string
-        expectedAdmissionDate:
-          description: expected admission date
-          example: '2025-10-02'
-          type: string
-        expectedDischargeDate:
-          description: expected discharge date
-          example: '2025-10-02'
-          type: string
-        actualAdmissionDateTime:
-          description: actual admission date
-          example: '2025-10-02'
-          type: string
-        isPatientDischarged:
-          description: patient discharge flag
-          example: 'Yes'
-          type: string
-        dischargeDate:
-          description: actual discharge date
-          example: '2025-10-02'
-          type: string
-        dischargeLocation:
-          description: discharge location
-          example: Home
-          type: string
-    PriorAuthSearchResponse:
-      type: object
-      properties:
-        caseSummary:
-          description: A list of summarized cases matching the search criteria
+        diagnosisCodes:
+          description: diagnosis codes
+          example: M79.3
           type: array
           items:
-            $ref: '#/components/schemas/CaseSummary'
-        caseDescription:
-          $ref: '#/components/schemas/CaseDescription'
+            type: string
+        referralQuantity:
+          $ref: '#/components/schemas/ReferralQuantityInput'
+        startDate:
+          description: referral start date
+          example: '2025-01-01'
+          type: string
+        endDate:
+          description: referral end date
+          example: '2025-01-01'
+          type: string
+        comment:
+          description: referral comments
+          example: Patient requires physical therapy for knee pain
+          type: string
+      required:
+      - referralQuantity.quantity
+      - referralQuantity.qualifier
+      - diagnosisCodes
+      - referralQuantity
+      - startDate
+    FacilityDetails:
+      type: object
+      properties:
+        name:
+          description: provider full name
+          example: John J Doe
+          type: string
+        firstName:
+          description: provider first name
+          example: John
+          type: string
+        middleName:
+          description: provider middle name
+          example: J
+          type: string
+        lastName:
+          description: provider last name
+          example: Doe
+          type: string
+        providerOrganizationName:
+          description: provider org name
+          example: Dr. John Doe Clinic
+          type: string
+        npi:
+          description: provider NPI
+          example: '1234567890'
+          type: string
+        taxId:
+          description: provider TIN
+          example: 12345678
+          type: string
+        contactName:
+          description: provider contact name
+          example: Alison Johnson
+          type: string
+        phoneNumber:
+          description: provider phone number
+          example: 555-123-4567
+          type: string
+        fax:
+          description: provider fax number
+          example: 555-123-4568
+          type: string
+        networkStatus:
+          description: provider network status
+          example: In Network
+          type: string
+        address:
+          $ref: '#/components/schemas/AddressExt'
+        coverage:
+          description: coverage status
+          example: Covered/Approved
+          type: string
     SearchProvider:
       type: object
       properties:
@@ -2208,29 +1928,65 @@ components:
         pagination:
           $ref: '#/components/schemas/Pagination'
       description: Response for provider search operation
-    ReferralSearchResult:
+    ReferralSubmitProviderInput:
       type: object
       properties:
-        referralId:
-          description: referral unique identifier
-          example: REF123456789
+        npi:
+          description: provider NPI
+          example: '1234567890'
           type: string
-        referralStatus:
-          description: Referral status
-          example: APPROVED
+        taxId:
+          description: provider TIN#
+          example: '98765432'
           type: string
-        referralStatusCode:
-          description: referral status code
-          example: A1
+        zip:
+          description: provider zip code
+          example: '90201'
           type: string
-        requestingProvider:
-          $ref: '#/components/schemas/SearchProvider'
-        servicingProvider:
-          $ref: '#/components/schemas/SearchProvider'
-        service:
-          $ref: '#/components/schemas/ServiceResponse'
-        rejectionResponse:
-          $ref: '#/components/schemas/RejectionReason'
+        firstName:
+          description: provider first name
+          example: Carlos
+          type: string
+        lastOrOrgName:
+          description: provider last name or organization name
+          example: Dr. Carlos Clinic
+          type: string
+        specialityCode:
+          description: provider speciality
+          example: CARD
+          type: string
+        gender:
+          description: provider gender
+          example: M
+          type: string
+        city:
+          description: Provider city
+          example: Healthcare City
+          type: string
+        state:
+          description: Provider state code
+          example: CA
+          type: string
+        radius:
+          description: provider search radius
+          example: 50
+          type: integer
+        contactName:
+          description: contact name for provider
+          example: Carlos Benito
+          type: string
+        phoneNumber:
+          description: provider phone number
+          example: 555-222-3333
+          type: string
+        preferredLanguage:
+          description: preferred language (SPA, ENG etc)
+          example: SPA
+          type: string
+      required:
+      - npi
+      - taxId
+      - zip
     CaseDetail:
       type: object
       properties:
@@ -2274,70 +2030,6 @@ components:
           description: actual service end date
           example: '2025-10-03'
           type: string
-    PatientDetails:
-      type: object
-      properties:
-        id:
-          description: patient/member id
-          example: '123456789'
-          type: string
-        firstName:
-          description: patient first name
-          example: Alice
-          type: string
-        middleName:
-          description: patient middle name
-          example: A
-          type: string
-        lastName:
-          description: patient last name
-          example: Johnson
-          type: string
-        dateOfBirth:
-          description: patient date of birth
-          example: '1990-12-31'
-          type: string
-        groupNumber:
-          description: patient policy number
-          example: GRP321
-          type: string
-        relationshipCode:
-          description: patient relationship code
-          example: '18'
-          type: string
-        relationshipDesc:
-          description: patient relationship description
-          example: SELF
-          type: string
-        product:
-          description: member insurance product type
-          example: PPO  - Options PPO
-          type: string
-        effectiveDate:
-          description: policy effective date
-          example: '2025-03-01'
-          type: string
-        terminationDate:
-          description: policy termination date
-          example: '2025-12-31'
-          type: string
-        insuranceType:
-          description: insurance type
-          example: Medicare
-          type: string
-        verbalLanguagePreference:
-          description: patient preferred verbal language
-          example: English
-          type: string
-        writtenLanguagePreference:
-          description: patient preferred written language
-          example: English
-          type: string
-        informationalMessage:
-          description: informational message
-          example: A future timeline may be available for this member. For future coverage please call
-            the telephone number located on the back of the member's Medical ID card.
-          type: string
     RejectionReason:
       type: object
       properties:
@@ -2365,61 +2057,6 @@ components:
           description: rejection value request indicator
           example: N
           type: string
-    ClinicalNote:
-      type: object
-      properties:
-        createdTime:
-          description: date time for clinical note entry
-          example: 2025-01-01:00:00:01
-          type: string
-        createdBy:
-          description: clinical entry note created by
-          example: doctor
-          type: string
-        noteText:
-          description: clinical note text
-          example: note text detail
-          type: string
-    SearchProvidersRequest:
-      properties:
-        query:
-          type: string
-        variables:
-          properties:
-            input:
-              $ref: '#/components/schemas/ProviderSearchInput'
-          type: object
-      type: object
-    SubmitReferralRequest:
-      properties:
-        query:
-          type: string
-        variables:
-          properties:
-            input:
-              $ref: '#/components/schemas/ReferralSubmitInput'
-          type: object
-      type: object
-    SearchReferralsRequest:
-      properties:
-        query:
-          type: string
-        variables:
-          properties:
-            input:
-              $ref: '#/components/schemas/ReferralSearchInput'
-          type: object
-      type: object
-    SearchPriorAuthsRequest:
-      properties:
-        query:
-          type: string
-        variables:
-          properties:
-            input:
-              $ref: '#/components/schemas/PriorAuthSearchInput'
-          type: object
-      type: object
   securitySchemes:
     oAuth:
       type: oauth2

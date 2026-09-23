@@ -110,7 +110,7 @@ paths:
     get:
       tags:
       - QPP MIPS APIs
-      summary: 'Generates the data for the quality performance category '
+      summary: Generates the data for the quality performance category
       operationId: qppMipsDocument
       parameters:
       - name: doc-id

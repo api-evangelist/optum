@@ -425,109 +425,10 @@ paths:
               example:
                 message: Internal server error
                 statusCode: 500
+      summary: Bulk member match
+      x-summary-source: derived
 components:
   schemas:
-    Patient:
-      type: object
-      properties:
-        resourceType:
-          type: string
-          example: Patient
-        id:
-          type: string
-        text:
-          $ref: '#/components/schemas/Narrative'
-        identifier:
-          type: array
-          items:
-            $ref: '#/components/schemas/IdentifierWithType'
-        name:
-          type: array
-          items:
-            $ref: '#/components/schemas/HumanName'
-        gender:
-          type: string
-        birthDate:
-          type: string
-    Characteristic:
-      type: object
-      properties:
-        code:
-          $ref: '#/components/schemas/CodeableConcept'
-        valueReference:
-          $ref: '#/components/schemas/Reference'
-        exclude:
-          type: boolean
-        period:
-          $ref: '#/components/schemas/Period'
-    Verification:
-      type: object
-      properties:
-        verified:
-          type: boolean
-        verifiedWith:
-          $ref: '#/components/schemas/Reference'
-        verificationDate:
-          type: string
-    GroupMember:
-      type: object
-      properties:
-        entity:
-          type: object
-          properties:
-            reference:
-              type: string
-            display:
-              type: string
-            extension:
-              type: array
-              items:
-                $ref: '#/components/schemas/Extension'
-    Meta:
-      type: object
-      properties:
-        profile:
-          type: array
-          items:
-            type: string
-    Extension:
-      type: object
-      properties:
-        url:
-          type: string
-        valueReference:
-          $ref: '#/components/schemas/Reference'
-    Coverage:
-      type: object
-      properties:
-        resourceType:
-          type: string
-        id:
-          type: string
-        text:
-          $ref: '#/components/schemas/Narrative'
-        identifier:
-          type: array
-          items:
-            $ref: '#/components/schemas/IdentifierWithType'
-        status:
-          type: string
-        subscriberId:
-          type: string
-        beneficiary:
-          $ref: '#/components/schemas/Reference'
-        relationship:
-          $ref: '#/components/schemas/CodeableConcept'
-        period:
-          $ref: '#/components/schemas/Period'
-        payor:
-          type: array
-          items:
-            $ref: '#/components/schemas/Reference'
-        class:
-          type: array
-          items:
-            $ref: '#/components/schemas/CoverageClass'
     Consent:
       type: object
       properties:
@@ -568,13 +469,6 @@ components:
             $ref: '#/components/schemas/Verification'
         provision:
           $ref: '#/components/schemas/Provision'
-    CoverageClass:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/CodeableConcept'
-        value:
-          type: string
     CodeableConcept:
       type: object
       properties:
@@ -582,30 +476,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Coding'
-    HumanName:
+    ProvisionActor:
       type: object
       properties:
-        use:
+        role:
+          $ref: '#/components/schemas/CodeableConcept'
+        reference:
+          $ref: '#/components/schemas/Reference'
+    Parameter:
+      type: object
+      description: Input parameter entry
+      properties:
+        name:
           type: string
-        family:
-          type: string
-        given:
+        part:
           type: array
           items:
-            type: string
-    Narrative:
+            $ref: '#/components/schemas/ParameterPart'
+    CoverageClass:
       type: object
       properties:
-        status:
-          type: string
-        div:
-          type: string
-    Period:
-      type: object
-      properties:
-        start:
-          type: string
-        end:
+        type:
+          $ref: '#/components/schemas/CodeableConcept'
+        value:
           type: string
     Reference:
       type: object
@@ -616,65 +509,66 @@ components:
           type: string
         identifier:
           $ref: '#/components/schemas/Identifier'
-    Provision:
+    IdentifierWithType:
       type: object
       properties:
         type:
-          type: string
-        period:
-          $ref: '#/components/schemas/Period'
-        actor:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProvisionActor'
-        purpose:
-          type: array
-          items:
-            $ref: '#/components/schemas/Coding'
-    ResponseParameter:
-      type: object
-      description: Response parameter containing Group
-      properties:
-        name:
-          type: string
-          enum:
-          - MatchedMembers
-          - NonMatchedMembers
-          - ConsentConstrainedMembers
-        resource:
-          $ref: '#/components/schemas/Group'
-    ParameterPart:
-      type: object
-      description: Nested part representing Patient/Coverage/Consent
-      properties:
-        name:
-          type: string
-          enum:
-          - MemberPatient
-          - CoverageToMatch
-          - Consent
-        resource:
-          oneOf:
-          - $ref: '#/components/schemas/Patient'
-          - $ref: '#/components/schemas/Coverage'
-          - $ref: '#/components/schemas/Consent'
-    Identifier:
-      type: object
-      properties:
+          $ref: '#/components/schemas/CodeableConcept'
         system:
           type: string
         value:
           type: string
-    ProvisionActor:
+        assigner:
+          type: object
+          properties:
+            display:
+              type: string
+    Patient:
       type: object
       properties:
-        role:
-          $ref: '#/components/schemas/CodeableConcept'
-        reference:
-          $ref: '#/components/schemas/Reference'
-    BulkMemberMatchRequest:
+        resourceType:
+          type: string
+          example: Patient
+        id:
+          type: string
+        text:
+          $ref: '#/components/schemas/Narrative'
+        identifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentifierWithType'
+        name:
+          type: array
+          items:
+            $ref: '#/components/schemas/HumanName'
+        gender:
+          type: string
+        birthDate:
+          type: string
+    GroupMember:
       type: object
-      description: FHIR Parameters request for bulk member match
+      properties:
+        entity:
+          type: object
+          properties:
+            reference:
+              type: string
+            display:
+              type: string
+            extension:
+              type: array
+              items:
+                $ref: '#/components/schemas/Extension'
+    Extension:
+      type: object
+      properties:
+        url:
+          type: string
+        valueReference:
+          $ref: '#/components/schemas/Reference'
+    BulkMemberMatchResponse:
+      type: object
+      description: FHIR Parameters response containing grouped match results
       properties:
         resourceType:
           type: string
@@ -686,17 +580,34 @@ components:
         parameter:
           type: array
           items:
-            $ref: '#/components/schemas/Parameter'
-    Parameter:
+            $ref: '#/components/schemas/ResponseParameter'
+    HumanName:
       type: object
-      description: Input parameter entry
       properties:
-        name:
+        use:
           type: string
-        part:
+        family:
+          type: string
+        given:
           type: array
           items:
-            $ref: '#/components/schemas/ParameterPart'
+            type: string
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+        value:
+          type: string
+    Verification:
+      type: object
+      properties:
+        verified:
+          type: boolean
+        verifiedWith:
+          $ref: '#/components/schemas/Reference'
+        verificationDate:
+          type: string
     Group:
       type: object
       description: FHIR Group resource used for match result
@@ -734,9 +645,104 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/GroupMember'
-    BulkMemberMatchResponse:
+    ParameterPart:
       type: object
-      description: FHIR Parameters response containing grouped match results
+      description: Nested part representing Patient/Coverage/Consent
+      properties:
+        name:
+          type: string
+          enum:
+          - MemberPatient
+          - CoverageToMatch
+          - Consent
+        resource:
+          oneOf:
+          - $ref: '#/components/schemas/Patient'
+          - $ref: '#/components/schemas/Coverage'
+          - $ref: '#/components/schemas/Consent'
+    Coverage:
+      type: object
+      properties:
+        resourceType:
+          type: string
+        id:
+          type: string
+        text:
+          $ref: '#/components/schemas/Narrative'
+        identifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentifierWithType'
+        status:
+          type: string
+        subscriberId:
+          type: string
+        beneficiary:
+          $ref: '#/components/schemas/Reference'
+        relationship:
+          $ref: '#/components/schemas/CodeableConcept'
+        period:
+          $ref: '#/components/schemas/Period'
+        payor:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+        class:
+          type: array
+          items:
+            $ref: '#/components/schemas/CoverageClass'
+    Coding:
+      type: object
+      properties:
+        system:
+          type: string
+        code:
+          type: string
+        display:
+          type: string
+    Provision:
+      type: object
+      properties:
+        type:
+          type: string
+        period:
+          $ref: '#/components/schemas/Period'
+        actor:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProvisionActor'
+        purpose:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coding'
+    Narrative:
+      type: object
+      properties:
+        status:
+          type: string
+        div:
+          type: string
+    Characteristic:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/CodeableConcept'
+        valueReference:
+          $ref: '#/components/schemas/Reference'
+        exclude:
+          type: boolean
+        period:
+          $ref: '#/components/schemas/Period'
+    Period:
+      type: object
+      properties:
+        start:
+          type: string
+        end:
+          type: string
+    BulkMemberMatchRequest:
+      type: object
+      description: FHIR Parameters request for bulk member match
       properties:
         resourceType:
           type: string
@@ -748,30 +754,26 @@ components:
         parameter:
           type: array
           items:
-            $ref: '#/components/schemas/ResponseParameter'
-    IdentifierWithType:
+            $ref: '#/components/schemas/Parameter'
+    ResponseParameter:
+      type: object
+      description: Response parameter containing Group
+      properties:
+        name:
+          type: string
+          enum:
+          - MatchedMembers
+          - NonMatchedMembers
+          - ConsentConstrainedMembers
+        resource:
+          $ref: '#/components/schemas/Group'
+    Meta:
       type: object
       properties:
-        type:
-          $ref: '#/components/schemas/CodeableConcept'
-        system:
-          type: string
-        value:
-          type: string
-        assigner:
-          type: object
-          properties:
-            display:
-              type: string
-    Coding:
-      type: object
-      properties:
-        system:
-          type: string
-        code:
-          type: string
-        display:
-          type: string
+        profile:
+          type: array
+          items:
+            type: string
   securitySchemes:
     oAuth:
       type: oauth2

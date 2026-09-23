@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Real Provider Access Provider Access Da Vinci Export Download API
+  title: Real Provider Access Provider Access Da Vinci Export…
   description: FHIR Provider Access APIs
   version: 1.0.0
 servers:
@@ -105,8 +105,40 @@ paths:
               example:
                 message: Internal server error
                 statusCode: 500
+      summary: Download da vinci export file
+      x-summary-source: derived
 components:
   schemas:
+    Coding:
+      type: object
+      properties:
+        system:
+          type: string
+        code:
+          type: string
+        display:
+          type: string
+    Narrative:
+      type: object
+      properties:
+        status:
+          type: string
+        div:
+          type: string
+    IdentifierWithType:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/CodeableConcept'
+        system:
+          type: string
+        value:
+          type: string
+        assigner:
+          type: object
+          properties:
+            display:
+              type: string
     Patient:
       type: object
       properties:
@@ -147,36 +179,6 @@ components:
           type: array
           items:
             type: string
-    Narrative:
-      type: object
-      properties:
-        status:
-          type: string
-        div:
-          type: string
-    IdentifierWithType:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/CodeableConcept'
-        system:
-          type: string
-        value:
-          type: string
-        assigner:
-          type: object
-          properties:
-            display:
-              type: string
-    Coding:
-      type: object
-      properties:
-        system:
-          type: string
-        code:
-          type: string
-        display:
-          type: string
   securitySchemes:
     oAuth:
       type: oauth2

@@ -115,7 +115,7 @@ paths:
     get:
       tags:
       - CMS HCC APIs
-      summary: 'Fetches hcc type specific codes '
+      summary: Fetches hcc type specific codes
       operationId: getHCCCodes
       parameters:
       - name: hccType

@@ -2,9 +2,7 @@ openapi: 3.2.0
 info:
   title: ABM Prepay DME Claim API-1.0.0 Prepaydme API
   version: 1.0.0
-  description: 'This is a wrapper API which internally calls ABM CES API to get the claim edits and DME Pricing API to get the rate and then update the claim amount.
-
-    CES calls ABM PriorAuth API to get the matching PriorAuth record with remaining claimed unit. DME Claim API calculates Claim amount based on remaining unit and rate. This API needs auth bearer token which can be retrieved using https://sandbox-apigw.optum.com/apip/auth/sntl/v1/token. Please check documentation under Security section to get more details on auth token.'
+  description: This is a wrapper API which internally calls ABM CES API to get the claim edits and DME Pricing API to get the rate and then update the claim amount.
 servers:
 - url: https://sandbox-apigw.optum.com
 tags:
@@ -104,6 +102,8 @@ paths:
                             xml:
                               name: procedure-code
                 example: "<request>\n    <environment>live</environment>\n    <enterprise-id>ENTERPRISEID</enterprise-id>\n    <claim>\n        <id>ClaimId</id>\n        <subscriber-id>54654</subscriber-id>\n        <line>\n            <id>1</id>\n            <procedure-code>EXXXX</procedure-code>\n        </line>\n    </claim>\n</request>"
+      operationId: postAbmPrepaydmeV1
+      x-operation-id-source: derived
 x-readme:
   explorer-enabled: true
   proxy-enabled: true

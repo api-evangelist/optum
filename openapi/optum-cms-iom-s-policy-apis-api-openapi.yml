@@ -15,7 +15,7 @@ paths:
     get:
       tags:
       - CMS IOM's Policy APIs
-      summary: 'Fetches CMS IOM policies '
+      summary: Fetches CMS IOM policies
       operationId: getCMSIOMSPolicies
       parameters:
       - name: codeType

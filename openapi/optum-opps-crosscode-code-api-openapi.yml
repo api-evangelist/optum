@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Optum Real-Time eContent Web services OPPS CrossCode Code API
+  title: Optum Real-Time eContent Web services OPPS CrossCode Code…
   description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
   contact:
     name: Ken Kracker

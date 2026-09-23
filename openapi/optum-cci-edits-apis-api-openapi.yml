@@ -752,16 +752,6 @@ paths:
     - url: /v1/cmscommonms
 components:
   schemas:
-    OptumPageImplModifiersPopUpValue:
-      type: object
-      properties:
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/ModifiersPopUpValue'
-        totalCount:
-          type: integer
-          format: int64
     Notification:
       type: object
       properties:
@@ -777,6 +767,16 @@ components:
           type: array
           items:
             type: string
+    OptumPageImplModifiersPopUpValue:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModifiersPopUpValue'
+        totalCount:
+          type: integer
+          format: int64
     ModifiersPopUpValue:
       type: object
       properties:

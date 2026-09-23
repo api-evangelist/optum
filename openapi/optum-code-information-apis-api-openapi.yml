@@ -483,7 +483,7 @@ paths:
     get:
       tags:
       - Code Information APIs
-      summary: Fetches the root operation definition for a code and term.
+      summary: Fetches the root operation definition for a code and term
       operationId: rootOperationDefinitionTerm
       parameters:
       - name: codetype
@@ -550,7 +550,7 @@ paths:
     get:
       tags:
       - Code Information APIs
-      summary: Fetches the root operation definition for a code.
+      summary: Fetches the root operation definition for a code
       operationId: rootOperationDefinition
       parameters:
       - name: codetype
@@ -1109,6 +1109,21 @@ paths:
       - bearerAuth: []
 components:
   schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
     Link:
       type: object
       properties:
@@ -1138,21 +1153,6 @@ components:
           items:
             type: string
         desc:
-          type: array
-          items:
-            type: string
-    Notification:
-      type: object
-      properties:
-        error:
-          type: array
-          items:
-            type: string
-        warning:
-          type: array
-          items:
-            type: string
-        info:
           type: array
           items:
             type: string

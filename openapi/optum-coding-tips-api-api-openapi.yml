@@ -67,7 +67,7 @@ paths:
     get:
       tags:
       - Coding Tips API
-      summary: Fetches the list of  annotations for HCPCS codes
+      summary: Fetches the list of annotations for HCPCS codes
       operationId: getAnnotations
       parameters:
       - name: code

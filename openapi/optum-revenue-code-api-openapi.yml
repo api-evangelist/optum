@@ -317,15 +317,6 @@ paths:
           description: Service Unavailable
 components:
   schemas:
-    Link:
-      type: object
-      properties:
-        href:
-          type: string
-          xml:
-            attribute: true
-        value:
-          type: string
     Item:
       type: object
       properties:
@@ -347,6 +338,15 @@ components:
           type: string
           xml:
             attribute: true
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
     RevenueCodeToProcedure:
       type: object
       properties:
@@ -360,15 +360,6 @@ components:
             $ref: '#/components/schemas/Link'
       xml:
         name: revenue-code-to-procedure
-    PhysicianDoc:
-      required:
-      - text
-      type: object
-      properties:
-        title:
-          type: string
-        text:
-          type: string
     RevCodeDesc:
       type: object
       properties:
@@ -390,6 +381,15 @@ components:
             name: desc-full
       xml:
         name: code-properties
+    PhysicianDoc:
+      required:
+      - text
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
     PhysicianDocs:
       type: object
       properties:

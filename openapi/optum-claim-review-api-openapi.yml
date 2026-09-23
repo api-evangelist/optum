@@ -103,6 +103,18 @@ paths:
                 status: 401
 components:
   schemas:
+    ClaimResponse:
+      type: object
+      properties:
+        edit:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClaimLineEdit'
+        claimId:
+          type: string
+          xml:
+            name: claim-id
+            attribute: true
     ClaimResponses:
       required:
       - claimResponse
@@ -116,18 +128,6 @@ components:
             $ref: '#/components/schemas/ClaimResponse'
       xml:
         name: claim-responses
-    ClaimResponse:
-      type: object
-      properties:
-        edit:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClaimLineEdit'
-        claimId:
-          type: string
-          xml:
-            name: claim-id
-            attribute: true
     ClaimLineEdit:
       required:
       - description

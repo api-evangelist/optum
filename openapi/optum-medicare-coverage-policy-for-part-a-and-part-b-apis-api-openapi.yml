@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Optum Medicare Coverage Policy for part A and Part B APIs API
+  title: Optum Medicare Coverage Policy for part A and Part B APIs…
   version: v1.0
   contact:
     name: Ken Kracker
@@ -15,7 +15,7 @@ paths:
     get:
       tags:
       - Medicare Coverage Policy for part A and Part B APIs
-      summary: Fetches NCD Policies for particular Contractor part and Code (procedural or diagnosis)
+      summary: Fetches NCD Policies for particular Contractor part and Code (procedural or…
       operationId: getNCDPolicyList
       parameters:
       - name: codetype
@@ -124,7 +124,7 @@ paths:
     get:
       tags:
       - Medicare Coverage Policy for part A and Part B APIs
-      summary: Fetches LCD policies for particular contractor Id  , contractor part and code (procedural or diagnosis)
+      summary: Fetches LCD policies for particular contractor Id , contractor part and code…
       operationId: getLCDPolicyList
       parameters:
       - name: codetype
@@ -326,7 +326,7 @@ paths:
     get:
       tags:
       - Medicare Coverage Policy for part A and Part B APIs
-      summary: Fetches LCD policies for particular contractor id  , contractor part
+      summary: Fetches LCD policies for particular contractor id , contractor part
       operationId: getMedicareLCDPolicyList
       parameters:
       - name: contractorPart

@@ -114,7 +114,7 @@ paths:
     get:
       tags:
       - Device Codes APIs
-      summary: Fetches device to procedure/procedure to device codes and their descriptions for a specific device or procedure code
+      summary: Fetches device to procedure/procedure to device codes and their descriptions…
       operationId: getProcedureToDeviceToProcedureCodeSpecific
       parameters:
       - name: procedure-device-type

@@ -316,7 +316,7 @@ paths:
     get:
       tags:
       - Modifiers
-      summary: Return Modifiers for the supplied {code}. If you want additional information please supply additional query parameters
+      summary: Return Modifiers for the supplied {code}.
       operationId: getModifiers_1
       parameters:
       - name: codetype
@@ -407,6 +407,26 @@ components:
             attribute: true
         value:
           type: string
+    ModifierDesc:
+      type: object
+      properties:
+        descFull:
+          type: string
+          xml:
+            name: desc-full
+        usage:
+          type: string
+        definition:
+          type: string
+      xml:
+        name: code-properties
+    Optum360:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
     ModifierProperty:
       required:
       - sources
@@ -436,28 +456,13 @@ components:
           $ref: '#/components/schemas/Links'
       xml:
         name: modifier-property
-    ModifierDesc:
+    Ama:
       type: object
       properties:
-        descFull:
+        code:
           type: string
-          xml:
-            name: desc-full
-        usage:
+        description:
           type: string
-        definition:
-          type: string
-      xml:
-        name: code-properties
-    SourceRationale:
-      type: object
-      properties:
-        value:
-          type: string
-        type:
-          type: string
-          xml:
-            attribute: true
     Links:
       type: object
       properties:
@@ -467,61 +472,6 @@ components:
             name: Link
           items:
             $ref: '#/components/schemas/Link'
-    Ama:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
-          type: string
-    Modifier51Exempt:
-      required:
-      - ama
-      - optum360
-      type: object
-      properties:
-        optum360:
-          type: array
-          items:
-            $ref: '#/components/schemas/Optum360'
-        ama:
-          type: array
-          items:
-            $ref: '#/components/schemas/Ama'
-      xml:
-        name: modifier-51-exempt
-    Sources:
-      required:
-      - source
-      - sourceRationale
-      type: object
-      properties:
-        source:
-          type: array
-          items:
-            $ref: '#/components/schemas/Source'
-        sourceRationale:
-          type: array
-          xml:
-            name: source_rationale
-          items:
-            $ref: '#/components/schemas/SourceRationale'
-    Source:
-      type: object
-      properties:
-        value:
-          type: string
-        type:
-          type: string
-          xml:
-            attribute: true
-    Optum360:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
-          type: string
     Modifiers:
       type: object
       properties:
@@ -541,6 +491,56 @@ components:
           $ref: '#/components/schemas/Links'
       xml:
         name: modifiers
+    Source:
+      type: object
+      properties:
+        value:
+          type: string
+        type:
+          type: string
+          xml:
+            attribute: true
+    Modifier51Exempt:
+      required:
+      - ama
+      - optum360
+      type: object
+      properties:
+        optum360:
+          type: array
+          items:
+            $ref: '#/components/schemas/Optum360'
+        ama:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ama'
+      xml:
+        name: modifier-51-exempt
+    SourceRationale:
+      type: object
+      properties:
+        value:
+          type: string
+        type:
+          type: string
+          xml:
+            attribute: true
+    Sources:
+      required:
+      - source
+      - sourceRationale
+      type: object
+      properties:
+        source:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+        sourceRationale:
+          type: array
+          xml:
+            name: source_rationale
+          items:
+            $ref: '#/components/schemas/SourceRationale'
   securitySchemes:
     bearerAuth:
       type: http

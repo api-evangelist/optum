@@ -117,6 +117,19 @@ paths:
           description: Internal server error
 components:
   schemas:
+    Search277CAInput:
+      type: object
+      required:
+      - transactionId
+      - payerId
+      additionalProperties: false
+      properties:
+        transactionId:
+          type: string
+          example: '123456789'
+        payerId:
+          type: string
+          example: '87726'
     GraphQLClaimStatusRequest:
       type: object
       required:
@@ -175,19 +188,6 @@ components:
           items:
             type: object
       additionalProperties: true
-    Search277CAInput:
-      type: object
-      required:
-      - transactionId
-      - payerId
-      additionalProperties: false
-      properties:
-        transactionId:
-          type: string
-          example: '123456789'
-        payerId:
-          type: string
-          example: '87726'
     SearchClaimInput:
       type: object
       required:

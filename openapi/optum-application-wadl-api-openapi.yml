@@ -29,6 +29,8 @@ paths:
             application/xml: {}
       tags:
       - Application.wadl
+      summary: Get external grammar
+      x-summary-source: derived
   /application.wadl:
     get:
       operationId: getWadl
@@ -40,6 +42,8 @@ paths:
             application/xml: {}
       tags:
       - Application.wadl
+      summary: Get wadl
+      x-summary-source: derived
 components:
   securitySchemes:
     bearerAuth:

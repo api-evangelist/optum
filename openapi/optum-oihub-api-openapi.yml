@@ -1,9 +1,7 @@
 openapi: 3.2.0
 info:
   title: Real Dental Pre-Care Eligibility Oihub API
-  description: 'API to perform pre-service eligibility checks for dental/medical coverage. This endpoint accepts a GraphQL-style request payload over HTTP POST.
-
-    '
+  description: API to perform pre-service eligibility checks for dental/medical coverage. This endpoint accepts a GraphQL-style request payload over HTTP POST.
   version: 1.0.0
 servers:
 - url: https://sandbox-apigw.optum.com

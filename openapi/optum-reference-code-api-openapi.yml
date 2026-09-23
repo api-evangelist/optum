@@ -587,132 +587,6 @@ paths:
           description: Service Unavailable
 components:
   schemas:
-    Link:
-      type: object
-      properties:
-        href:
-          type: string
-          xml:
-            attribute: true
-        value:
-          type: string
-    IncludesNotes:
-      required:
-      - note
-      type: object
-      properties:
-        includesHeader:
-          type: string
-          xml:
-            name: includes-header
-        note:
-          type: array
-          items:
-            $ref: '#/components/schemas/Note'
-    Items:
-      type: object
-      properties:
-        item:
-          type: array
-          items:
-            type: string
-      xml:
-        name: items
-    ExcludesNotes1:
-      required:
-      - note
-      type: object
-      properties:
-        excludesHeader1:
-          type: string
-          xml:
-            name: excludes-header-1
-        note:
-          type: array
-          items:
-            $ref: '#/components/schemas/Note'
-    TermSearchResults:
-      type: object
-      properties:
-        termSearchResult:
-          type: array
-          xml:
-            name: term-search-result
-          items:
-            $ref: '#/components/schemas/TermSearchResult'
-        link:
-          type: array
-          items:
-            $ref: '#/components/schemas/Link'
-      xml:
-        name: term-search-results
-    TermSearchResult:
-      required:
-      - code
-      type: object
-      properties:
-        code:
-          type: string
-        rank:
-          type: integer
-          format: int64
-        desc:
-          type: string
-        descFull:
-          type: string
-          xml:
-            name: desc-full
-        href:
-          type: string
-          xml:
-            attribute: true
-        codeType:
-          type: integer
-          format: int32
-    TermSearchGroups:
-      type: object
-      properties:
-        termSearchGroup:
-          type: array
-          xml:
-            name: term-search-group
-          items:
-            $ref: '#/components/schemas/Node'
-      xml:
-        name: term-search-groups
-    Tabulardata:
-      type: object
-      properties:
-        dataLine:
-          type: array
-          xml:
-            name: data-line
-          items:
-            type: string
-            xml:
-              name: data-line
-    CodeRange:
-      type: object
-      properties:
-        headers:
-          type: string
-        rangeId:
-          type: integer
-          format: int32
-          xml:
-            name: range-id
-        rangeItem:
-          type: array
-          xml:
-            name: range-item
-          items:
-            $ref: '#/components/schemas/RangeItem'
-        link:
-          type: array
-          items:
-            $ref: '#/components/schemas/Link'
-      xml:
-        name: code-range
     Node:
       required:
       - code
@@ -760,29 +634,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Note'
-    Note:
+    TermSearchGroups:
       type: object
       properties:
-        content:
-          type: string
-        indentation:
-          type: integer
-          format: int32
+        termSearchGroup:
+          type: array
           xml:
-            attribute: true
-    RangeItem:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
-          type: string
-        tabulardata:
-          $ref: '#/components/schemas/Tabulardata'
-        href:
-          type: string
-          xml:
-            attribute: true
+            name: term-search-group
+          items:
+            $ref: '#/components/schemas/Node'
+      xml:
+        name: term-search-groups
     ExcludesNotes2:
       required:
       - note
@@ -796,6 +658,131 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Note'
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    IncludesNotes:
+      required:
+      - note
+      type: object
+      properties:
+        includesHeader:
+          type: string
+          xml:
+            name: includes-header
+        note:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
+    CodeRange:
+      type: object
+      properties:
+        headers:
+          type: string
+        rangeId:
+          type: integer
+          format: int32
+          xml:
+            name: range-id
+        rangeItem:
+          type: array
+          xml:
+            name: range-item
+          items:
+            $ref: '#/components/schemas/RangeItem'
+        link:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+      xml:
+        name: code-range
+    Note:
+      type: object
+      properties:
+        content:
+          type: string
+        indentation:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+    TermSearchResult:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+        rank:
+          type: integer
+          format: int64
+        desc:
+          type: string
+        descFull:
+          type: string
+          xml:
+            name: desc-full
+        href:
+          type: string
+          xml:
+            attribute: true
+        codeType:
+          type: integer
+          format: int32
+    Items:
+      type: object
+      properties:
+        item:
+          type: array
+          items:
+            type: string
+      xml:
+        name: items
+    RangeItem:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+        tabulardata:
+          $ref: '#/components/schemas/Tabulardata'
+        href:
+          type: string
+          xml:
+            attribute: true
+    TermSearchResults:
+      type: object
+      properties:
+        termSearchResult:
+          type: array
+          xml:
+            name: term-search-result
+          items:
+            $ref: '#/components/schemas/TermSearchResult'
+        link:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+      xml:
+        name: term-search-results
+    Tabulardata:
+      type: object
+      properties:
+        dataLine:
+          type: array
+          xml:
+            name: data-line
+          items:
+            type: string
+            xml:
+              name: data-line
     IncludesExcludesNotes:
       type: object
       properties:
@@ -809,6 +796,19 @@ components:
           $ref: '#/components/schemas/ExcludesNotes2'
       xml:
         name: includes-excludes-notes
+    ExcludesNotes1:
+      required:
+      - note
+      type: object
+      properties:
+        excludesHeader1:
+          type: string
+          xml:
+            name: excludes-header-1
+        note:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
   securitySchemes:
     bearerAuth:
       type: http

@@ -15,7 +15,7 @@ paths:
     get:
       tags:
       - Code History APIs
-      summary: Fetches the complete history for a code.
+      summary: Fetches the complete history for a code
       operationId: codeHistory
       parameters:
       - name: codetype

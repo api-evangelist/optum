@@ -339,15 +339,6 @@ paths:
           description: Service Unavailable
 components:
   schemas:
-    Links:
-      type: object
-      properties:
-        link:
-          type: array
-          xml:
-            name: Link
-          items:
-            $ref: '#/components/schemas/Link'
     Link:
       type: object
       properties:
@@ -357,6 +348,15 @@ components:
             attribute: true
         value:
           type: string
+    Links:
+      type: object
+      properties:
+        link:
+          type: array
+          xml:
+            name: Link
+          items:
+            $ref: '#/components/schemas/Link'
     Modifiers:
       type: object
       properties:

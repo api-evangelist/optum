@@ -15,7 +15,7 @@ paths:
     get:
       tags:
       - I10PCS Code Builder APIs
-      summary: Returns body system, section , options , code description and other tabular fields like Body Part, Approach, Device and Qualifier available for the I10 PCS code type
+      summary: Returns body system, section , options , code description and other tabular…
       operationId: searchCode
       parameters:
       - name: code

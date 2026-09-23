@@ -6,13 +6,13 @@ info:
 servers:
 - url: https://sandbox-apigw.optum.com
 tags:
-- name: DocumentReference
+- name: Document Reference
 paths:
   /oihub/fhirpriorauth/v1/fhirpa/R4/{payerId}/{lob}/document-reference:
     get:
       operationId: getDocumentReference
       tags:
-      - DocumentReference
+      - Document Reference
       security:
       - oAuth:
         - read_healthcheck
@@ -120,6 +120,8 @@ paths:
               example:
                 message: Internal server error
                 statusCode: 500
+      summary: Get document reference
+      x-summary-source: derived
 components:
   schemas:
     Content:
@@ -152,6 +154,26 @@ components:
         title:
           type: string
           example: History and Physical data
+    DocumentReference:
+      type: object
+      description: FHIR DocumentReference used inside attachment
+      properties:
+        resourceType:
+          type: string
+          example: DocumentReference
+        id:
+          type: string
+          example: docref-hp-002
+        status:
+          type: string
+          example: current
+        date:
+          type: string
+          example: '2025-11-05T10:30:00-05:00'
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Content'
     DocumentReferenceResponse:
       type: object
       description: FHIR Bundle containing DocumentReference search results
@@ -184,26 +206,6 @@ components:
           items:
             type: string
             example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
-    DocumentReference:
-      type: object
-      description: FHIR DocumentReference used inside attachment
-      properties:
-        resourceType:
-          type: string
-          example: DocumentReference
-        id:
-          type: string
-          example: docref-hp-002
-        status:
-          type: string
-          example: current
-        date:
-          type: string
-          example: '2025-11-05T10:30:00-05:00'
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/Content'
   securitySchemes:
     oAuth:
       type: oauth2

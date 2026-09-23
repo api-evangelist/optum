@@ -156,8 +156,27 @@ paths:
               example:
                 message: Internal server error
                 statusCode: 500
+      summary: Get next question
+      x-summary-source: derived
 components:
   schemas:
+    Coding:
+      type: object
+      description: Coding structure for answers
+      properties:
+        code:
+          type: string
+          example: '1'
+        display:
+          type: string
+          example: Age ≥ 50
+    Reference:
+      type: object
+      description: FHIR Reference
+      properties:
+        reference:
+          type: string
+          example: Patient/anonymous
     Item:
       type: object
       description: Questionnaire item (question)
@@ -248,6 +267,12 @@ components:
           description: List of questions
           items:
             $ref: '#/components/schemas/Item'
+    AnswerOption:
+      type: object
+      description: Answer choice option
+      properties:
+        valueCoding:
+          $ref: '#/components/schemas/Coding'
     Meta:
       type: object
       description: FHIR metadata
@@ -258,6 +283,35 @@ components:
           items:
             type: string
             example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    NextQuestionResponse:
+      type: object
+      description: FHIR QuestionnaireResponse response containing next adaptive question
+      properties:
+        resourceType:
+          type: string
+          example: QuestionnaireResponse
+        meta:
+          $ref: '#/components/schemas/Meta'
+        contained:
+          type: array
+          description: Contained Questionnaire with next question items
+          items:
+            $ref: '#/components/schemas/Questionnaire'
+        extension:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+        questionnaire:
+          type: string
+          example: '#12345'
+        status:
+          type: string
+          example: in-progress
+        subject:
+          $ref: '#/components/schemas/Reference'
+        authored:
+          type: string
+          example: '2025-11-04T12:12:59.7131+00:00'
     Extension:
       type: object
       description: FHIR extension with Reference
@@ -267,23 +321,6 @@ components:
           example: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
         valueReference:
           $ref: '#/components/schemas/Reference'
-    Coding:
-      type: object
-      description: Coding structure for answers
-      properties:
-        code:
-          type: string
-          example: '1'
-        display:
-          type: string
-          example: Age ≥ 50
-    Reference:
-      type: object
-      description: FHIR Reference
-      properties:
-        reference:
-          type: string
-          example: Patient/anonymous
     NextQuestionRequest:
       type: object
       description: FHIR QuestionnaireResponse request containing current answers and context to fetch next adaptive question
@@ -322,41 +359,6 @@ components:
           type: string
           description: Date/time when response was authored
           example: '2025-11-04T12:12:59.7131+00:00'
-    NextQuestionResponse:
-      type: object
-      description: FHIR QuestionnaireResponse response containing next adaptive question
-      properties:
-        resourceType:
-          type: string
-          example: QuestionnaireResponse
-        meta:
-          $ref: '#/components/schemas/Meta'
-        contained:
-          type: array
-          description: Contained Questionnaire with next question items
-          items:
-            $ref: '#/components/schemas/Questionnaire'
-        extension:
-          type: array
-          items:
-            $ref: '#/components/schemas/Extension'
-        questionnaire:
-          type: string
-          example: '#12345'
-        status:
-          type: string
-          example: in-progress
-        subject:
-          $ref: '#/components/schemas/Reference'
-        authored:
-          type: string
-          example: '2025-11-04T12:12:59.7131+00:00'
-    AnswerOption:
-      type: object
-      description: Answer choice option
-      properties:
-        valueCoding:
-          $ref: '#/components/schemas/Coding'
   securitySchemes:
     oAuth:
       type: oauth2

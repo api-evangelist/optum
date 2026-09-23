@@ -170,13 +170,25 @@ paths:
                 statusCode: 500
                 message: Internal server error
           description: Internal Server Error
-      description: 'The Dental Claim Action API facilitates dental claim submission in X12 format and returns responses in the 277CA format. It provides a flexible GraphQL endpoint to streamline end-to-end dental claim action processing. Below operation is supported: <strong>SubmitDentalClaim:</strong> Validates if the dental claim submitted is eligible for claim submission and upon validation if the claim is eligible for submission, claim will be submitted.'
+      description: 'The Dental Claim Action API facilitates dental claim submission in X12 format and returns responses in the 277CA format. It provides a flexible GraphQL endpoint to streamline end-to-end dental claim action processing. Below operation is supported: SubmitDentalClaim: Validates if the dental claim submitted is eligible for claim submission and upon validation if the claim is eligible for submission, claim will be submitted.'
       summary: Dental Claim Actions API
       operationId: dntClaimActions
       security:
       - bearerAuth: []
 components:
   schemas:
+    ClaimSubmissionInput:
+      type: object
+      description: ClaimSubmissionInput
+      properties:
+        x12RequestData:
+          example: ISA*00*          *00*          *ZZ*SENDER ID       *ZZ*RECEIVER ID    *231012*1200*U*00501*000000001*0*P*:~ GS*HP*SENDERAPP*RECEIVERAPP*20231012*1200*000000001*X*005010X222A1~ ST*837*0001*005010X222A1~ [... BHT, HL, PRV, N1, N3, N4, CLM, CAS, PLB, HI, DMG, and other 837 segments...] SE*32*0001~ GE*1*000000001~ IEA*1*000000001~
+          description: EDI837 X12 formatted claim data
+          type: string
+        payerId:
+          example: '88848'
+          description: payer ID
+          type: string
     ClaimSubmissionResponse:
       type: object
       description: ClaimSubmissionResponse
@@ -196,18 +208,6 @@ components:
         statusCode:
           example: '000'
           description: status code for the submission process.
-          type: string
-    ClaimSubmissionInput:
-      type: object
-      description: ClaimSubmissionInput
-      properties:
-        x12RequestData:
-          example: ISA*00*          *00*          *ZZ*SENDER ID       *ZZ*RECEIVER ID    *231012*1200*U*00501*000000001*0*P*:~ GS*HP*SENDERAPP*RECEIVERAPP*20231012*1200*000000001*X*005010X222A1~ ST*837*0001*005010X222A1~ [... BHT, HL, PRV, N1, N3, N4, CLM, CAS, PLB, HI, DMG, and other 837 segments...] SE*32*0001~ GE*1*000000001~ IEA*1*000000001~
-          description: EDI837 X12 formatted claim data
-          type: string
-        payerId:
-          example: '88848'
-          description: payer ID
           type: string
   securitySchemes:
     bearerAuth:

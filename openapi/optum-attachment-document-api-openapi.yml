@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Medical Network Attachment Retrieval v1 Attachment Document API
+  title: Medical Network Attachment Retrieval v1 Attachment Document…
   description: Optum's Attachment Retrieval API.
   version: '1'
   contact:
@@ -91,6 +91,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalError'
+      operationId: postSearch
+      x-operation-id-source: derived
   /{documentId}:
     get:
       tags:
@@ -115,41 +117,28 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalError'
+      operationId: getByDocumentId
+      x-operation-id-source: derived
 components:
-  responses:
-    Unauthorized:
-      description: Not Authorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-              error_description:
-                type: string
-          example:
-            error: invalid_request
-            error_description: The access token is missing
-    NotFound:
-      description: Resource Not Found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFound'
-    InternalError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    BadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/BadRequest'
   schemas:
+    BadRequest:
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponse'
+      example:
+        code: '400'
+        description: Invalid header value
+        typeInfo:
+          type: ErrorResponse
+          value: ClientErrors.BAD_REQUEST
+    NotFound:
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponse'
+      example:
+        code: '404'
+        description: Item not found
+        typeInfo:
+          type: ErrorResponse
+          value: ClientErrors.NOT_FOUND
     ErrorResponse:
       type: object
       properties:
@@ -210,24 +199,39 @@ components:
         attachmentUploadDate:
           type: string
           description: attachmentUploadDate
-    NotFound:
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponse'
-      example:
-        code: '404'
-        description: Item not found
-        typeInfo:
-          type: ErrorResponse
-          value: ClientErrors.NOT_FOUND
+  responses:
+    Unauthorized:
+      description: Not Authorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              error_description:
+                type: string
+          example:
+            error: invalid_request
+            error_description: The access token is missing
     BadRequest:
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponse'
-      example:
-        code: '400'
-        description: Invalid header value
-        typeInfo:
-          type: ErrorResponse
-          value: ClientErrors.BAD_REQUEST
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequest'
+    InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Resource Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
   securitySchemes:
     bearerToken:
       type: apiKey

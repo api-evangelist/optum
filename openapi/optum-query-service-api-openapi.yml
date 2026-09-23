@@ -6,13 +6,13 @@ servers:
 - url: https://sandbox-apigw.optum.com
   description: ABM Care Decision Support API server
 tags:
-- name: QueryService
+- name: Query Service
 paths:
   /abm/dsrservicesearch/v1/:
     get:
       tags:
-      - QueryService
-      summary: Query Decision Support Records by organizationId and procedureCode (GET /abm/dsrservicesearch/v1/)
+      - Query Service
+      summary: Query Decision Support Records by organizationId and procedureCode (GET…
       parameters:
       - name: organizationId
         in: query
@@ -26,6 +26,8 @@ paths:
       responses:
         '200':
           description: OK
+      operationId: getAbmDsrservicesearchV1
+      x-operation-id-source: derived
 x-readme:
   explorer-enabled: true
   proxy-enabled: true

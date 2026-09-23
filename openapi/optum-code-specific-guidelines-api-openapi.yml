@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Optum Real-Time eContent Web services Code Specific Guidelines API
+  title: Optum Real-Time eContent Web services Code Specific…
   description: Optum® Real-Time eContent web services provides access to both ondemand medical coding data and Optum coding tool logic required by your applications. The information you or your clients need is delivered to your application in real time, when you need it, and customized to how you want it displayed. Optum Real-Time eContent service provides access to the content of 37 printed coding resources and proprietary data and offers the power of the Optum CodeLogic™ search engine.
   contact:
     name: Ken Kracker
@@ -147,28 +147,6 @@ paths:
           description: Service Unavailable
 components:
   schemas:
-    Icd10pcsCodeSpecificGuidelines:
-      required:
-      - icd10pcsCodeSpecificGuideline
-      type: object
-      properties:
-        icd10pcsCodeSpecificGuideline:
-          type: array
-          xml:
-            name: icd-10-pcs-code-specific-guideline
-          items:
-            $ref: '#/components/schemas/Icd10pcsCodeSpecificGuideline'
-      xml:
-        name: icd-10-pcs-code-specific-guidelines
-    Icd10pcsCodeSpecificGuideline:
-      type: object
-      properties:
-        year:
-          type: string
-        title:
-          type: string
-        guideline:
-          type: string
     Icd10CmColorCodes:
       type: object
       properties:
@@ -276,6 +254,28 @@ components:
           type: string
       xml:
         name: icd-10-cm-color-codes
+    Icd10pcsCodeSpecificGuidelines:
+      required:
+      - icd10pcsCodeSpecificGuideline
+      type: object
+      properties:
+        icd10pcsCodeSpecificGuideline:
+          type: array
+          xml:
+            name: icd-10-pcs-code-specific-guideline
+          items:
+            $ref: '#/components/schemas/Icd10pcsCodeSpecificGuideline'
+      xml:
+        name: icd-10-pcs-code-specific-guidelines
+    Icd10pcsCodeSpecificGuideline:
+      type: object
+      properties:
+        year:
+          type: string
+        title:
+          type: string
+        guideline:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

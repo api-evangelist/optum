@@ -91,6 +91,8 @@ paths:
               example:
                 message: Internal server error
                 statusCode: 500
+      summary: Get discovery
+      x-summary-source: derived
 components:
   schemas:
     DiscoveryService:
@@ -117,13 +119,6 @@ components:
       - id
       - hook
       - title
-    DiscoveryResponse:
-      type: object
-      properties:
-        services:
-          type: array
-          items:
-            $ref: '#/components/schemas/DiscoveryService'
     Prefetch:
       type: object
       properties:
@@ -154,6 +149,13 @@ components:
         practitionerRole:
           type: string
           example: PractitionerRole?practitioner={{%context.userId}}
+    DiscoveryResponse:
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscoveryService'
   securitySchemes:
     oAuth:
       type: oauth2

@@ -51,6 +51,8 @@ paths:
           $ref: '#/components/responses/403'
         '500':
           $ref: '#/components/responses/500'
+      operationId: postNoaX12
+      x-operation-id-source: derived
   /noa:
     post:
       summary: JSON Notice of Admission
@@ -92,154 +94,844 @@ paths:
           $ref: '#/components/responses/403'
         '500':
           $ref: '#/components/responses/500'
+      operationId: postNoa
+      x-operation-id-source: derived
 components:
-  examples:
-    UserNoaRequest:
-      summary: Notice of admission Request (JSON)
-      value:
-        senderId: 201985AAS
-        submitterTransactionIdentifier: 222438911WEB
-        payerId: '60054'
-        payerName: AETNA
-        umClearingHouseId: IMNDIRECT
-        source:
-          sourceType: FA
-          organizationName: B'enefits Health System'
-          lastName: Benefits Health System
-          npi: '1881650737'
-          contactTelephone: '4064552959'
-        subscriber:
-          lastName: LNAME
-          firstName: FNAME
-          memberId: NOA-01-SUCCESS
-          supplementalIdentification:
-            groupNumber: 0123456789012
-          dateOfBirth: '19700101'
-        patientEventDetail:
-          requestCategoryCode: AR
-          certificationTypeCode: I
-          serviceTypeCode: '1'
-          facilityTypeCode: '11'
-          facilityCodeQualifier: A
-          accidentDate: '20260101'
-          lastMenstrualPeriodDate: '20260101'
-          estimatedDateOfBirth: '20260101'
-          onsetDate: '20260101'
-          eventDateBegin: '20260101'
-          admissionDateBegin: '20260101'
-          admissionDateEnd: '20260101'
-          dischargeDate: '20260101'
-          certificationIssueDateBegin: '20260101'
-          certificationExpirationDateBegin: '20260101'
-          certificationEffectiveDateBegin: '20260101'
-          diagnosisTypeCode1: ABJ
-          diagnosisCode1: N1330
-          freeFormMessageText: AT=061500;ICD=N1330
-          patientEventProviderName:
-          - entityIdentifierCode: '71'
-            organizationName: Benefits Health System
-            lastName: SLATER
-            firstName: RICHARD
-            identificationCodeQualifier: XX
-            identifier: '1285928754'
-    UserNoaResponse:
-      summary: Noa Response Subscriber Only
-      value:
-        authorizationId: 16665bb7-3040-4d4d-a889-123a27b29789
-        noa:
-          x12: ISA*00*6666      *00*5555      *ZZ*6546564        *ZZ*6546564        *0623  *1301*^*00501*000000001*0*T*:~GS*HI*FL0738*PERSEPVS*20090601*040612*1*X*005010X216~ST*278*0001*005010X216~BHT*0007*11*165932*20055002*0815*18~HL*1**20*1~NM1*X3*2*ABC PAYER*****PI*1234560010~HL*2*1*21*1~NM1*1P*1*XYZ AMBULANCE SVC*****24*7759621873~HL*3*2*22*1~NM1*IL*1*SMITH*JOE****MI*12345689001~REF*EJ*1234567890~DMG*D8*19700101*M~HL*4*3*EV*1~UM*HS*I*56*41:B~HCR*A1*1234567890123~DTP*AAH*D8*20250101~CR1***X**DH*27~NM1*PW*2*HOME~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~NM1*ND*2*DOCTOR OFFICE~N3*123 SOME AVENUE~N4*SACRAMENTO*CA*95624~NM1*R3*2*SOME DIALYSIS CENTER~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~NM1*FS*2*HOME~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~HL*5*4*SS*0~SV1*HC:A0428:RX**UN*5~HL*6*4*SS*0~SV1*HC:A0428:PD**UN*8~HL*7*4*SS*0~SV1*HC:A0428:DR**UN*14~SE*34*0001~GE*1*1~IEA*1*000000001~
-          json:
-            submitterTransactionIdentifier: '165932'
-            payerId: '1234560010'
-            payerName: ABC PAYER
-            umClearingHouseId: PERSEPVS
-            umRequestValidation: null
-            requester:
-              requesterType: 1P
-              lastName: XYZ AMBULANCE SVC
-              requesterIdentification: {}
-              employersId: '7759621873'
-            subscriber:
-              lastName: SMITH
-              firstName: JOE
-              memberId: '12345689001'
-              dateOfBirth: '19700101'
-              genderCode: M
-              supplementalIdentification:
-                patientAccountNumber: '1234567890'
-            dependent:
-              supplementalIdentification: {}
-            patientEventDetail:
-              requestCategoryCode: HS
-              certificationTypeCode: I
-              serviceTypeCode: '56'
-              facilityTypeCode: '41'
-              facilityCodeQualifier: B
-              certificationActionCode: A1
-              reviewIdentificationNumber: '1234567890123'
-              eventDateBegin: '20250101'
-              ambulanceTransportCode: X
-              ambulanceUnitOrBasisForMeasurementCode: DH
-              ambulanceTransportDistance: '27'
-              patientEventAdditionalPatientInformationContactName:
-              - {}
-              patientEventTransportInformation:
-              - entityIdentifierCode: PW
-                transportLocationName: HOME
-                address1: 123 SOME ROAD
-                city: SACRAMENTO
-                state: CA
-                postalCode: '95826'
-              - entityIdentifierCode: ND
-                transportLocationName: DOCTOR OFFICE
-                address1: 123 SOME AVENUE
-                city: SACRAMENTO
-                state: CA
-                postalCode: '95624'
-              - entityIdentifierCode: R3
-                transportLocationName: SOME DIALYSIS CENTER
-                address1: 123 SOME ROAD
-                city: SACRAMENTO
-                state: CA
-                postalCode: '95826'
-              - entityIdentifierCode: FS
-                transportLocationName: HOME
-                address1: 123 SOME ROAD
-                city: SACRAMENTO
-                state: CA
-                postalCode: '95826'
-              serviceLevel:
-              - professionalService:
-                  productOrServiceIDQualifier: HC
-                  procedureCode: A0428
-                  procedureModifier: RX
-                  unitOrBasisForMeasurementCode: UN
-                  serviceUnitCount: '5'
-                institutionalService: {}
-                dentalService: {}
-                serviceDetailAdditionalServiceInformationContactName:
-                - {}
-              - professionalService:
-                  productOrServiceIDQualifier: HC
-                  procedureCode: A0428
-                  procedureModifier: PD
-                  unitOrBasisForMeasurementCode: UN
-                  serviceUnitCount: '8'
-                institutionalService: {}
-                dentalService: {}
-                serviceDetailAdditionalServiceInformationContactName:
-                - {}
-              - professionalService:
-                  productOrServiceIDQualifier: HC
-                  procedureCode: A0428
-                  procedureModifier: DR
-                  unitOrBasisForMeasurementCode: UN
-                  serviceUnitCount: '14'
-                institutionalService: {}
-                dentalService: {}
-                serviceDetailAdditionalServiceInformationContactName:
-                - {}
   schemas:
+    NoaJSONResponse:
+      type: object
+      properties:
+        requestValidation:
+          type: array
+          items:
+            type: object
+            properties:
+              responseCode:
+                type: string
+              rejectReasonCode:
+                type: string
+              followupActionCode:
+                type: string
+        submitterTransactionIdentifier:
+          type: string
+        payerId:
+          type: string
+        payerName:
+          type: string
+        umClearingHouseId:
+          type: string
+        contactName:
+          type: string
+        contactElectronicMail:
+          type: string
+        contactFacsimile:
+          type: string
+        contactTelephone:
+          type: string
+        umRequestValidation:
+          type: array
+          items:
+            type: object
+            properties:
+              responseCode:
+                type: string
+              rejectReasonCode:
+                type: string
+              followupActionCode:
+                type: string
+        requester:
+          type: object
+          properties:
+            requesterRequestValidation:
+              type: array
+              items:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                  rejectReasonCode:
+                    type: string
+                  followupActionCode:
+                    type: string
+            requesterType:
+              type: string
+            organizationName:
+              type: string
+            firstName:
+              type: string
+            requesterIdentification:
+              type: object
+              properties:
+                facilityIdNumber:
+                  type: string
+                socialSecurityNumber:
+                  type: string
+            npi:
+              type: string
+            providerCode:
+              type: string
+            referenceIdentification:
+              type: string
+        subscriber:
+          type: object
+          properties:
+            subscriberRequestValidation:
+              type: array
+              items:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                  rejectReasonCode:
+                    type: string
+                  followupActionCode:
+                    type: string
+            lastName:
+              type: string
+            firstName:
+              type: string
+            middleName:
+              type: string
+            prefix:
+              type: string
+            suffix:
+              type: string
+            memberId:
+              type: string
+            dateOfBirth:
+              type: string
+            genderCode:
+              type: string
+            supplementalIdentification:
+              type: object
+              properties:
+                medicaidRecipientIdentificationNumber:
+                  type: string
+                ssn:
+                  type: string
+            address1:
+              type: string
+            address2:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            postalCode:
+              type: string
+            countryCode:
+              type: string
+            countrySubDivisionCode:
+              type: string
+            insuredIndicator:
+              type: string
+            militaryRelationship:
+              type: string
+        dependent:
+          type: object
+          properties:
+            dependentRequestValidation:
+              type: array
+              items:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                  rejectReasonCode:
+                    type: string
+                  followupActionCode:
+                    type: string
+            lastName:
+              type: string
+            firstName:
+              type: string
+            middleName:
+              type: string
+            suffix:
+              type: string
+            dateOfBirth:
+              type: string
+            genderCode:
+              type: string
+            supplementalIdentification:
+              type: object
+              properties:
+                patientAccountNumber:
+                  type: string
+                ssn:
+                  type: string
+            address1:
+              type: string
+            address2:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            postalCode:
+              type: string
+            countryCode:
+              type: string
+            countrySubDivisionCode:
+              type: string
+            insuredIndicator:
+              type: string
+            relationshipToInsuredCode:
+              type: string
+            birthSequenceNumber:
+              type: string
+        patientEventDetail:
+          type: object
+          properties:
+            patientEventRequestValidation:
+              type: array
+              items:
+                type: object
+                properties:
+                  responseCode:
+                    type: string
+                  rejectReasonCode:
+                    type: string
+                  followupActionCode:
+                    type: string
+            requestCategoryCode:
+              type: string
+            certificationTypeCode:
+              type: string
+            serviceTypeCode:
+              type: string
+            facilityTypeCode:
+              type: string
+            facilityCodeQualifier:
+              type: string
+            levelOfServiceCode:
+              type: string
+            certificationActionCode:
+              type: string
+            reviewIdentificationNumber:
+              type: string
+            reviewDecisionReasonCode:
+              type: string
+            secondSurgicalOpinionIndicator:
+              type: string
+            administrativeReferenceNumber:
+              type: string
+            previousReviewAuthorizationNumber:
+              type: string
+            accidentDate:
+              type: string
+            lastMenstrualPeriodDate:
+              type: string
+            estimatedDateOfBirth:
+              type: string
+            onsetOfCurrentSymptomsOrIllnessDate:
+              type: string
+            eventDateBegin:
+              type: string
+            eventDateEnd:
+              type: string
+            admissionDateBegin:
+              type: string
+            admissionDateEnd:
+              type: string
+            dischargeDate:
+              type: string
+            certificationIssueDate:
+              type: string
+            certificationExpirationDate:
+              type: string
+            certificationEffectiveDateBegin:
+              type: string
+            certificationEffectiveDateEnd:
+              type: string
+            diagnosisTypeCode1:
+              type: string
+            diagnosisCode1:
+              type: string
+            diagnosisDate1:
+              type: string
+            diagnosisTypeCode2:
+              type: string
+            diagnosisCode2:
+              type: string
+            diagnosisDate2:
+              type: string
+            diagnosisTypeCode3:
+              type: string
+            diagnosisCode3:
+              type: string
+            diagnosisDate3:
+              type: string
+            diagnosisTypeCode4:
+              type: string
+            diagnosisCode4:
+              type: string
+            diagnosisDate4:
+              type: string
+            diagnosisTypeCode5:
+              type: string
+            diagnosisCode5:
+              type: string
+            diagnosisDate5:
+              type: string
+            diagnosisTypeCode6:
+              type: string
+            diagnosisCode6:
+              type: string
+            diagnosisDate6:
+              type: string
+            diagnosisTypeCode7:
+              type: string
+            diagnosisCode7:
+              type: string
+            diagnosisDate7:
+              type: string
+            diagnosisTypeCode8:
+              type: string
+            diagnosisCode8:
+              type: string
+            diagnosisDate8:
+              type: string
+            diagnosisTypeCode9:
+              type: string
+            diagnosisCode9:
+              type: string
+            diagnosisDate9:
+              type: string
+            diagnosisTypeCode10:
+              type: string
+            diagnosisCode10:
+              type: string
+            diagnosisDate10:
+              type: string
+            diagnosisTypeCode11:
+              type: string
+            diagnosisCode11:
+              type: string
+            diagnosisDate11:
+              type: string
+            diagnosisTypeCode12:
+              type: string
+            diagnosisCode12:
+              type: string
+            diagnosisDate12:
+              type: string
+            quantityQualifier:
+              type: string
+            serviceUnitCount:
+              type: string
+            unitOrBasisForMeasurementCode:
+              type: string
+            sampleSelectionModulus:
+              type: string
+            timePeriodQualifier:
+              type: string
+            periodCount:
+              type: string
+            deliveryFrequencyCode:
+              type: string
+            deliveryPatternTimeCode:
+              type: string
+            institutionalAdmissionTypeCode:
+              type: string
+            institutionalAdmissionSourceCode:
+              type: string
+            institutionalPatientStatusCode:
+              type: string
+            ambulanceTransportCode:
+              type: string
+            ambulanceUnitOrBasisForMeasurementCode:
+              type: string
+            ambulanceTransportDistance:
+              type: string
+            spinalManipulationTreatmentSeriesNumber:
+              type: string
+            spinalManipulationTreatmentCount:
+              type: string
+            spinalManipulationSubluxationLevelCode:
+              type: string
+            spinalManipulationSubluxationLevelCode2:
+              type: string
+            oxygenEquipmentTypeCode:
+              type: string
+            oxygenEquipmentTypeCode2:
+              type: string
+            oxygenFlowRate:
+              type: string
+            dailyOxygenUseCount:
+              type: string
+            oxygenUsePeriodHourCount:
+              type: string
+            respiratoryTherapistOrderText:
+              type: string
+            portableOxygenSystemFlowRate:
+              type: string
+            oxygenDeliverySystemCode:
+              type: string
+            oxygenSystemTypeCode:
+              type: string
+            homeHealthPrognosisCode:
+              type: string
+            homeHealthStartDate:
+              type: string
+            homeHealthCertificationPeriodStartDate:
+              type: string
+            homeHealthMedicareCoverageIndicator:
+              type: string
+            homeHealthCertificationTypeCode:
+              type: string
+            attachments:
+              type: array
+              items:
+                type: object
+                properties:
+                  reportTypeCode:
+                    type: string
+                  transmissionCode:
+                    type: string
+                  controlNumber:
+                    type: string
+                  description:
+                    type: string
+            freeFormMessageText:
+              type: string
+            patientEventProviderName:
+              type: array
+              items:
+                type: object
+                properties:
+                  patientEventProviderRequestValidation:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        responseCode:
+                          type: string
+                        rejectReasonCode:
+                          type: string
+                        followupActionCode:
+                          type: string
+                  entityIdentifierCode:
+                    type: string
+                  lastName:
+                    type: string
+                  firstName:
+                    type: string
+                  middleName:
+                    type: string
+                  namePrefix:
+                    type: string
+                  nameSuffix:
+                    type: string
+                  identificationCodeQualifier:
+                    type: string
+                  identifier:
+                    type: string
+                  address1:
+                    type: string
+                  address2:
+                    type: string
+                  city:
+                    type: string
+                  state:
+                    type: string
+                  postalCode:
+                    type: string
+                  countryCode:
+                    type: string
+                  countrySubDivisionCode:
+                    type: string
+                  providerSupplementalInformation:
+                    type: object
+                    properties:
+                      ssn:
+                        type: string
+                      carrierAssignedReferenceNumber:
+                        type: string
+                  contactName:
+                    type: string
+                  contactElectronicMail:
+                    type: string
+                  contactFacsimile:
+                    type: string
+                  contactTelephone:
+                    type: string
+                  providerCode:
+                    type: string
+                  providerTaxonomyCode:
+                    type: string
+            patientEventAdditionalPatientInformationContactName:
+              type: array
+              items:
+                type: object
+                properties:
+                  organizationName:
+                    type: string
+                  middleName:
+                    type: string
+                  nameSuffix:
+                    type: string
+                  identificationCodeQualifier:
+                    type: string
+                  identifier:
+                    type: string
+                  address1:
+                    type: string
+                  address2:
+                    type: string
+                  city:
+                    type: string
+                  state:
+                    type: string
+                  postalCode:
+                    type: string
+                  countryCode:
+                    type: string
+                  countrySubDivisionCode:
+                    type: string
+                  contactName:
+                    type: string
+                  contactElectronicMail:
+                    type: string
+                  contactFacsimile:
+                    type: string
+                  contactTelephone:
+                    type: string
+            patientEventTransportInformation:
+              type: array
+              items:
+                type: object
+                properties:
+                  patientEventTransportInformationValidation:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        responseCode:
+                          type: string
+                        rejectReasonCode:
+                          type: string
+                        followupActionCode:
+                          type: string
+                  entityIdentifierCode:
+                    type: string
+                  transportLocationName:
+                    type: string
+                  address1:
+                    type: string
+                  address2:
+                    type: string
+                  city:
+                    type: string
+                  state:
+                    type: string
+                  postalCode:
+                    type: string
+            serviceLevel:
+              type: array
+              items:
+                type: object
+                properties:
+                  serviceRequestValidation:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        responseCode:
+                          type: string
+                        rejectReasonCode:
+                          type: string
+                        followupActionCode:
+                          type: string
+                  requestCategoryCode:
+                    type: string
+                  certificationTypeCode:
+                    type: string
+                  serviceTypeCode:
+                    type: string
+                  facilityTypeCode:
+                    type: string
+                  facilityCodeQualifier:
+                    type: string
+                  certificationActionCode:
+                    type: string
+                  reviewIdentificationNumber:
+                    type: string
+                  reviewDecisionReasonCode:
+                    type: string
+                  secondSurgicalOpinionIndicator:
+                    type: string
+                  administrativeReferenceNumber:
+                    type: string
+                  previousReviewAuthorizationNumber:
+                    type: string
+                  serviceDateBegin:
+                    type: string
+                  serviceDateEnd:
+                    type: string
+                  certificationIssueDate:
+                    type: string
+                  certificationExpirationDate:
+                    type: string
+                  certificationEffectiveDateBegin:
+                    type: string
+                  certificationEffectiveDateEnd:
+                    type: string
+                  professionalService:
+                    type: object
+                    properties:
+                      productOrServiceIDQualifier:
+                        type: string
+                      procedureCode:
+                        type: string
+                      procedureModifier:
+                        type: string
+                      procedureModifier2:
+                        type: string
+                      procedureModifier3:
+                        type: string
+                      procedureModifier4:
+                        type: string
+                      procedureCodeDescription:
+                        type: string
+                      procedureCode2:
+                        type: string
+                      serviceLineAmount:
+                        type: string
+                      unitOrBasisForMeasurementCode:
+                        type: string
+                      serviceUnitCount:
+                        type: string
+                      epsdtIndicator:
+                        type: string
+                      nursingHomeLevelOfCareCode:
+                        type: string
+                  institutionalService:
+                    type: object
+                    properties:
+                      serviceLineRevenueCode:
+                        type: string
+                      productOrServiceIDQualifier:
+                        type: string
+                      procedureCode:
+                        type: string
+                      procedureModifier:
+                        type: string
+                      procedureModifier2:
+                        type: string
+                      procedureModifier3:
+                        type: string
+                      procedureModifier4:
+                        type: string
+                      procedureCodeDescription:
+                        type: string
+                      procedureCode2:
+                        type: string
+                      serviceLineAmount:
+                        type: string
+                      unitOrBasisForMeasurementCode:
+                        type: string
+                      serviceUnitCount:
+                        type: string
+                      serviceLineRate:
+                        type: string
+                      nursingHomeLevelOfCare:
+                        type: string
+                  dentalService:
+                    type: object
+                    properties:
+                      procedureCode:
+                        type: string
+                      procedureModifier:
+                        type: string
+                      procedureModifier2:
+                        type: string
+                      procedureModifier3:
+                        type: string
+                      procedureModifier4:
+                        type: string
+                      procedureCodeDescription:
+                        type: string
+                      procedureCode2:
+                        type: string
+                      serviceLineAmount:
+                        type: string
+                      americanDentalAssociationCodes:
+                        type: string
+                      americanDentalAssociationCodes2:
+                        type: string
+                      americanDentalAssociationCodes3:
+                        type: string
+                      americanDentalAssociationCodes4:
+                        type: string
+                      americanDentalAssociationCodes5:
+                        type: string
+                      prosthesisCrownOrInlayCode:
+                        type: string
+                      serviceUnitCount:
+                        type: string
+                  toothInformation:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        toothCode:
+                          type: string
+                        toothSurfaceCode:
+                          type: string
+                        toothSurfaceCode2:
+                          type: string
+                        toothSurfaceCode3:
+                          type: string
+                        toothSurfaceCode4:
+                          type: string
+                        toothSurfaceCode5:
+                          type: string
+                  quantityQualifier:
+                    type: string
+                  serviceUnitCount:
+                    type: string
+                  unitOrBasisForMeasurementCode:
+                    type: string
+                  sampleSelectionModulus:
+                    type: string
+                  timePeriodQualifier:
+                    type: string
+                  periodCount:
+                    type: string
+                  deliveryFrequencyCode:
+                    type: string
+                  deliveryPatternTimeCode:
+                    type: string
+                  attachments:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        reportTypeCode:
+                          type: string
+                        transmissionCode:
+                          type: string
+                        controlNumber:
+                          type: string
+                        description:
+                          type: string
+                  freeFormMessageText:
+                    type: string
+                  serviceProviderName:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        serviceProviderRequestValidation:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              responseCode:
+                                type: string
+                              rejectReasonCode:
+                                type: string
+                              followupActionCode:
+                                type: string
+                        entityIdentifierCode:
+                          type: string
+                        lastName:
+                          type: string
+                        firstName:
+                          type: string
+                        middleName:
+                          type: string
+                        namePrefix:
+                          type: string
+                        nameSuffix:
+                          type: string
+                        identificationCodeQualifier:
+                          type: string
+                        identifier:
+                          type: string
+                        address1:
+                          type: string
+                        address2:
+                          type: string
+                        city:
+                          type: string
+                        state:
+                          type: string
+                        postalCode:
+                          type: string
+                        countryCode:
+                          type: string
+                        countrySubDivisionCode:
+                          type: string
+                        providerSupplementalInformation:
+                          type: object
+                          properties:
+                            ssn:
+                              type: string
+                            carrierAssignedReferenceNumber:
+                              type: string
+                        contactName:
+                          type: string
+                        contactElectronicMail:
+                          type: string
+                        contactFacsimile:
+                          type: string
+                        contactTelephone:
+                          type: string
+                        providerCode:
+                          type: string
+                        providerTaxonomyCode:
+                          type: string
+                  serviceDetailAdditionalServiceInformationContactName:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        organizationName:
+                          type: string
+                        middleName:
+                          type: string
+                        nameSuffix:
+                          type: string
+                        identificationCodeQualifier:
+                          type: string
+                        identifier:
+                          type: string
+                        address1:
+                          type: string
+                        address2:
+                          type: string
+                        city:
+                          type: string
+                        state:
+                          type: string
+                        postalCode:
+                          type: string
+                        countryCode:
+                          type: string
+                        countrySubDivisionCode:
+                          type: string
+                        contactName:
+                          type: string
+                        contactElectronicMail:
+                          type: string
+                        contactFacsimile:
+                          type: string
+                        contactTelephone:
+                          type: string
+    NoaResponse:
+      type: object
+      properties:
+        authorizationId:
+          type: string
+        submission:
+          type: object
+          properties:
+            x12:
+              type: string
+            json:
+              $ref: '#/components/schemas/NoaJSONResponse'
     NoaX12Request:
       type: object
       properties:
@@ -1151,840 +1843,152 @@ components:
                           type: string
                         providerTaxonomyCode:
                           type: string
-    NoaResponse:
-      type: object
-      properties:
-        authorizationId:
-          type: string
-        submission:
-          type: object
-          properties:
-            x12:
-              type: string
-            json:
-              $ref: '#/components/schemas/NoaJSONResponse'
-    NoaJSONResponse:
-      type: object
-      properties:
-        requestValidation:
-          type: array
-          items:
-            type: object
-            properties:
-              responseCode:
-                type: string
-              rejectReasonCode:
-                type: string
-              followupActionCode:
-                type: string
-        submitterTransactionIdentifier:
-          type: string
-        payerId:
-          type: string
-        payerName:
-          type: string
-        umClearingHouseId:
-          type: string
-        contactName:
-          type: string
-        contactElectronicMail:
-          type: string
-        contactFacsimile:
-          type: string
-        contactTelephone:
-          type: string
-        umRequestValidation:
-          type: array
-          items:
-            type: object
-            properties:
-              responseCode:
-                type: string
-              rejectReasonCode:
-                type: string
-              followupActionCode:
-                type: string
-        requester:
-          type: object
-          properties:
-            requesterRequestValidation:
-              type: array
-              items:
-                type: object
-                properties:
-                  responseCode:
-                    type: string
-                  rejectReasonCode:
-                    type: string
-                  followupActionCode:
-                    type: string
-            requesterType:
-              type: string
-            organizationName:
-              type: string
-            firstName:
-              type: string
-            requesterIdentification:
-              type: object
-              properties:
-                facilityIdNumber:
-                  type: string
-                socialSecurityNumber:
-                  type: string
-            npi:
-              type: string
-            providerCode:
-              type: string
-            referenceIdentification:
-              type: string
+  examples:
+    UserNoaRequest:
+      summary: Notice of admission Request (JSON)
+      value:
+        senderId: 201985AAS
+        submitterTransactionIdentifier: 222438911WEB
+        payerId: '60054'
+        payerName: AETNA
+        umClearingHouseId: IMNDIRECT
+        source:
+          sourceType: FA
+          organizationName: B'enefits Health System'
+          lastName: Benefits Health System
+          npi: '1881650737'
+          contactTelephone: '4064552959'
         subscriber:
-          type: object
-          properties:
-            subscriberRequestValidation:
-              type: array
-              items:
-                type: object
-                properties:
-                  responseCode:
-                    type: string
-                  rejectReasonCode:
-                    type: string
-                  followupActionCode:
-                    type: string
-            lastName:
-              type: string
-            firstName:
-              type: string
-            middleName:
-              type: string
-            prefix:
-              type: string
-            suffix:
-              type: string
-            memberId:
-              type: string
-            dateOfBirth:
-              type: string
-            genderCode:
-              type: string
-            supplementalIdentification:
-              type: object
-              properties:
-                medicaidRecipientIdentificationNumber:
-                  type: string
-                ssn:
-                  type: string
-            address1:
-              type: string
-            address2:
-              type: string
-            city:
-              type: string
-            state:
-              type: string
-            postalCode:
-              type: string
-            countryCode:
-              type: string
-            countrySubDivisionCode:
-              type: string
-            insuredIndicator:
-              type: string
-            militaryRelationship:
-              type: string
-        dependent:
-          type: object
-          properties:
-            dependentRequestValidation:
-              type: array
-              items:
-                type: object
-                properties:
-                  responseCode:
-                    type: string
-                  rejectReasonCode:
-                    type: string
-                  followupActionCode:
-                    type: string
-            lastName:
-              type: string
-            firstName:
-              type: string
-            middleName:
-              type: string
-            suffix:
-              type: string
-            dateOfBirth:
-              type: string
-            genderCode:
-              type: string
-            supplementalIdentification:
-              type: object
-              properties:
-                patientAccountNumber:
-                  type: string
-                ssn:
-                  type: string
-            address1:
-              type: string
-            address2:
-              type: string
-            city:
-              type: string
-            state:
-              type: string
-            postalCode:
-              type: string
-            countryCode:
-              type: string
-            countrySubDivisionCode:
-              type: string
-            insuredIndicator:
-              type: string
-            relationshipToInsuredCode:
-              type: string
-            birthSequenceNumber:
-              type: string
+          lastName: LNAME
+          firstName: FNAME
+          memberId: NOA-01-SUCCESS
+          supplementalIdentification:
+            groupNumber: 0123456789012
+          dateOfBirth: '19700101'
         patientEventDetail:
-          type: object
-          properties:
-            patientEventRequestValidation:
-              type: array
-              items:
-                type: object
-                properties:
-                  responseCode:
-                    type: string
-                  rejectReasonCode:
-                    type: string
-                  followupActionCode:
-                    type: string
-            requestCategoryCode:
-              type: string
-            certificationTypeCode:
-              type: string
-            serviceTypeCode:
-              type: string
-            facilityTypeCode:
-              type: string
-            facilityCodeQualifier:
-              type: string
-            levelOfServiceCode:
-              type: string
-            certificationActionCode:
-              type: string
-            reviewIdentificationNumber:
-              type: string
-            reviewDecisionReasonCode:
-              type: string
-            secondSurgicalOpinionIndicator:
-              type: string
-            administrativeReferenceNumber:
-              type: string
-            previousReviewAuthorizationNumber:
-              type: string
-            accidentDate:
-              type: string
-            lastMenstrualPeriodDate:
-              type: string
-            estimatedDateOfBirth:
-              type: string
-            onsetOfCurrentSymptomsOrIllnessDate:
-              type: string
-            eventDateBegin:
-              type: string
-            eventDateEnd:
-              type: string
-            admissionDateBegin:
-              type: string
-            admissionDateEnd:
-              type: string
-            dischargeDate:
-              type: string
-            certificationIssueDate:
-              type: string
-            certificationExpirationDate:
-              type: string
-            certificationEffectiveDateBegin:
-              type: string
-            certificationEffectiveDateEnd:
-              type: string
-            diagnosisTypeCode1:
-              type: string
-            diagnosisCode1:
-              type: string
-            diagnosisDate1:
-              type: string
-            diagnosisTypeCode2:
-              type: string
-            diagnosisCode2:
-              type: string
-            diagnosisDate2:
-              type: string
-            diagnosisTypeCode3:
-              type: string
-            diagnosisCode3:
-              type: string
-            diagnosisDate3:
-              type: string
-            diagnosisTypeCode4:
-              type: string
-            diagnosisCode4:
-              type: string
-            diagnosisDate4:
-              type: string
-            diagnosisTypeCode5:
-              type: string
-            diagnosisCode5:
-              type: string
-            diagnosisDate5:
-              type: string
-            diagnosisTypeCode6:
-              type: string
-            diagnosisCode6:
-              type: string
-            diagnosisDate6:
-              type: string
-            diagnosisTypeCode7:
-              type: string
-            diagnosisCode7:
-              type: string
-            diagnosisDate7:
-              type: string
-            diagnosisTypeCode8:
-              type: string
-            diagnosisCode8:
-              type: string
-            diagnosisDate8:
-              type: string
-            diagnosisTypeCode9:
-              type: string
-            diagnosisCode9:
-              type: string
-            diagnosisDate9:
-              type: string
-            diagnosisTypeCode10:
-              type: string
-            diagnosisCode10:
-              type: string
-            diagnosisDate10:
-              type: string
-            diagnosisTypeCode11:
-              type: string
-            diagnosisCode11:
-              type: string
-            diagnosisDate11:
-              type: string
-            diagnosisTypeCode12:
-              type: string
-            diagnosisCode12:
-              type: string
-            diagnosisDate12:
-              type: string
-            quantityQualifier:
-              type: string
-            serviceUnitCount:
-              type: string
-            unitOrBasisForMeasurementCode:
-              type: string
-            sampleSelectionModulus:
-              type: string
-            timePeriodQualifier:
-              type: string
-            periodCount:
-              type: string
-            deliveryFrequencyCode:
-              type: string
-            deliveryPatternTimeCode:
-              type: string
-            institutionalAdmissionTypeCode:
-              type: string
-            institutionalAdmissionSourceCode:
-              type: string
-            institutionalPatientStatusCode:
-              type: string
-            ambulanceTransportCode:
-              type: string
-            ambulanceUnitOrBasisForMeasurementCode:
-              type: string
-            ambulanceTransportDistance:
-              type: string
-            spinalManipulationTreatmentSeriesNumber:
-              type: string
-            spinalManipulationTreatmentCount:
-              type: string
-            spinalManipulationSubluxationLevelCode:
-              type: string
-            spinalManipulationSubluxationLevelCode2:
-              type: string
-            oxygenEquipmentTypeCode:
-              type: string
-            oxygenEquipmentTypeCode2:
-              type: string
-            oxygenFlowRate:
-              type: string
-            dailyOxygenUseCount:
-              type: string
-            oxygenUsePeriodHourCount:
-              type: string
-            respiratoryTherapistOrderText:
-              type: string
-            portableOxygenSystemFlowRate:
-              type: string
-            oxygenDeliverySystemCode:
-              type: string
-            oxygenSystemTypeCode:
-              type: string
-            homeHealthPrognosisCode:
-              type: string
-            homeHealthStartDate:
-              type: string
-            homeHealthCertificationPeriodStartDate:
-              type: string
-            homeHealthMedicareCoverageIndicator:
-              type: string
-            homeHealthCertificationTypeCode:
-              type: string
-            attachments:
-              type: array
-              items:
-                type: object
-                properties:
-                  reportTypeCode:
-                    type: string
-                  transmissionCode:
-                    type: string
-                  controlNumber:
-                    type: string
-                  description:
-                    type: string
-            freeFormMessageText:
-              type: string
-            patientEventProviderName:
-              type: array
-              items:
-                type: object
-                properties:
-                  patientEventProviderRequestValidation:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        responseCode:
-                          type: string
-                        rejectReasonCode:
-                          type: string
-                        followupActionCode:
-                          type: string
-                  entityIdentifierCode:
-                    type: string
-                  lastName:
-                    type: string
-                  firstName:
-                    type: string
-                  middleName:
-                    type: string
-                  namePrefix:
-                    type: string
-                  nameSuffix:
-                    type: string
-                  identificationCodeQualifier:
-                    type: string
-                  identifier:
-                    type: string
-                  address1:
-                    type: string
-                  address2:
-                    type: string
-                  city:
-                    type: string
-                  state:
-                    type: string
-                  postalCode:
-                    type: string
-                  countryCode:
-                    type: string
-                  countrySubDivisionCode:
-                    type: string
-                  providerSupplementalInformation:
-                    type: object
-                    properties:
-                      ssn:
-                        type: string
-                      carrierAssignedReferenceNumber:
-                        type: string
-                  contactName:
-                    type: string
-                  contactElectronicMail:
-                    type: string
-                  contactFacsimile:
-                    type: string
-                  contactTelephone:
-                    type: string
-                  providerCode:
-                    type: string
-                  providerTaxonomyCode:
-                    type: string
-            patientEventAdditionalPatientInformationContactName:
-              type: array
-              items:
-                type: object
-                properties:
-                  organizationName:
-                    type: string
-                  middleName:
-                    type: string
-                  nameSuffix:
-                    type: string
-                  identificationCodeQualifier:
-                    type: string
-                  identifier:
-                    type: string
-                  address1:
-                    type: string
-                  address2:
-                    type: string
-                  city:
-                    type: string
-                  state:
-                    type: string
-                  postalCode:
-                    type: string
-                  countryCode:
-                    type: string
-                  countrySubDivisionCode:
-                    type: string
-                  contactName:
-                    type: string
-                  contactElectronicMail:
-                    type: string
-                  contactFacsimile:
-                    type: string
-                  contactTelephone:
-                    type: string
-            patientEventTransportInformation:
-              type: array
-              items:
-                type: object
-                properties:
-                  patientEventTransportInformationValidation:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        responseCode:
-                          type: string
-                        rejectReasonCode:
-                          type: string
-                        followupActionCode:
-                          type: string
-                  entityIdentifierCode:
-                    type: string
-                  transportLocationName:
-                    type: string
-                  address1:
-                    type: string
-                  address2:
-                    type: string
-                  city:
-                    type: string
-                  state:
-                    type: string
-                  postalCode:
-                    type: string
-            serviceLevel:
-              type: array
-              items:
-                type: object
-                properties:
-                  serviceRequestValidation:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        responseCode:
-                          type: string
-                        rejectReasonCode:
-                          type: string
-                        followupActionCode:
-                          type: string
-                  requestCategoryCode:
-                    type: string
-                  certificationTypeCode:
-                    type: string
-                  serviceTypeCode:
-                    type: string
-                  facilityTypeCode:
-                    type: string
-                  facilityCodeQualifier:
-                    type: string
-                  certificationActionCode:
-                    type: string
-                  reviewIdentificationNumber:
-                    type: string
-                  reviewDecisionReasonCode:
-                    type: string
-                  secondSurgicalOpinionIndicator:
-                    type: string
-                  administrativeReferenceNumber:
-                    type: string
-                  previousReviewAuthorizationNumber:
-                    type: string
-                  serviceDateBegin:
-                    type: string
-                  serviceDateEnd:
-                    type: string
-                  certificationIssueDate:
-                    type: string
-                  certificationExpirationDate:
-                    type: string
-                  certificationEffectiveDateBegin:
-                    type: string
-                  certificationEffectiveDateEnd:
-                    type: string
-                  professionalService:
-                    type: object
-                    properties:
-                      productOrServiceIDQualifier:
-                        type: string
-                      procedureCode:
-                        type: string
-                      procedureModifier:
-                        type: string
-                      procedureModifier2:
-                        type: string
-                      procedureModifier3:
-                        type: string
-                      procedureModifier4:
-                        type: string
-                      procedureCodeDescription:
-                        type: string
-                      procedureCode2:
-                        type: string
-                      serviceLineAmount:
-                        type: string
-                      unitOrBasisForMeasurementCode:
-                        type: string
-                      serviceUnitCount:
-                        type: string
-                      epsdtIndicator:
-                        type: string
-                      nursingHomeLevelOfCareCode:
-                        type: string
-                  institutionalService:
-                    type: object
-                    properties:
-                      serviceLineRevenueCode:
-                        type: string
-                      productOrServiceIDQualifier:
-                        type: string
-                      procedureCode:
-                        type: string
-                      procedureModifier:
-                        type: string
-                      procedureModifier2:
-                        type: string
-                      procedureModifier3:
-                        type: string
-                      procedureModifier4:
-                        type: string
-                      procedureCodeDescription:
-                        type: string
-                      procedureCode2:
-                        type: string
-                      serviceLineAmount:
-                        type: string
-                      unitOrBasisForMeasurementCode:
-                        type: string
-                      serviceUnitCount:
-                        type: string
-                      serviceLineRate:
-                        type: string
-                      nursingHomeLevelOfCare:
-                        type: string
-                  dentalService:
-                    type: object
-                    properties:
-                      procedureCode:
-                        type: string
-                      procedureModifier:
-                        type: string
-                      procedureModifier2:
-                        type: string
-                      procedureModifier3:
-                        type: string
-                      procedureModifier4:
-                        type: string
-                      procedureCodeDescription:
-                        type: string
-                      procedureCode2:
-                        type: string
-                      serviceLineAmount:
-                        type: string
-                      americanDentalAssociationCodes:
-                        type: string
-                      americanDentalAssociationCodes2:
-                        type: string
-                      americanDentalAssociationCodes3:
-                        type: string
-                      americanDentalAssociationCodes4:
-                        type: string
-                      americanDentalAssociationCodes5:
-                        type: string
-                      prosthesisCrownOrInlayCode:
-                        type: string
-                      serviceUnitCount:
-                        type: string
-                  toothInformation:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        toothCode:
-                          type: string
-                        toothSurfaceCode:
-                          type: string
-                        toothSurfaceCode2:
-                          type: string
-                        toothSurfaceCode3:
-                          type: string
-                        toothSurfaceCode4:
-                          type: string
-                        toothSurfaceCode5:
-                          type: string
-                  quantityQualifier:
-                    type: string
-                  serviceUnitCount:
-                    type: string
-                  unitOrBasisForMeasurementCode:
-                    type: string
-                  sampleSelectionModulus:
-                    type: string
-                  timePeriodQualifier:
-                    type: string
-                  periodCount:
-                    type: string
-                  deliveryFrequencyCode:
-                    type: string
-                  deliveryPatternTimeCode:
-                    type: string
-                  attachments:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        reportTypeCode:
-                          type: string
-                        transmissionCode:
-                          type: string
-                        controlNumber:
-                          type: string
-                        description:
-                          type: string
-                  freeFormMessageText:
-                    type: string
-                  serviceProviderName:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        serviceProviderRequestValidation:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              responseCode:
-                                type: string
-                              rejectReasonCode:
-                                type: string
-                              followupActionCode:
-                                type: string
-                        entityIdentifierCode:
-                          type: string
-                        lastName:
-                          type: string
-                        firstName:
-                          type: string
-                        middleName:
-                          type: string
-                        namePrefix:
-                          type: string
-                        nameSuffix:
-                          type: string
-                        identificationCodeQualifier:
-                          type: string
-                        identifier:
-                          type: string
-                        address1:
-                          type: string
-                        address2:
-                          type: string
-                        city:
-                          type: string
-                        state:
-                          type: string
-                        postalCode:
-                          type: string
-                        countryCode:
-                          type: string
-                        countrySubDivisionCode:
-                          type: string
-                        providerSupplementalInformation:
-                          type: object
-                          properties:
-                            ssn:
-                              type: string
-                            carrierAssignedReferenceNumber:
-                              type: string
-                        contactName:
-                          type: string
-                        contactElectronicMail:
-                          type: string
-                        contactFacsimile:
-                          type: string
-                        contactTelephone:
-                          type: string
-                        providerCode:
-                          type: string
-                        providerTaxonomyCode:
-                          type: string
-                  serviceDetailAdditionalServiceInformationContactName:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        organizationName:
-                          type: string
-                        middleName:
-                          type: string
-                        nameSuffix:
-                          type: string
-                        identificationCodeQualifier:
-                          type: string
-                        identifier:
-                          type: string
-                        address1:
-                          type: string
-                        address2:
-                          type: string
-                        city:
-                          type: string
-                        state:
-                          type: string
-                        postalCode:
-                          type: string
-                        countryCode:
-                          type: string
-                        countrySubDivisionCode:
-                          type: string
-                        contactName:
-                          type: string
-                        contactElectronicMail:
-                          type: string
-                        contactFacsimile:
-                          type: string
-                        contactTelephone:
-                          type: string
+          requestCategoryCode: AR
+          certificationTypeCode: I
+          serviceTypeCode: '1'
+          facilityTypeCode: '11'
+          facilityCodeQualifier: A
+          accidentDate: '20260101'
+          lastMenstrualPeriodDate: '20260101'
+          estimatedDateOfBirth: '20260101'
+          onsetDate: '20260101'
+          eventDateBegin: '20260101'
+          admissionDateBegin: '20260101'
+          admissionDateEnd: '20260101'
+          dischargeDate: '20260101'
+          certificationIssueDateBegin: '20260101'
+          certificationExpirationDateBegin: '20260101'
+          certificationEffectiveDateBegin: '20260101'
+          diagnosisTypeCode1: ABJ
+          diagnosisCode1: N1330
+          freeFormMessageText: AT=061500;ICD=N1330
+          patientEventProviderName:
+          - entityIdentifierCode: '71'
+            organizationName: Benefits Health System
+            lastName: SLATER
+            firstName: RICHARD
+            identificationCodeQualifier: XX
+            identifier: '1285928754'
+    UserNoaResponse:
+      summary: Noa Response Subscriber Only
+      value:
+        authorizationId: 16665bb7-3040-4d4d-a889-123a27b29789
+        noa:
+          x12: ISA*00*6666      *00*5555      *ZZ*6546564        *ZZ*6546564        *0623  *1301*^*00501*000000001*0*T*:~GS*HI*FL0738*PERSEPVS*20090601*040612*1*X*005010X216~ST*278*0001*005010X216~BHT*0007*11*165932*20055002*0815*18~HL*1**20*1~NM1*X3*2*ABC PAYER*****PI*1234560010~HL*2*1*21*1~NM1*1P*1*XYZ AMBULANCE SVC*****24*7759621873~HL*3*2*22*1~NM1*IL*1*SMITH*JOE****MI*12345689001~REF*EJ*1234567890~DMG*D8*19700101*M~HL*4*3*EV*1~UM*HS*I*56*41:B~HCR*A1*1234567890123~DTP*AAH*D8*20250101~CR1***X**DH*27~NM1*PW*2*HOME~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~NM1*ND*2*DOCTOR OFFICE~N3*123 SOME AVENUE~N4*SACRAMENTO*CA*95624~NM1*R3*2*SOME DIALYSIS CENTER~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~NM1*FS*2*HOME~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~HL*5*4*SS*0~SV1*HC:A0428:RX**UN*5~HL*6*4*SS*0~SV1*HC:A0428:PD**UN*8~HL*7*4*SS*0~SV1*HC:A0428:DR**UN*14~SE*34*0001~GE*1*1~IEA*1*000000001~
+          json:
+            submitterTransactionIdentifier: '165932'
+            payerId: '1234560010'
+            payerName: ABC PAYER
+            umClearingHouseId: PERSEPVS
+            umRequestValidation: null
+            requester:
+              requesterType: 1P
+              lastName: XYZ AMBULANCE SVC
+              requesterIdentification: {}
+              employersId: '7759621873'
+            subscriber:
+              lastName: SMITH
+              firstName: JOE
+              memberId: '12345689001'
+              dateOfBirth: '19700101'
+              genderCode: M
+              supplementalIdentification:
+                patientAccountNumber: '1234567890'
+            dependent:
+              supplementalIdentification: {}
+            patientEventDetail:
+              requestCategoryCode: HS
+              certificationTypeCode: I
+              serviceTypeCode: '56'
+              facilityTypeCode: '41'
+              facilityCodeQualifier: B
+              certificationActionCode: A1
+              reviewIdentificationNumber: '1234567890123'
+              eventDateBegin: '20250101'
+              ambulanceTransportCode: X
+              ambulanceUnitOrBasisForMeasurementCode: DH
+              ambulanceTransportDistance: '27'
+              patientEventAdditionalPatientInformationContactName:
+              - {}
+              patientEventTransportInformation:
+              - entityIdentifierCode: PW
+                transportLocationName: HOME
+                address1: 123 SOME ROAD
+                city: SACRAMENTO
+                state: CA
+                postalCode: '95826'
+              - entityIdentifierCode: ND
+                transportLocationName: DOCTOR OFFICE
+                address1: 123 SOME AVENUE
+                city: SACRAMENTO
+                state: CA
+                postalCode: '95624'
+              - entityIdentifierCode: R3
+                transportLocationName: SOME DIALYSIS CENTER
+                address1: 123 SOME ROAD
+                city: SACRAMENTO
+                state: CA
+                postalCode: '95826'
+              - entityIdentifierCode: FS
+                transportLocationName: HOME
+                address1: 123 SOME ROAD
+                city: SACRAMENTO
+                state: CA
+                postalCode: '95826'
+              serviceLevel:
+              - professionalService:
+                  productOrServiceIDQualifier: HC
+                  procedureCode: A0428
+                  procedureModifier: RX
+                  unitOrBasisForMeasurementCode: UN
+                  serviceUnitCount: '5'
+                institutionalService: {}
+                dentalService: {}
+                serviceDetailAdditionalServiceInformationContactName:
+                - {}
+              - professionalService:
+                  productOrServiceIDQualifier: HC
+                  procedureCode: A0428
+                  procedureModifier: PD
+                  unitOrBasisForMeasurementCode: UN
+                  serviceUnitCount: '8'
+                institutionalService: {}
+                dentalService: {}
+                serviceDetailAdditionalServiceInformationContactName:
+                - {}
+              - professionalService:
+                  productOrServiceIDQualifier: HC
+                  procedureCode: A0428
+                  procedureModifier: DR
+                  unitOrBasisForMeasurementCode: UN
+                  serviceUnitCount: '14'
+                institutionalService: {}
+                dentalService: {}
+                serviceDetailAdditionalServiceInformationContactName:
+                - {}
   headers:
     transaction-id:
       description: Transaction Id of the request
@@ -2000,11 +2004,11 @@ components:
       schema:
         type: string
   responses:
-    '403':
+    '500':
       headers:
         x-amzn-trace-id:
           $ref: '#/components/headers/x-amzn-trace-id'
-      description: Forbidden. Authentication succeeded but authenticated user doesn't have access to the resource
+      description: Internal Server Error. An unexpected error has occurred.
       content:
         application/json:
           schema:
@@ -2018,11 +2022,11 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Errors'
-    '500':
+    '403':
       headers:
         x-amzn-trace-id:
           $ref: '#/components/headers/x-amzn-trace-id'
-      description: Internal Server Error. An unexpected error has occurred.
+      description: Forbidden. Authentication succeeded but authenticated user doesn't have access to the resource
       content:
         application/json:
           schema:

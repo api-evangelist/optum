@@ -290,7 +290,7 @@ paths:
     get:
       tags:
       - Policy Lookup APIs
-      summary: Fetches medicare contractors list for a given contractor part.
+      summary: Fetches medicare contractors list for a given contractor part
       operationId: fetchMedicareContractors
       parameters:
       - name: contractor-part
@@ -326,6 +326,66 @@ paths:
     - url: /v1/cmscommonms
 components:
   schemas:
+    ContractorValue:
+      type: object
+      properties:
+        contractorNum:
+          type: string
+        stateAbbr:
+          type: string
+        contractorName:
+          type: string
+        regionCode:
+          type: string
+        contractorType:
+          type: string
+        url:
+          type: string
+        contractorEid:
+          type: string
+        icpContractorId:
+          type: string
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+    PolicySearchRequest:
+      type: object
+      properties:
+        policyType:
+          type: string
+          enum:
+          - NCD_PART_A
+          - NCD_PART_B
+          - LCD_DME
+          - NCD_DME
+          - LCD_PART_A
+          - LCD_PART_B
+          - NCD_LAB
+        searchType:
+          type: string
+        procedureCode:
+          type: string
+        termSearch:
+          $ref: '#/components/schemas/TermSearch'
+        diagnosisCode:
+          $ref: '#/components/schemas/DiagnosisCode'
+        effectiveDate:
+          type: string
+          format: date-time
+        lcd:
+          $ref: '#/components/schemas/Lcd'
     PolicyValue:
       type: object
       properties:
@@ -377,21 +437,13 @@ components:
           type: string
         contractorTypeDisplayName:
           type: string
-    Notification:
+    DiagnosisCode:
       type: object
       properties:
-        error:
-          type: array
-          items:
-            type: string
-        warning:
-          type: array
-          items:
-            type: string
-        info:
-          type: array
-          items:
-            type: string
+        code:
+          type: string
+        codeType:
+          type: string
     Lcd:
       type: object
       properties:
@@ -406,32 +458,6 @@ components:
           format: int32
         retiredPolicies:
           type: boolean
-    ContractorValue:
-      type: object
-      properties:
-        contractorNum:
-          type: string
-        stateAbbr:
-          type: string
-        contractorName:
-          type: string
-        regionCode:
-          type: string
-        contractorType:
-          type: string
-        url:
-          type: string
-        contractorEid:
-          type: string
-        icpContractorId:
-          type: string
-    DiagnosisCode:
-      type: object
-      properties:
-        code:
-          type: string
-        codeType:
-          type: string
     TermSearch:
       type: object
       properties:
@@ -441,32 +467,6 @@ components:
           type: string
         searchLogic:
           type: string
-    PolicySearchRequest:
-      type: object
-      properties:
-        policyType:
-          type: string
-          enum:
-          - NCD_PART_A
-          - NCD_PART_B
-          - LCD_DME
-          - NCD_DME
-          - LCD_PART_A
-          - LCD_PART_B
-          - NCD_LAB
-        searchType:
-          type: string
-        procedureCode:
-          type: string
-        termSearch:
-          $ref: '#/components/schemas/TermSearch'
-        diagnosisCode:
-          $ref: '#/components/schemas/DiagnosisCode'
-        effectiveDate:
-          type: string
-          format: date-time
-        lcd:
-          $ref: '#/components/schemas/Lcd'
   securitySchemes:
     bearerAuth:
       type: http

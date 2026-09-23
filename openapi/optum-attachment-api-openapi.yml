@@ -73,6 +73,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: postDentalnetworkAttachmentsV1CreateAttachment
+      x-operation-id-source: derived
   /dentalnetwork/attachments/v1/AddAttachment:
     post:
       summary: Add attachment files
@@ -136,9 +138,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: postDentalnetworkAttachmentsV1AddAttachment
+      x-operation-id-source: derived
   /dentalnetwork/attachments/v1/{attachmentId}/UpdateAttachmentFile/{attachmentFileId}:
     put:
-      summary: Update attachment to container.
+      summary: Update attachment to container
       tags:
       - Attachment
       requestBody:
@@ -214,6 +218,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: putDentalnetworkAttachmentsV1ByAttachmentIdUpdateAttachmentFileByAttachmentFileId
+      x-operation-id-source: derived
   /dentalnetwork/attachments/v1/CommitAttachment/{attachmentId}:
     patch:
       summary: Commits the attachment container and files
@@ -291,9 +297,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: patchDentalnetworkAttachmentsV1CommitAttachmentByAttachmentId
+      x-operation-id-source: derived
   /dentalnetwork/attachments/v1/GetAttachmentbyId/{attachmentId}:
     get:
-      summary: Gets an attachment container.
+      summary: Gets an attachment container
       description: Gets the attachment contatiner created by the /attachments/v1/CreateAttachment endpoint
       tags:
       - Attachment
@@ -362,6 +370,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: getDentalnetworkAttachmentsV1GetAttachmentbyIdByAttachmentId
+      x-operation-id-source: derived
   /dentalnetwork/attachments/v1/GetAttachmentList/{AttachmentId}:
     get:
       summary: Get attachment files from container
@@ -427,6 +437,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: getDentalnetworkAttachmentsV1GetAttachmentListByAttachmentId
+      x-operation-id-source: derived
   /dentalnetwork/attachments/v1/{attachmentId}/DeleteAttachmentFile/{attachmentFileId}:
     delete:
       summary: Delete attachment file
@@ -505,6 +517,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: deleteDentalnetworkAttachmentsV1ByAttachmentIdDeleteAttachmentFileByAttachmentFileId
+      x-operation-id-source: derived
   /dentalnetwork/attachments/v1/GetAllParticipatingPayers:
     get:
       summary: Get participating payers
@@ -562,6 +576,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: getDentalnetworkAttachmentsV1GetAllParticipatingPayers
+      x-operation-id-source: derived
   /dentalnetwork/attachments/v1/IsParticipatingPayer:
     get:
       summary: Check participating payer by payer ID
@@ -632,6 +648,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: getDentalnetworkAttachmentsV1IsParticipatingPayer
+      x-operation-id-source: derived
   /dentalnetwork/attachments/v1/GetPayerBusinessRules/me:
     get:
       summary: Get payer business rule
@@ -708,9 +726,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: getDentalnetworkAttachmentsV1GetPayerBusinessRulesMe
+      x-operation-id-source: derived
   /apip/auth/v2/token:
     post:
-      summary: To generate token.
+      summary: To generate token
       tags:
       - Attachment
       requestBody:
@@ -771,90 +791,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: postApipAuthV2Token
+      x-operation-id-source: derived
 components:
   schemas:
-    AttachmentFile:
+    ErrorResponse:
       type: object
-      properties:
-        attachmentFileId:
-          type: integer
-          format: int32
-        attachmentId:
-          type: integer
-          format: int32
-        vendorId:
-          type: integer
-          format: int32
-        dateProcessed:
-          type: string
-          format: date-time
-        documentTypeCode:
-          type: integer
-          format: int32
-        imageDate:
-          type: string
-          format: date-time
-        orientationCode:
-          type: integer
-          format: int32
-        narrative:
-          type:
-          - string
-          - 'null'
-        pageCount:
-          type: integer
-          format: int32
-        fileChecksum:
-          type:
-          - string
-          - 'null'
-        fileSize:
-          type: integer
-          format: int32
-        fileExtension:
-          type:
-          - string
-          - 'null'
-        fileName:
-          type:
-          - string
-          - 'null'
-        attachmentFileData:
-          type:
-          - string
-          - 'null'
-          format: byte
-        attachmentFileContent:
-          type:
-          - string
-          - 'null'
-        links:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Link'
+      description: Describes an error that occurred while processing the request.
       additionalProperties: false
-    Link:
-      type: object
       properties:
-        rel:
-          type:
-          - string
-          - 'null'
-        href:
-          type:
-          - string
-          - 'null'
-        action:
-          type:
-          - string
-          - 'null'
-        types:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
+        type:
+          type: string
+          description: A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provide human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be 'about:blank'.
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation).
+        status:
+          type: integer
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+        traceId:
+          type: string
+          description: An identifier that can be used to trace this error back to an external request.
+        errors:
+          type: object
+          description: An object that gives specifics on what error or errors occurred. An error code is given as the property key followed by an error description in plain English.
+          additionalProperties:
+            type: string
     Attachment:
       type: object
       properties:
@@ -1048,34 +1016,88 @@ components:
           items:
             $ref: '#/components/schemas/Link'
       additionalProperties: false
-    ErrorResponse:
+    Link:
       type: object
-      description: Describes an error that occurred while processing the request.
-      additionalProperties: false
       properties:
-        type:
-          type: string
-          description: A URI reference [RFC3986] that identifies the problem type. This specification encourages that, when dereferenced, it provide human-readable documentation for the problem type (e.g., using HTML [W3C.REC-html5-20141028]). When this member is not present, its value is assumed to be 'about:blank'.
-        title:
-          type: string
-          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization (e.g., using proactive content negotiation).
-        status:
+        rel:
+          type:
+          - string
+          - 'null'
+        href:
+          type:
+          - string
+          - 'null'
+        action:
+          type:
+          - string
+          - 'null'
+        types:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    AttachmentFile:
+      type: object
+      properties:
+        attachmentFileId:
           type: integer
-          description: The HTTP status code generated by the origin server for this occurrence of the problem.
-        detail:
+          format: int32
+        attachmentId:
+          type: integer
+          format: int32
+        vendorId:
+          type: integer
+          format: int32
+        dateProcessed:
           type: string
-          description: A human-readable explanation specific to this occurrence of the problem.
-        instance:
+          format: date-time
+        documentTypeCode:
+          type: integer
+          format: int32
+        imageDate:
           type: string
-          description: A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
-        traceId:
-          type: string
-          description: An identifier that can be used to trace this error back to an external request.
-        errors:
-          type: object
-          description: An object that gives specifics on what error or errors occurred. An error code is given as the property key followed by an error description in plain English.
-          additionalProperties:
-            type: string
+          format: date-time
+        orientationCode:
+          type: integer
+          format: int32
+        narrative:
+          type:
+          - string
+          - 'null'
+        pageCount:
+          type: integer
+          format: int32
+        fileChecksum:
+          type:
+          - string
+          - 'null'
+        fileSize:
+          type: integer
+          format: int32
+        fileExtension:
+          type:
+          - string
+          - 'null'
+        fileName:
+          type:
+          - string
+          - 'null'
+        attachmentFileData:
+          type:
+          - string
+          - 'null'
+          format: byte
+        attachmentFileContent:
+          type:
+          - string
+          - 'null'
+        links:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Link'
+      additionalProperties: false
   securitySchemes:
     Bearer:
       type: oauth2

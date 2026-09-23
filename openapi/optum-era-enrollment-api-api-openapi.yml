@@ -107,7 +107,7 @@ paths:
                     timestamp: '2023-04-25T18:16:37.990376100Z'
                     traceId: 133cab33-6839-423e-b554-eeec78c9b3e9
           description: Server Error
-      summary: Submit ERA Enrollment records for processing.
+      summary: Submit ERA Enrollment records for processing
       tags:
       - ERA Enrollment API
   /era/results/{payloadId}:
@@ -259,11 +259,35 @@ paths:
                     timestamp: '2023-04-25T18:16:37.990376100Z'
                     traceId: 133cab33-6839-423e-b554-eeec78c9b3e9
           description: Server Error
-      summary: Retrieve results of ERA Enrollment record processing.
+      summary: Retrieve results of ERA Enrollment record processing
       tags:
       - ERA Enrollment API
 components:
   schemas:
+    ProviderIdentifiers:
+      properties:
+        npi:
+          format: int64
+          type: integer
+        tinOrEin:
+          format: int64
+          type: integer
+      type: object
+    AssociationStatus:
+      properties:
+        payerId:
+          type: string
+        providerId:
+          type: string
+        providerIdType:
+          type: string
+        rejectionReason:
+          type: string
+        status:
+          type: string
+        statusDate:
+          type: string
+      type: object
     ProviderAddress:
       properties:
         city:
@@ -284,24 +308,26 @@ components:
           format: int64
           type: integer
       type: object
-    SubmissionResponse:
+    ResultSummary:
       properties:
-        payloadId:
-          type: string
-      type: object
-    AssociationStatus:
-      properties:
-        payerId:
-          type: string
-        providerId:
-          type: string
-        providerIdType:
-          type: string
-        rejectionReason:
-          type: string
+        acceptedRecords:
+          items:
+            $ref: '#/components/schemas/EnrollmentRoot'
+          type: array
+        numberOfRecordsAccepted:
+          format: int64
+          type: integer
+        numberOfRecordsRecieved:
+          format: int64
+          type: integer
+        numberOfRecordsRejected:
+          format: int64
+          type: integer
+        rejectedRecords:
+          items:
+            $ref: '#/components/schemas/EnrollmentRoot'
+          type: array
         status:
-          type: string
-        statusDate:
           type: string
       type: object
     ProviderEnrollmentStatus:
@@ -311,6 +337,31 @@ components:
             $ref: '#/components/schemas/AssociationStatus'
           type: array
         enrollmentStatus:
+          type: string
+      type: object
+    OtherIdentifiers:
+      properties:
+        assigningAuthority:
+          type: string
+        tradingPartnerId:
+          type: string
+      type: object
+    ProviderContact:
+      properties:
+        contactName:
+          type: string
+        emailAddress:
+          type: string
+        faxNumber:
+          type: string
+        telephoneNumber:
+          type: string
+        telephoneNumberExtension:
+          type: string
+      type: object
+    SubmissionResponse:
+      properties:
+        payloadId:
           type: string
       type: object
     EnrollmentRoot:
@@ -364,57 +415,6 @@ components:
         version:
           format: int32
           type: integer
-      type: object
-    ProviderContact:
-      properties:
-        contactName:
-          type: string
-        emailAddress:
-          type: string
-        faxNumber:
-          type: string
-        telephoneNumber:
-          type: string
-        telephoneNumberExtension:
-          type: string
-      type: object
-    ProviderIdentifiers:
-      properties:
-        npi:
-          format: int64
-          type: integer
-        tinOrEin:
-          format: int64
-          type: integer
-      type: object
-    OtherIdentifiers:
-      properties:
-        assigningAuthority:
-          type: string
-        tradingPartnerId:
-          type: string
-      type: object
-    ResultSummary:
-      properties:
-        acceptedRecords:
-          items:
-            $ref: '#/components/schemas/EnrollmentRoot'
-          type: array
-        numberOfRecordsAccepted:
-          format: int64
-          type: integer
-        numberOfRecordsRecieved:
-          format: int64
-          type: integer
-        numberOfRecordsRejected:
-          format: int64
-          type: integer
-        rejectedRecords:
-          items:
-            $ref: '#/components/schemas/EnrollmentRoot'
-          type: array
-        status:
-          type: string
       type: object
   securitySchemes:
     bearerAuth:

@@ -128,6 +128,54 @@ paths:
       - Provider Participation List
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        detail:
+          $ref: '#/components/schemas/ErrorDetail'
+    ApiResponseProviderParticipationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            totalNoOfRecords:
+              type: integer
+              format: int64
+              description: Total number of records available
+            pageSize:
+              type: integer
+              format: int32
+              description: Maximum number of records per page
+            pageNumber:
+              type: integer
+              format: int32
+              description: Current page number
+            providerParticipation:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProviderParticipation'
+        status:
+          type: string
+          description: HTTP Response Status
+          example: success
+        message:
+          type: string
+          description: Returns 'VENDOR MATCHED' message if records are found, otherwise 'NO VENDOR MATCHED'
+          enum:
+          - VENDOR MATCHED
+          - NO VENDOR MATCHED
+        error:
+          $ref: '#/components/schemas/ApiErrorResponse'
+    ErrorDetail:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
     ProviderParticipation:
       type: object
       properties:
@@ -159,20 +207,6 @@ components:
           type: string
         error:
           $ref: '#/components/schemas/Error'
-    Error:
-      type: object
-      properties:
-        status:
-          type: string
-        detail:
-          $ref: '#/components/schemas/ErrorDetail'
-    ErrorDetail:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
     ProviderInfo:
       type: object
       properties:
@@ -223,40 +257,6 @@ components:
         optInEndDate:
           type: string
           format: date
-    ApiResponseProviderParticipationResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            totalNoOfRecords:
-              type: integer
-              format: int64
-              description: Total number of records available
-            pageSize:
-              type: integer
-              format: int32
-              description: Maximum number of records per page
-            pageNumber:
-              type: integer
-              format: int32
-              description: Current page number
-            providerParticipation:
-              type: array
-              items:
-                $ref: '#/components/schemas/ProviderParticipation'
-        status:
-          type: string
-          description: HTTP Response Status
-          example: success
-        message:
-          type: string
-          description: Returns 'VENDOR MATCHED' message if records are found, otherwise 'NO VENDOR MATCHED'
-          enum:
-          - VENDOR MATCHED
-          - NO VENDOR MATCHED
-        error:
-          $ref: '#/components/schemas/ApiErrorResponse'
   securitySchemes:
     bearerAuth:
       type: http

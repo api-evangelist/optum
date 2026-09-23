@@ -764,6 +764,77 @@ paths:
     - url: https://sandbox-apigw.optum.com
 components:
   schemas:
+    HealthCareDiagnosisCode:
+      type: object
+      properties:
+        diagnosisTypeCode:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-1, HI02-1, HI03-1, HI04-1, HI05-1, HI06-1, HI01-7, HI08-1'
+        diagnosisCode:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-2, HI02-2, HI03-2, HI04-2, HI05-2, HI06-2, HI01-2, HI08-2'
+      description: HealthCareDiagnosisCode
+    ResponseProvider:
+      type: object
+      properties:
+        providerName:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM103, Notes: Name Last'
+        providerFirstName:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM104, Notes: Name First'
+        providerOrgName:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM103, Notes: Organization Name'
+        middleName:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM105, Notes: Name Middle'
+        suffix:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM107, Notes: suffix'
+        entityIdentifier:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM101, Notes: Entity Identifier Code'
+        entityType:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM102, Notes: Entity Type Qualifier'
+        npi:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=XX Centers for Medicare and Medicaid Services National Provider Identifier'
+        providerCode:
+          type: string
+          description: 'Loop: 2100B, 2100C and 2100D, Segment: PRV, Element: PRV01, Notes: Provider Code'
+        referenceIdentification:
+          type: string
+          description: 'Loop: 2100C, 2100C and 2100D, Segment: PRV, Element: PRV03, Notes: PRV02=PXC Reference Identification'
+        employersId:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=24 Employer''s Identification Number'
+        ssn:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=34 Social Security Number'
+        federalTaxpayersIdNumber:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=FI Federal Taxpayer''s Identification Number'
+        payorIdentification:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=PI Payor Identification'
+        pharmacyProcessorNumber:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=PP Pharmacy Processor Number'
+        serviceProviderNumber:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=SV Service Provider Number'
+        servicesPlanID:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=XV Centers for Medicare and Medicaid Services PlanID'
+        address:
+          $ref: '#/components/schemas/Address'
+        aaaErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      description: Provider
     RequestSubscriber:
       type: object
       properties:
@@ -926,590 +997,32 @@ components:
         additionalIdentification:
           $ref: '#/components/schemas/AdditionalIdentification'
       description: 'Loop: 2100C, Notes: Subscriber Detail'
-    HealthCareDiagnosisCode:
+    CompositeMedicalProcedureIdentifier:
       type: object
       properties:
-        diagnosisTypeCode:
+        productOrServiceIdQualifierCode:
           type: string
-          description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-1, HI02-1, HI03-1, HI04-1, HI05-1, HI06-1, HI01-7, HI08-1'
-        diagnosisCode:
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB13-1, Notes: Product or Service ID Qualifier Code'
+        productOrServiceIdQualifier:
           type: string
-          description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-2, HI02-2, HI03-2, HI04-2, HI05-2, HI06-2, HI01-2, HI08-2'
-      description: HealthCareDiagnosisCode
-    PlanDateInformation:
-      type: object
-      properties:
-        discharge:
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB13-1, Notes: Product or Service ID Qualifier'
+        procedureCode:
           type: string
-          description: 'Loop: 2100C and 2100D or 2110C and 2110D, Segments: DTP, Element: DTP03, Notes: DTP01=096 Discharge'
-        issue:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=102 issue'
-        effectiveDateOfChange:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=152 effectiveDateOfChange'
-        periodStart:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03, Notes: DTP01=193 periodStart'
-        periodEnd:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03, Notes: DTP01=194 periodEnd'
-        completion:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03, Notes: DTP01=198 completion'
-        coordinationOfBenefits:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03, Notes: DTP01=290 coordinationOfBenefits'
-        plan:
-          type: string
-          description: 'Loop: 2100C and 2100D or 2110C and 2110D, Segments: DTP, Element: DTP03, Notes: DTP01=291 plan'
-        benefit:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=292 benefit'
-        primaryCareProvider:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=295 primaryCareProvider'
-        latestVisitOrConsultation:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=304 latestVisitOrConsultation'
-        eligibility:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=307 eligibility'
-        added:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=318 added'
-        cobraBegin:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=340 cobraBegin'
-        cobraEnd:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=341 cobraEnd'
-        premiumPaidToDateBegin:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=342 premiumPaidToDateBegin'
-        premiumPaidToDateEnd:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=343 premiumPaidToDateEnd'
-        planBegin:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=346 planBegin'
-        planEnd:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=347 planEnd'
-        benefitBegin:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=348 benefitBegin'
-        benefitEnd:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=349 benefitEnd'
-        eligibilityBegin:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=356 eligibilityBegin'
-        eligibilityEnd:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=357 eligibilityEnd'
-        enrollment:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=382 enrollment'
-        admission:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=435 admission'
-        dateOfDeath:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=442 dateOfDeath'
-        certification:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=458 certification'
-        service:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=472 service'
-        policyEffective:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=539 policyEffective'
-        policyExpiration:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=540 policyExpiration'
-        dateOfLastUpdate:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=636 dateOfLastUpdate'
-        status:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=771 status'
-      description: PlanDateInformation
-    AdditionalIdentification:
-      type: object
-      properties:
-        planNumber:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=18 Plan Number'
-        policyNumber:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=1L Group or Policy Number'
-        memberIdentificationNumber:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=1W Member Identification Number'
-        contractNumber:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=CT Contract Number'
-        medicalRecordIdentificationNumber:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=EA Medical Record Identification Number'
-        patientAccountNumber:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=EJ Patient Account Number'
-        healthInsuranceClaimNumber:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=F6 Health Insurance (HIC) Number'
-        identificationCardSerialNumber:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=GH Identification Card Serial Number'
-        insurancePolicyNumber:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=IG Insurance Policy Number'
-        planNetworkIdentificationNumber:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=N6 Plan Network Identification Number'
-        agencyClaimNumber:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=Y4 Agency Claim Number'
-      description: 'Loop: 2100C and 2100D, Segment: REF Notes: Additional Identification'
-    ResponseProvider:
-      type: object
-      properties:
-        providerName:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM103, Notes: Name Last'
-        providerFirstName:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM104, Notes: Name First'
-        providerOrgName:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM103, Notes: Organization Name'
-        middleName:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM105, Notes: Name Middle'
-        suffix:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM107, Notes: suffix'
-        entityIdentifier:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM101, Notes: Entity Identifier Code'
-        entityType:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM102, Notes: Entity Type Qualifier'
-        npi:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=XX Centers for Medicare and Medicaid Services National Provider Identifier'
-        providerCode:
-          type: string
-          description: 'Loop: 2100B, 2100C and 2100D, Segment: PRV, Element: PRV01, Notes: Provider Code'
-        referenceIdentification:
-          type: string
-          description: 'Loop: 2100C, 2100C and 2100D, Segment: PRV, Element: PRV03, Notes: PRV02=PXC Reference Identification'
-        employersId:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=24 Employer''s Identification Number'
-        ssn:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=34 Social Security Number'
-        federalTaxpayersIdNumber:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=FI Federal Taxpayer''s Identification Number'
-        payorIdentification:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=PI Payor Identification'
-        pharmacyProcessorNumber:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=PP Pharmacy Processor Number'
-        serviceProviderNumber:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=SV Service Provider Number'
-        servicesPlanID:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: NM108=XV Centers for Medicare and Medicaid Services PlanID'
-        address:
-          $ref: '#/components/schemas/Address'
-        aaaErrors:
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB13-2, Notes: Procedure Code'
+        procedureModifiers:
           type: array
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB13-3-6, Notes: ProcedureModifier'
           items:
-            $ref: '#/components/schemas/Error'
-      description: Provider
-    Address:
-      type: object
-      properties:
-        address1:
-          maxLength: 55
-          minLength: 0
+            type: string
+        productOrServiceID:
           type: string
-          description: 'Segment: N3, Element: N301, Notes: Required, Address Information'
-          example: 123 address1
-        address2:
-          maxLength: 55
-          minLength: 0
-          type: string
-          description: 'Segment: N3, Element: N302, Notes: Address Information'
-        city:
-          maxLength: 30
-          minLength: 0
-          type: string
-          description: 'Segment: N4, Element: N401, Notes: Required, city'
-          example: city1
-        state:
-          maxLength: 2
-          minLength: 0
-          type: string
-          description: 'Segment: N4, Element: N402, Notes: state example: TN, WA'
-          example: wa
-        postalCode:
-          maxLength: 15
-          minLength: 0
-          type: string
-          description: 'Segment: N4, Element: N403'
-          example: '981010000'
-        countryCode:
-          type: string
-          description: 'Segment: N4, Element: N404'
-        locationIdentifier:
-          type: string
-          description: 'Segment: N4, Element: N406'
-        countrySubDivisionCode:
-          type: string
-          description: 'Segment: N4, Element: N407, Notes: Country SubDivision Code'
-      description: 'Address: N3 and N4'
-    SubscriberTraceNumber:
-      type: object
-      properties:
-        traceTypeCode:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: TRN, Element: TRN01, Notes: Trace Type Code'
-        traceType:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: TRN, Element: TRN01, Notes: Trace Type'
-        referenceIdentification:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: TRN, Element: TRN02, Notes: Reference Identification'
-        originatingCompanyIdentifier:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: TRN, Element: TRN03, Notes: Originating Company Identifier'
-        secondaryReferenceIdentification:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: TRN, Element: TRN04, Notes: Originating Company Identifier'
-      description: SubscriberTraceNumber
-    ContactInformation:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 'Loop: 2100A, 2120C and 2120D, Segments: PER, Element: PER02, Notes: Name'
-        contacts:
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB13-8, Notes: Product or Service ID'
+        diagnosisCodePointer:
           type: array
-          description: 'Loop: 2100A, 2120C and 2120D, Segments: PER, Element: PER03-8, Notes: Communication'
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB14-1-4, Notes: DiagnosisCodePointer'
           items:
-            $ref: '#/components/schemas/Contacts'
-      description: ContactInformation
-    MedicalEligibility:
-      required:
-      - controlNumber
-      - subscriber
-      type: object
-      properties:
-        submitterTransactionIdentifier:
-          type: string
-          description: BHT03
-        controlNumber:
-          maxLength: 9
-          minLength: 9
-          type: string
-          description: 'Segment: ISA, Element: ISA13, Notes: Required, Interchange Control Number - must be exactly 9 positive unsigned numeric characters.'
-          example: '123456789'
-        tradingPartnerServiceId:
-          maxLength: 80
-          minLength: 0
-          type: string
-          description: 'Loop: 2100A Segment: NM1, Element: NM109, Notes: we send this as MN108 as PI'
-          example: serviceId
-        tradingPartnerName:
-          maxLength: 80
-          minLength: 0
-          type: string
-          description: 'Loop: 2100A, Segment: NM1, Element: NM103, Notes: organizational name'
-        provider:
-          $ref: '#/components/schemas/Provider'
-        portalUsername:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: User Identification REF01=JD'
-        portalPassword:
-          maxLength: 50
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: Personal Identification Number (PIN) REF01=4A'
-        informationReceiverName:
-          $ref: '#/components/schemas/InformationReceiverName'
-        subscriber:
-          $ref: '#/components/schemas/RequestSubscriber'
-        dependents:
-          maxItems: 2147483647
-          minItems: 1
-          type: array
-          description: 'Loop: 2000D, Notes: Dependent Detail'
-          items:
-            $ref: '#/components/schemas/RequestDependent'
-        encounter:
-          $ref: '#/components/schemas/Encounter'
-      description: MedicalEligibility
-    RawX12Request:
-      type: object
-      properties:
-        x12:
-          type: string
-    Response:
-      type: object
-      properties:
-        meta:
-          $ref: '#/components/schemas/MetaData'
-        controlNumber:
-          type: string
-          description: 'Segment: ISA, Element: ISA13, Notes: Interchange Control Number original request'
-        reassociationKey:
-          type: string
-          description: 'Segment: ISA, Element: ISA13, Notes: Interchange Control Number'
-        tradingPartnerServiceId:
-          type: string
-          description: This is the payorId or Identification Code that was sent in the 270
-        provider:
-          $ref: '#/components/schemas/ResponseProvider'
-        subscriber:
-          $ref: '#/components/schemas/ResponseMember'
-        subscriberTraceNumbers:
-          type: array
-          description: 'Loop: 2100C and 2100D, Segment: TRN, Notes: Subscriber Trace Numbers'
-          items:
-            $ref: '#/components/schemas/SubscriberTraceNumber'
-        dependents:
-          type: array
-          description: 'Loop: 2100D, Notes: Dependent Details'
-          items:
-            $ref: '#/components/schemas/ResponseMember'
-        payer:
-          $ref: '#/components/schemas/Payer'
-        planInformation:
-          $ref: '#/components/schemas/PlanInformation'
-        planDateInformation:
-          $ref: '#/components/schemas/PlanDateInformation'
-        planStatus:
-          type: array
-          description: 'Loop: 2110C and 2110D, Segments: EB, Notes: Subscriber/Dependent Eligibility Benefit Information - Deprecated please use benefitsInformation'
-          deprecated: true
-          items:
-            $ref: '#/components/schemas/PlanStatus'
-        benefitsInformation:
-          type: array
-          description: 'Loop: 2110C and 2110D, Segments: NM1, PER, PRV, N3, N4, EB, H SD, MSG, LS, LE, REF, DTP, Notes: Subscriber/Dependent Eligibility Benefit Information'
-          items:
-            $ref: '#/components/schemas/BenefitsInformation'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-        status:
-          type: string
-        transactionSetAcknowledgement:
-          type: string
-        implementationTransactionSetSyntaxError:
-          type: string
-        x12:
-          type: string
-    Error:
-      type: object
-      properties:
-        field:
-          type: string
-        code:
-          type: string
-        description:
-          type: string
-        followupAction:
-          type: string
-        location:
-          type: string
-        possibleResolutions:
-          type: string
-    Provider:
-      type: object
-      properties:
-        organizationName:
-          maxLength: 60
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B Segment: MN1, Element: NM103, Notes: NM101=PR when providerType=''payer'' && payerId is present otherwise 1P for Provider, NM102=2 Non-Person Entity, organizationName 1-60 alphanumeric characters'
-          example: provider_name
-        firstName:
-          maxLength: 35
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B Segment: MN1, Element: NM104, Notes: NM101=PR when providerType=''payer'' && payerId is present otherwise 1P for Provider, NM102=1 Person, firstName 1-35 alphanumeric characters'
-        lastName:
-          maxLength: 60
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B Segment: MN1, Element: NM103, Notes: NM101=PR when providerType=''payer'' && payerId is present otherwise 1P for Provider, NM102=1 Person, lastName 1-60 alphanumeric characters'
-        npi:
-          maxLength: 80
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B Segment: MN1, Element: NM109, Notes: NM108=XX Centers for Medicare and Medicaid Services National Provider Identifier 2-80 alphanumeric characters'
-          example: 0123456789
-        serviceProviderNumber:
-          maxLength: 80
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B Segment: MN1, Element: NM109, Notes: NM108=SV Service Provider Number 2-80 alphanumeric characters'
-          example: '54321'
-        payorId:
-          maxLength: 80
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B Segment: MN1, Element: NM109, Notes: NM101=PR when providerType=''payer'' && payerId is present otherwise 1P for Provider, NM108=PI Payor Identification 2-80 alphanumeric characters'
-        taxId:
-          maxLength: 80
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B Segment: MN1, Element: NM109, Notes: NM108=FI Federal Taxpayer''s Identification Number 2-80 alphanumeric characters'
-        ssn:
-          maxLength: 80
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109 Notes: NM108=34 Social Security Number'
-        pharmacyProcessorNumber:
-          maxLength: 80
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109 Notes: NM108=PP Pharmacy Processor Number'
-        servicesPlanID:
-          maxLength: 80
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109 Notes: NM108=XV Centers for Medicare and Medicaid Services PlanID'
-        employersId:
-          maxLength: 80
-          minLength: 0
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109 Notes: NM108=24 Employer''s Identification Number'
-        providerCode:
-          type: string
-          description: 'Loop: 2100B Segment: PRV, Element: PRV01, Notes: PRV02=PXC Allowed descriptions are: ''AD'' Admitting, ''AT'' Attending, ''BI'' Billing, ''CO'' Consulting, ''CV'' Covering, ''H'' Hospital, ''HH'' Home Health Care, ''LA'' Laboratory, ''OT'' Other Physician, ''P1'' Pharmacist, ''P2'' Pharmacy, ''PC'' Primary Care Physician, ''PE'' Performing, ''R'' Rural Health Clinic, ''RF'' Referring, ''SB'' Submitting, ''SK'' Skilled Nursing Facility, ''SU'' Supervising'
-          example: AD
-          enum:
-          - AD
-          - AT
-          - BI
-          - CO
-          - CV
-          - H
-          - HH
-          - LA
-          - OT
-          - P1
-          - P2
-          - PC
-          - PE
-          - R
-          - RF
-          - SB
-          - SK
-          - SU
-        referenceIdentification:
-          type: string
-          description: 'Loop: 2100B Segment: PRV, Element: PRV03, Notes: PRV02=PXC referenceIdentification and controlNumber into PRV03'
-          example: 54321g
-        providerType:
-          type: string
-          description: 'Loop: 2100B Segment: MN1, Element: MN101, Notes: Allowed descriptions are: ''PR'' when providerType=''payer'' && payerId is present, ''2B'' when providerType=''third-party administrator'', ''36'' when providerType=''employer'', ''80'' when providerType=''hospital'', ''FA'' when providerType=''facility'', ''GP'' when providerType=''gateway provider'', ''P5'' when providerType=''plan sponsor'', ''1P'' when providerType=''provider'''
-          enum:
-          - payer
-          - third-party administrator
-          - employer
-          - hospital
-          - facility
-          - gateway provider
-          - plan sponsor
-          - provider
-      description: 'Loop: 2100B, Segment: NM1, Notes: Information Receiver'
-    Payer:
-      type: object
-      properties:
-        entityIdentifier:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM101 Notes: Entity Identifier Code'
-        entityType:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM102 Notes: Entity Type Qualifier'
-        firstName:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM104 Notes: Name First'
-        lastName:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM103 Notes: Name Last'
-        name:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM103 Notes: Organization Name'
-        middleName:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM105 Notes: Name Middle'
-        suffix:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM107 Notes: Name Suffix'
-        employersId:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM109 Notes: NM108=24 Employer''s Identification Number'
-        federalTaxpayersIdNumber:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM109 Notes: NM108=FI Federal Taxpayer''s Identification Number'
-        naic:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM109 Notes: NM108=NI National Association of Insurance Commissioners (NAIC) Identification'
-        npi:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM109 Notes: NM108=XX Centers for Medicare and Medicaid Services National Provider Identifier'
-        centersForMedicareAndMedicaidPlanId:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM109 Notes: NM108=XV Centers for Medicare and Medicaid Services PlanID'
-        payorIdentification:
-          type: string
-          description: 'Loop: 2100A, Segments: NM1, Element: NM109 Notes: NM108=PI Payor Identification'
-        contactInformation:
-          $ref: '#/components/schemas/ContactInformation'
-        aaaErrors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-        etin:
-          type: string
-      description: Payer
+            type: string
+      description: CompositeMedicalProcedureIdentifier
     PlanInformation:
       type: object
       properties:
@@ -1640,6 +1153,347 @@ components:
           type: string
           description: 'Loop: 2100C, 2100D; Segments: REF; Element: REF02; Notes: REF01=Y4 Agency Claim Number'
       description: PlanInformation
+    BenefitsServiceDelivery:
+      type: object
+      properties:
+        quantityQualifierCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD01'
+        quantityQualifier:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD01, Notes: Description of the quantityQualifier Code'
+        quantity:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD02'
+        unitForMeasurementCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD03, Notes: Description of the qualifier Code'
+        sampleSelectionModulus:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD04'
+        timePeriodQualifierCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD05'
+        timePeriodQualifier:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD05, Notes: Description of the timePeriodQualifier Code'
+        numOfPeriods:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD06'
+        deliveryOrCalendarPatternCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD07, Notes: Description of the deliveryOrCalendarPatternQualifier Code'
+        deliveryPatternTimeCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD08'
+        unitForMeasurementQualifierCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD03'
+        unitForMeasurementQualifier:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD03, Notes: Description of the unitForMeasurementQualifier Code'
+        deliveryOrCalendarPatternQualifierCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD07'
+        deliveryOrCalendarPatternQualifier:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD07, Notes: Description of the deliveryOrCalendarPatternQualifier Code'
+        deliveryPatternTimeQualifierCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD08'
+        deliveryPatternTimeQualifier:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD08, Notes: Description of the deliveryPatternTimeQualifier Code'
+      description: BenefitsServiceDelivery
+    Address:
+      type: object
+      properties:
+        address1:
+          maxLength: 55
+          minLength: 0
+          type: string
+          description: 'Segment: N3, Element: N301, Notes: Required, Address Information'
+          example: 123 address1
+        address2:
+          maxLength: 55
+          minLength: 0
+          type: string
+          description: 'Segment: N3, Element: N302, Notes: Address Information'
+        city:
+          maxLength: 30
+          minLength: 0
+          type: string
+          description: 'Segment: N4, Element: N401, Notes: Required, city'
+          example: city1
+        state:
+          maxLength: 2
+          minLength: 0
+          type: string
+          description: 'Segment: N4, Element: N402, Notes: state example: TN, WA'
+          example: wa
+        postalCode:
+          maxLength: 15
+          minLength: 0
+          type: string
+          description: 'Segment: N4, Element: N403'
+          example: '981010000'
+        countryCode:
+          type: string
+          description: 'Segment: N4, Element: N404'
+        locationIdentifier:
+          type: string
+          description: 'Segment: N4, Element: N406'
+        countrySubDivisionCode:
+          type: string
+          description: 'Segment: N4, Element: N407, Notes: Country SubDivision Code'
+      description: 'Address: N3 and N4'
+    BenefitsDateInformation:
+      type: object
+      properties:
+        discharge:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=096 Discharge'
+        discharges:
+          type: array
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=096 Discharge'
+          items:
+            $ref: '#/components/schemas/DtpDate'
+        issue:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=102 issue'
+        effectiveDateOfChange:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=152 effectiveDateOfChange'
+        periodStart:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=193 periodStart'
+        periodEnd:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=193 periodEnd'
+        completion:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=198 completion'
+        coordinationOfBenefits:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=290 coordinationOfBenefits'
+        plan:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=291 plan'
+        benefit:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=292 benefit'
+        primaryCareProvider:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=295 primaryCareProvider'
+        latestVisitOrConsultation:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=304 latestVisitOrConsultation'
+        eligibility:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=307 eligibility'
+        added:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=318 added'
+        cobraBegin:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=340 cobraBegin'
+        cobraEnd:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=341 cobraEnd'
+        premiumPaidtoDateBegin:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=342 premiumPaidToDateBegin'
+        premiumPaidToDateEnd:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=343 premiumPaidToDateEnd'
+        planBegin:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=346 planBegin'
+        planEnd:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=347 planEnd'
+        benefitBegin:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=348 benefitBegin'
+        benefitEnd:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=349 benefitEnd'
+        eligibilityBegin:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=356 eligibilityBegin'
+        eligibilityEnd:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=357 eligibilityEnd'
+        enrollment:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=382 enrollment'
+        admission:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=435 admission'
+        admissions:
+          type: array
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=435 admission'
+          items:
+            $ref: '#/components/schemas/DtpDate'
+        dateOfDeath:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=442 dateOfDeath'
+        certification:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=458 certification'
+        service:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=472 service'
+        policyEffective:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=539 policyEffective'
+        policyExpiration:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=540 policyExpiration'
+        dateOfLastUpdate:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=636 dateOfLastUpdate'
+        status:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=771 status'
+      description: BenefitsDateInformation
+    MetaData:
+      type: object
+      properties:
+        senderId:
+          type: string
+          description: Sender id assigned to this request
+        submitterId:
+          type: string
+          description: Submitter id assigned to this request
+        billerId:
+          type: string
+          description: Billing id assigned to this request
+        applicationMode:
+          type: string
+          description: Used by Optum to identify where this request can be found for support
+        traceId:
+          type: string
+          description: Unique Id assigned to each request by Optum
+        outboundTraceId:
+          type: string
+          description: BHT03 Value for submitterTransactionIdentifier
+      description: Meta data about the response
+    HealthCareInformation:
+      type: object
+      properties:
+        diagnosisTypeCode:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-1 , Notes: Diagnosis Type Code, Allowed descriptions are: ''BK'' International Classification of Diseases Clinical Modification (ICD-9-CM) Principal Diagnosis, ''ABK'' International Classification of Diseases Clinical Modification (ICD-10-CM) Principal Diagnosis, ''BF'' International Classification of Diseases Clinical Modification (ICD-9-CM) Diagnosis, ''ABF'' International Classification of Diseases Clinical Modification (ICD-10-CM) Diagnosis'
+          enum:
+          - BK
+          - ABK
+          - BF
+          - ABF
+        diagnosisCode:
+          maxLength: 30
+          minLength: 0
+          pattern: ^[A-Za-z0-9]+$
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-2, Notes: Diagnosis Code'
+      description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-1 HI01-2, Notes: Health Care Diagnosis'
+    Response:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/MetaData'
+        controlNumber:
+          type: string
+          description: 'Segment: ISA, Element: ISA13, Notes: Interchange Control Number original request'
+        reassociationKey:
+          type: string
+          description: 'Segment: ISA, Element: ISA13, Notes: Interchange Control Number'
+        tradingPartnerServiceId:
+          type: string
+          description: This is the payorId or Identification Code that was sent in the 270
+        provider:
+          $ref: '#/components/schemas/ResponseProvider'
+        subscriber:
+          $ref: '#/components/schemas/ResponseMember'
+        subscriberTraceNumbers:
+          type: array
+          description: 'Loop: 2100C and 2100D, Segment: TRN, Notes: Subscriber Trace Numbers'
+          items:
+            $ref: '#/components/schemas/SubscriberTraceNumber'
+        dependents:
+          type: array
+          description: 'Loop: 2100D, Notes: Dependent Details'
+          items:
+            $ref: '#/components/schemas/ResponseMember'
+        payer:
+          $ref: '#/components/schemas/Payer'
+        planInformation:
+          $ref: '#/components/schemas/PlanInformation'
+        planDateInformation:
+          $ref: '#/components/schemas/PlanDateInformation'
+        planStatus:
+          type: array
+          description: 'Loop: 2110C and 2110D, Segments: EB, Notes: Subscriber/Dependent Eligibility Benefit Information - Deprecated please use benefitsInformation'
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/PlanStatus'
+        benefitsInformation:
+          type: array
+          description: 'Loop: 2110C and 2110D, Segments: NM1, PER, PRV, N3, N4, EB, H SD, MSG, LS, LE, REF, DTP, Notes: Subscriber/Dependent Eligibility Benefit Information'
+          items:
+            $ref: '#/components/schemas/BenefitsInformation'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+        status:
+          type: string
+        transactionSetAcknowledgement:
+          type: string
+        implementationTransactionSetSyntaxError:
+          type: string
+        x12:
+          type: string
+    RawX12Request:
+      type: object
+      properties:
+        x12:
+          type: string
+    EligibilityAdditionalInformation:
+      type: object
+      properties:
+        codeListQualifierCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: III, Element: III01'
+        industryCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: III, Element: III02'
+        codeCategory:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: III, Element: III03'
+        injuredBodyPartName:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: III, Element: III04'
+      description: EligibilityAdditionalInformation
+    SubscriberTraceNumber:
+      type: object
+      properties:
+        traceTypeCode:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: TRN, Element: TRN01, Notes: Trace Type Code'
+        traceType:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: TRN, Element: TRN01, Notes: Trace Type'
+        referenceIdentification:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: TRN, Element: TRN02, Notes: Reference Identification'
+        originatingCompanyIdentifier:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: TRN, Element: TRN03, Notes: Originating Company Identifier'
+        secondaryReferenceIdentification:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: TRN, Element: TRN04, Notes: Originating Company Identifier'
+      description: SubscriberTraceNumber
     BenefitsRelatedEntity:
       type: object
       properties:
@@ -1677,79 +1531,89 @@ components:
         providerInformation:
           $ref: '#/components/schemas/ProviderInformation'
       description: BenefitsRelatedEntity
-    DtpDate:
+    ProviderInformation:
       type: object
       properties:
-        date:
+        providerCode:
           type: string
-          description: DTP03 where DTP02=D8, single date
-        startDate:
+          description: 'Loop: 2120C and 2120D, Segments: PRV, Element: PRV01, Notes: providerCode'
+        referenceIdentification:
           type: string
-          description: DTP03 where DTP02=RD8 left side of date range
-        endDate:
-          type: string
-          description: DTP03 where DTP02=RD8 right side of date range
-      description: DtpDate
-    PlanStatus:
+          description: 'Loop: 2120C and 2120D, Segments: PRV, Element: PRV03, Notes: Benefit Related Entity Provider Taxonomy Code'
+      description: ProviderInformation
+    ContactInformation:
       type: object
       properties:
-        statusCode:
+        name:
           type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB01, Notes: Eligibility or Benefit Information Code'
-        status:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB01, Notes: Eligibility or Benefit Information Code Description'
-        planDetails:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB05, Notes: Plan Coverage Description'
-        serviceTypeCode:
+          description: 'Loop: 2100A, 2120C and 2120D, Segments: PER, Element: PER02, Notes: Name'
+        contacts:
           type: array
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB03, Notes: Plan Coverage Description'
+          description: 'Loop: 2100A, 2120C and 2120D, Segments: PER, Element: PER03-8, Notes: Communication'
           items:
-            type: string
-            description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB03, Notes: Plan Coverage Description'
-        serviceTypeCodes:
-          type: array
-          items:
-            type: string
-      description: PlanStatus - Deprecated please use benefitsInformation
-      deprecated: true
-    MedicalProcedure:
+            $ref: '#/components/schemas/Contacts'
+      description: ContactInformation
+    Contacts:
       type: object
       properties:
-        productOrServiceIDQualifier:
+        communicationMode:
           type: string
-          description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-1, Notes: Composite Medical Procedure Identifier - Product or Service ID Qualifier, Allowed Values are: ''AD'' American Dental Association Codes, ''CJ'' Current Procedural Terminology (CPT) Codes, ''HC'' Health Care Financing Administration Common Procedural Coding System (HCPCS) Codes, ''ID'' International Classification of Diseases, 9th Revision, Clinical Modification (ICD-9-CM) - Procedure, ''IV'' Home Infusion EDI Coalition (HIEC) Product/Service Code, ''N4'' National Drug Code in 5-4-2 Format, ''ZZ'' Mutually Defined'
-          enum:
-          - AD
-          - CJ
-          - HC
-          - ID
-          - IV
-          - N4
-          - ZZ
-        procedureCode:
-          maxLength: 48
-          minLength: 0
+          description: 'Loop: 2100A, Segments: PER, Element: PER03-8, Notes: Communication Number Qualifier'
+        communicationNumber:
           type: string
-          description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-2, Notes: Composite Medical Procedure Identifier - Procedure Code'
-        procedureModifiers:
-          maxItems: 4
-          minItems: 0
+          description: 'Loop: 2100A, Segments: PER, Element: PER03-8, Notes: Communication Number'
+      description: Contacts
+    Payer:
+      type: object
+      properties:
+        entityIdentifier:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM101 Notes: Entity Identifier Code'
+        entityType:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM102 Notes: Entity Type Qualifier'
+        firstName:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM104 Notes: Name First'
+        lastName:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM103 Notes: Name Last'
+        name:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM103 Notes: Organization Name'
+        middleName:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM105 Notes: Name Middle'
+        suffix:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM107 Notes: Name Suffix'
+        employersId:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM109 Notes: NM108=24 Employer''s Identification Number'
+        federalTaxpayersIdNumber:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM109 Notes: NM108=FI Federal Taxpayer''s Identification Number'
+        naic:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM109 Notes: NM108=NI National Association of Insurance Commissioners (NAIC) Identification'
+        npi:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM109 Notes: NM108=XX Centers for Medicare and Medicaid Services National Provider Identifier'
+        centersForMedicareAndMedicaidPlanId:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM109 Notes: NM108=XV Centers for Medicare and Medicaid Services PlanID'
+        payorIdentification:
+          type: string
+          description: 'Loop: 2100A, Segments: NM1, Element: NM109 Notes: NM108=PI Payor Identification'
+        contactInformation:
+          $ref: '#/components/schemas/ContactInformation'
+        aaaErrors:
           type: array
-          description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-3, Notes: Composite Medical Procedure Identifier - Procedure Modifier'
           items:
-            type: string
-            description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-3, Notes: Composite Medical Procedure Identifier - Procedure Modifier'
-        diagnosisCodePointer:
-          maxItems: 4
-          minItems: 0
-          type: array
-          description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ05, Notes: Composite Diagnosis Code Pointer'
-          items:
-            type: string
-            description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ05, Notes: Composite Diagnosis Code Pointer'
-      description: 'Loop: 2110C and 2110D, Notes: Eligibility or Benefit Information, EQ02 and beyond only'
+            $ref: '#/components/schemas/Error'
+        etin:
+          type: string
+      description: Payer
     RequestDependent:
       type: object
       properties:
@@ -1902,39 +1766,21 @@ components:
         additionalIdentification:
           $ref: '#/components/schemas/AdditionalIdentification'
       description: 'Loop: 2000D, Notes: Dependent Detail'
-    CompositeMedicalProcedureIdentifier:
+    Error:
       type: object
       properties:
-        productOrServiceIdQualifierCode:
+        field:
           type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB13-1, Notes: Product or Service ID Qualifier Code'
-        productOrServiceIdQualifier:
+        code:
           type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB13-1, Notes: Product or Service ID Qualifier'
-        procedureCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB13-2, Notes: Procedure Code'
-        procedureModifiers:
-          type: array
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB13-3-6, Notes: ProcedureModifier'
-          items:
-            type: string
-        productOrServiceID:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB13-8, Notes: Product or Service ID'
-        diagnosisCodePointer:
-          type: array
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB14-1-4, Notes: DiagnosisCodePointer'
-          items:
-            type: string
-      description: CompositeMedicalProcedureIdentifier
-    AdditionalInformation:
-      type: object
-      properties:
         description:
           type: string
-          description: 'Loop: 2110C and 2110D, Segment: MSG, Element: MSG01, Notes: Message Text Description'
-      description: AdditionalInformation
+        followupAction:
+          type: string
+        location:
+          type: string
+        possibleResolutions:
+          type: string
     Encounter:
       type: object
       properties:
@@ -2245,295 +2091,116 @@ components:
           items:
             $ref: '#/components/schemas/MedicalProcedure'
       description: 'Loop: 2110C and 2110D, Notes: Eligibility or Benefit Information'
-    BenefitsServiceDelivery:
+    ResponseMember:
       type: object
       properties:
-        quantityQualifierCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD01'
-        quantityQualifier:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD01, Notes: Description of the quantityQualifier Code'
-        quantity:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD02'
-        unitForMeasurementCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD03, Notes: Description of the qualifier Code'
-        sampleSelectionModulus:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD04'
-        timePeriodQualifierCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD05'
-        timePeriodQualifier:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD05, Notes: Description of the timePeriodQualifier Code'
-        numOfPeriods:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD06'
-        deliveryOrCalendarPatternCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD07, Notes: Description of the deliveryOrCalendarPatternQualifier Code'
-        deliveryPatternTimeCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD08'
-        unitForMeasurementQualifierCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD03'
-        unitForMeasurementQualifier:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD03, Notes: Description of the unitForMeasurementQualifier Code'
-        deliveryOrCalendarPatternQualifierCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD07'
-        deliveryOrCalendarPatternQualifier:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD07, Notes: Description of the deliveryOrCalendarPatternQualifier Code'
-        deliveryPatternTimeQualifierCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD08'
-        deliveryPatternTimeQualifier:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: HSD, Element: HSD08, Notes: Description of the deliveryPatternTimeQualifier Code'
-      description: BenefitsServiceDelivery
-    EligibilityAdditionalInformation:
-      type: object
-      properties:
-        codeListQualifierCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: III, Element: III01'
-        industryCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: III, Element: III02'
-        codeCategory:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: III, Element: III03'
-        injuredBodyPartName:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segment: III, Element: III04'
-      description: EligibilityAdditionalInformation
-    ProviderInformation:
-      type: object
-      properties:
-        providerCode:
-          type: string
-          description: 'Loop: 2120C and 2120D, Segments: PRV, Element: PRV01, Notes: providerCode'
-        referenceIdentification:
-          type: string
-          description: 'Loop: 2120C and 2120D, Segments: PRV, Element: PRV03, Notes: Benefit Related Entity Provider Taxonomy Code'
-      description: ProviderInformation
-    BenefitsDateInformation:
-      type: object
-      properties:
-        discharge:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=096 Discharge'
-        discharges:
-          type: array
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=096 Discharge'
-          items:
-            $ref: '#/components/schemas/DtpDate'
-        issue:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=102 issue'
-        effectiveDateOfChange:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=152 effectiveDateOfChange'
-        periodStart:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=193 periodStart'
-        periodEnd:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=193 periodEnd'
-        completion:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=198 completion'
-        coordinationOfBenefits:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=290 coordinationOfBenefits'
-        plan:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=291 plan'
-        benefit:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=292 benefit'
-        primaryCareProvider:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=295 primaryCareProvider'
-        latestVisitOrConsultation:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=304 latestVisitOrConsultation'
-        eligibility:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=307 eligibility'
-        added:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=318 added'
-        cobraBegin:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=340 cobraBegin'
-        cobraEnd:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=341 cobraEnd'
-        premiumPaidtoDateBegin:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=342 premiumPaidToDateBegin'
-        premiumPaidToDateEnd:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=343 premiumPaidToDateEnd'
-        planBegin:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=346 planBegin'
-        planEnd:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=347 planEnd'
-        benefitBegin:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=348 benefitBegin'
-        benefitEnd:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=349 benefitEnd'
-        eligibilityBegin:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=356 eligibilityBegin'
-        eligibilityEnd:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=357 eligibilityEnd'
-        enrollment:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=382 enrollment'
-        admission:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=435 admission'
-        admissions:
-          type: array
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=435 admission'
-          items:
-            $ref: '#/components/schemas/DtpDate'
-        dateOfDeath:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=442 dateOfDeath'
-        certification:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=458 certification'
-        service:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=472 service'
-        policyEffective:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=539 policyEffective'
-        policyExpiration:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=540 policyExpiration'
-        dateOfLastUpdate:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=636 dateOfLastUpdate'
-        status:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03 Notes: DTP01=771 status'
-      description: BenefitsDateInformation
-    BenefitsInformation:
-      type: object
-      properties:
-        code:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB01, Notes: Eligibility or Benefit Information Code'
-        name:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB01, Notes: Eligibility or Benefit Information Code'
-        coverageLevelCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB02, Notes: Coverage Level Code'
-        coverageLevel:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB02, Notes: Coverage Level'
-        serviceTypeCodes:
-          type: array
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB03, Notes: Service Type Codes'
-          items:
-            type: string
-            description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB03, Notes: Service Type Codes'
-        serviceTypes:
-          type: array
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB03, Notes: Service Types'
-          items:
-            type: string
-            description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB03, Notes: Service Types'
-        insuranceTypeCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB04, Notes: Insurance Type Code'
-        insuranceType:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB04, Notes: Insurance Type'
-        planCoverage:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB05, Notes: Plan Coverage Description'
-        timeQualifierCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB06, Notes: Time Period Qualifier Code'
-        timeQualifier:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB06, Notes: Time Period Qualifier'
-        benefitAmount:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB07, Notes: Monetary Amount'
-        benefitPercent:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB08, Notes: Percentage as Decimal'
-        quantityQualifierCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB09, Notes: Quantity Qualifier Code'
-        quantityQualifier:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB09, Notes: Quantity Qualifier'
-        benefitQuantity:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB10, Notes: Quantity'
-        authOrCertIndicator:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB11, Notes: Yes/No Condition or Response Code'
-        inPlanNetworkIndicatorCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB12, Notes: Yes/No Condition or Response Code'
-        inPlanNetworkIndicator:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB12, Notes: Yes/No Condition or Response'
-        headerLoopIdentifierCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: LS, Element: LS01, Notes: Loop Identifier Code'
-        trailerLoopIdentifierCode:
-          type: string
-          description: 'Loop: 2110C and 2110D, Segments: LE, Element: LE01, Notes: Loop Identifier Code'
-        compositeMedicalProcedureIdentifier:
-          $ref: '#/components/schemas/CompositeMedicalProcedureIdentifier'
-        benefitsAdditionalInformation:
-          $ref: '#/components/schemas/BenefitsAdditionalInformation'
-        benefitsDateInformation:
-          $ref: '#/components/schemas/BenefitsDateInformation'
-        benefitsRelatedEntity:
-          $ref: '#/components/schemas/BenefitsRelatedEntity'
-        benefitsRelatedEntities:
-          type: array
-          description: 'Loop: 2120C and 2120D, Segments: NM1, N3, N4, PER, PRV, Notes: All occurrence of SUBSCRIBER/DEPENDENT BENEFIT RELATED ENTITY'
-          items:
-            $ref: '#/components/schemas/BenefitsRelatedEntity'
-        benefitsServiceDelivery:
+        healthCareDiagnosisCodes:
           type: array
           items:
-            $ref: '#/components/schemas/BenefitsServiceDelivery'
-        additionalInformation:
+            $ref: '#/components/schemas/HealthCareDiagnosisCode'
+        memberId:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM109, Notes: NM108=MI Member Identification Number'
+        firstName:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM104, Notes: First Name'
+        lastName:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM103, Notes: Last Name'
+        middleName:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1 Element: NM105, Notes: Middle Name'
+        suffix:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM107, Notes: suffix'
+        gender:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: DMG, Element: DMG03, Notes: gender'
+          enum:
+          - M
+          - F
+        entityIdentifier:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM101, Notes: entityIdentifier'
+        entityType:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM102, Notes: entityType'
+        uniqueHealthIdentifier:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM109, Notes: NM108=II uniqueHealthIdentifier'
+        dateOfBirth:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: DMG, Element: DMG02, Notes: Date of Birth'
+        informationStatusCode:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI01, Notes: Information Status Code'
+        employmentStatusCode:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI02, Notes: Employment Status Code'
+        governmentServiceAffiliationCode:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI03, Notes: Government Service Affiliation Code'
+        description:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI04, Notes: Description'
+        militaryServiceRankCode:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI05, Notes: Military Service Rank Code'
+        dateTimePeriodFormatQualifier:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI06, Notes: Date Time Period Format Qualifier'
+        dateTimePeriod:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI07, Notes: MPI06=D8 Date Time Period'
+        endDateTimePeriod:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI08, Notes: MPI06=RD8 Date Time Period'
+        startDateTimePeriod:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI08, Notes: MPI06=RD8 Date Time Period'
+        ssn:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: REF, Element: REF02, Notes: REF01=SY Social Security Number'
+        groupNumber:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: REF, Element: REF02, Notes: REF01=6P Group Number'
+        planNumber:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: REF, Element: REF02, Notes: REF01=18 Plan Number'
+        planNetworkIdNumber:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: REF, Element: REF02, Notes: REF01=N6 Plan Network Identification Number'
+        relationToSubscriber:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: INS, Element: INS02, Notes: Individual Relationship Code'
+        relationToSubscriberCode:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: INS, Element: INS02, Notes: Individual Relationship Code'
+        insuredIndicator:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: INS, Element: INS01, Notes: Insured Indicator'
+        maintenanceTypeCode:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: INS, Element: INS03, Notes: Maintenance Type Code'
+        maintenanceReasonCode:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: INS, Element: INS04, Notes: Maintenance Reason Code'
+        birthSequenceNumber:
+          type: string
+          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: INS, Element: INS17, Notes: Birth Sequence Number Use to indicate the birth order in the event of multiple births in association with the birth date supplied in DMG02'
+        address:
+          $ref: '#/components/schemas/Address'
+        responseProvider:
+          $ref: '#/components/schemas/ResponseProvider'
+        aaaErrors:
           type: array
           items:
-            $ref: '#/components/schemas/AdditionalInformation'
-        eligibilityAdditionalInformation:
-          $ref: '#/components/schemas/EligibilityAdditionalInformation'
-        eligibilityAdditionalInformationList:
+            $ref: '#/components/schemas/Error'
+        allAAAErrors:
           type: array
-          description: 'Loop: 2115C and 2115D, Segments: III Notes: all occurrences'
           items:
-            $ref: '#/components/schemas/EligibilityAdditionalInformation'
-      description: BenefitsInformation
+            $ref: '#/components/schemas/Error'
+      description: ResponseMember
     BenefitsAdditionalInformation:
       type: object
       properties:
@@ -2652,6 +2319,499 @@ components:
           type: string
           description: 'Loop: 2110C and 2110D, Segments: REF, Element: REF02, Notes: REF01=Y4 agencyClaimNumber'
       description: BenefitsAdditionalInformation
+    Provider:
+      type: object
+      properties:
+        organizationName:
+          maxLength: 60
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B Segment: MN1, Element: NM103, Notes: NM101=PR when providerType=''payer'' && payerId is present otherwise 1P for Provider, NM102=2 Non-Person Entity, organizationName 1-60 alphanumeric characters'
+          example: provider_name
+        firstName:
+          maxLength: 35
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B Segment: MN1, Element: NM104, Notes: NM101=PR when providerType=''payer'' && payerId is present otherwise 1P for Provider, NM102=1 Person, firstName 1-35 alphanumeric characters'
+        lastName:
+          maxLength: 60
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B Segment: MN1, Element: NM103, Notes: NM101=PR when providerType=''payer'' && payerId is present otherwise 1P for Provider, NM102=1 Person, lastName 1-60 alphanumeric characters'
+        npi:
+          maxLength: 80
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B Segment: MN1, Element: NM109, Notes: NM108=XX Centers for Medicare and Medicaid Services National Provider Identifier 2-80 alphanumeric characters'
+          example: 0123456789
+        serviceProviderNumber:
+          maxLength: 80
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B Segment: MN1, Element: NM109, Notes: NM108=SV Service Provider Number 2-80 alphanumeric characters'
+          example: '54321'
+        payorId:
+          maxLength: 80
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B Segment: MN1, Element: NM109, Notes: NM101=PR when providerType=''payer'' && payerId is present otherwise 1P for Provider, NM108=PI Payor Identification 2-80 alphanumeric characters'
+        taxId:
+          maxLength: 80
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B Segment: MN1, Element: NM109, Notes: NM108=FI Federal Taxpayer''s Identification Number 2-80 alphanumeric characters'
+        ssn:
+          maxLength: 80
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109 Notes: NM108=34 Social Security Number'
+        pharmacyProcessorNumber:
+          maxLength: 80
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109 Notes: NM108=PP Pharmacy Processor Number'
+        servicesPlanID:
+          maxLength: 80
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109 Notes: NM108=XV Centers for Medicare and Medicaid Services PlanID'
+        employersId:
+          maxLength: 80
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109 Notes: NM108=24 Employer''s Identification Number'
+        providerCode:
+          type: string
+          description: 'Loop: 2100B Segment: PRV, Element: PRV01, Notes: PRV02=PXC Allowed descriptions are: ''AD'' Admitting, ''AT'' Attending, ''BI'' Billing, ''CO'' Consulting, ''CV'' Covering, ''H'' Hospital, ''HH'' Home Health Care, ''LA'' Laboratory, ''OT'' Other Physician, ''P1'' Pharmacist, ''P2'' Pharmacy, ''PC'' Primary Care Physician, ''PE'' Performing, ''R'' Rural Health Clinic, ''RF'' Referring, ''SB'' Submitting, ''SK'' Skilled Nursing Facility, ''SU'' Supervising'
+          example: AD
+          enum:
+          - AD
+          - AT
+          - BI
+          - CO
+          - CV
+          - H
+          - HH
+          - LA
+          - OT
+          - P1
+          - P2
+          - PC
+          - PE
+          - R
+          - RF
+          - SB
+          - SK
+          - SU
+        referenceIdentification:
+          type: string
+          description: 'Loop: 2100B Segment: PRV, Element: PRV03, Notes: PRV02=PXC referenceIdentification and controlNumber into PRV03'
+          example: 54321g
+        providerType:
+          type: string
+          description: 'Loop: 2100B Segment: MN1, Element: MN101, Notes: Allowed descriptions are: ''PR'' when providerType=''payer'' && payerId is present, ''2B'' when providerType=''third-party administrator'', ''36'' when providerType=''employer'', ''80'' when providerType=''hospital'', ''FA'' when providerType=''facility'', ''GP'' when providerType=''gateway provider'', ''P5'' when providerType=''plan sponsor'', ''1P'' when providerType=''provider'''
+          enum:
+          - payer
+          - third-party administrator
+          - employer
+          - hospital
+          - facility
+          - gateway provider
+          - plan sponsor
+          - provider
+      description: 'Loop: 2100B, Segment: NM1, Notes: Information Receiver'
+    AdditionalInformation:
+      type: object
+      properties:
+        description:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: MSG, Element: MSG01, Notes: Message Text Description'
+      description: AdditionalInformation
+    MedicalEligibility:
+      required:
+      - controlNumber
+      - subscriber
+      type: object
+      properties:
+        submitterTransactionIdentifier:
+          type: string
+          description: BHT03
+        controlNumber:
+          maxLength: 9
+          minLength: 9
+          type: string
+          description: 'Segment: ISA, Element: ISA13, Notes: Required, Interchange Control Number - must be exactly 9 positive unsigned numeric characters.'
+          example: '123456789'
+        tradingPartnerServiceId:
+          maxLength: 80
+          minLength: 0
+          type: string
+          description: 'Loop: 2100A Segment: NM1, Element: NM109, Notes: we send this as MN108 as PI'
+          example: serviceId
+        tradingPartnerName:
+          maxLength: 80
+          minLength: 0
+          type: string
+          description: 'Loop: 2100A, Segment: NM1, Element: NM103, Notes: organizational name'
+        provider:
+          $ref: '#/components/schemas/Provider'
+        portalUsername:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: User Identification REF01=JD'
+        portalPassword:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100B, Segment: REF, Element: REF02, Notes: Personal Identification Number (PIN) REF01=4A'
+        informationReceiverName:
+          $ref: '#/components/schemas/InformationReceiverName'
+        subscriber:
+          $ref: '#/components/schemas/RequestSubscriber'
+        dependents:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          description: 'Loop: 2000D, Notes: Dependent Detail'
+          items:
+            $ref: '#/components/schemas/RequestDependent'
+        encounter:
+          $ref: '#/components/schemas/Encounter'
+      description: MedicalEligibility
+    AdditionalIdentification:
+      type: object
+      properties:
+        planNumber:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=18 Plan Number'
+        policyNumber:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=1L Group or Policy Number'
+        memberIdentificationNumber:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=1W Member Identification Number'
+        contractNumber:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=CT Contract Number'
+        medicalRecordIdentificationNumber:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=EA Medical Record Identification Number'
+        patientAccountNumber:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=EJ Patient Account Number'
+        healthInsuranceClaimNumber:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=F6 Health Insurance (HIC) Number'
+        identificationCardSerialNumber:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=GH Identification Card Serial Number'
+        insurancePolicyNumber:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=IG Insurance Policy Number'
+        planNetworkIdentificationNumber:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=N6 Plan Network Identification Number'
+        agencyClaimNumber:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: 'Loop: 2100C and 2100D, Segment: REF, Element: REF02, Notes: REF01=Y4 Agency Claim Number'
+      description: 'Loop: 2100C and 2100D, Segment: REF Notes: Additional Identification'
+    PlanDateInformation:
+      type: object
+      properties:
+        discharge:
+          type: string
+          description: 'Loop: 2100C and 2100D or 2110C and 2110D, Segments: DTP, Element: DTP03, Notes: DTP01=096 Discharge'
+        issue:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=102 issue'
+        effectiveDateOfChange:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=152 effectiveDateOfChange'
+        periodStart:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03, Notes: DTP01=193 periodStart'
+        periodEnd:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03, Notes: DTP01=194 periodEnd'
+        completion:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03, Notes: DTP01=198 completion'
+        coordinationOfBenefits:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: DTP, Element: DTP03, Notes: DTP01=290 coordinationOfBenefits'
+        plan:
+          type: string
+          description: 'Loop: 2100C and 2100D or 2110C and 2110D, Segments: DTP, Element: DTP03, Notes: DTP01=291 plan'
+        benefit:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=292 benefit'
+        primaryCareProvider:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=295 primaryCareProvider'
+        latestVisitOrConsultation:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=304 latestVisitOrConsultation'
+        eligibility:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=307 eligibility'
+        added:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=318 added'
+        cobraBegin:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=340 cobraBegin'
+        cobraEnd:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=341 cobraEnd'
+        premiumPaidToDateBegin:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=342 premiumPaidToDateBegin'
+        premiumPaidToDateEnd:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=343 premiumPaidToDateEnd'
+        planBegin:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=346 planBegin'
+        planEnd:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=347 planEnd'
+        benefitBegin:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=348 benefitBegin'
+        benefitEnd:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=349 benefitEnd'
+        eligibilityBegin:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=356 eligibilityBegin'
+        eligibilityEnd:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=357 eligibilityEnd'
+        enrollment:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=382 enrollment'
+        admission:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=435 admission'
+        dateOfDeath:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=442 dateOfDeath'
+        certification:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=458 certification'
+        service:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=472 service'
+        policyEffective:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=539 policyEffective'
+        policyExpiration:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=540 policyExpiration'
+        dateOfLastUpdate:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=636 dateOfLastUpdate'
+        status:
+          type: string
+          description: 'Loop: 2100C and 2100D, Segments: DTP, Element: DTP03, Notes: DTP01=771 status'
+      description: PlanDateInformation
+    PlanStatus:
+      type: object
+      properties:
+        statusCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB01, Notes: Eligibility or Benefit Information Code'
+        status:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB01, Notes: Eligibility or Benefit Information Code Description'
+        planDetails:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB05, Notes: Plan Coverage Description'
+        serviceTypeCode:
+          type: array
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB03, Notes: Plan Coverage Description'
+          items:
+            type: string
+            description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB03, Notes: Plan Coverage Description'
+        serviceTypeCodes:
+          type: array
+          items:
+            type: string
+      description: PlanStatus - Deprecated please use benefitsInformation
+      deprecated: true
+    BenefitsInformation:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB01, Notes: Eligibility or Benefit Information Code'
+        name:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB01, Notes: Eligibility or Benefit Information Code'
+        coverageLevelCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB02, Notes: Coverage Level Code'
+        coverageLevel:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB02, Notes: Coverage Level'
+        serviceTypeCodes:
+          type: array
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB03, Notes: Service Type Codes'
+          items:
+            type: string
+            description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB03, Notes: Service Type Codes'
+        serviceTypes:
+          type: array
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB03, Notes: Service Types'
+          items:
+            type: string
+            description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB03, Notes: Service Types'
+        insuranceTypeCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB04, Notes: Insurance Type Code'
+        insuranceType:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB04, Notes: Insurance Type'
+        planCoverage:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB05, Notes: Plan Coverage Description'
+        timeQualifierCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB06, Notes: Time Period Qualifier Code'
+        timeQualifier:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB06, Notes: Time Period Qualifier'
+        benefitAmount:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB07, Notes: Monetary Amount'
+        benefitPercent:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB08, Notes: Percentage as Decimal'
+        quantityQualifierCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB09, Notes: Quantity Qualifier Code'
+        quantityQualifier:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB09, Notes: Quantity Qualifier'
+        benefitQuantity:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB10, Notes: Quantity'
+        authOrCertIndicator:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB11, Notes: Yes/No Condition or Response Code'
+        inPlanNetworkIndicatorCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB12, Notes: Yes/No Condition or Response Code'
+        inPlanNetworkIndicator:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: EB, Element: EB12, Notes: Yes/No Condition or Response'
+        headerLoopIdentifierCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: LS, Element: LS01, Notes: Loop Identifier Code'
+        trailerLoopIdentifierCode:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segments: LE, Element: LE01, Notes: Loop Identifier Code'
+        compositeMedicalProcedureIdentifier:
+          $ref: '#/components/schemas/CompositeMedicalProcedureIdentifier'
+        benefitsAdditionalInformation:
+          $ref: '#/components/schemas/BenefitsAdditionalInformation'
+        benefitsDateInformation:
+          $ref: '#/components/schemas/BenefitsDateInformation'
+        benefitsRelatedEntity:
+          $ref: '#/components/schemas/BenefitsRelatedEntity'
+        benefitsRelatedEntities:
+          type: array
+          description: 'Loop: 2120C and 2120D, Segments: NM1, N3, N4, PER, PRV, Notes: All occurrence of SUBSCRIBER/DEPENDENT BENEFIT RELATED ENTITY'
+          items:
+            $ref: '#/components/schemas/BenefitsRelatedEntity'
+        benefitsServiceDelivery:
+          type: array
+          items:
+            $ref: '#/components/schemas/BenefitsServiceDelivery'
+        additionalInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalInformation'
+        eligibilityAdditionalInformation:
+          $ref: '#/components/schemas/EligibilityAdditionalInformation'
+        eligibilityAdditionalInformationList:
+          type: array
+          description: 'Loop: 2115C and 2115D, Segments: III Notes: all occurrences'
+          items:
+            $ref: '#/components/schemas/EligibilityAdditionalInformation'
+      description: BenefitsInformation
+    MedicalProcedure:
+      type: object
+      properties:
+        productOrServiceIDQualifier:
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-1, Notes: Composite Medical Procedure Identifier - Product or Service ID Qualifier, Allowed Values are: ''AD'' American Dental Association Codes, ''CJ'' Current Procedural Terminology (CPT) Codes, ''HC'' Health Care Financing Administration Common Procedural Coding System (HCPCS) Codes, ''ID'' International Classification of Diseases, 9th Revision, Clinical Modification (ICD-9-CM) - Procedure, ''IV'' Home Infusion EDI Coalition (HIEC) Product/Service Code, ''N4'' National Drug Code in 5-4-2 Format, ''ZZ'' Mutually Defined'
+          enum:
+          - AD
+          - CJ
+          - HC
+          - ID
+          - IV
+          - N4
+          - ZZ
+        procedureCode:
+          maxLength: 48
+          minLength: 0
+          type: string
+          description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-2, Notes: Composite Medical Procedure Identifier - Procedure Code'
+        procedureModifiers:
+          maxItems: 4
+          minItems: 0
+          type: array
+          description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-3, Notes: Composite Medical Procedure Identifier - Procedure Modifier'
+          items:
+            type: string
+            description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ02-3, Notes: Composite Medical Procedure Identifier - Procedure Modifier'
+        diagnosisCodePointer:
+          maxItems: 4
+          minItems: 0
+          type: array
+          description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ05, Notes: Composite Diagnosis Code Pointer'
+          items:
+            type: string
+            description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ05, Notes: Composite Diagnosis Code Pointer'
+      description: 'Loop: 2110C and 2110D, Notes: Eligibility or Benefit Information, EQ02 and beyond only'
+    DtpDate:
+      type: object
+      properties:
+        date:
+          type: string
+          description: DTP03 where DTP02=D8, single date
+        startDate:
+          type: string
+          description: DTP03 where DTP02=RD8 left side of date range
+        endDate:
+          type: string
+          description: DTP03 where DTP02=RD8 right side of date range
+      description: DtpDate
     InformationReceiverName:
       type: object
       properties:
@@ -2728,465 +2888,52 @@ components:
         address:
           $ref: '#/components/schemas/Address'
       description: 'Loop: 2100B, Notes: Information Receiver Name'
-    ResponseMember:
+    MemberInfo:
       type: object
       properties:
-        healthCareDiagnosisCodes:
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthCareDiagnosisCode'
         memberId:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM109, Notes: NM108=MI Member Identification Number'
-        firstName:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM104, Notes: First Name'
-        lastName:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM103, Notes: Last Name'
-        middleName:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1 Element: NM105, Notes: Middle Name'
-        suffix:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM107, Notes: suffix'
-        gender:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: DMG, Element: DMG03, Notes: gender'
-          enum:
-          - M
-          - F
-        entityIdentifier:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM101, Notes: entityIdentifier'
-        entityType:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM102, Notes: entityType'
-        uniqueHealthIdentifier:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: NM1, Element: NM109, Notes: NM108=II uniqueHealthIdentifier'
-        dateOfBirth:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: DMG, Element: DMG02, Notes: Date of Birth'
-        informationStatusCode:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI01, Notes: Information Status Code'
-        employmentStatusCode:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI02, Notes: Employment Status Code'
-        governmentServiceAffiliationCode:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI03, Notes: Government Service Affiliation Code'
-        description:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI04, Notes: Description'
-        militaryServiceRankCode:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI05, Notes: Military Service Rank Code'
-        dateTimePeriodFormatQualifier:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI06, Notes: Date Time Period Format Qualifier'
-        dateTimePeriod:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI07, Notes: MPI06=D8 Date Time Period'
-        endDateTimePeriod:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI08, Notes: MPI06=RD8 Date Time Period'
-        startDateTimePeriod:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: MPI, Element: MPI08, Notes: MPI06=RD8 Date Time Period'
-        ssn:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: REF, Element: REF02, Notes: REF01=SY Social Security Number'
-        groupNumber:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: REF, Element: REF02, Notes: REF01=6P Group Number'
-        planNumber:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: REF, Element: REF02, Notes: REF01=18 Plan Number'
-        planNetworkIdNumber:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: REF, Element: REF02, Notes: REF01=N6 Plan Network Identification Number'
-        relationToSubscriber:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: INS, Element: INS02, Notes: Individual Relationship Code'
-        relationToSubscriberCode:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: INS, Element: INS02, Notes: Individual Relationship Code'
-        insuredIndicator:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: INS, Element: INS01, Notes: Insured Indicator'
-        maintenanceTypeCode:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: INS, Element: INS03, Notes: Maintenance Type Code'
-        maintenanceReasonCode:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: INS, Element: INS04, Notes: Maintenance Reason Code'
-        birthSequenceNumber:
-          type: string
-          description: 'Loop: 2000C, 2000D, 2100C, 2100D, Segment: INS, Element: INS17, Notes: Birth Sequence Number Use to indicate the birth order in the event of multiple births in association with the birth date supplied in DMG02'
-        address:
-          $ref: '#/components/schemas/Address'
-        responseProvider:
-          $ref: '#/components/schemas/ResponseProvider'
-        aaaErrors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-        allAAAErrors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-      description: ResponseMember
-    HealthCareInformation:
-      type: object
-      properties:
-        diagnosisTypeCode:
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-1 , Notes: Diagnosis Type Code, Allowed descriptions are: ''BK'' International Classification of Diseases Clinical Modification (ICD-9-CM) Principal Diagnosis, ''ABK'' International Classification of Diseases Clinical Modification (ICD-10-CM) Principal Diagnosis, ''BF'' International Classification of Diseases Clinical Modification (ICD-9-CM) Diagnosis, ''ABF'' International Classification of Diseases Clinical Modification (ICD-10-CM) Diagnosis'
-          enum:
-          - BK
-          - ABK
-          - BF
-          - ABF
-        diagnosisCode:
-          maxLength: 30
-          minLength: 0
-          pattern: ^[A-Za-z0-9]+$
-          type: string
-          description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-2, Notes: Diagnosis Code'
-      description: 'Loop: 2100C and 2100D, Segment: HI, Element: HI01-1 HI01-2, Notes: Health Care Diagnosis'
-    MetaData:
-      type: object
-      properties:
-        senderId:
-          type: string
-          description: Sender id assigned to this request
-        submitterId:
-          type: string
-          description: Submitter id assigned to this request
-        billerId:
-          type: string
-          description: Billing id assigned to this request
-        applicationMode:
-          type: string
-          description: Used by Optum to identify where this request can be found for support
-        traceId:
-          type: string
-          description: Unique Id assigned to each request by Optum
-        outboundTraceId:
-          type: string
-          description: BHT03 Value for submitterTransactionIdentifier
-      description: Meta data about the response
-    Contacts:
-      type: object
-      properties:
-        communicationMode:
-          type: string
-          description: 'Loop: 2100A, Segments: PER, Element: PER03-8, Notes: Communication Number Qualifier'
-        communicationNumber:
-          type: string
-          description: 'Loop: 2100A, Segments: PER, Element: PER03-8, Notes: Communication Number'
-      description: Contacts
-    AssociatedIds:
-      type: object
-      properties:
-        alternateId:
-          description: Alternate identifier for the member
+          description: Unique identifier for the member
           example: '840868613'
           type: string
-        medicaidRecipientId:
-          description: Medicaid recipient identifier
-          example: '123456'
+        firstName:
+          description: First name of the member
+          example: DARLA
           type: string
-        exchangeMemberId:
-          description: Exchange member identifier
-          example: '654321'
+        lastName:
+          description: Last name of the member
+          example: Brown
           type: string
-        alternateSubscriberId:
-          description: Alternate subscriber identifier
-          example: '12345'
+        middleName:
+          description: Middle name of the member
+          example: J
           type: string
-        hicNumber:
-          description: Health Insurance Claim (HIC) number
-          example: HIC123456
+        suffix:
+          description: Name suffix of the member
+          example: Jr.
           type: string
-        mbiNumber:
-          description: Medicare Beneficiary Identifier (MBI) number
-          example: '123456'
+        dateOfBirth:
+          description: Date of birth of the member in ISO 8601 format (YYYY-MM-DD)
+          example: '1981-06-14'
           type: string
-        subscriberMemberFacingIdentifier:
-          description: Member-facing identifier for the subscriber
-          example: '12345'
+        gender:
+          description: Gender of the member
+          example: F
           type: string
-        survivingSpouseId:
-          description: ID for surviving spouses
-          example: '1234'
+        relationshipCode:
+          description: Code representing the relationship to the primary subscriber
+          example: '000'
           type: string
-        subscriberId:
-          description: Subscriber identifier
-          example: 313782034
+        dependentSequenceNumber:
+          description: Code representing the type of Dependent Sequence
+          example: '00'
           type: string
-        memberReplacementId:
-          description: Member replacement identifiers
-          example: '123456'
-          type: string
-        legacyMemberId:
-          description: Legacy member identifiers
-          example: '654321'
-          type: string
-        healthInsuranceExchangeId:
-          description: Health Insurance Exchange identifier
-          example: '929292'
-          type: string
-      description: Collection of different identifiers associated with the member
-    ContactDetails:
-      type: object
-      properties:
-        phone:
-          description: Phone number
-          example: 010-011-0101
-          type: string
-        fax:
-          description: Fax number
-          example: 010-011-0102
-          type: string
-        email:
-          description: Email address
-          example: entity@example.com
-          type: string
-    SubMessage:
-      type: object
-      properties:
-        service:
-          description: Service related to the sub-message
-          example: VARIED BENEFIT.REFER TO PLAN EVIDENCE OF COVERAGE FOR BENEFITS AND LIMITATIONS
-          type: string
-        status:
-          description: Status of the service
-          example: Active
-          type: string
-        copay:
-          description: Co-pay amount
-          example: $15
-          type: string
-        msg:
-          description: Message
-          example: Message about the service
-          type: string
-        startDate:
-          description: Start date for the service
-          example: '2020-01-01'
-          type: string
-        endDate:
-          description: End date for the service
-          example: '2020-12-31'
-          type: string
-        minCopay:
-          description: Minimum co-pay amount
-          type: string
-        minCopayMsg:
-          description: Message about minimum co-pay
-          type: string
-        maxCopay:
-          description: Maximum co-pay amount
-          type: string
-        maxCopayMsg:
-          description: Message about maximum co-pay
-          type: string
-        isPrimaryIndicator:
-          description: Indicates if this is a primary indicator
-          example: 'false'
-          type: boolean
-      description: Sub-message details
-    PatientLiability:
-      type: object
-      properties:
-        startDate:
-          description: Start date
-          example: '2020-01-01'
-          type: string
-        endDate:
-          description: End date
-          example: '2020-12-31'
-          type: string
-        amount:
-          description: Liability amount
-          example: '100.00'
-          type: string
-        amountFrequency:
-          description: Liability amount frequency
-          example: Monthly
-          type: string
-        remainingAmount:
-          description: Remaining amount
-          example: '50.00'
-          type: string
-        metYtdAmount:
-          description: Met year-to-date amount
-          example: '25.00'
-          type: string
-      description: Patient liability details
-    Address_2:
-      type: object
-      properties:
-        type:
-          description: Type of address
-          example: Postal/Mailing/Remit
-          type: string
-        street1:
-          description: First line of street address
-          example: 1234 CHARDAVE
-          type: string
-        street2:
-          description: Second line of street address
-          example: Apt 101
-          type: string
-        city:
-          description: City
-          example: Hastings
-          type: string
-        state:
-          description: State code
-          example: TX
-          type: string
-        country:
-          description: Country code
-          example: US
-          type: string
-        zip:
-          description: ZIP code
-          example: '12133'
-          type: string
-        zip4:
-          description: Extended ZIP+4 code
-          example: 12133-4567
-          type: string
-      description: Address details
-    LimitationInfo:
-      type: object
-      properties:
-        lmtPeriod:
-          description: Calendar Year
-          example: Annual
-          type: string
-        lmtType:
-          description: visits
-          example: Visit
-          type: string
-        lmtOccurPerPeriod:
-          description: Limit occured per period
-          type: string
-        lmtDollarPerPeriod:
-          description: Limit of dollars can be used per period
-          type: string
-        message:
-          description: Array of string values contains the messages
-          type: string
-    EligibilityBasic:
-      type: object
-      properties:
-        trnId:
-          description: Transaction ID for the eligibility check
-          example: dsfd-asdsd-asdasd-adad-aasdasd
-          type: string
-        member:
-          description: Member information
-          $ref: '#/components/schemas/MemberInfo'
-        contact:
-          description: Contact information
-          $ref: '#/components/schemas/ContactInfo'
-        insuranceInfo:
-          description: Insurance information
-          $ref: '#/components/schemas/InsuranceInfo'
-        associatedIds:
-          description: Associated IDs
-          $ref: '#/components/schemas/AssociatedIds'
-        planLevels:
-          description: Plan level information including deductibles, out-of-pocket expenses, etc.
-          type: array
-          items:
-            $ref: '#/components/schemas/PlanLevel'
-        delegatedInfo:
-          description: Delegated information
-          type: array
-          items:
-            $ref: '#/components/schemas/DelegatedInfo'
-      description: Basic eligibility information
-    CobMember:
-      type: object
-      properties:
-        id:
-          description: Member identifier
-          example: '123456'
-          type: string
-        name:
-          description: Member name
-          example: John Doe
-          type: string
-      description: COB member summary
-    PlanDetail:
-      type: object
-      properties:
-        networkStatus:
-          description: Network status for this cost sharing information
-          example: InNetwork/OutOfNetwork/Tier1/Tier2
-          type: string
-        planAmount:
-          description: Planned amount for this cost sharing
-          example: '234.56'
-          type: string
-        planAmountFrequency:
-          description: Frequency of the planned amount
-          example: Calendar Year
-          type: string
-        remainingAmount:
-          description: Remaining amount for this cost sharing
-          example: '0.00'
-          type: string
-      description: Cost sharing details for a specific network status
-    CobDetail:
-      type: object
-      properties:
-        member:
-          description: Member identifier
-          $ref: '#/components/schemas/CobMember'
-        policy:
-          description: COB policy information
-          $ref: '#/components/schemas/COBPolicy'
-        payer:
-          description: COB Payer information
-          $ref: '#/components/schemas/Payer_2'
-        cobPrimacy:
-          description: Cob Primacy
-          $ref: '#/components/schemas/CobPrimacy'
-      description: COB member summary
-    EligibilityPreCheckRequest:
-      type: object
-      properties:
-        query:
-          description: GraphQL query for the Eligibility Pre-Check operation
-          example: 'query CheckEligibility($input: EligibilityInput!) { checkEligibility( input: $input ) { eligibility { eligibilityInfo { trnId member { memberId firstName lastName middleName suffix dateOfBirth gender relationshipCode dependentSequenceNumber individualRelationship { code description } relationshipType { code description } } contact{ addresses { type street1 street2 city state country zip zip4 } } insuranceInfo { policyNumber eligibilityStartDate eligibilityEndDate planStartDate planEndDate policyStatus planTypeDescription groupName address { type street1 street2 city state country zip zip4 } stateOfIssueCode productType productId productCode payerId lineOfBusinessCode governmentProgramCode coverageType insuranceTypeCode insuranceType paidThroughDate consumerName } associatedIds { alternateId medicaidRecipientId exchangeMemberId alternateSubscriberId hicNumber mbiNumber subscriberMemberFacingIdentifier survivingSpouseId subscriberId memberReplacementId legacyMemberId healthInsuranceExchangeId } planLevels { level family { networkStatus planAmount planAmountFrequency remainingAmount } individual { networkStatus planAmount planAmountFrequency remainingAmount } } delegatedInfo { entity payerId contact { phone fax email } addresses { type street1 street2 city state country zip zip4 } } } primaryCarePhysician { lastName firstName middleName phoneNumber address { type street1 street2 city state country zip zip4 } affiliateHospitalName providerGroupName pcpSpeciality pcpStartDate pcpEndDate providerNPI providerTIN acoNetworkDescription acoNetworkId pcpHistoryList { lastName firstName middleName phoneNumber address { type street1 street2 city state country zip zip4 } affiliateHospitalName providerGroupName pcpSpeciality entityType providerId pcpStartDate pcpEndDate providerNPI providerTIN acoNetworkDescription acoNetworkId } } coordinationOfBenefits { coordinationOfBenefitDetails { member { id name } policy { policyNumber groupNumber coverageType insuranceTypeCode medicareEntitlementType medicareEntitlementReason effectiveDate terminationDate verificationDate } payer { name phoneNumber address { type street1 street2 city state country zip zip4 } } cobPrimacy { indicator description message } } cobUpdateInformation { cobUpdateMessage cobLastVerifiedDate } disclaimer } idCardImages { side content contentType } providerNetwork { status tier speciality } serviceLevels { vendorServices { key vendorName url phone serviceDescription serviceTypeCode } family { networkStatus services { service serviceCode serviceDate status planAmount remainingAmount metYearToDateAmount message { coPay { isSingleMessageDetail isViewDetail messages subMessages { service status copay frequency msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator exactCopay { coveredStatus copayDetails { amount serviceSetting } } } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } coInsurance { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } deductible { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } benefitsAllowed { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } benefitsRemaining { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } coPayList { placeOfService copay service startDate endDate messages } coInsuranceList { placeOfService coinsurancePercent service messages startDate endDate } } } } individual { networkStatus services { service serviceCode serviceDate status planAmount remainingAmount metYearToDateAmount message { coPay { isSingleMessageDetail isViewDetail messages subMessages { service status copay frequency msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator exactCopay { coveredStatus copayDetails { amount serviceSetting } } } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } coInsurance { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } deductible { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } benefitsAllowed { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } benefitsRemaining { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } coPayList { placeOfService copay service startDate endDate messages } coInsuranceList { placeOfService coinsurancePercent service messages startDate endDate } } } } } otherBeneficiaries { memberId firstName lastName middleName suffix dateOfBirth gender relationshipCode dependentSequenceNumber individualRelationship { code description } relationshipType { code description } } additionalInfo { fundingType fundingArrangementDescription businessSegment sizeDefinitionDescription revenueArrangementDescription hsa cdhp cmsHId cmsPackageBenefitPlanCode cmsSegmentId cmsContractId benefitPlanId virtualVisit designatedVirtualClinicNetwork medicaidVariableCode hraBalance hraMessage hraUnavailableMessage graceMessageByState gracePaidThrough gracePeriodMonth medicareGuidelines medicareEntitlementReason medicaidEntitlement { waiverLiabilityList { startDate endDate amount amountFrequency remainingAmount metYtdAmount } patientLiabilityList { startDate endDate amount amountFrequency remainingAmount metYtdAmount } transferOfPropertyPenaltyPeriod { startDate endDate } medicaidVariables { hcfaStatus cobraIndicator spendDownTotal spendDownMet spendDownInd effectiveDate terminationDate } } } } } }'
-          type: string
-        variables:
-          description: Variables for the Eligibility Pre-Check operation
-          $ref: '#/components/schemas/Variables'
-      description: Request object for Eligibility Pre-Check operation
-    EligibilityPreCheckResponseWrapper:
-      type: object
-      properties:
-        checkEligibility:
-          description: Eligibility Pre-Check Response data
-          $ref: '#/components/schemas/EligibilityResponse'
-      description: Wrapper for Eligibility Pre-Check Response
-    ContactInfo:
-      type: object
-      properties:
-        addresses:
-          description: Postal/Mailing address of the member
-          type: array
-          items:
-            $ref: '#/components/schemas/Address_2'
+        individualRelationship:
+          description: Individual Relationship Code
+          $ref: '#/components/schemas/RelationShipInfo'
+        relationshipType:
+          description: Code representing the type of relationship
+          $ref: '#/components/schemas/RelationShipInfo'
+      description: Member Information
     PrimaryCarePhysician:
       type: object
       properties:
@@ -3240,73 +2987,179 @@ components:
           description: ACO network ID
           type: string
       description: Information about the member's primary care physician
-    ProviderNetwork:
+    ContactInfo:
       type: object
       properties:
-        status:
-          description: Network Status
-          example: In Network
-          type: string
-        tier:
-          description: Network tier
-          example: '1'
-          type: string
-        speciality:
-          description: Provider speciality
-          example: internal Med
-          type: string
-      description: Information about the member's network status
-    Payer_2:
+        addresses:
+          description: Postal/Mailing address of the member
+          type: array
+          items:
+            $ref: '#/components/schemas/Address_2'
+    Messages:
       type: object
       properties:
-        name:
-          description: Payer name
-          example: SIF
-          type: string
-        phoneNumber:
-          description: Payer Phone Number
-          example: 123-456-7890
-          type: string
-        address:
-          description: Address
-          $ref: '#/components/schemas/Address_2'
-      description: COB Payer Information
-    CoPayDetails:
+        coPay:
+          description: Detailed message information
+          $ref: '#/components/schemas/CoPayDetails'
+        coInsurance:
+          description: Detailed message information
+          $ref: '#/components/schemas/MessageDetail'
+        deductible:
+          description: Detailed message information
+          $ref: '#/components/schemas/MessageDetail'
+        benefitsAllowed:
+          description: Detailed message information
+          $ref: '#/components/schemas/MessageDetail'
+        benefitsRemaining:
+          description: Detailed message information
+          $ref: '#/components/schemas/MessageDetail'
+        coPayList:
+          description: CoPay List
+          type: array
+          items:
+            $ref: '#/components/schemas/CoPayListItem'
+        coInsuranceList:
+          description: CoInsurance List
+          type: array
+          items:
+            $ref: '#/components/schemas/CoInsuranceListItem'
+      description: Messages related to a service
+    CoInsuranceListItem:
       type: object
       properties:
-        isSingleMessageDetail:
-          description: Indicates if there is a single message detail
-          example: 'false'
-          type: boolean
-        isViewDetail:
-          description: Indicates if details can be viewed
-          example: 'false'
-          type: boolean
+        placeOfService:
+          description: Place of service
+          example: Office
+          type: string
+        coinsurancePercent:
+          description: Co-insurance percentage and frequency
+          example: 20% / Visit
+          type: string
+        service:
+          description: Service name
+          example: diagnosticLab
+          type: string
         messages:
-          description: List of messages
-          example: 0% / Visit VARIED BENEFIT.REFER TO PLAN EVIDENCE OF COVERAGE FOR BENEFITS AND LIMITATIONS
+          description: List of messages related to the co-insurance
+          example: '[DESIGNATED DIAGNOSTIC PROVIDER]'
           type: array
           items:
             type: string
-        subMessages:
-          description: List of sub-messages
+        startDate:
+          description: Start date for the co-insurance
+          example: '2024-01-01'
+          type: string
+        endDate:
+          description: End date for the co-insurance
+          example: '2024-12-31'
+          type: string
+      description: Co-insurance list item details
+    CoPayListItem:
+      type: object
+      properties:
+        placeOfService:
+          description: Place of service
+          example: Office
+          type: string
+        copay:
+          description: Co-pay amount and frequency
+          example: $0 / Visit
+          type: string
+        service:
+          description: Service name
+          example: diagnosticLab
+          type: string
+        startDate:
+          description: Start date for the co-pay
+          example: '2020-01-01'
+          type: string
+        endDate:
+          description: End date for the co-pay
+          example: '2020-01-01'
+          type: string
+        messages:
+          description: List of messages related to the co-pay
+          example: '[DESIGNATED DIAGNOSTIC PROVIDER]'
           type: array
           items:
-            $ref: '#/components/schemas/SubMessageCopay'
-        limitationInfo:
-          description: List of Limitation Info
+            type: string
+      description: Co-pay list item details
+    CobMember:
+      type: object
+      properties:
+        id:
+          description: Member identifier
+          example: '123456'
+          type: string
+        name:
+          description: Member name
+          example: John Doe
+          type: string
+      description: COB member summary
+    ServiceDetail:
+      type: object
+      properties:
+        networkStatus:
+          description: Network status for this service level
+          example: ' inNetwork/outOfNetwork/inNetworkTier1/inNetworkTier1PreferredLab/inNetworkTier2/inNetworkDesignatedDiagnosticProvider'
+          type: string
+        services:
+          description: Service Covered at this level
           type: array
           items:
-            $ref: '#/components/schemas/LimitationInfo'
-        isMultipleCopaysFound:
-          description: Indicates if multiple co-pays were found
+            $ref: '#/components/schemas/ServiceDetails'
+      description: Detailed service level information
+    SubMessageCopay:
+      type: object
+      properties:
+        service:
+          description: Service related to the sub-message
+          example: VARIED BENEFIT.REFER TO PLAN EVIDENCE OF COVERAGE FOR BENEFITS AND LIMITATIONS
+          type: string
+        status:
+          description: Status of the service
+          example: Active
+          type: string
+        copay:
+          description: Co-pay amount
+          example: $15
+          type: string
+        frequency:
+          description: Frequency of the copay
+          example: Monthly
+          type: string
+        msg:
+          description: Message
+          example: Message about the service
+          type: string
+        startDate:
+          description: Start date for the service
+          example: '2020-01-01'
+          type: string
+        endDate:
+          description: End date for the service
+          example: '2020-12-31'
+          type: string
+        minCopay:
+          description: Minimum co-pay amount
+          type: string
+        minCopayMsg:
+          description: Message about minimum co-pay
+          type: string
+        maxCopay:
+          description: Maximum co-pay amount
+          type: string
+        maxCopayMsg:
+          description: Message about maximum co-pay
+          type: string
+        isPrimaryIndicator:
+          description: Indicates if this is a primary indicator
           example: 'false'
           type: boolean
-        isMultipleCoinsuranceFound:
-          description: Indicates if multiple co-insurances were found
-          example: 'false'
-          type: boolean
-      description: Detailed message information
+        exactCopay:
+          description: Exact copay information
+          $ref: '#/components/schemas/ExactCopay'
+      description: Sub-message details
     EligibilityResponse:
       type: object
       properties:
@@ -3316,6 +3169,58 @@ components:
           items:
             $ref: '#/components/schemas/Eligibility'
       description: Response containing eligibility details
+    AssociatedIds:
+      type: object
+      properties:
+        alternateId:
+          description: Alternate identifier for the member
+          example: '840868613'
+          type: string
+        medicaidRecipientId:
+          description: Medicaid recipient identifier
+          example: '123456'
+          type: string
+        exchangeMemberId:
+          description: Exchange member identifier
+          example: '654321'
+          type: string
+        alternateSubscriberId:
+          description: Alternate subscriber identifier
+          example: '12345'
+          type: string
+        hicNumber:
+          description: Health Insurance Claim (HIC) number
+          example: HIC123456
+          type: string
+        mbiNumber:
+          description: Medicare Beneficiary Identifier (MBI) number
+          example: '123456'
+          type: string
+        subscriberMemberFacingIdentifier:
+          description: Member-facing identifier for the subscriber
+          example: '12345'
+          type: string
+        survivingSpouseId:
+          description: ID for surviving spouses
+          example: '1234'
+          type: string
+        subscriberId:
+          description: Subscriber identifier
+          example: 313782034
+          type: string
+        memberReplacementId:
+          description: Member replacement identifiers
+          example: '123456'
+          type: string
+        legacyMemberId:
+          description: Legacy member identifiers
+          example: '654321'
+          type: string
+        healthInsuranceExchangeId:
+          description: Health Insurance Exchange identifier
+          example: '929292'
+          type: string
+      description: Collection of different identifiers associated with the member
     ExactCopay:
       type: object
       properties:
@@ -3329,6 +3234,116 @@ components:
           items:
             $ref: '#/components/schemas/CopayDetail'
       description: Exact copay information
+    Address_2:
+      type: object
+      properties:
+        type:
+          description: Type of address
+          example: Postal/Mailing/Remit
+          type: string
+        street1:
+          description: First line of street address
+          example: 1234 CHARDAVE
+          type: string
+        street2:
+          description: Second line of street address
+          example: Apt 101
+          type: string
+        city:
+          description: City
+          example: Hastings
+          type: string
+        state:
+          description: State code
+          example: TX
+          type: string
+        country:
+          description: Country code
+          example: US
+          type: string
+        zip:
+          description: ZIP code
+          example: '12133'
+          type: string
+        zip4:
+          description: Extended ZIP+4 code
+          example: 12133-4567
+          type: string
+      description: Address details
+    DelegatedInfo:
+      type: object
+      properties:
+        entity:
+          description: Entity Name
+          example: Entity name
+          type: string
+        payerId:
+          description: Payer Details
+          example: SIS
+          type: string
+        contact:
+          description: Contact Details
+          $ref: '#/components/schemas/ContactDetails'
+        addresses:
+          description: Remit Address
+          type: array
+          items:
+            $ref: '#/components/schemas/Address_2'
+      description: Delegated Information
+    Variables:
+      type: object
+      properties:
+        input:
+          description: Input data for the Eligibility Pre-Check operation
+          $ref: '#/components/schemas/Input'
+      description: Variables for the Eligibility Pre-Check operation
+    CobPrimacy:
+      type: object
+      properties:
+        indicator:
+          description: COB primacy indicator
+          example: P
+          type: string
+        description:
+          description: COB primacy description
+          example: Primary
+          type: string
+        message:
+          description: COB primacy message
+          example: COB Message
+          type: string
+      description: COB primacy information
+    LimitationInfo:
+      type: object
+      properties:
+        lmtPeriod:
+          description: Calendar Year
+          example: Annual
+          type: string
+        lmtType:
+          description: visits
+          example: Visit
+          type: string
+        lmtOccurPerPeriod:
+          description: Limit occured per period
+          type: string
+        lmtDollarPerPeriod:
+          description: Limit of dollars can be used per period
+          type: string
+        message:
+          description: Array of string values contains the messages
+          type: string
+    EligibilityPreCheckRequest:
+      type: object
+      properties:
+        query:
+          description: GraphQL query for the Eligibility Pre-Check operation
+          example: 'query CheckEligibility($input: EligibilityInput!) { checkEligibility( input: $input ) { eligibility { eligibilityInfo { trnId member { memberId firstName lastName middleName suffix dateOfBirth gender relationshipCode dependentSequenceNumber individualRelationship { code description } relationshipType { code description } } contact{ addresses { type street1 street2 city state country zip zip4 } } insuranceInfo { policyNumber eligibilityStartDate eligibilityEndDate planStartDate planEndDate policyStatus planTypeDescription groupName address { type street1 street2 city state country zip zip4 } stateOfIssueCode productType productId productCode payerId lineOfBusinessCode governmentProgramCode coverageType insuranceTypeCode insuranceType paidThroughDate consumerName } associatedIds { alternateId medicaidRecipientId exchangeMemberId alternateSubscriberId hicNumber mbiNumber subscriberMemberFacingIdentifier survivingSpouseId subscriberId memberReplacementId legacyMemberId healthInsuranceExchangeId } planLevels { level family { networkStatus planAmount planAmountFrequency remainingAmount } individual { networkStatus planAmount planAmountFrequency remainingAmount } } delegatedInfo { entity payerId contact { phone fax email } addresses { type street1 street2 city state country zip zip4 } } } primaryCarePhysician { lastName firstName middleName phoneNumber address { type street1 street2 city state country zip zip4 } affiliateHospitalName providerGroupName pcpSpeciality pcpStartDate pcpEndDate providerNPI providerTIN acoNetworkDescription acoNetworkId pcpHistoryList { lastName firstName middleName phoneNumber address { type street1 street2 city state country zip zip4 } affiliateHospitalName providerGroupName pcpSpeciality entityType providerId pcpStartDate pcpEndDate providerNPI providerTIN acoNetworkDescription acoNetworkId } } coordinationOfBenefits { coordinationOfBenefitDetails { member { id name } policy { policyNumber groupNumber coverageType insuranceTypeCode medicareEntitlementType medicareEntitlementReason effectiveDate terminationDate verificationDate } payer { name phoneNumber address { type street1 street2 city state country zip zip4 } } cobPrimacy { indicator description message } } cobUpdateInformation { cobUpdateMessage cobLastVerifiedDate } disclaimer } idCardImages { side content contentType } providerNetwork { status tier speciality } serviceLevels { vendorServices { key vendorName url phone serviceDescription serviceTypeCode } family { networkStatus services { service serviceCode serviceDate status planAmount remainingAmount metYearToDateAmount message { coPay { isSingleMessageDetail isViewDetail messages subMessages { service status copay frequency msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator exactCopay { coveredStatus copayDetails { amount serviceSetting } } } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } coInsurance { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } deductible { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } benefitsAllowed { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } benefitsRemaining { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } coPayList { placeOfService copay service startDate endDate messages } coInsuranceList { placeOfService coinsurancePercent service messages startDate endDate } } } } individual { networkStatus services { service serviceCode serviceDate status planAmount remainingAmount metYearToDateAmount message { coPay { isSingleMessageDetail isViewDetail messages subMessages { service status copay frequency msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator exactCopay { coveredStatus copayDetails { amount serviceSetting } } } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } coInsurance { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } deductible { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } benefitsAllowed { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } benefitsRemaining { isSingleMessageDetail isViewDetail messages subMessages { service status copay msg startDate endDate minCopay minCopayMsg maxCopay maxCopayMsg isPrimaryIndicator } limitationInfo { lmtPeriod lmtType lmtOccurPerPeriod lmtDollarPerPeriod messages } isMultipleCopaysFound isMultipleCoinsuranceFound } coPayList { placeOfService copay service startDate endDate messages } coInsuranceList { placeOfService coinsurancePercent service messages startDate endDate } } } } } otherBeneficiaries { memberId firstName lastName middleName suffix dateOfBirth gender relationshipCode dependentSequenceNumber individualRelationship { code description } relationshipType { code description } } additionalInfo { fundingType fundingArrangementDescription businessSegment sizeDefinitionDescription revenueArrangementDescription hsa cdhp cmsHId cmsPackageBenefitPlanCode cmsSegmentId cmsContractId benefitPlanId virtualVisit designatedVirtualClinicNetwork medicaidVariableCode hraBalance hraMessage hraUnavailableMessage graceMessageByState gracePaidThrough gracePeriodMonth medicareGuidelines medicareEntitlementReason medicaidEntitlement { waiverLiabilityList { startDate endDate amount amountFrequency remainingAmount metYtdAmount } patientLiabilityList { startDate endDate amount amountFrequency remainingAmount metYtdAmount } transferOfPropertyPenaltyPeriod { startDate endDate } medicaidVariables { hcfaStatus cobraIndicator spendDownTotal spendDownMet spendDownInd effectiveDate terminationDate } } } } } }'
+          type: string
+        variables:
+          description: Variables for the Eligibility Pre-Check operation
+          $ref: '#/components/schemas/Variables'
+      description: Request object for Eligibility Pre-Check operation
     MessageDetail:
       type: object
       properties:
@@ -3365,62 +3380,260 @@ components:
           example: 'false'
           type: boolean
       description: Detailed message information
-    MedicaidEntitlement:
+    CobDetail:
       type: object
       properties:
-        waiverLiabilityList:
-          description: Waiver liability list
-          type: array
-          items:
-            $ref: '#/components/schemas/WaiverLiability'
-        patientLiabilityList:
-          description: Patient liability list
-          type: array
-          items:
-            $ref: '#/components/schemas/PatientLiability'
-        transferOfPropertyPenaltyPeriod:
-          description: Transfer of property penalty period
-          type: array
-          items:
-            $ref: '#/components/schemas/TransferOfPropertyPenaltyPeriod'
-      description: Medicaid entitlement information
-    Variables:
+        member:
+          description: Member identifier
+          $ref: '#/components/schemas/CobMember'
+        policy:
+          description: COB policy information
+          $ref: '#/components/schemas/COBPolicy'
+        payer:
+          description: COB Payer information
+          $ref: '#/components/schemas/Payer_2'
+        cobPrimacy:
+          description: Cob Primacy
+          $ref: '#/components/schemas/CobPrimacy'
+      description: COB member summary
+    Payer_2:
       type: object
       properties:
-        input:
-          description: Input data for the Eligibility Pre-Check operation
-          $ref: '#/components/schemas/Input'
-      description: Variables for the Eligibility Pre-Check operation
-    CoPayListItem:
+        name:
+          description: Payer name
+          example: SIF
+          type: string
+        phoneNumber:
+          description: Payer Phone Number
+          example: 123-456-7890
+          type: string
+        address:
+          description: Address
+          $ref: '#/components/schemas/Address_2'
+      description: COB Payer Information
+    TransferOfPropertyPenaltyPeriod:
       type: object
       properties:
-        placeOfService:
-          description: Place of service
-          example: Office
-          type: string
-        copay:
-          description: Co-pay amount and frequency
-          example: $0 / Visit
-          type: string
-        service:
-          description: Service name
-          example: diagnosticLab
-          type: string
         startDate:
-          description: Start date for the co-pay
+          description: Start date
           example: '2020-01-01'
           type: string
         endDate:
-          description: End date for the co-pay
-          example: '2020-01-01'
+          description: End date
+          example: '2021-12-31'
           type: string
-        messages:
-          description: List of messages related to the co-pay
-          example: '[DESIGNATED DIAGNOSTIC PROVIDER]'
+      description: Transfer of property penalty period details
+    AdditionalInfo:
+      type: object
+      properties:
+        fundingType:
+          description: Type of funding for the policy
+          example: Fully Insuredss
+          type: string
+        businessSegment:
+          description: Business segment
+          example: Small Business
+          type: string
+        sizeDefinitionDescription:
+          description: Size definition description
+          example: Small Group
+          type: string
+        revenueArrangementDescription:
+          description: Revenue arrangement description
+          example: Level Funded
+          type: string
+        hsa:
+          description: Indicates if the plan has a Health Savings Account (HSA)
+          example: 'NO'
+          type: string
+        cdhp:
+          description: Indicates if the plan is a Consumer-Directed Health Plan (CDHP)
+          example: 'NO'
+          type: string
+        cmsHId:
+          description: CMS H ID
+          example: H1889
+          type: string
+        cmsPackageBenefitPlanCode:
+          description: CMS package benefit plan code
+          example: '025'
+          type: string
+        cmsSegmentId:
+          description: CMS segment identifier
+          example: '000'
+          type: string
+        cmsContractId:
+          description: CMS contract identifier
+          example: H1889-025-000
+          type: string
+        benefitPlanId:
+          description: Benefit plan identifier
+          example: '47544'
+          type: string
+        virtualVisit:
+          description: Indicates if virtual visits are covered
+          example: 'NO'
+          type: string
+        designatedVirtualClinicNetwork:
+          description: Indicates if there is a designated virtual clinic network
+          example: Y
+          type: string
+        medicaidVariableCode:
+          description: Medicaid variable code
+          example: '12345'
+          type: string
+        hraBalance:
+          description: HRA balance amount
+          example: '1000.00'
+          type: string
+        hraMessage:
+          description: HRA message
+          example: HRA available
+          type: string
+        hraUnavailableMessage:
+          description: HRA unavailable message
+          example: N/A
+          type: string
+        graceMessageByState:
+          description: Grace period message by state
+          example: Texas has a grace period of 90 days
+          type: string
+        gracePaidThrough:
+          description: Grace paid through date
+          example: '2025-03-31'
+          type: string
+        gracePeriodMonth:
+          description: Grace period month
+          example: March
+          type: string
+        medicareGuidelines:
+          description: Indicates if Medicare guidelines apply
+          example: 'false'
+          type: boolean
+        medicareEntitlementReason:
+          description: Reason for Medicare entitlement
+          example: Age
+          type: string
+        medicaidEntitlement:
+          description: Medicaid entitlement information
           type: array
           items:
-            type: string
-      description: Co-pay list item details
+            $ref: '#/components/schemas/MedicaidEntitlement'
+      description: Additional plan related information
+    InsuranceInfo:
+      type: object
+      properties:
+        policyNumber:
+          description: Policy number for the insurance coverage
+          example: 708547
+          type: string
+        eligibilityStartDate:
+          description: Start date of the eligibility in ISO 8601 format (YYYY-MM-DD)
+          example: '2020-01-01'
+          type: string
+        eligibilityEndDate:
+          description: End date of the eligibility in ISO 8601 format (YYYY-MM-DD)
+          example: '2020-12-31'
+          type: string
+        planStartDate:
+          description: Start date of the plan in ISO 8601 format (YYYY-MM-DD)
+          example: '2020-01-01'
+          type: string
+        planEndDate:
+          description: End date of the plan in ISO 8601 format (YYYY-MM-DD)
+          example: '2020-12-31'
+          type: string
+        policyStatus:
+          description: Status of the policy
+          example: Past Policy
+          type: string
+        planTypeDescription:
+          description: Description of the plan type
+          type: string
+        groupName:
+          description: Group Name
+          example: Indiana Acute nursing
+          type: string
+        address:
+          description: Address of the Insurance Company
+          $ref: '#/components/schemas/Address_2'
+        stateOfIssueCode:
+          description: State where the policy was issued
+          example: IL
+          type: string
+        productType:
+          description: Type of insurance product
+          example: EPO
+          type: string
+        productId:
+          description: Product identifier
+          example: '123'
+          type: string
+        productCode:
+          description: Product code
+          example: '9'
+          type: string
+        payerId:
+          description: Payer Id
+          example: '87726'
+          type: string
+        lineOfBusinessCode:
+          description: Code for the line of business
+          example: E&I
+          type: string
+        governmentProgramCode:
+          description: government Program Code
+          example: '2'
+          type: string
+        coverageType:
+          description: Types of coverage included in the policy
+          example: Medical
+          type: string
+        insuranceTypeCode:
+          description: Insurance type code
+          example: HN
+          type: string
+        insuranceType:
+          description: Insurance type
+          example: Health Maintenance Organization (HMO)
+          type: string
+      description: Insurance information
+    Eligibility:
+      type: object
+      properties:
+        eligibilityInfo:
+          description: Basic eligibility information
+          $ref: '#/components/schemas/EligibilityBasic'
+        primaryCarePhysician:
+          description: Primary care physician details
+          $ref: '#/components/schemas/PrimaryCarePhysician'
+        coordinationOfBenefits:
+          description: Coordination of benefits information
+          type: array
+          items:
+            $ref: '#/components/schemas/CoordinationOfBenefits'
+        idCardImages:
+          description: List of ID card images
+          type: array
+          items:
+            $ref: '#/components/schemas/IdCard'
+        providerNetwork:
+          description: Provider network details
+          $ref: '#/components/schemas/ProviderNetwork'
+        serviceLevels:
+          description: List of service levels
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceLevel'
+        additionalInfo:
+          description: Extended attributes
+          $ref: '#/components/schemas/AdditionalInfo'
+        otherBeneficiaries:
+          description: List of other beneficiaries
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberInfo'
+      description: Eligibility details containing various attributes
     ServiceDetails:
       type: object
       properties:
@@ -3456,6 +3669,134 @@ components:
           description: Messages related to a service
           $ref: '#/components/schemas/Messages'
       description: Information about a specific covered service
+    WaiverLiability:
+      type: object
+      properties:
+        startDate:
+          description: Start date
+          example: '2020-01-01'
+          type: string
+        endDate:
+          description: End date
+          example: '2020-12-31'
+          type: string
+        amount:
+          description: Waiver amount
+          example: '100.00'
+          type: string
+        amountFrequency:
+          description: Waiver amount frequency
+          example: Monthly
+          type: string
+        remainingAmount:
+          description: Remaining amount
+          example: '50.00'
+          type: string
+        metYtdAmount:
+          description: Met year-to-date amount
+          example: '25.00'
+          type: string
+      description: Waiver liability details
+    COBPolicy:
+      type: object
+      properties:
+        policyNumber:
+          description: Policy number
+          example: '123456'
+          type: string
+        groupNumber:
+          description: Group number
+          example: '123456'
+          type: string
+        coverageType:
+          description: Coverage type
+          example: M
+          type: string
+        insuranceTypeCode:
+          description: Insurance type code
+          example: C
+          type: string
+        medicareEntitlementType:
+          description: Medicare entitlement type
+          example: Medicaid
+          type: string
+        medicareEntitlementReason:
+          description: Medicare entitlement reason
+          example: Age
+          type: string
+        effectiveDate:
+          description: Effective date
+          example: '2025-12-21'
+          type: string
+        terminationDate:
+          description: Termination date
+          example: '2025-12-21'
+          type: string
+        verificationDate:
+          description: Verification date
+          example: '2025-12-21'
+          type: string
+      description: COB policy information
+    SubMessage:
+      type: object
+      properties:
+        service:
+          description: Service related to the sub-message
+          example: VARIED BENEFIT.REFER TO PLAN EVIDENCE OF COVERAGE FOR BENEFITS AND LIMITATIONS
+          type: string
+        status:
+          description: Status of the service
+          example: Active
+          type: string
+        copay:
+          description: Co-pay amount
+          example: $15
+          type: string
+        msg:
+          description: Message
+          example: Message about the service
+          type: string
+        startDate:
+          description: Start date for the service
+          example: '2020-01-01'
+          type: string
+        endDate:
+          description: End date for the service
+          example: '2020-12-31'
+          type: string
+        minCopay:
+          description: Minimum co-pay amount
+          type: string
+        minCopayMsg:
+          description: Message about minimum co-pay
+          type: string
+        maxCopay:
+          description: Maximum co-pay amount
+          type: string
+        maxCopayMsg:
+          description: Message about maximum co-pay
+          type: string
+        isPrimaryIndicator:
+          description: Indicates if this is a primary indicator
+          example: 'false'
+          type: boolean
+      description: Sub-message details
+    CoordinationOfBenefits:
+      type: object
+      properties:
+        coordinationOfBenefitDetails:
+          description: List of coordination of benefits
+          type: array
+          items:
+            $ref: '#/components/schemas/CobDetail'
+        cobUpdateInformation:
+          description: COB update information
+          $ref: '#/components/schemas/COBUpdateInformation'
+        disclaimer:
+          description: COB disclaimer
+          example: Disclaimer Long text
+          type: string
+      description: Details about coordination of benefits
     CopayDetail:
       type: object
       properties:
@@ -3468,6 +3809,36 @@ components:
           example: OP
           type: string
       description: Copay detail information
+    ServiceLevel:
+      type: object
+      properties:
+        family:
+          description: Family service level information
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceDetail'
+        individual:
+          description: Individual Service level information
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceDetail'
+      description: Detailed service level information
+    ProviderNetwork:
+      type: object
+      properties:
+        status:
+          description: Network Status
+          example: In Network
+          type: string
+        tier:
+          description: Network tier
+          example: '1'
+          type: string
+        speciality:
+          description: Provider speciality
+          example: internal Med
+          type: string
+      description: Information about the member's network status
     Input:
       type: object
       properties:
@@ -3585,469 +3956,13 @@ components:
       - payerId
       - providerLastName
       description: Input data for the Eligibility Pre-Check operation
-    CoordinationOfBenefits:
+    EligibilityPreCheckResponseWrapper:
       type: object
       properties:
-        coordinationOfBenefitDetails:
-          description: List of coordination of benefits
-          type: array
-          items:
-            $ref: '#/components/schemas/CobDetail'
-        cobUpdateInformation:
-          description: COB update information
-          $ref: '#/components/schemas/COBUpdateInformation'
-        disclaimer:
-          description: COB disclaimer
-          example: Disclaimer Long text
-          type: string
-      description: Details about coordination of benefits
-    CobPrimacy:
-      type: object
-      properties:
-        indicator:
-          description: COB primacy indicator
-          example: P
-          type: string
-        description:
-          description: COB primacy description
-          example: Primary
-          type: string
-        message:
-          description: COB primacy message
-          example: COB Message
-          type: string
-      description: COB primacy information
-    COBUpdateInformation:
-      type: object
-      properties:
-        cobUpdateMessage:
-          description: COB update message
-          example: Update Message
-          type: string
-        cobLastVerifiedDate:
-          description: COB last verified date
-          example: '2021-01-01'
-          type: string
-      description: COB update information
-    CoInsuranceListItem:
-      type: object
-      properties:
-        placeOfService:
-          description: Place of service
-          example: Office
-          type: string
-        coinsurancePercent:
-          description: Co-insurance percentage and frequency
-          example: 20% / Visit
-          type: string
-        service:
-          description: Service name
-          example: diagnosticLab
-          type: string
-        messages:
-          description: List of messages related to the co-insurance
-          example: '[DESIGNATED DIAGNOSTIC PROVIDER]'
-          type: array
-          items:
-            type: string
-        startDate:
-          description: Start date for the co-insurance
-          example: '2024-01-01'
-          type: string
-        endDate:
-          description: End date for the co-insurance
-          example: '2024-12-31'
-          type: string
-      description: Co-insurance list item details
-    ServiceDetail:
-      type: object
-      properties:
-        networkStatus:
-          description: Network status for this service level
-          example: ' inNetwork/outOfNetwork/inNetworkTier1/inNetworkTier1PreferredLab/inNetworkTier2/inNetworkDesignatedDiagnosticProvider'
-          type: string
-        services:
-          description: Service Covered at this level
-          type: array
-          items:
-            $ref: '#/components/schemas/ServiceDetails'
-      description: Detailed service level information
-    AdditionalInfo:
-      type: object
-      properties:
-        fundingType:
-          description: Type of funding for the policy
-          example: Fully Insuredss
-          type: string
-        businessSegment:
-          description: Business segment
-          example: Small Business
-          type: string
-        sizeDefinitionDescription:
-          description: Size definition description
-          example: Small Group
-          type: string
-        revenueArrangementDescription:
-          description: Revenue arrangement description
-          example: Level Funded
-          type: string
-        hsa:
-          description: Indicates if the plan has a Health Savings Account (HSA)
-          example: 'NO'
-          type: string
-        cdhp:
-          description: Indicates if the plan is a Consumer-Directed Health Plan (CDHP)
-          example: 'NO'
-          type: string
-        cmsHId:
-          description: CMS H ID
-          example: H1889
-          type: string
-        cmsPackageBenefitPlanCode:
-          description: CMS package benefit plan code
-          example: '025'
-          type: string
-        cmsSegmentId:
-          description: CMS segment identifier
-          example: '000'
-          type: string
-        cmsContractId:
-          description: CMS contract identifier
-          example: H1889-025-000
-          type: string
-        benefitPlanId:
-          description: Benefit plan identifier
-          example: '47544'
-          type: string
-        virtualVisit:
-          description: Indicates if virtual visits are covered
-          example: 'NO'
-          type: string
-        designatedVirtualClinicNetwork:
-          description: Indicates if there is a designated virtual clinic network
-          example: Y
-          type: string
-        medicaidVariableCode:
-          description: Medicaid variable code
-          example: '12345'
-          type: string
-        hraBalance:
-          description: HRA balance amount
-          example: '1000.00'
-          type: string
-        hraMessage:
-          description: HRA message
-          example: HRA available
-          type: string
-        hraUnavailableMessage:
-          description: HRA unavailable message
-          example: N/A
-          type: string
-        graceMessageByState:
-          description: Grace period message by state
-          example: Texas has a grace period of 90 days
-          type: string
-        gracePaidThrough:
-          description: Grace paid through date
-          example: '2025-03-31'
-          type: string
-        gracePeriodMonth:
-          description: Grace period month
-          example: March
-          type: string
-        medicareGuidelines:
-          description: Indicates if Medicare guidelines apply
-          example: 'false'
-          type: boolean
-        medicareEntitlementReason:
-          description: Reason for Medicare entitlement
-          example: Age
-          type: string
-        medicaidEntitlement:
-          description: Medicaid entitlement information
-          type: array
-          items:
-            $ref: '#/components/schemas/MedicaidEntitlement'
-      description: Additional plan related information
-    TransferOfPropertyPenaltyPeriod:
-      type: object
-      properties:
-        startDate:
-          description: Start date
-          example: '2020-01-01'
-          type: string
-        endDate:
-          description: End date
-          example: '2021-12-31'
-          type: string
-      description: Transfer of property penalty period details
-    SubMessageCopay:
-      type: object
-      properties:
-        service:
-          description: Service related to the sub-message
-          example: VARIED BENEFIT.REFER TO PLAN EVIDENCE OF COVERAGE FOR BENEFITS AND LIMITATIONS
-          type: string
-        status:
-          description: Status of the service
-          example: Active
-          type: string
-        copay:
-          description: Co-pay amount
-          example: $15
-          type: string
-        frequency:
-          description: Frequency of the copay
-          example: Monthly
-          type: string
-        msg:
-          description: Message
-          example: Message about the service
-          type: string
-        startDate:
-          description: Start date for the service
-          example: '2020-01-01'
-          type: string
-        endDate:
-          description: End date for the service
-          example: '2020-12-31'
-          type: string
-        minCopay:
-          description: Minimum co-pay amount
-          type: string
-        minCopayMsg:
-          description: Message about minimum co-pay
-          type: string
-        maxCopay:
-          description: Maximum co-pay amount
-          type: string
-        maxCopayMsg:
-          description: Message about maximum co-pay
-          type: string
-        isPrimaryIndicator:
-          description: Indicates if this is a primary indicator
-          example: 'false'
-          type: boolean
-        exactCopay:
-          description: Exact copay information
-          $ref: '#/components/schemas/ExactCopay'
-      description: Sub-message details
-    InsuranceInfo:
-      type: object
-      properties:
-        policyNumber:
-          description: Policy number for the insurance coverage
-          example: 708547
-          type: string
-        eligibilityStartDate:
-          description: Start date of the eligibility in ISO 8601 format (YYYY-MM-DD)
-          example: '2020-01-01'
-          type: string
-        eligibilityEndDate:
-          description: End date of the eligibility in ISO 8601 format (YYYY-MM-DD)
-          example: '2020-12-31'
-          type: string
-        planStartDate:
-          description: Start date of the plan in ISO 8601 format (YYYY-MM-DD)
-          example: '2020-01-01'
-          type: string
-        planEndDate:
-          description: End date of the plan in ISO 8601 format (YYYY-MM-DD)
-          example: '2020-12-31'
-          type: string
-        policyStatus:
-          description: Status of the policy
-          example: Past Policy
-          type: string
-        planTypeDescription:
-          description: Description of the plan type
-          type: string
-        groupName:
-          description: Group Name
-          example: Indiana Acute nursing
-          type: string
-        address:
-          description: Address of the Insurance Company
-          $ref: '#/components/schemas/Address_2'
-        stateOfIssueCode:
-          description: State where the policy was issued
-          example: IL
-          type: string
-        productType:
-          description: Type of insurance product
-          example: EPO
-          type: string
-        productId:
-          description: Product identifier
-          example: '123'
-          type: string
-        productCode:
-          description: Product code
-          example: '9'
-          type: string
-        payerId:
-          description: Payer Id
-          example: '87726'
-          type: string
-        lineOfBusinessCode:
-          description: Code for the line of business
-          example: E&I
-          type: string
-        governmentProgramCode:
-          description: government Program Code
-          example: '2'
-          type: string
-        coverageType:
-          description: Types of coverage included in the policy
-          example: Medical
-          type: string
-        insuranceTypeCode:
-          description: Insurance type code
-          example: HN
-          type: string
-        insuranceType:
-          description: Insurance type
-          example: Health Maintenance Organization (HMO)
-          type: string
-      description: Insurance information
-    Eligibility:
-      type: object
-      properties:
-        eligibilityInfo:
-          description: Basic eligibility information
-          $ref: '#/components/schemas/EligibilityBasic'
-        primaryCarePhysician:
-          description: Primary care physician details
-          $ref: '#/components/schemas/PrimaryCarePhysician'
-        coordinationOfBenefits:
-          description: Coordination of benefits information
-          type: array
-          items:
-            $ref: '#/components/schemas/CoordinationOfBenefits'
-        idCardImages:
-          description: List of ID card images
-          type: array
-          items:
-            $ref: '#/components/schemas/IdCard'
-        providerNetwork:
-          description: Provider network details
-          $ref: '#/components/schemas/ProviderNetwork'
-        serviceLevels:
-          description: List of service levels
-          type: array
-          items:
-            $ref: '#/components/schemas/ServiceLevel'
-        additionalInfo:
-          description: Extended attributes
-          $ref: '#/components/schemas/AdditionalInfo'
-        otherBeneficiaries:
-          description: List of other beneficiaries
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberInfo'
-      description: Eligibility details containing various attributes
-    MemberInfo:
-      type: object
-      properties:
-        memberId:
-          description: Unique identifier for the member
-          example: '840868613'
-          type: string
-        firstName:
-          description: First name of the member
-          example: DARLA
-          type: string
-        lastName:
-          description: Last name of the member
-          example: Brown
-          type: string
-        middleName:
-          description: Middle name of the member
-          example: J
-          type: string
-        suffix:
-          description: Name suffix of the member
-          example: Jr.
-          type: string
-        dateOfBirth:
-          description: Date of birth of the member in ISO 8601 format (YYYY-MM-DD)
-          example: '1981-06-14'
-          type: string
-        gender:
-          description: Gender of the member
-          example: F
-          type: string
-        relationshipCode:
-          description: Code representing the relationship to the primary subscriber
-          example: '000'
-          type: string
-        dependentSequenceNumber:
-          description: Code representing the type of Dependent Sequence
-          example: '00'
-          type: string
-        individualRelationship:
-          description: Individual Relationship Code
-          $ref: '#/components/schemas/RelationShipInfo'
-        relationshipType:
-          description: Code representing the type of relationship
-          $ref: '#/components/schemas/RelationShipInfo'
-      description: Member Information
-    IdCard:
-      type: object
-      properties:
-        side:
-          description: Type of ID card (front or back)
-          example: front
-          type: string
-        content:
-          description: Byte Array
-          example: REPO01|1234567890
-          type: string
-        contentType:
-          description: Image Content (PNG)
-          example: image/png
-          type: string
-      description: Information about the member's ID card
-    WaiverLiability:
-      type: object
-      properties:
-        startDate:
-          description: Start date
-          example: '2020-01-01'
-          type: string
-        endDate:
-          description: End date
-          example: '2020-12-31'
-          type: string
-        amount:
-          description: Waiver amount
-          example: '100.00'
-          type: string
-        amountFrequency:
-          description: Waiver amount frequency
-          example: Monthly
-          type: string
-        remainingAmount:
-          description: Remaining amount
-          example: '50.00'
-          type: string
-        metYtdAmount:
-          description: Met year-to-date amount
-          example: '25.00'
-          type: string
-      description: Waiver liability details
-    RelationShipInfo:
-      type: object
-      properties:
-        code:
-          description: Individual relationship code
-          example: EE
-          type: string
-        description:
-          description: Description of the individual relationship
-          example: subscriber
-          type: string
-      description: Relationship Information
+        checkEligibility:
+          description: Eligibility Pre-Check Response data
+          $ref: '#/components/schemas/EligibilityResponse'
+      description: Wrapper for Eligibility Pre-Check Response
     PlanLevel:
       type: object
       properties:
@@ -4066,109 +3981,258 @@ components:
           items:
             $ref: '#/components/schemas/PlanDetail'
       description: Deductible information
-    COBPolicy:
+    MedicaidEntitlement:
       type: object
       properties:
-        policyNumber:
-          description: Policy number
-          example: '123456'
+        waiverLiabilityList:
+          description: Waiver liability list
+          type: array
+          items:
+            $ref: '#/components/schemas/WaiverLiability'
+        patientLiabilityList:
+          description: Patient liability list
+          type: array
+          items:
+            $ref: '#/components/schemas/PatientLiability'
+        transferOfPropertyPenaltyPeriod:
+          description: Transfer of property penalty period
+          type: array
+          items:
+            $ref: '#/components/schemas/TransferOfPropertyPenaltyPeriod'
+      description: Medicaid entitlement information
+    RelationShipInfo:
+      type: object
+      properties:
+        code:
+          description: Individual relationship code
+          example: EE
           type: string
-        groupNumber:
-          description: Group number
-          example: '123456'
+        description:
+          description: Description of the individual relationship
+          example: subscriber
           type: string
-        coverageType:
-          description: Coverage type
-          example: M
+      description: Relationship Information
+    PatientLiability:
+      type: object
+      properties:
+        startDate:
+          description: Start date
+          example: '2020-01-01'
           type: string
-        insuranceTypeCode:
-          description: Insurance type code
-          example: C
+        endDate:
+          description: End date
+          example: '2020-12-31'
           type: string
-        medicareEntitlementType:
-          description: Medicare entitlement type
-          example: Medicaid
+        amount:
+          description: Liability amount
+          example: '100.00'
           type: string
-        medicareEntitlementReason:
-          description: Medicare entitlement reason
-          example: Age
+        amountFrequency:
+          description: Liability amount frequency
+          example: Monthly
           type: string
-        effectiveDate:
-          description: Effective date
-          example: '2025-12-21'
+        remainingAmount:
+          description: Remaining amount
+          example: '50.00'
           type: string
-        terminationDate:
-          description: Termination date
-          example: '2025-12-21'
+        metYtdAmount:
+          description: Met year-to-date amount
+          example: '25.00'
           type: string
-        verificationDate:
-          description: Verification date
-          example: '2025-12-21'
+      description: Patient liability details
+    IdCard:
+      type: object
+      properties:
+        side:
+          description: Type of ID card (front or back)
+          example: front
           type: string
-      description: COB policy information
-    DelegatedInfo:
+        content:
+          description: Byte Array
+          example: REPO01|1234567890
+          type: string
+        contentType:
+          description: Image Content (PNG)
+          example: image/png
+          type: string
+      description: Information about the member's ID card
+    CoPayDetails:
+      type: object
+      properties:
+        isSingleMessageDetail:
+          description: Indicates if there is a single message detail
+          example: 'false'
+          type: boolean
+        isViewDetail:
+          description: Indicates if details can be viewed
+          example: 'false'
+          type: boolean
+        messages:
+          description: List of messages
+          example: 0% / Visit VARIED BENEFIT.REFER TO PLAN EVIDENCE OF COVERAGE FOR BENEFITS AND LIMITATIONS
+          type: array
+          items:
+            type: string
+        subMessages:
+          description: List of sub-messages
+          type: array
+          items:
+            $ref: '#/components/schemas/SubMessageCopay'
+        limitationInfo:
+          description: List of Limitation Info
+          type: array
+          items:
+            $ref: '#/components/schemas/LimitationInfo'
+        isMultipleCopaysFound:
+          description: Indicates if multiple co-pays were found
+          example: 'false'
+          type: boolean
+        isMultipleCoinsuranceFound:
+          description: Indicates if multiple co-insurances were found
+          example: 'false'
+          type: boolean
+      description: Detailed message information
+    PlanDetail:
+      type: object
+      properties:
+        networkStatus:
+          description: Network status for this cost sharing information
+          example: InNetwork/OutOfNetwork/Tier1/Tier2
+          type: string
+        planAmount:
+          description: Planned amount for this cost sharing
+          example: '234.56'
+          type: string
+        planAmountFrequency:
+          description: Frequency of the planned amount
+          example: Calendar Year
+          type: string
+        remainingAmount:
+          description: Remaining amount for this cost sharing
+          example: '0.00'
+          type: string
+      description: Cost sharing details for a specific network status
+    COBUpdateInformation:
+      type: object
+      properties:
+        cobUpdateMessage:
+          description: COB update message
+          example: Update Message
+          type: string
+        cobLastVerifiedDate:
+          description: COB last verified date
+          example: '2021-01-01'
+          type: string
+      description: COB update information
+    ContactDetails:
+      type: object
+      properties:
+        phone:
+          description: Phone number
+          example: 010-011-0101
+          type: string
+        fax:
+          description: Fax number
+          example: 010-011-0102
+          type: string
+        email:
+          description: Email address
+          example: entity@example.com
+          type: string
+    EligibilityBasic:
+      type: object
+      properties:
+        trnId:
+          description: Transaction ID for the eligibility check
+          example: dsfd-asdsd-asdasd-adad-aasdasd
+          type: string
+        member:
+          description: Member information
+          $ref: '#/components/schemas/MemberInfo'
+        contact:
+          description: Contact information
+          $ref: '#/components/schemas/ContactInfo'
+        insuranceInfo:
+          description: Insurance information
+          $ref: '#/components/schemas/InsuranceInfo'
+        associatedIds:
+          description: Associated IDs
+          $ref: '#/components/schemas/AssociatedIds'
+        planLevels:
+          description: Plan level information including deductibles, out-of-pocket expenses, etc.
+          type: array
+          items:
+            $ref: '#/components/schemas/PlanLevel'
+        delegatedInfo:
+          description: Delegated information
+          type: array
+          items:
+            $ref: '#/components/schemas/DelegatedInfo'
+      description: Basic eligibility information
+    PlanAmount:
+      type: object
+      properties:
+        networkStatus:
+          type: string
+        planAmount:
+          type: number
+          format: decimal
+        remainingAmount:
+          type: number
+          format: decimal
+    DelegatedInfo_2:
       type: object
       properties:
         entity:
-          description: Entity Name
-          example: Entity name
-          type: string
-        payerId:
-          description: Payer Details
-          example: SIS
           type: string
         contact:
-          description: Contact Details
-          $ref: '#/components/schemas/ContactDetails'
+          type: object
+          properties:
+            phone:
+              type: string
         addresses:
-          description: Remit Address
           type: array
           items:
-            $ref: '#/components/schemas/Address_2'
-      description: Delegated Information
-    ServiceLevel:
+            $ref: '#/components/schemas/Address_3'
+    GraphQLRequest:
+      type: object
+      required:
+      - query
+      - variables
+      properties:
+        query:
+          type: string
+          description: GraphQL query string
+        variables:
+          type: object
+          required:
+          - input
+          properties:
+            input:
+              $ref: '#/components/schemas/EligibilityInput'
+    EligibilityInfo:
       type: object
       properties:
-        family:
-          description: Family service level information
+        trnId:
+          type:
+          - string
+          - 'null'
+        member:
+          $ref: '#/components/schemas/Member'
+        contact:
+          $ref: '#/components/schemas/Contact'
+        insuranceInfo:
+          $ref: '#/components/schemas/InsuranceInfo_2'
+        associatedIds:
+          $ref: '#/components/schemas/AssociatedIds_2'
+        planLevels:
           type: array
           items:
-            $ref: '#/components/schemas/ServiceDetail'
-        individual:
-          description: Individual Service level information
+            $ref: '#/components/schemas/PlanLevel_2'
+        delegatedInfo:
           type: array
           items:
-            $ref: '#/components/schemas/ServiceDetail'
-      description: Detailed service level information
-    Messages:
-      type: object
-      properties:
-        coPay:
-          description: Detailed message information
-          $ref: '#/components/schemas/CoPayDetails'
-        coInsurance:
-          description: Detailed message information
-          $ref: '#/components/schemas/MessageDetail'
-        deductible:
-          description: Detailed message information
-          $ref: '#/components/schemas/MessageDetail'
-        benefitsAllowed:
-          description: Detailed message information
-          $ref: '#/components/schemas/MessageDetail'
-        benefitsRemaining:
-          description: Detailed message information
-          $ref: '#/components/schemas/MessageDetail'
-        coPayList:
-          description: CoPay List
-          type: array
-          items:
-            $ref: '#/components/schemas/CoPayListItem'
-        coInsuranceList:
-          description: CoInsurance List
-          type: array
-          items:
-            $ref: '#/components/schemas/CoInsuranceListItem'
-      description: Messages related to a service
+            $ref: '#/components/schemas/DelegatedInfo_2'
     EligibilityInput:
       type: object
       required:
@@ -4212,6 +4276,74 @@ components:
         providerNPI:
           type: string
           pattern: ^\d{10}$
+    InsuranceInfo_2:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+        eligibilityStartDate:
+          type: string
+          format: date
+        eligibilityEndDate:
+          type: string
+          format: date
+        planStartDate:
+          type: string
+          format: date
+        planEndDate:
+          type: string
+          format: date
+        policyStatus:
+          type: string
+        planTypeDescription:
+          type: string
+        groupName:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address_3'
+        stateOfIssueCode:
+          type: string
+        productType:
+          type: string
+        productCode:
+          type: string
+        payerId:
+          type: string
+        lineOfBusinessCode:
+          type: string
+        governmentProgramCode:
+          type: string
+        coverageType:
+          type: string
+        insuranceTypeCode:
+          type: string
+        insuranceType:
+          type: string
+    EligibilityRecord:
+      type: object
+      properties:
+        eligibilityInfo:
+          $ref: '#/components/schemas/EligibilityInfo'
+    EligibilityResponse_2:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            checkEligibility:
+              type: object
+              properties:
+                eligibility:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/EligibilityRecord'
+    CodeDescription:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
     Contact:
       type: object
       properties:
@@ -4230,54 +4362,6 @@ components:
           type: string
         healthInsuranceExchangeId:
           type: string
-    PlanLevel_2:
-      type: object
-      properties:
-        level:
-          type: string
-        family:
-          type: array
-          items:
-            $ref: '#/components/schemas/PlanAmount'
-        individual:
-          type: array
-          items:
-            $ref: '#/components/schemas/PlanAmount'
-    EligibilityRecord:
-      type: object
-      properties:
-        eligibilityInfo:
-          $ref: '#/components/schemas/EligibilityInfo'
-    GraphQLRequest:
-      type: object
-      required:
-      - query
-      - variables
-      properties:
-        query:
-          type: string
-          description: GraphQL query string
-        variables:
-          type: object
-          required:
-          - input
-          properties:
-            input:
-              $ref: '#/components/schemas/EligibilityInput'
-    DelegatedInfo_2:
-      type: object
-      properties:
-        entity:
-          type: string
-        contact:
-          type: object
-          properties:
-            phone:
-              type: string
-        addresses:
-          type: array
-          items:
-            $ref: '#/components/schemas/Address_3'
     Member:
       type: object
       properties:
@@ -4323,103 +4407,19 @@ components:
           type: string
         zip4:
           type: string
-    PlanAmount:
+    PlanLevel_2:
       type: object
       properties:
-        networkStatus:
+        level:
           type: string
-        planAmount:
-          type: number
-          format: decimal
-        remainingAmount:
-          type: number
-          format: decimal
-    EligibilityResponse_2:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            checkEligibility:
-              type: object
-              properties:
-                eligibility:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/EligibilityRecord'
-    CodeDescription:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
-          type: string
-    InsuranceInfo_2:
-      type: object
-      properties:
-        policyNumber:
-          type: string
-        eligibilityStartDate:
-          type: string
-          format: date
-        eligibilityEndDate:
-          type: string
-          format: date
-        planStartDate:
-          type: string
-          format: date
-        planEndDate:
-          type: string
-          format: date
-        policyStatus:
-          type: string
-        planTypeDescription:
-          type: string
-        groupName:
-          type: string
-        address:
-          $ref: '#/components/schemas/Address_3'
-        stateOfIssueCode:
-          type: string
-        productType:
-          type: string
-        productCode:
-          type: string
-        payerId:
-          type: string
-        lineOfBusinessCode:
-          type: string
-        governmentProgramCode:
-          type: string
-        coverageType:
-          type: string
-        insuranceTypeCode:
-          type: string
-        insuranceType:
-          type: string
-    EligibilityInfo:
-      type: object
-      properties:
-        trnId:
-          type:
-          - string
-          - 'null'
-        member:
-          $ref: '#/components/schemas/Member'
-        contact:
-          $ref: '#/components/schemas/Contact'
-        insuranceInfo:
-          $ref: '#/components/schemas/InsuranceInfo_2'
-        associatedIds:
-          $ref: '#/components/schemas/AssociatedIds_2'
-        planLevels:
+        family:
           type: array
           items:
-            $ref: '#/components/schemas/PlanLevel_2'
-        delegatedInfo:
+            $ref: '#/components/schemas/PlanAmount'
+        individual:
           type: array
           items:
-            $ref: '#/components/schemas/DelegatedInfo_2'
+            $ref: '#/components/schemas/PlanAmount'
   securitySchemes:
     bearer-key:
       type: http

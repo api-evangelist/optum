@@ -96,8 +96,19 @@ paths:
               example:
                 message: Internal server error
                 statusCode: 500
+      summary: Get operation definition
+      x-summary-source: derived
 components:
   schemas:
+    Narrative:
+      type: object
+      properties:
+        status:
+          type: string
+          example: generated
+        div:
+          type: string
+          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
     OperationDefinitionResponse:
       type: object
       properties:
@@ -140,15 +151,6 @@ components:
         instance:
           type: boolean
           example: false
-    Narrative:
-      type: object
-      properties:
-        status:
-          type: string
-          example: generated
-        div:
-          type: string
-          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
   securitySchemes:
     oAuth:
       type: oauth2

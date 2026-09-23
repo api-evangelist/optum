@@ -155,7 +155,7 @@ paths:
     get:
       tags:
       - I-OCE Edits APIs
-      summary: 'Facility - fetch I-OCE edits '
+      summary: Facility - fetch I-OCE edits
       operationId: getIOCEEdits
       parameters:
       - name: limit
@@ -272,7 +272,7 @@ paths:
     get:
       tags:
       - I-OCE Edits APIs
-      summary: 'Facility - fetch codes associated with specified I-OCE edit number '
+      summary: Facility - fetch codes associated with specified I-OCE edit number
       operationId: getCodesAssociatedForEdit
       parameters:
       - name: edit-number

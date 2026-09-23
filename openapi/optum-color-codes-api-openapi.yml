@@ -403,6 +403,113 @@ components:
           type: string
       xml:
         name: icd-10-pcs-color-codes
+    Icd10CmColorCodes:
+      type: object
+      properties:
+        newCode:
+          type: string
+          xml:
+            name: new-code
+        revisedCode:
+          type: string
+          xml:
+            name: revised-code
+        characterRequired4Th:
+          type: string
+          xml:
+            name: character-required-4th
+        characterRequired5Th:
+          type: string
+          xml:
+            name: character-required-5th
+        characterRequired6Th:
+          type: string
+          xml:
+            name: character-required-6th
+        characterRequired7Th:
+          type: string
+          xml:
+            name: character-required-7th
+        characterRequiredX7Th:
+          type: string
+          xml:
+            name: character-required-x7th
+        maleDiagnosis:
+          type: string
+          xml:
+            name: male-diagnosis
+        femaleDiagnosis:
+          type: string
+          xml:
+            name: female-diagnosis
+        unspecifiedDiagnosisCode:
+          type: string
+          xml:
+            name: unspecified-diagnosis-code
+        otherSpecifiedDiagnosisCode:
+          type: string
+          xml:
+            name: other-specified-diagnosis-code
+        adultDiagnosis:
+          type: string
+          xml:
+            name: adult-diagnosis
+        maternityDiagnosis:
+          type: string
+          xml:
+            name: maternity-diagnosis
+        newbornDiagnosis:
+          type: string
+          xml:
+            name: newborn-diagnosis
+        pediatricDiagnosis:
+          type: string
+          xml:
+            name: pediatric-diagnosis
+        hivRelated:
+          type: string
+          xml:
+            name: hiv-related
+        unacceptablePrincipalDx:
+          type: string
+          xml:
+            name: unacceptable-principal-dx
+        manifestationCodeNotAPrimaryDx:
+          type: string
+          xml:
+            name: manifestation-code-not-a-primary-dx
+        comorbidityOrComplication:
+          type: string
+          xml:
+            name: comorbidity-or-complication
+        majorComplication:
+          type: string
+          xml:
+            name: major-complication
+        questionablePdx:
+          type: string
+          xml:
+            name: questionable-pdx
+        hospitalAcquiredCondition:
+          type: array
+          xml:
+            name: hospital-acquired-condition
+          items:
+            type: string
+            xml:
+              name: hospital-acquired-condition
+        conditionalHospitalAcquiredCondition:
+          type: array
+          xml:
+            name: conditional-hospital-acquired-condition
+          items:
+            type: string
+            xml:
+              name: conditional-hospital-acquired-condition
+        zcodeIndicator:
+          type: string
+      xml:
+        name: icd-10-cm-color-codes
     ColorCodes:
       required:
       - modifier51Exempt
@@ -636,113 +743,6 @@ components:
           type: string
       xml:
         name: color-codes
-    Icd10CmColorCodes:
-      type: object
-      properties:
-        newCode:
-          type: string
-          xml:
-            name: new-code
-        revisedCode:
-          type: string
-          xml:
-            name: revised-code
-        characterRequired4Th:
-          type: string
-          xml:
-            name: character-required-4th
-        characterRequired5Th:
-          type: string
-          xml:
-            name: character-required-5th
-        characterRequired6Th:
-          type: string
-          xml:
-            name: character-required-6th
-        characterRequired7Th:
-          type: string
-          xml:
-            name: character-required-7th
-        characterRequiredX7Th:
-          type: string
-          xml:
-            name: character-required-x7th
-        maleDiagnosis:
-          type: string
-          xml:
-            name: male-diagnosis
-        femaleDiagnosis:
-          type: string
-          xml:
-            name: female-diagnosis
-        unspecifiedDiagnosisCode:
-          type: string
-          xml:
-            name: unspecified-diagnosis-code
-        otherSpecifiedDiagnosisCode:
-          type: string
-          xml:
-            name: other-specified-diagnosis-code
-        adultDiagnosis:
-          type: string
-          xml:
-            name: adult-diagnosis
-        maternityDiagnosis:
-          type: string
-          xml:
-            name: maternity-diagnosis
-        newbornDiagnosis:
-          type: string
-          xml:
-            name: newborn-diagnosis
-        pediatricDiagnosis:
-          type: string
-          xml:
-            name: pediatric-diagnosis
-        hivRelated:
-          type: string
-          xml:
-            name: hiv-related
-        unacceptablePrincipalDx:
-          type: string
-          xml:
-            name: unacceptable-principal-dx
-        manifestationCodeNotAPrimaryDx:
-          type: string
-          xml:
-            name: manifestation-code-not-a-primary-dx
-        comorbidityOrComplication:
-          type: string
-          xml:
-            name: comorbidity-or-complication
-        majorComplication:
-          type: string
-          xml:
-            name: major-complication
-        questionablePdx:
-          type: string
-          xml:
-            name: questionable-pdx
-        hospitalAcquiredCondition:
-          type: array
-          xml:
-            name: hospital-acquired-condition
-          items:
-            type: string
-            xml:
-              name: hospital-acquired-condition
-        conditionalHospitalAcquiredCondition:
-          type: array
-          xml:
-            name: conditional-hospital-acquired-condition
-          items:
-            type: string
-            xml:
-              name: conditional-hospital-acquired-condition
-        zcodeIndicator:
-          type: string
-      xml:
-        name: icd-10-cm-color-codes
   securitySchemes:
     bearerAuth:
       type: http

@@ -59,6 +59,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      operationId: getByTraceId
+      x-operation-id-source: derived
   /metadata:
     post:
       tags:
@@ -148,8 +150,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       x-codegen-request-body-name: data
+      operationId: postMetadata
+      x-operation-id-source: derived
 components:
   schemas:
+    DetailedResponse:
+      type: object
+      properties:
+        transactionDetails:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/TransactionDetails'
+        status:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusDetails'
+    BadRequest:
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponse'
     ErrorResponse:
       type: object
       properties:
@@ -160,6 +178,49 @@ components:
       example:
         statusCode: ErrorResponseCode
         statusMessage: SystemErrors.INTERNAL_ERROR
+    NotAuthorized:
+      allOf:
+      - $ref: '#/components/schemas/UnAuthorized'
+    MetadataResponses:
+      type: array
+      items:
+        $ref: '#/components/schemas/MetadataResponse'
+    StatusDetails:
+      type: object
+      properties:
+        statusMessage:
+          type: string
+        statusCode:
+          type: string
+        statusTimeStamp:
+          type: string
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentDetails'
+    MetadataResponse:
+      type: object
+      properties:
+        traceId:
+          type: string
+        transactionDetails:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/TransactionDetails'
+        status:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusDetails'
+    UnAuthorized:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string
+      example:
+        error: invalid_request
+        error_description: The access token is missing
     TransactionDetails:
       type: object
       properties:
@@ -185,9 +246,6 @@ components:
           type: string
         rejectionInformation:
           type: string
-    NotAuthorized:
-      allOf:
-      - $ref: '#/components/schemas/UnAuthorized'
     DocumentDetails:
       type: object
       properties:
@@ -211,60 +269,6 @@ components:
           type:
           - string
           - 'null'
-    StatusDetails:
-      type: object
-      properties:
-        statusMessage:
-          type: string
-        statusCode:
-          type: string
-        statusTimeStamp:
-          type: string
-        documents:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentDetails'
-    BadRequest:
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponse'
-    UnAuthorized:
-      type: object
-      properties:
-        error:
-          type: string
-        error_description:
-          type: string
-      example:
-        error: invalid_request
-        error_description: The access token is missing
-    MetadataResponses:
-      type: array
-      items:
-        $ref: '#/components/schemas/MetadataResponse'
-    DetailedResponse:
-      type: object
-      properties:
-        transactionDetails:
-          type: object
-          allOf:
-          - $ref: '#/components/schemas/TransactionDetails'
-        status:
-          type: array
-          items:
-            $ref: '#/components/schemas/StatusDetails'
-    MetadataResponse:
-      type: object
-      properties:
-        traceId:
-          type: string
-        transactionDetails:
-          type: object
-          allOf:
-          - $ref: '#/components/schemas/TransactionDetails'
-        status:
-          type: array
-          items:
-            $ref: '#/components/schemas/StatusDetails'
   securitySchemes:
     bearerToken:
       type: apiKey

@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Optum Common Facility Federal Register Addendum B History API
+  title: Optum Common Facility Federal Register Addendum B History…
   description: MicroService that contains Optum module-related information
   contact:
     name: Ken Kracker

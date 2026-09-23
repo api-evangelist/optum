@@ -71,6 +71,8 @@ paths:
           description: Service Unavailable
       security:
       - bearerAuth: []
+      summary: Dict terms
+      x-summary-source: derived
 components:
   securitySchemes:
     bearerAuth:

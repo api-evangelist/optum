@@ -93,6 +93,15 @@ paths:
           description: Service Unavailable
 components:
   schemas:
+    Icd10Mapping:
+      type: object
+      properties:
+        node:
+          type: array
+          items:
+            $ref: '#/components/schemas/Icd10Code'
+      xml:
+        name: icd-10-mapping
     Icd10Code:
       required:
       - code
@@ -116,15 +125,6 @@ components:
           type: string
           xml:
             attribute: true
-    Icd10Mapping:
-      type: object
-      properties:
-        node:
-          type: array
-          items:
-            $ref: '#/components/schemas/Icd10Code'
-      xml:
-        name: icd-10-mapping
   securitySchemes:
     bearerAuth:
       type: http

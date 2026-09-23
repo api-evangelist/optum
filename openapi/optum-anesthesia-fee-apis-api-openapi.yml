@@ -15,7 +15,7 @@ paths:
     get:
       tags:
       - Anesthesia Fee APIs
-      summary: Fetches anesthesia fee carrier localities and units information for a given anesthesia code
+      summary: Fetches anesthesia fee carrier localities and units information for a given…
       operationId: fetchAnesthesiaFee
       parameters:
       - name: codetype

@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Optum Common Facility Diagnostic Related Groups (DRG) Indicators APIs API
+  title: Optum Common Facility Diagnostic Related Groups (DRG)…
   description: MicroService that contains Optum module-related information
   contact:
     name: Ken Kracker
@@ -93,6 +93,8 @@ paths:
                 path: /optumcommonms/api/optum/facility/drg-indicators
       security:
       - bearerAuth: []
+      summary: Get DRG indicator list
+      x-summary-source: derived
 components:
   securitySchemes:
     bearerAuth:

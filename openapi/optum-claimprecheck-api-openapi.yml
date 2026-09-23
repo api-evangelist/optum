@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Claim Pre Check API
-  description: Claim Pre Check  API
+  description: Claim Pre Check API
   version: 1.0.0
 servers:
 - url: https://sandbox-apigw.optum.com/oihub
@@ -121,12 +121,45 @@ paths:
                 statusCode: 500
 components:
   schemas:
+    ClaimPreCheckRequest:
+      type: object
+      properties:
+        query:
+          description: GraphQL query for the Claims Pre-Check operation
+          example: 'query claimPreCheck($input: ClaimInput!) { claimPreCheck(input: $input) { transactionId x12ResponseData responseType x12Response277CA message statusCode } }
+
+            '
+          type: string
+        variables:
+          description: Variables for the Claims Pre-Check operation
+          $ref: '#/components/schemas/Variables'
     Variables:
       type: object
       properties:
         input:
           description: Input data for the Claims Pre-Check operation
           $ref: '#/components/schemas/Input'
+    ClaimPreCheckResponseWrapper:
+      type: object
+      properties:
+        claimPreCheck:
+          description: Claim Pre-Check Response data
+          $ref: '#/components/schemas/ClaimPreCheckResponse'
+      description: Wrapper for Claim Pre-Check Response
+    Input:
+      type: object
+      properties:
+        x12RequestData:
+          description: 837X12 request data for Institutional/Professional claims
+          example: ISA*00*...
+          type: string
+        payerId:
+          description: Payer ID
+          example: '123456789'
+          type: string
+      required:
+      - payerId
+      - x12RequestData
     ClaimPreCheckResponse:
       type: object
       properties:
@@ -155,39 +188,6 @@ components:
           example: '200'
           type: string
       description: Response model for Claim Pre-Check operations
-    ClaimPreCheckResponseWrapper:
-      type: object
-      properties:
-        claimPreCheck:
-          description: Claim Pre-Check Response data
-          $ref: '#/components/schemas/ClaimPreCheckResponse'
-      description: Wrapper for Claim Pre-Check Response
-    Input:
-      type: object
-      properties:
-        x12RequestData:
-          description: 837X12 request data for Institutional/Professional claims
-          example: ISA*00*...
-          type: string
-        payerId:
-          description: Payer ID
-          example: '123456789'
-          type: string
-      required:
-      - payerId
-      - x12RequestData
-    ClaimPreCheckRequest:
-      type: object
-      properties:
-        query:
-          description: GraphQL query for the Claims Pre-Check operation
-          example: 'query claimPreCheck($input: ClaimInput!) { claimPreCheck(input: $input) { transactionId x12ResponseData responseType x12Response277CA message statusCode } }
-
-            '
-          type: string
-        variables:
-          description: Variables for the Claims Pre-Check operation
-          $ref: '#/components/schemas/Variables'
   securitySchemes:
     oAuth:
       type: oauth2

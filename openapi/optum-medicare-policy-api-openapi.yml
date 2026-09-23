@@ -330,21 +330,6 @@ components:
             attribute: true
         value:
           type: string
-    Contractors:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/Links'
-        fi:
-          $ref: '#/components/schemas/Links'
-        ca:
-          $ref: '#/components/schemas/Links'
-        na:
-          $ref: '#/components/schemas/Links'
-        nb:
-          $ref: '#/components/schemas/Links'
-      xml:
-        name: Contractors
     Policy:
       type: object
       properties:
@@ -377,6 +362,32 @@ components:
             name: Link
           items:
             $ref: '#/components/schemas/Link'
+    Code:
+      type: object
+      properties:
+        policy:
+          type: array
+          items:
+            $ref: '#/components/schemas/Policy'
+        value:
+          type: string
+          xml:
+            attribute: true
+    Contractors:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/Links'
+        fi:
+          $ref: '#/components/schemas/Links'
+        ca:
+          $ref: '#/components/schemas/Links'
+        na:
+          $ref: '#/components/schemas/Links'
+        nb:
+          $ref: '#/components/schemas/Links'
+      xml:
+        name: Contractors
     Policies:
       type: object
       properties:
@@ -390,17 +401,6 @@ components:
             $ref: '#/components/schemas/Link'
       xml:
         name: policies
-    Code:
-      type: object
-      properties:
-        policy:
-          type: array
-          items:
-            $ref: '#/components/schemas/Policy'
-        value:
-          type: string
-          xml:
-            attribute: true
   securitySchemes:
     bearerAuth:
       type: http

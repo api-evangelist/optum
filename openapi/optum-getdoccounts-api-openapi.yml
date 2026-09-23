@@ -43,8 +43,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/documentCountRespObj'
+      summary: Get get doc counts by context id
+      x-summary-source: derived
+      operationId: getGetDocCountsByContextID
+      x-operation-id-source: derived
 components:
   schemas:
+    documentCountRespObj:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/documentCountObj'
+        rowCount:
+          type: integer
+          example: 1
     documentCountObj:
       type: object
       properties:
@@ -81,16 +95,6 @@ components:
         clientKey:
           type: string
           example: '1234028'
-    documentCountRespObj:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/documentCountObj'
-        rowCount:
-          type: integer
-          example: 1
 x-readme:
   explorer-enabled: true
   proxy-enabled: true

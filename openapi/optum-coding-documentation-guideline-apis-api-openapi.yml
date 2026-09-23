@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Optum Common Facility Coding Documentation Guideline APIs API
+  title: Optum Common Facility Coding Documentation Guideline APIs…
   description: MicroService that contains Optum module-related information
   contact:
     name: Ken Kracker

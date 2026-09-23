@@ -66,8 +66,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/documentStatusRespObj'
+      summary: Get get document status by context id by file name by claim number by claim…
+      x-summary-source: derived
+      operationId: getGetDocumentStatusByContextIDByFileNameByClaimNumberByClaimTypeByRecipientType
+      x-operation-id-source: derived
 components:
   schemas:
+    documentStatusRespObj:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/docStatusObj'
+        rowCount:
+          type: integer
+          example: 1
     docStatusObj:
       type: object
       properties:
@@ -101,16 +115,6 @@ components:
         docType:
           type: string
           example: '01'
-    documentStatusRespObj:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/docStatusObj'
-        rowCount:
-          type: integer
-          example: 1
 x-readme:
   explorer-enabled: true
   proxy-enabled: true

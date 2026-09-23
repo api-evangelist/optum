@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: CMS Common Facility MPFS National Payment Table Facility APIs API
+  title: CMS Common Facility MPFS National Payment Table Facility…
   description: MicroService that contains CMS related information
   contact:
     name: Ken Kracker

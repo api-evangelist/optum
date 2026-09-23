@@ -488,18 +488,10 @@ paths:
                 type: boolean
       security:
       - bearerAuth: []
+      summary: Modifier valid
+      x-summary-source: derived
 components:
   schemas:
-    OptumPageImplCode:
-      type: object
-      properties:
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/Code'
-        totalCount:
-          type: integer
-          format: int64
     Link:
       type: object
       properties:
@@ -521,6 +513,17 @@ components:
           type: string
         addonId:
           type: string
+    CodeGroup:
+      type: object
+      properties:
+        codes:
+          type: array
+          items:
+            type: string
+        desc:
+          type: array
+          items:
+            type: string
     Notification:
       type: object
       properties:
@@ -533,17 +536,6 @@ components:
           items:
             type: string
         info:
-          type: array
-          items:
-            type: string
-    CodeGroup:
-      type: object
-      properties:
-        codes:
-          type: array
-          items:
-            type: string
-        desc:
           type: array
           items:
             type: string
@@ -626,6 +618,16 @@ components:
           type: boolean
         code:
           type: string
+    OptumPageImplCode:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Code'
+        totalCount:
+          type: integer
+          format: int64
   securitySchemes:
     bearerAuth:
       type: http

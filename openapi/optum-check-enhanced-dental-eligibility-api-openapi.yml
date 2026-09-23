@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Real Dental Pre-Care Eligibility Intelligence Check Enhanced Dental Eligibility API
+  title: Real Dental Pre-Care Eligibility Intelligence Check…
   description: Enhanced Eligibility
   version: 1.0.0
 servers:
@@ -47,6 +47,28 @@ paths:
       - BearerAuth: []
 components:
   schemas:
+    EligibilityInfo:
+      type: object
+      properties:
+        trnId:
+          type:
+          - string
+          - 'null'
+        member:
+          $ref: '#/components/schemas/Member'
+        insuranceInfo:
+          $ref: '#/components/schemas/InsuranceInfo'
+    Eligibility:
+      type: object
+      properties:
+        eligibilityInfo:
+          $ref: '#/components/schemas/EligibilityInfo'
+        benefitNotes:
+          $ref: '#/components/schemas/BenefitNotes'
+        benefitSummary:
+          $ref: '#/components/schemas/BenefitSummary'
+        benefitUtilization:
+          $ref: '#/components/schemas/BenefitUtilization'
     EligibilityInput:
       type: object
       required:
@@ -96,6 +118,58 @@ components:
                   type: array
                   items:
                     $ref: '#/components/schemas/FootNoteInfo'
+    InsuranceInfo:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+          example: 0241816
+        planTypeDescription:
+          type: string
+          example: Preferred Provider Org.
+        groupName:
+          type: string
+          example: HOUSTON LIVESTOCK SHOW AND ROD
+        productType:
+          type: string
+          example: PPO
+        payerId:
+          type: string
+          example: '52133'
+        insuranceType:
+          type: string
+          example: COMM
+        eligibilityStartDate:
+          type: string
+        eligibilityEndDate:
+          type: string
+        planStartDate:
+          type: string
+        planEndDate:
+          type: string
+        policyStatus:
+          type: string
+        productId:
+          type: string
+        productCode:
+          type: string
+    BenefitUtilization:
+      type: object
+      properties:
+        memberName:
+          type: object
+        memberRelationship:
+          type: string
+          example: SUBSCRIBER
+        procedures:
+          type: array
+          items:
+            $ref: '#/components/schemas/Procedure'
+    EligibilityVariables:
+      type: object
+      properties:
+        input:
+          $ref: '#/components/schemas/EligibilityInput'
     EligibilityRequest:
       type: object
       required:
@@ -107,6 +181,19 @@ components:
           description: GraphQL query string
         variables:
           $ref: '#/components/schemas/EligibilityVariables'
+    EligibilityResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            checkEnhancedEligibility:
+              type: object
+              properties:
+                eligibility:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Eligibility'
     BenefitSummary:
       type: object
       properties:
@@ -163,23 +250,6 @@ components:
           type: array
           items:
             type: object
-    BenefitUtilization:
-      type: object
-      properties:
-        memberName:
-          type: object
-        memberRelationship:
-          type: string
-          example: SUBSCRIBER
-        procedures:
-          type: array
-          items:
-            $ref: '#/components/schemas/Procedure'
-    EligibilityVariables:
-      type: object
-      properties:
-        input:
-          $ref: '#/components/schemas/EligibilityInput'
     Member:
       type: object
       properties:
@@ -205,30 +275,6 @@ components:
           example: M
         relationshipCode:
           type: string
-    EligibilityResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            checkEnhancedEligibility:
-              type: object
-              properties:
-                eligibility:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/Eligibility'
-    Eligibility:
-      type: object
-      properties:
-        eligibilityInfo:
-          $ref: '#/components/schemas/EligibilityInfo'
-        benefitNotes:
-          $ref: '#/components/schemas/BenefitNotes'
-        benefitSummary:
-          $ref: '#/components/schemas/BenefitSummary'
-        benefitUtilization:
-          $ref: '#/components/schemas/BenefitUtilization'
     FootNoteInfo:
       type: object
       properties:
@@ -240,52 +286,6 @@ components:
           type: string
         benefitSummaryText:
           type: string
-    InsuranceInfo:
-      type: object
-      properties:
-        policyNumber:
-          type: string
-          example: 0241816
-        planTypeDescription:
-          type: string
-          example: Preferred Provider Org.
-        groupName:
-          type: string
-          example: HOUSTON LIVESTOCK SHOW AND ROD
-        productType:
-          type: string
-          example: PPO
-        payerId:
-          type: string
-          example: '52133'
-        insuranceType:
-          type: string
-          example: COMM
-        eligibilityStartDate:
-          type: string
-        eligibilityEndDate:
-          type: string
-        planStartDate:
-          type: string
-        planEndDate:
-          type: string
-        policyStatus:
-          type: string
-        productId:
-          type: string
-        productCode:
-          type: string
-    EligibilityInfo:
-      type: object
-      properties:
-        trnId:
-          type:
-          - string
-          - 'null'
-        member:
-          $ref: '#/components/schemas/Member'
-        insuranceInfo:
-          $ref: '#/components/schemas/InsuranceInfo'
   securitySchemes:
     BearerAuth:
       type: http

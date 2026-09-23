@@ -40,11 +40,13 @@ paths:
                 $ref: '#/components/schemas/PDFDocument'
       security:
       - bearerAuth: []
+      summary: Fetch section guidelines PDF
+      x-summary-source: derived
   /api/coding/code/{codetype}/{code}/chapter-notes:
     get:
       tags:
       - Notes Information APIs
-      summary: ' Fetches I10CM chapter notes'
+      summary: Fetches I10CM chapter notes
       operationId: chapterNotes
       parameters:
       - name: codetype
@@ -131,7 +133,7 @@ paths:
     get:
       tags:
       - Notes Information APIs
-      summary: ' Fetches CPT or I10CM notes'
+      summary: Fetches CPT or I10CM notes
       operationId: codeNotes
       parameters:
       - name: codetype
@@ -202,7 +204,7 @@ paths:
     get:
       tags:
       - Notes Information APIs
-      summary: ' Fetches CPT ,I10CM ,I9v1 range notes'
+      summary: Fetches CPT ,I10CM ,I9v1 range notes
       operationId: rangeNotes
       parameters:
       - name: codetype
@@ -273,7 +275,7 @@ paths:
     get:
       tags:
       - Notes Information APIs
-      summary: ' Fetches CPT ,HCPCS ,I10_CM section notes'
+      summary: Fetches CPT ,HCPCS ,I10_CM section notes
       operationId: sectionNotes
       parameters:
       - name: codetype
@@ -395,16 +397,6 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    PDFDocument:
-      type: object
-      properties:
-        fileType:
-          type: string
-        fileName:
-          type: string
-        documentBuffer:
-          type: string
-          format: byte
     Notification:
       type: object
       properties:
@@ -420,6 +412,16 @@ components:
           type: array
           items:
             type: string
+    PDFDocument:
+      type: object
+      properties:
+        fileType:
+          type: string
+        fileName:
+          type: string
+        documentBuffer:
+          type: string
+          format: byte
   securitySchemes:
     bearerAuth:
       type: http

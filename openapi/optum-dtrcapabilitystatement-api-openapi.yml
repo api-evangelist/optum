@@ -120,8 +120,33 @@ paths:
               example:
                 message: Internal server error
                 statusCode: 500
+      summary: Get dtr capability statement
+      x-summary-source: derived
 components:
   schemas:
+    Narrative:
+      type: object
+      properties:
+        status:
+          type: string
+          example: generated
+        div:
+          type: string
+          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
+    CapabilityStatementRest:
+      type: object
+      properties:
+        mode:
+          type: string
+          example: server
+        resource:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapabilityStatementResource'
+        operation:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapabilityStatementOperation'
     DtrCapabilityStatementResponse:
       type: object
       properties:
@@ -174,48 +199,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CapabilityStatementRest'
-    CapabilityStatementSoftware:
+    CapabilityStatementOperation:
       type: object
       properties:
         name:
           type: string
-          example: uhcpp-paan-pas-server
-        version:
-          type: string
-          example: 8.8.0
-    Narrative:
-      type: object
-      properties:
-        status:
-          type: string
-          example: generated
-        div:
-          type: string
-          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
-    CapabilityStatementImplementation:
-      type: object
-      properties:
-        description:
-          type: string
-          example: uhcpp-paan-pas-server implementation
-        url:
+          example: submit
+        definition:
           type: string
           format: uri
-          example: https://apimarketplace-stg.uhc.com/PriorAuth/v1
-    CapabilityStatementRest:
-      type: object
-      properties:
-        mode:
-          type: string
-          example: server
-        resource:
-          type: array
-          items:
-            $ref: '#/components/schemas/CapabilityStatementResource'
-        operation:
-          type: array
-          items:
-            $ref: '#/components/schemas/CapabilityStatementOperation'
     CapabilityStatementResource:
       type: object
       properties:
@@ -237,21 +229,31 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CapabilityStatementOperation'
+    CapabilityStatementImplementation:
+      type: object
+      properties:
+        description:
+          type: string
+          example: uhcpp-paan-pas-server implementation
+        url:
+          type: string
+          format: uri
+          example: https://apimarketplace-stg.uhc.com/PriorAuth/v1
+    CapabilityStatementSoftware:
+      type: object
+      properties:
+        name:
+          type: string
+          example: uhcpp-paan-pas-server
+        version:
+          type: string
+          example: 8.8.0
     CapabilityStatementInteraction:
       type: object
       properties:
         code:
           type: string
           example: read
-    CapabilityStatementOperation:
-      type: object
-      properties:
-        name:
-          type: string
-          example: submit
-        definition:
-          type: string
-          format: uri
   securitySchemes:
     oAuth:
       type: oauth2

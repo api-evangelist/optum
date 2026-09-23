@@ -135,6 +135,18 @@ paths:
       - documentRetrieve
 components:
   schemas:
+    HttpClientServerError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date
+        status:
+          type: integer
+        error:
+          type: string
+        path:
+          type: string
     MultiValueMap:
       type: object
       properties:
@@ -149,17 +161,18 @@ components:
         type: array
         items:
           type: object
-    HttpClientServerError:
+    DocumentLookup:
       type: object
+      required:
+      - homeCommunityId
+      - repositoryUniqueId
+      - documentUniqueId
       properties:
-        timestamp:
+        homeCommunityId:
           type: string
-          format: date
-        status:
-          type: integer
-        error:
+        documentUniqueId:
           type: string
-        path:
+        repositoryUniqueId:
           type: string
     DocumentRetrievalRequest:
       type: object
@@ -170,6 +183,13 @@ components:
           $ref: '#/components/schemas/Authorization'
         documentLookup:
           $ref: '#/components/schemas/DocumentLookup'
+    AdditionalRetrievalParameters:
+      type: object
+      properties:
+        maxPayloadSizeMB:
+          type: string
+        includeStylesheet:
+          type: string
     Authorization:
       type: object
       required:
@@ -191,26 +211,6 @@ components:
         clientId:
           type: string
         clientUUId:
-          type: string
-    DocumentLookup:
-      type: object
-      required:
-      - homeCommunityId
-      - repositoryUniqueId
-      - documentUniqueId
-      properties:
-        homeCommunityId:
-          type: string
-        documentUniqueId:
-          type: string
-        repositoryUniqueId:
-          type: string
-    AdditionalRetrievalParameters:
-      type: object
-      properties:
-        maxPayloadSizeMB:
-          type: string
-        includeStylesheet:
           type: string
   securitySchemes:
     bearerAuth:

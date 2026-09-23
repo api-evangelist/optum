@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: File and Document Tracking API v1 Get List Of File Status API
+  title: File and Document Tracking API v1 Get List Of File Status…
   description: The File and Document Tracking API, a healthcare API for customers using Communication and Payment Services solutions from Optus, provides payers with real-time processing status at the file and document levels.
   version: 1.0.0
 servers:
@@ -47,6 +47,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/fileStatusRespObj'
+      summary: Get get list of file status by context id
+      x-summary-source: derived
+      operationId: getGetListOfFileStatusByContextID
+      x-operation-id-source: derived
 components:
   schemas:
     fileStatusObj:

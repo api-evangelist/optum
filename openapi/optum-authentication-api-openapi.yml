@@ -12,9 +12,7 @@ paths:
   /apip/auth/sntl/v1/token:
     post:
       summary: Generate Bearer Token for accessing Optum Real APIs
-      description: 'Given the client ID and client secret, retrieves a bearer token to be used for accessing this API.
-
-        '
+      description: Given the client ID and client secret, retrieves a bearer token to be used for accessing this API.
       tags:
       - Authentication
       requestBody:
@@ -144,6 +142,8 @@ paths:
                     failureReason: ServerError
                     Errors:
                     - An unexpected error occurred while generating the token. Please retry.
+      operationId: postApipAuthSntlV1Token
+      x-operation-id-source: derived
 components:
   schemas:
     Errors:

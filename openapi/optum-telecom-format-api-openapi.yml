@@ -68,1359 +68,6 @@ paths:
       - Telecom Format
 components:
   schemas:
-    RejectDetailsV1:
-      properties:
-        code:
-          type: string
-        fieldOccurrenceIndicator:
-          format: int32
-          type: integer
-      type: object
-    ProcessorV1:
-      properties:
-        binNumber:
-          errorMessage:
-            maxLength: exceeds the maximum limit of 6.
-            pattern: invalid value, only numeric characters are allowed.
-            type: invalid type, expected string.
-          maxLength: 6
-          pattern: ^[0-9]*$
-          type: string
-        claimFormatCode:
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 9.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 9
-          type: string
-        groupCode:
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 45.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 45
-          type: string
-        processorControlNumber:
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 30.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 30
-          type: string
-        rems:
-          enum:
-          - Y
-          - N
-          - y
-          - n
-          errorMessage:
-            enum: invalid Value, expected values are Y or N.
-            maxLength: exceeds the maximum limit of 1.
-            type: invalid type, expected string.
-          maxLength: 1
-          type: string
-        siteCode:
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 240.
-            type: invalid type, expected string or null.
-          format: ncpdp-alphanumeric
-          maxLength: 240
-          type:
-          - string
-          - 'null'
-        softwareVendorId:
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 30.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 30
-          type: string
-        transactionCount:
-          enum:
-          - '1'
-          - ''
-          errorMessage:
-            enum: invalid value, only expected value is 1.
-            maxLength: exceeds the maximum limit of 1.
-            type: invalid type, expected string.
-          maxLength: 1
-          type: string
-      type: object
-    PharmacyV1:
-      properties:
-        professionalProvider:
-          properties:
-            providerId:
-              errorMessage:
-                minItems: must have at least one item.
-                type: invalid type, expected array.
-              items:
-                properties:
-                  code:
-                    description: 1 - Drug Enforcement Administration (DEA), 2 - State License, 3 - Social Security Number (SSN), 4 - Name, 5 - National Provider Identifier (NPI), 6 - Health Industry Number (HIN), 7 - State Issued, 8 - Other
-                    errorMessage:
-                      maxLength: exceeds the maximum limit of 2.
-                      pattern: invalid value, only numeric characters are allowed.
-                      type: invalid type, expected number.
-                    maximum: 99
-                    minimum: 0
-                    type: number
-                  value:
-                    errorMessage:
-                      format: invalid value, only printable characters are allowed.
-                      maxLength: exceeds the maximum limit of 90.
-                      type: invalid type, expected string.
-                    format: ncpdp-alphanumeric
-                    maxLength: 90
-                    type: string
-                type: object
-              minItems: 1
-              type: array
-          type: object
-        serviceProviderId:
-          errorMessage:
-            minItems: must have at least one item.
-            type: invalid type, expected array.
-          items:
-            properties:
-              code:
-                description: Code qualifying the service Provider. 1 - National Provider Identifier (NPI), 2 - Blue Cross, 3 - Blue Shield, 4 - Medicare, 5 - Medicaid, 6 - UPIN (Unique Physician/Practitioner Identification Number), 7 - NCPDP Provider Identification Number (National Council for Prescription Drug Programs Provider Identification Number), 8 - State License, 9 - TRICARE, 10 - Health Industry Number (HIN), 11 - Federal Tax ID, 12 - Drug Enforcement Administration (DEA) Number, 13 - State Issued, 14 - Plan Specific, 15 - HCIdea, 16 - Combat Methamphetamine Epidemic Act (CMEA) Certificate ID, 17 - Foreign Prescriber Identifier, 18 - No Prescriber Required, 99 - Other
-                errorMessage:
-                  maxLength: exceeds the maximum limit of 2.
-                  pattern: invalid value, only numeric characters are allowed.
-                  type: invalid type, expected number.
-                maximum: 99
-                minimum: 0
-                type: number
-              value:
-                errorMessage:
-                  format: invalid value, only printable characters are allowed.
-                  maxLength: exceeds the maximum limit of 90.
-                  type: invalid type, expected string.
-                format: ncpdp-alphanumeric
-                maxLength: 90
-                type: string
-            type: object
-          minItems: 1
-          type: array
-      type: object
-    DurOrPpsV1:
-      properties:
-        durPpsResponseCode:
-          items:
-            $ref: '#/components/schemas/DurPpsResponseCodeV1'
-          type: array
-      type: object
-    NCPDPRequestConverterV1Response:
-      properties:
-        ncpdpRequestString:
-          type: string
-        switchResponse:
-          $ref: '#/components/schemas/NCPDPResponseConverterV1Response'
-      type: object
-    OtherPayerIdsV1:
-      properties:
-        otherPayerBenefitEffectiveDate:
-          format: date
-          type: string
-        otherPayerBenefitTerminationDate:
-          format: date
-          type: string
-        otherPayerCardholderId:
-          type: string
-        otherPayerCoverage:
-          type: string
-        otherPayerGroupId:
-          type: string
-        otherPayerHelpDeskPhoneNumber:
-          $ref: '#/components/schemas/PhoneNumber'
-        otherPayerId:
-          $ref: '#/components/schemas/IdentifierV1'
-        otherPayerPatientRelationshipCode:
-          type: string
-        otherPayerPersonCode:
-          type: string
-        otherPayerProcessorControlNumber:
-          type: string
-      type: object
-    NcpdpResponse:
-      properties:
-        claim:
-          $ref: '#/components/schemas/ClaimSegment'
-        durOrPps:
-          $ref: '#/components/schemas/DurOrPpsSegment'
-        empty:
-          type: boolean
-        header:
-          $ref: '#/components/schemas/HeaderSegment'
-        insurance:
-          $ref: '#/components/schemas/InsuranceSegment'
-        insuranceAdditionalInformation:
-          $ref: '#/components/schemas/InsuranceAdditionalInformationSegment'
-        intermediary:
-          $ref: '#/components/schemas/IntermediarySegment'
-        message:
-          $ref: '#/components/schemas/MessageSegment'
-        otherPayers:
-          $ref: '#/components/schemas/OtherPayersSegment'
-        otherRelatedBenefitDetail:
-          $ref: '#/components/schemas/OtherRelatedBenefitDetailSegment'
-        patient:
-          $ref: '#/components/schemas/PatientSegment'
-        present:
-          type: boolean
-        pricing:
-          $ref: '#/components/schemas/PricingSegment'
-        priorAuthorization:
-          $ref: '#/components/schemas/PriorAuthorizationSegment'
-        provider:
-          $ref: '#/components/schemas/ProviderSegment'
-        raw:
-          type: string
-        rawEmpty:
-          type: boolean
-        rawPresent:
-          type: boolean
-        status:
-          $ref: '#/components/schemas/StatusSegment'
-        transactions:
-          items:
-            $ref: '#/components/schemas/ResponseTransaction'
-          type: array
-      type: object
-    CobOtherPaymentsV1:
-      properties:
-        otherPayerId:
-          items:
-            $ref: '#/components/schemas/OtherPayerIdsV1'
-          type: array
-      type: object
-    InsuranceV1:
-      properties:
-        cardholderId:
-          type: string
-        groupId:
-          type: string
-        medicaidAgencyNumber:
-          type: string
-        medicaidIdNumber:
-          type: string
-        networkReimbursementId:
-          type: string
-        payerId:
-          $ref: '#/components/schemas/IdentifierV1'
-        planId:
-          type: string
-      type: object
-    NcpdpCounterType:
-      properties:
-        empty:
-          type: boolean
-        present:
-          type: boolean
-        raw:
-          type: string
-        rawEmpty:
-          type: boolean
-        rawPresent:
-          type: boolean
-      type: object
-    StatusV1:
-      properties:
-        additionalMessageInformation:
-          items:
-            $ref: '#/components/schemas/AdditionalMessageInformationGroupingV1'
-          type: array
-        additionalMessageInformationCount:
-          type: string
-        approvedMessageCode:
-          items:
-            type: string
-          type: array
-        approvedMessageCodeCount:
-          type: string
-        authorizationNumber:
-          type: string
-        helpDeskTelephone:
-          $ref: '#/components/schemas/IdentifierV1'
-        internalControlNumber:
-          type: string
-        rejectDetails:
-          items:
-            $ref: '#/components/schemas/RejectDetailsV1'
-          type: array
-        transactionReferenceNumber:
-          type: string
-        transactionResponseStatus:
-          type: string
-        url:
-          type: string
-      type: object
-    MessageSegment:
-      properties:
-        empty:
-          type: boolean
-        message:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        present:
-          type: boolean
-      type: object
-    DurOrPpsSegment:
-      properties:
-        durOrPpsGroupings:
-          items:
-            $ref: '#/components/schemas/DurOrPpsGrouping'
-          type: array
-        empty:
-          type: boolean
-        present:
-          type: boolean
-      type: object
-    NcpdpCountType:
-      properties:
-        empty:
-          type: boolean
-        present:
-          type: boolean
-        raw:
-          type: string
-        rawEmpty:
-          type: boolean
-        rawPresent:
-          type: boolean
-      type: object
-    HeaderRequestV1:
-      properties:
-        chainID:
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 30.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 30
-          type: string
-        dateOfService:
-          errorMessage:
-            format: invalid date.
-            type: invalid type.
-          example: '2023-10-01'
-          format: rxn-date
-          type: string
-        externalMessageId:
-          errorMessage:
-            maxLength: exceeds the maximum limit of 30.
-            pattern: invalid value, only numeric characters are allowed.
-            type: invalid type, expected string.
-          maxLength: 30
-          pattern: ^[0-9]*$
-          type: string
-        sourceSystemId:
-          errorMessage:
-            maxLength: exceeds the maximum limit of 30.
-            pattern: invalid value, only numeric characters are allowed.
-            type: invalid type, expected string.
-          maxLength: 30
-          pattern: ^[0-9]*$
-          type: string
-        standard:
-          errorMessage:
-            required:
-              standardName: standardName is required.
-              transactionType: transactionType is required.
-              type: type is required.
-              versionOrReleaseNumber: versionOrReleaseNumber is required.
-          properties:
-            standardName:
-              enum:
-              - TELECOM
-              - ''
-              errorMessage:
-                enum: invalid value, only expected TELECOM.
-                type: invalid type, expected string.
-              type: string
-            transactionType:
-              enum:
-              - B1
-              - B2
-              - B3
-              - C1
-              - C2
-              - C3
-              - D1
-              - E1
-              - N1
-              - N2
-              - N3
-              - P1
-              - P2
-              - P3
-              - P4
-              - S1
-              - S2
-              - S3
-              - ''
-              errorMessage:
-                enum: invalid value, expected values are B1,B2,B3,C1,C2,C3,D1,E1,N1,N2,N3,P1,P2,P3,P4,S1,S2,S3.
-                maxLength: exceeds the maximum limit of 2.
-                type: invalid type, expected string.
-              maxLength: 2
-              type: string
-            type:
-              enum:
-              - request
-              - response
-              - ''
-              errorMessage:
-                enum: invalid value, expected values are request or response.
-                type: invalid type, expected string.
-              type: string
-            versionOrReleaseNumber:
-              enum:
-              - D0
-              - ''
-              errorMessage:
-                enum: invalid value, only expected D0.
-                maxLength: exceeds the maximum limit of 2.
-                type: invalid type, expected string.
-              maxLength: 2
-              type: string
-          required:
-          - standardName
-          - versionOrReleaseNumber
-          - transactionType
-          - type
-          type: object
-        transactionCode:
-          enum:
-          - B1
-          - B2
-          - B3
-          - C1
-          - C2
-          - C3
-          - D1
-          - E1
-          - N1
-          - N2
-          - N3
-          - P1
-          - P2
-          - P3
-          - P4
-          - S1
-          - S2
-          - S3
-          - ''
-          errorMessage:
-            enum: invalid value, expected values are B1,B2,B3,C1,C2,C3,D1,E1,N1,N2,N3,P1,P2,P3,P4,S1,S2,S3.
-            maxLength: exceeds the maximum limit of 2.
-            type: invalid type, expected string.
-          maxLength: 2
-          type: string
-      type: object
-    PayerOrHealthPlanIdGrouping:
-      properties:
-        empty:
-          type: boolean
-        payerOrHealthPlanId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        payerOrHealthPlanIdQualifier:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        present:
-          type: boolean
-      type: object
-    NcpdpDecimalType:
-      properties:
-        empty:
-          type: boolean
-        present:
-          type: boolean
-        raw:
-          type: string
-        rawEmpty:
-          type: boolean
-        rawPresent:
-          type: boolean
-      type: object
-    CouponV1:
-      properties:
-        number:
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 45.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 45
-          type: string
-        type:
-          errorMessage:
-            maxLength: exceeds the maximum limit of 2.
-            pattern: invalid value, only numeric characters are allowed.
-            type: invalid type, expected number.
-          maximum: 99
-          minimum: 0
-          type: number
-        valueAmount:
-          errorMessage:
-            maxLength: exceeds the maximum limit of 13.
-            pattern: not valid amount.
-            type: invalid type, expected string.
-          maxLength: 13
-          pattern: ^-?(\d{1,6}(?:[.]\d{1,6})?)?$
-          type: string
-      type: object
-    ClaimV1:
-      properties:
-        preferredProduct:
-          items:
-            $ref: '#/components/schemas/PreferredProductGroupingV1'
-          type: array
-        prescriptionServiceReferenceNumberId:
-          $ref: '#/components/schemas/IdentifierV1'
-      type: object
-    IntermediarySegment:
-      properties:
-        empty:
-          type: boolean
-        intermediaryHelpDeskSupportTypeCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        intermediaryHelpDeskSupportTypeGroupings:
-          items:
-            $ref: '#/components/schemas/IntermediaryHelpDeskSupportTypeGrouping'
-          type: array
-        present:
-          type: boolean
-        responseIntermediaryAuthorizationCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        responseIntermediaryAuthorizationGroupings:
-          items:
-            $ref: '#/components/schemas/ResponseIntermediaryAuthorizationGrouping'
-          type: array
-      type: object
-    AdditionalDocumentationV1:
-      properties:
-        additionalDocumentationTypeId:
-          description: 006 - Medicare equals 04.04B Lymphedema Pumps, 007 - Medicare equals 04.05C Osteogenesis Stimulator, 008 - Medicare equals 06.03B Transcutaneous Electrical NerveStimulator (TENS), 009 - Medicare equals 07.03A Seat Lift Mechanisms, 012 - Medicare equals 09.02 Infusion Pump, 015 - Medicare equals 484.03 Oxygen, 016 - Medicare equals 10.03 Enteral and Parenteral Nutrition, 017 - Medicare equals 11.02 Section C Continuation Form
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 9.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 9
-          type: string
-        lengthOfNeed:
-          errorMessage:
-            minProperties: must have at least one property.
-          minProperties: 1
-          properties:
-            days:
-              errorMessage:
-                maxLength: exceeds the maximum limit of 3.
-                pattern: invalid value, only numeric characters are allowed.
-                type: invalid type, expected string.
-              maxLength: 3
-              pattern: ^[0-9]*$
-              type: string
-            hours:
-              errorMessage:
-                maxLength: exceeds the maximum limit of 3.
-                pattern: invalid value, only numeric characters are allowed.
-                type: invalid type, expected string.
-              maxLength: 3
-              pattern: ^[0-9]*$
-              type: string
-            lifetime:
-              errorMessage:
-                maxLength: exceeds the maximum limit of 3.
-                pattern: invalid value, only numeric characters are allowed.
-                type: invalid type, expected string.
-              maxLength: 3
-              pattern: ^[0-9]*$
-              type: string
-            months:
-              errorMessage:
-                maxLength: exceeds the maximum limit of 3.
-                pattern: invalid value, only numeric characters are allowed.
-                type: invalid type, expected string.
-              maxLength: 3
-              pattern: ^[0-9]*$
-              type: string
-            weeks:
-              errorMessage:
-                maxLength: exceeds the maximum limit of 3.
-                pattern: invalid value, only numeric characters are allowed.
-                type: invalid type, expected string.
-              maxLength: 3
-              pattern: ^[0-9]*$
-              type: string
-            years:
-              errorMessage:
-                maxLength: exceeds the maximum limit of 3.
-                pattern: invalid value, only numeric characters are allowed.
-                type: invalid type, expected string.
-              maxLength: 3
-              pattern: ^[0-9]*$
-              type: string
-          required:
-          - hours
-          - days
-          - weeks
-          - months
-          - years
-          - lifetime
-          type: object
-        prescriberOrSupplierDateSigned:
-          errorMessage:
-            format: invalid date.
-            type: invalid type, expected string.
-          example: '2023-10-01'
-          format: rxn-date
-          type: string
-        question:
-          items:
-            errorMessage:
-              required:
-                alphanumericResponse: alphanumericResponse is required.
-                dateResponse: dateResponse is required.
-                dollarAmountResponse: dollarAmountResponse is required.
-                numberOrLetter: numberOrLetter is required.
-                numericResponse: numericResponse is required.
-                percentResponse: percentResponse is required.
-            properties:
-              alphanumericResponse:
-                errorMessage:
-                  format: invalid value, only printable characters are allowed.
-                  maxLength: exceeds the maximum limit of 90.
-                  type: invalid type, expected string.
-                format: ncpdp-alphanumeric
-                maxLength: 90
-                type: string
-              dateResponse:
-                errorMessage:
-                  format: invalid date.
-                  type: invalid type, expected string.
-                example: '2023-10-01'
-                format: rxn-date
-                type: string
-              dollarAmountResponse:
-                errorMessage:
-                  maxLength: exceeds the maximum limit of 16.
-                  pattern: not valid amount.
-                  type: invalid type, expected string.
-                maxLength: 16
-                pattern: ^-?(\d{1,9}(?:[.]\d{1,6})?)?$
-                type: string
-              numberOrLetter:
-                errorMessage:
-                  format: invalid value, only printable characters are allowed.
-                  maxLength: exceeds the maximum limit of 9.
-                  type: invalid type, expected string.
-                format: ncpdp-alphanumeric
-                maxLength: 9
-                type: string
-              numericResponse:
-                errorMessage:
-                  maxLength: exceeds the maximum limit of 11.
-                  pattern: invalid value,only numeric expected.
-                  type: invalid type, expected string.
-                maxLength: 11
-                pattern: ^[0-9]*$
-                type: string
-              percentResponse:
-                errorMessage:
-                  maxLength: exceeds the maximum limit of 5.
-                  pattern: not valid percent.
-                  type: invalid type, expected string.
-                maxLength: 5
-                pattern: ^(\d{1,3}(?:[.]\d{1,2})?)?$
-                type: string
-            required:
-            - numberOrLetter
-            - percentResponse
-            - dateResponse
-            - dollarAmountResponse
-            - numericResponse
-            - alphanumericResponse
-            type: object
-          type: array
-        requestPeriodBeginDate:
-          errorMessage:
-            format: invalid date.
-            type: invalid type, expected string.
-          example: '2023-10-01'
-          format: rxn-date
-          type: string
-        requestPeriodRecertOrRevisedDate:
-          errorMessage:
-            format: invalid date.
-            type: invalid type, expected string.
-          example: '2023-10-01'
-          format: rxn-date
-          type: string
-        requestStatus:
-          description: Code identifying type of request. 0 - Not Specified, 1 - Initial, 2 - Revision, 3 - Recertification
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 3.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 3
-          type: string
-        supportingDocumentation:
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 195.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 195
-          type: string
-      type: object
-    IntermediaryHelpDeskBusinessUnitTypeGrouping:
-      properties:
-        empty:
-          type: boolean
-        intermediaryHelpDeskBusinessUnitType:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        intermediaryHelpDeskContactInformation:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        intermediaryHelpDeskContactInformationExtension:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        intermediaryHelpDeskContactInformationQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        present:
-          type: boolean
-      type: object
-    PriorAuthorizationV1:
-      properties:
-        authorizationNumber:
-          errorMessage:
-            format: invalid value for authorizationNumber
-            maxLength: exceeds the maximum limit of 60.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 60
-          type: string
-        authorizedRepresentative:
-          errorMessage:
-            minProperties: must have at least one property.
-          minProperties: 1
-          properties:
-            address:
-              errorMessage:
-                minProperties: must have at least one address property.
-              minProperties: 1
-              properties:
-                cityName:
-                  errorMessage:
-                    format: invalid city name.
-                    maxLength: exceeds the maximum limit of 60.
-                    type: invalid type, expected string.
-                  format: ncpdp-alphanumeric
-                  maxLength: 60
-                  type: string
-                postalCode:
-                  errorMessage:
-                    format: invalid postal code.
-                    maxLength: maximum length must be 15.
-                    type: invalid type, expected string.
-                  format: zip-or-postal-code
-                  maxLength: 15
-                  type: string
-                stateProvinceCode:
-                  enum:
-                  - AL
-                  - AK
-                  - AZ
-                  - AR
-                  - CA
-                  - CO
-                  - CT
-                  - DE
-                  - DC
-                  - FM
-                  - FL
-                  - GA
-                  - GU
-                  - HI
-                  - ID
-                  - IL
-                  - IN
-                  - IA
-                  - KS
-                  - KY
-                  - LA
-                  - ME
-                  - MD
-                  - MA
-                  - MI
-                  - MN
-                  - MS
-                  - MO
-                  - MT
-                  - NE
-                  - NV
-                  - NH
-                  - NJ
-                  - NM
-                  - NY
-                  - NC
-                  - ND
-                  - MP
-                  - OH
-                  - OK
-                  - OR
-                  - PW
-                  - PA
-                  - PR
-                  - RI
-                  - SC
-                  - SD
-                  - TN
-                  - TX
-                  - UT
-                  - VT
-                  - VI
-                  - VA
-                  - WA
-                  - WV
-                  - WI
-                  - WY
-                  - AB
-                  - BC
-                  - MB
-                  - NB
-                  - NF
-                  - NL
-                  - NS
-                  - NT
-                  - 'ON'
-                  - PE
-                  - QC
-                  - SK
-                  - YT
-                  - UM
-                  - ''
-                  errorMessage:
-                    enum: invalid state or province.
-                    maxLength: maximum length must be 2.
-                    type: invalid type, expected string.
-                  maxLength: 2
-                  type: string
-                streetLine1:
-                  errorMessage:
-                    format: invalid street line 1 value.
-                    maxLength: exceeds the maximum limit of 90.
-                    type: invalid type, expected string.
-                  format: ncpdp-alphanumeric
-                  maxLength: 90
-                  type: string
-              type: object
-            name:
-              errorMessage:
-                minProperties: must have at least one name property.
-              minProperties: 1
-              properties:
-                first:
-                  errorMessage:
-                    format: invalid first name
-                    maxLength: exceeds the maximum limit of 105.
-                    type: invalid type, expected string.
-                  format: ncpdp-alphanumeric
-                  maxLength: 105
-                  type: string
-                last:
-                  errorMessage:
-                    format: invalid last name
-                    maxLength: exceeds the maximum limit of 105.
-                    type: invalid type, expected string.
-                  format: ncpdp-alphanumeric
-                  maxLength: 105
-                  type: string
-                middle:
-                  errorMessage:
-                    format: invalid middle name
-                    maxLength: exceeds the maximum limit of 105.
-                    type: invalid type, expected string.
-                  format: ncpdp-alphanumeric
-                  maxLength: 105
-                  type: string
-                prefix:
-                  errorMessage:
-                    format: invalid prefix value
-                    maxLength: exceeds the maximum limit of 9.
-                    type: invalid type, expected string.
-                  format: ncpdp-alphanumeric
-                  maxLength: 9
-                  type: string
-                suffix:
-                  errorMessage:
-                    format: invalid suffix value
-                    maxLength: exceeds the maximum limit of 9.
-                    type: invalid type, expected string.
-                  format: ncpdp-alphanumeric
-                  maxLength: 9
-                  type: string
-              type: object
-          type: object
-        basisOfRequest:
-          description: Code describing the reason for prior authorization request. ME - Medical Exception, PR - Plan Requirement, PL - Increase Plan Limitation
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 6.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 6
-          type: string
-        idAssigned:
-          errorMessage:
-            maxLength: exceeds the maximum limit of 11.
-            pattern: invalid value for pAIdAssigned
-            type: invalid type, expected string.
-          maxLength: 11
-          pattern: ^[0-9]*$
-          type: string
-        requestPeriodBeginDate:
-          errorMessage:
-            format: invalid date.
-            type: invalid type, expected string.
-          example: '2023-10-01'
-          format: rxn-date
-          type: string
-        requestPeriodEndDate:
-          errorMessage:
-            format: invalid date.
-            type: invalid type, expected string.
-          example: '2023-10-01'
-          format: rxn-date
-          type: string
-        requestType:
-          description: Code identifying type of prior authorization request. 1 - Initial, 2 -Reauthorization, 3 - Deferred
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 3.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 3
-          type: string
-        supportingDocumentation:
-          errorMessage:
-            format: invalid value for pASupportingDocumentation
-            maxLength: exceeds the maximum limit of 1500.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 1500
-          type: string
-      type: object
-    InsuranceSegment:
-      properties:
-        cardholderId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        empty:
-          type: boolean
-        groupId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        medicaidAgencyNumber:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        medicaidIdNumber:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        networkReimbursementId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        payerId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-          deprecated: true
-        payerIdQualifier:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-          deprecated: true
-        payerOrHealthPlanIdCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        payerOrHealthPlanIdGroupings:
-          items:
-            $ref: '#/components/schemas/PayerOrHealthPlanIdGrouping'
-          type: array
-        planId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        present:
-          type: boolean
-      type: object
-    IdentifierV1:
-      properties:
-        code:
-          format: int32
-          type: integer
-        value:
-          type: string
-      type: object
-    IntermediaryHelpDeskSupportTypeGrouping:
-      properties:
-        empty:
-          type: boolean
-        intermediaryHelpDeskBusinessUnitTypeCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        intermediaryHelpDeskBusinessUnitTypeGroupings:
-          items:
-            $ref: '#/components/schemas/IntermediaryHelpDeskBusinessUnitTypeGrouping'
-          type: array
-        intermediaryHelpDeskSupportType:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        present:
-          type: boolean
-      type: object
-    FormularyAlternativeProductGrouping:
-      properties:
-        empty:
-          type: boolean
-        formularyAlternativeDescription:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        formularyAlternativeEffectiveDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        formularyAlternativeEstimatedPatientCostShare:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        formularyAlternativeId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        formularyAlternativeIdQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        formularyAlternativeIncentive:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        formularyAlternativePlanBenefitTier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        formularyAlternativeReasonCode:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        formularyAlternativeRequiredTherapyIndicatorCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        formularyAlternativeRequiredTherapyIndicatorGroupings:
-          items:
-            $ref: '#/components/schemas/FormularyAlternativeRequiredTherapyIndicatorGrouping'
-          type: array
-        preferredProductCostShareIncentive:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        preferredProductDescription:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-          deprecated: true
-        preferredProductId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-          deprecated: true
-        preferredProductIdQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-          deprecated: true
-        preferredProductIncentive:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        present:
-          type: boolean
-      type: object
-    NcpdpPhoneNumberType:
-      properties:
-        empty:
-          type: boolean
-        present:
-          type: boolean
-        raw:
-          type: string
-        rawEmpty:
-          type: boolean
-        rawPresent:
-          type: boolean
-      type: object
-    OtherBenefitGrouping:
-      properties:
-        empty:
-          type: boolean
-        otherBenefitDetailInformationCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        otherBenefitDetailInformationGroupings:
-          items:
-            $ref: '#/components/schemas/OtherBenefitDetailInformationGrouping'
-          type: array
-        otherBenefitEffectiveDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        otherBenefitFacilityName:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherBenefitFacilityTelephoneNumber:
-          $ref: '#/components/schemas/NcpdpPhoneNumberType'
-        otherBenefitTerminationDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        otherBenefitTypeCode:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        otherBenefitTypeId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        present:
-          type: boolean
-        stateOrProvinceAddress:
-          $ref: '#/components/schemas/NcpdpCodeType'
-      type: object
-    OtherPayersSegment:
-      properties:
-        cobOrOtherPayersCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-          deprecated: true
-        cobOrOtherPayersGroupings:
-          deprecated: true
-          items:
-            $ref: '#/components/schemas/OtherPayerGrouping'
-          type: array
-        empty:
-          type: boolean
-        otherPayerGroupings:
-          items:
-            $ref: '#/components/schemas/OtherPayerGrouping'
-          type: array
-        otherPayerIdCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        present:
-          type: boolean
-      type: object
-    OtherPayerGrouping:
-      properties:
-        empty:
-          type: boolean
-        otherPayerAdjudicatedProgramType:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        otherPayerBenefitClassification:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        otherPayerBenefitEffectiveDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        otherPayerBenefitTerminationDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        otherPayerCardholderId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherPayerCoverageType:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        otherPayerGroupId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherPayerHelpDeskTelephoneNumber:
-          $ref: '#/components/schemas/NcpdpPhoneNumberType'
-        otherPayerHelpDeskTelephoneNumberExtension:
-          $ref: '#/components/schemas/NcpdpIntegerType'
-        otherPayerId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherPayerIdQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        otherPayerName:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherPayerPatientRelationshipCode:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        otherPayerPersonCode:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherPayerProcessorControlNumber:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherPayerRelationshipType:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        present:
-          type: boolean
-      type: object
-    MessageV1:
-      properties:
-        message:
-          type: string
-      type: object
-    HeaderV1:
-      properties:
-        chainID:
-          errorMessage:
-            format: invalid value, only printable characters are allowed.
-            maxLength: exceeds the maximum limit of 30.
-            type: invalid type, expected string.
-          format: ncpdp-alphanumeric
-          maxLength: 30
-          type: string
-        dateOfService:
-          errorMessage:
-            format: invalid date.
-            type: invalid type.
-          example: '2023-10-01'
-          format: rxn-date
-          type: string
-        externalMessageId:
-          errorMessage:
-            maxLength: exceeds the maximum limit of 30.
-            pattern: invalid value, only numeric characters are allowed.
-            type: invalid type, expected string.
-          maxLength: 30
-          pattern: ^[0-9]*$
-          type: string
-        sourceSystemId:
-          errorMessage:
-            maxLength: exceeds the maximum limit of 30.
-            pattern: invalid value, only numeric characters are allowed.
-            type: invalid type, expected string.
-          maxLength: 30
-          pattern: ^[0-9]*$
-          type: string
-        standard:
-          errorMessage:
-            required:
-              standardName: standardName is required.
-              transactionType: transactionType is required.
-              type: type is required.
-              versionOrReleaseNumber: versionOrReleaseNumber is required.
-          properties:
-            standardName:
-              enum:
-              - TELECOM
-              - ''
-              errorMessage:
-                enum: invalid value, only expected TELECOM.
-                type: invalid type, expected string.
-              type: string
-            transactionType:
-              enum:
-              - B1
-              - B2
-              - B3
-              - C1
-              - C2
-              - C3
-              - D1
-              - E1
-              - N1
-              - N2
-              - N3
-              - P1
-              - P2
-              - P3
-              - P4
-              - S1
-              - S2
-              - S3
-              - ''
-              errorMessage:
-                enum: invalid value, expected values are B1,B2,B3,C1,C2,C3,D1,E1,N1,N2,N3,P1,P2,P3,P4,S1,S2,S3.
-                maxLength: exceeds the maximum limit of 2.
-                type: invalid type, expected string.
-              maxLength: 2
-              type: string
-            type:
-              enum:
-              - request
-              - response
-              - ''
-              errorMessage:
-                enum: invalid value, expected values are request or response.
-                type: invalid type, expected string.
-              type: string
-            versionOrReleaseNumber:
-              enum:
-              - D0
-              - ''
-              errorMessage:
-                enum: invalid value, only expected D0.
-                maxLength: exceeds the maximum limit of 2.
-                type: invalid type, expected string.
-              maxLength: 2
-              type: string
-          required:
-          - standardName
-          - versionOrReleaseNumber
-          - transactionType
-          - type
-          type: object
-        transactionCode:
-          enum:
-          - B1
-          - B2
-          - B3
-          - C1
-          - C2
-          - C3
-          - D1
-          - E1
-          - N1
-          - N2
-          - N3
-          - P1
-          - P2
-          - P3
-          - P4
-          - S1
-          - S2
-          - S3
-          - ''
-          errorMessage:
-            enum: invalid value, expected values are B1,B2,B3,C1,C2,C3,D1,E1,N1,N2,N3,P1,P2,P3,P4,S1,S2,S3.
-            maxLength: exceeds the maximum limit of 2.
-            type: invalid type, expected string.
-          maxLength: 2
-          type: string
-      type: object
-    ResponseIntermediaryAuthorizationGrouping:
-      properties:
-        empty:
-          type: boolean
-        intermediaryMessage:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        present:
-          type: boolean
-        responseIntermediaryAuthorizationId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        responseIntermediaryAuthorizationTypeId:
-          $ref: '#/components/schemas/NcpdpCodeType'
-      type: object
-    HelpDeskSupportTypeGrouping:
-      properties:
-        empty:
-          type: boolean
-        helpDeskBusinessUnitTypeCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        helpDeskBusinessUnitTypeGroupings:
-          items:
-            $ref: '#/components/schemas/HelpDeskBusinessUnitTypeGrouping'
-          type: array
-        helpDeskSupportType:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        present:
-          type: boolean
-      type: object
-    OtherBenefitDetailInformationGrouping:
-      properties:
-        empty:
-          type: boolean
-        otherBenefitDetailInformation:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherBenefitDetailInformationEffectiveDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        otherBenefitDetailInformationFacilityName:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherBenefitDetailInformationIndicator:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        otherBenefitDetailInformationProviderNumber:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherBenefitDetailInformationTerminationDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        otherBenefitFacilityDetailInformationTelephoneNumber:
-          $ref: '#/components/schemas/NcpdpPhoneNumberType'
-        present:
-          type: boolean
-      type: object
-    TransactionV1:
-      properties:
-        dur:
-          $ref: '#/components/schemas/DurOrPpsV1'
-        payment:
-          $ref: '#/components/schemas/CobOtherPaymentsV1'
-        prescription:
-          $ref: '#/components/schemas/ClaimV1'
-        pricing:
-          $ref: '#/components/schemas/PricingV1'
-        status:
-          $ref: '#/components/schemas/StatusV1'
-      type: object
-    PreferredProductGroupingV1:
-      properties:
-        costShareIncentive:
-          type: number
-        description:
-          type: string
-        incentive:
-          type: number
-        productId:
-          $ref: '#/components/schemas/IdentifierV1'
-      type: object
     StatusSegment:
       properties:
         additionalMessageInformationCount:
@@ -1475,205 +122,6 @@ components:
           $ref: '#/components/schemas/NcpdpAlphaNumericType'
           deprecated: true
       type: object
-    DurOrPpsGrouping:
-      properties:
-        clinicalSignificanceCode:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        databaseIndicator:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        durAdditionalText:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-          deprecated: true
-        durFreeTextMessage:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-          deprecated: true
-        durOrDueCoAgentDescription:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        durOrDueCoAgentId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        durOrDueCoAgentIdQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        durOrDueCompoundProductId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        durOrDueCompoundProductIdQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        durOrDueFreeTextMessage:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        durOrDueMaximumDailyDoseQuantity:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        durOrDueMaximumDailyDoseUnitOfMeasure:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        durOrDueMinimumDailyDoseQuantity:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        durOrDueMinimumDailyDoseUnitOfMeasure:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        durOrPpsCodeCounter:
-          $ref: '#/components/schemas/NcpdpCounterType'
-        empty:
-          type: boolean
-        otherPharmacyId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherPharmacyIdQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        otherPharmacyIndicator:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        otherPharmacyName:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherPharmacyTelephone:
-          $ref: '#/components/schemas/NcpdpPhoneNumberType'
-        otherPrescriberId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherPrescriberIdQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        otherPrescriberIndicator:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        otherPrescriberLastName:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        otherPrescriberTelephoneNumber:
-          $ref: '#/components/schemas/NcpdpPhoneNumberType'
-        present:
-          type: boolean
-        previousDateOfFill:
-          $ref: '#/components/schemas/NcpdpDateType'
-          deprecated: true
-        previousDateOfService:
-          $ref: '#/components/schemas/NcpdpDateType'
-        quantityOfPreviousDispensing:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        quantityOfPreviousFill:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        reasonForServiceCode:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        unitOfMeasureForPreviousDispensedQuantity:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-      type: object
-    PricingV1:
-      properties:
-        accumulatedDeductibleAmount:
-          type: number
-        amountAppliedToPeriodicDeductible:
-          type: number
-        amountAttributedToCoverageGap:
-          type: number
-        amountAttributedToProcessorFee:
-          type: number
-        amountAttributedToProductSelectionOrBrandDrug:
-          type: number
-        amountAttributedToProductSelectionOrBrandNonPrefferedFormularySelection:
-          type: number
-        amountAttributedToProductSelectionOrNonPrefferedFormularySelection:
-          type: number
-        amountAttributedToProviderNetwork:
-          type: number
-        amountAttributedToSalesTax:
-          type: number
-        amountExceedingPeriodicBenefitMaximum:
-          type: number
-        amountOfCoinsurance:
-          type: number
-        amountOfCopay:
-          type: number
-        basisOfCalculationCoinsurance:
-          type: string
-        basisOfCalculationCopay:
-          type: string
-        basisOfCalculationDispensingFee:
-          type: string
-        basisOfCalculationFlatSalesTax:
-          type: string
-        basisOfCalculationPercentageSalesTax:
-          type: string
-        basisOfReimbursementDetermination:
-          type: string
-        benefitStage:
-          items:
-            $ref: '#/components/schemas/CodeValuePairV1'
-          type: array
-        dispensingFeeContractedOrReimbursableAmount:
-          type: number
-        dispensingFeePaid:
-          type: number
-        estimatedGenericSavings:
-          type: number
-        flatSalesTaxAmountPaid:
-          type: number
-        healthPlanFundedAssistanceAmount:
-          type: number
-        incentiveAmountPaid:
-          type: number
-        ingredientCostContractedOrReimbursableAmount:
-          type: number
-        ingredientCostPaid:
-          type: number
-        otherAmountPaid:
-          items:
-            $ref: '#/components/schemas/CodeValuePairV1'
-          type: array
-        otherPayerAmountRecognized:
-          type: number
-        patientPayAmount:
-          type: number
-        patientRegulatoryFeeAmount:
-          type: number
-        patientSalesTaxAmount:
-          type: number
-        percentageSalesTaxAmountPaid:
-          type: number
-        percentageSalesTaxBasisPaid:
-          type: string
-        percentageSalesTaxRatePaid:
-          type: number
-        percentageTaxExemptIndicator:
-          type: string
-        planSalesTaxAmount:
-          type: number
-        professionalServiceFeePaid:
-          type: number
-        remainingBenefitAmount:
-          type: number
-        remainingDeductibleAmount:
-          type: number
-        spendingAccountAmountRemaining:
-          type: number
-        totalAmountPaid:
-          type: number
-      type: object
-    RegulatoryFeeGrouping:
-      properties:
-        empty:
-          type: boolean
-        present:
-          type: boolean
-        regulatoryFeeAmountPaid:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        regulatoryFeeExemptIndicator:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        regulatoryFeeTypeCode:
-          $ref: '#/components/schemas/NcpdpCodeType'
-      type: object
-    DurPpsResponseCodeV1:
-      properties:
-        clinicalSignificanceCode:
-          type: string
-        databaseIndicator:
-          type: string
-        durAdditionalText:
-          type: string
-        durFreeTextMessage:
-          type: string
-        otherPharmacyIndicator:
-          type: string
-        otherPrescriberIndicator:
-          type: string
-        previousDateOfFill:
-          format: date
-          type: string
-        quantityOfPreviousFill:
-          type: number
-        reasonForServiceCode:
-          type: string
-      type: object
     ProviderSegment:
       properties:
         dataSourceOfInvalidProviderDetermination:
@@ -1685,286 +133,22 @@ components:
         stateCodeForDataSourceOfInvalidProviderDetermination:
           $ref: '#/components/schemas/NcpdpCodeType'
       type: object
-    PricingSegment:
-      properties:
-        accumulatedDeductibleAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        amountAppliedToPeriodicDeductible:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        amountAttributedToCoverageGap:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        amountAttributedToProcessorFee:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        amountAttributedToProductSelectionOrBrandDrug:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        amountAttributedToProductSelectionOrBrandNonPreferredFormularySelection:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        amountAttributedToProductSelectionOrNonPreferredFormularySelection:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        amountAttributedToProviderNetworkSelection:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        amountAttributedToSalesTax:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        amountExceedingPeriodicBenefitMaximum:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        amountOfCoinsurance:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        amountOfCopay:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        basisOfCalculationCoinsurance:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        basisOfCalculationCopay:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        basisOfCalculationDispensingFee:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        basisOfCalculationFlatSalesTax:
-          $ref: '#/components/schemas/NcpdpCodeType'
-          deprecated: true
-        basisOfCalculationPercentageSalesTax:
-          $ref: '#/components/schemas/NcpdpCodeType'
-          deprecated: true
-        basisOfCalculationPercentageTax:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        basisOfCalculationRegulatoryFee:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        basisOfReimbursementDetermination:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        benefitStageCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-          deprecated: true
-        benefitStageGroupings:
-          deprecated: true
-          items:
-            $ref: '#/components/schemas/BenefitStageGrouping'
-          type: array
-        benefitStageIndicatorCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        benefitStageIndicators:
-          items:
-            $ref: '#/components/schemas/NcpdpCountType'
-          type: array
-        dispensingFeeContractedOrReimbursableAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        dispensingFeePaid:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        empty:
-          type: boolean
-        estimatedGenericSavings:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        flatSalesTaxAmountPaid:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        healthPlanFundedAssistanceAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        incentiveAmountPaid:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        ingredientCostContractedOrReimbursableAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        ingredientCostPaid:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        otherAmountPaidCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        otherAmountPaidGroupings:
-          items:
-            $ref: '#/components/schemas/OtherAmountPaidGrouping'
-          type: array
-        otherPayerAmountRecognized:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        patientPayAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        patientPayComponentCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        patientPayComponentGroupings:
-          items:
-            $ref: '#/components/schemas/PatientPayComponentGrouping'
-          type: array
-        patientRegulatoryFeeAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        patientSalesTaxAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        percentageSalesTaxAmountPaid:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        percentageSalesTaxBasisPaid:
-          $ref: '#/components/schemas/NcpdpCodeType'
-          deprecated: true
-        percentageSalesTaxRatePaid:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        percentageTaxAmountPaid:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        percentageTaxBasisPaid:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        percentageTaxExemptIndicator:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        percentageTaxRatePaid:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        planSalesTaxAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-          deprecated: true
-        present:
-          type: boolean
-        professionalServiceFeeContractedOrReimbursementAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        professionalServiceFeePaid:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        regulatoryFeeCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        regulatoryFeeGroupings:
-          items:
-            $ref: '#/components/schemas/RegulatoryFeeGrouping'
-          type: array
-        remainingBenefitAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        remainingDeductibleAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        spendingAccountAmountRemaining:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        taxExemptIndicator:
-          $ref: '#/components/schemas/NcpdpCodeType'
-          deprecated: true
-        totalAmountPaid:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-      type: object
-    ClaimSegment:
-      properties:
-        benefitTypeOpportunities:
-          items:
-            $ref: '#/components/schemas/NcpdpCodeType'
-          type: array
-        benefitTypeOpportunityCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        empty:
-          type: boolean
-        formularyAlternativeProductCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        formularyAlternativeProductGroupings:
-          items:
-            $ref: '#/components/schemas/FormularyAlternativeProductGrouping'
-          type: array
-        maximumAge:
-          $ref: '#/components/schemas/NcpdpIntegerType'
-        maximumAgeQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        maximumAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        maximumAmountQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        maximumAmountTimePeriod:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        maximumAmountTimePeriodEndDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        maximumAmountTimePeriodStartDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        maximumAmountTimePeriodUnits:
-          $ref: '#/components/schemas/NcpdpIntegerType'
-        medicaidSubrogationIcnOrTcn:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-          deprecated: true
-        minimumAge:
-          $ref: '#/components/schemas/NcpdpIntegerType'
-        minimumAgeQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        minimumAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        minimumAmountQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        planBenefitOverrideIndicator:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        planBenefitOverrideValueCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        planBenefitOverrideValues:
-          items:
-            $ref: '#/components/schemas/NcpdpAlphaNumericType'
-          type: array
-        preferredProductCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-          deprecated: true
-        preferredProductGroupings:
-          deprecated: true
-          items:
-            $ref: '#/components/schemas/FormularyAlternativeProductGrouping'
-          type: array
-        prescriptionOrServiceReferenceNumber:
-          $ref: '#/components/schemas/NcpdpLongType'
-        prescriptionOrServiceReferenceNumberQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        present:
-          type: boolean
-        remainingAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        remainingAmountQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        subrogationRequestorsReconciliationId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-      type: object
-    PatientPayComponentGrouping:
+    HelpDeskBusinessUnitTypeGrouping:
       properties:
         empty:
           type: boolean
-        patientPayComponentAmount:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        patientPayComponentQualifier:
+        helpDeskBusinessUnitType:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        helpDeskContactInformation:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        helpDeskContactInformationExtension:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        helpDeskContactInformationQualifier:
           $ref: '#/components/schemas/NcpdpCodeType'
         present:
           type: boolean
       type: object
-    InsuranceAdditionalInformationSegment:
-      properties:
-        benefitId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        cmsLowIncomeCostSharingLevel:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-          deprecated: true
-        contractNumber:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        empty:
-          type: boolean
-        formularyId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        medicarePartDCoverageCode:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        nextMedicarePartDEffectiveDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        nextMedicarePartDTerminationDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        planName:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        present:
-          type: boolean
-      type: object
-    TelecomRequestV1:
-      properties:
-        additionalDocumentation:
-          $ref: '#/components/schemas/AdditionalDocumentationV1'
-        coupon:
-          $ref: '#/components/schemas/CouponV1'
-        header:
-          $ref: '#/components/schemas/HeaderRequestV1'
-        patient:
-          $ref: '#/components/schemas/PatientRequestV1'
-        pharmacy:
-          $ref: '#/components/schemas/PharmacyV1'
-        prescription:
-          $ref: '#/components/schemas/PrescriptionV1'
-        priorAuthorization:
-          $ref: '#/components/schemas/PriorAuthorizationV1'
-        processor:
-          $ref: '#/components/schemas/ProcessorV1'
-      type: object
-    NcpdpIntegerType:
+    NcpdpLongType:
       properties:
         empty:
           type: boolean
@@ -1977,42 +161,192 @@ components:
         rawPresent:
           type: boolean
       type: object
-    OtherAmountPaidGrouping:
+    IntermediaryHelpDeskSupportTypeGrouping:
       properties:
         empty:
           type: boolean
-        otherAmountPaid:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        otherAmountPaidQualifier:
+        intermediaryHelpDeskBusinessUnitTypeCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        intermediaryHelpDeskBusinessUnitTypeGroupings:
+          items:
+            $ref: '#/components/schemas/IntermediaryHelpDeskBusinessUnitTypeGrouping'
+          type: array
+        intermediaryHelpDeskSupportType:
           $ref: '#/components/schemas/NcpdpCodeType'
         present:
           type: boolean
       type: object
-    PatientSegment:
+    PhoneNumber:
       properties:
-        dateOfBirth:
-          $ref: '#/components/schemas/NcpdpDateType'
+        countryCode:
+          format: int32
+          type: integer
+        countryCodeSource:
+          enum:
+          - FROM_NUMBER_WITH_PLUS_SIGN
+          - FROM_NUMBER_WITH_IDD
+          - FROM_NUMBER_WITHOUT_PLUS_SIGN
+          - FROM_DEFAULT_COUNTRY
+          - UNSPECIFIED
+          type: string
+        extension:
+          type: string
+        italianLeadingZero:
+          type: boolean
+        nationalNumber:
+          format: int64
+          type: integer
+        numberOfLeadingZeros:
+          format: int32
+          type: integer
+        preferredDomesticCarrierCode:
+          type: string
+        rawInput:
+          type: string
+      type: object
+    InsuranceSegment:
+      properties:
+        cardholderId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
         empty:
           type: boolean
-        patientFirstName:
+        groupId:
           $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        patientIdCount:
+        medicaidAgencyNumber:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        medicaidIdNumber:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        networkReimbursementId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        payerId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+          deprecated: true
+        payerIdQualifier:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+          deprecated: true
+        payerOrHealthPlanIdCount:
           $ref: '#/components/schemas/NcpdpCountType'
-        patientIdGroupings:
+        payerOrHealthPlanIdGroupings:
           items:
-            $ref: '#/components/schemas/PatientIdGrouping'
+            $ref: '#/components/schemas/PayerOrHealthPlanIdGrouping'
           type: array
-        patientLastName:
+        planId:
           $ref: '#/components/schemas/NcpdpAlphaNumericType'
         present:
           type: boolean
       type: object
-    CodeValuePairV1:
+    OtherBenefitGrouping:
       properties:
-        code:
+        empty:
+          type: boolean
+        otherBenefitDetailInformationCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        otherBenefitDetailInformationGroupings:
+          items:
+            $ref: '#/components/schemas/OtherBenefitDetailInformationGrouping'
+          type: array
+        otherBenefitEffectiveDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        otherBenefitFacilityName:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherBenefitFacilityTelephoneNumber:
+          $ref: '#/components/schemas/NcpdpPhoneNumberType'
+        otherBenefitTerminationDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        otherBenefitTypeCode:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        otherBenefitTypeId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        present:
+          type: boolean
+        stateOrProvinceAddress:
+          $ref: '#/components/schemas/NcpdpCodeType'
+      type: object
+    DurOrPpsV1:
+      properties:
+        durPpsResponseCode:
+          items:
+            $ref: '#/components/schemas/DurPpsResponseCodeV1'
+          type: array
+      type: object
+    NCPDPResponseConverterV1Response:
+      properties:
+        header:
+          $ref: '#/components/schemas/HeaderV1'
+        insurance:
+          $ref: '#/components/schemas/InsuranceV1'
+        insuranceAdditionalInformation:
+          $ref: '#/components/schemas/InsuranceAdditionalInformationV1'
+        patient:
+          $ref: '#/components/schemas/PatientV1'
+        responseMessage:
+          $ref: '#/components/schemas/MessageV1'
+        transactions:
+          items:
+            $ref: '#/components/schemas/TransactionV1'
+          type: array
+      type: object
+    NcpdpFormatRequestData:
+      properties:
+        chainID:
+          format: ncpdp-alphanumeric
+          maxLength: 30
           type: string
-        value:
+        externalMessageId:
+          maxLength: 30
+          pattern: ^[0-9]*$
           type: string
+        response:
+          $ref: '#/components/schemas/NcpdpResponse'
+        sourceSystemId:
+          maxLength: 30
+          pattern: ^[0-9]*$
+          type: string
+      type: object
+    HeaderSegment:
+      properties:
+        dateOfService:
+          $ref: '#/components/schemas/NcpdpDateType'
+        empty:
+          type: boolean
+        headerResponseStatus:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        present:
+          type: boolean
+        serviceProviderId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        serviceProviderIdQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        transactionCode:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        transactionCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        versionOrReleaseNumber:
+          $ref: '#/components/schemas/NcpdpCodeType'
+      type: object
+    PatientPayComponentGrouping:
+      properties:
+        empty:
+          type: boolean
+        patientPayComponentAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        patientPayComponentQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        present:
+          type: boolean
+      type: object
+    NcpdpPhoneNumberType:
+      properties:
+        empty:
+          type: boolean
+        present:
+          type: boolean
+        raw:
+          type: string
+        rawEmpty:
+          type: boolean
+        rawPresent:
+          type: boolean
       type: object
     PrescriptionV1:
       properties:
@@ -2939,6 +1273,1168 @@ components:
           maxLength: 36
           type: string
       type: object
+    TransactionV1:
+      properties:
+        dur:
+          $ref: '#/components/schemas/DurOrPpsV1'
+        payment:
+          $ref: '#/components/schemas/CobOtherPaymentsV1'
+        prescription:
+          $ref: '#/components/schemas/ClaimV1'
+        pricing:
+          $ref: '#/components/schemas/PricingV1'
+        status:
+          $ref: '#/components/schemas/StatusV1'
+      type: object
+    PriorAuthorizationSegment:
+      properties:
+        empty:
+          type: boolean
+        present:
+          type: boolean
+        priorAuthorizationDollarsAuthorized:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        priorAuthorizationEffectiveDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        priorAuthorizationExpirationDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        priorAuthorizationIdAssigned:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        priorAuthorizationNumberAssigned:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+          deprecated: true
+        priorAuthorizationNumberOfRefillsAuthorized:
+          $ref: '#/components/schemas/NcpdpIntegerType'
+        priorAuthorizationProcessedDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        priorAuthorizationQuantity:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        priorAuthorizationQuantityAccumulated:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+      type: object
+    PricingSegment:
+      properties:
+        accumulatedDeductibleAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        amountAppliedToPeriodicDeductible:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        amountAttributedToCoverageGap:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        amountAttributedToProcessorFee:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        amountAttributedToProductSelectionOrBrandDrug:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        amountAttributedToProductSelectionOrBrandNonPreferredFormularySelection:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        amountAttributedToProductSelectionOrNonPreferredFormularySelection:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        amountAttributedToProviderNetworkSelection:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        amountAttributedToSalesTax:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        amountExceedingPeriodicBenefitMaximum:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        amountOfCoinsurance:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        amountOfCopay:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        basisOfCalculationCoinsurance:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        basisOfCalculationCopay:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        basisOfCalculationDispensingFee:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        basisOfCalculationFlatSalesTax:
+          $ref: '#/components/schemas/NcpdpCodeType'
+          deprecated: true
+        basisOfCalculationPercentageSalesTax:
+          $ref: '#/components/schemas/NcpdpCodeType'
+          deprecated: true
+        basisOfCalculationPercentageTax:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        basisOfCalculationRegulatoryFee:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        basisOfReimbursementDetermination:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        benefitStageCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+          deprecated: true
+        benefitStageGroupings:
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/BenefitStageGrouping'
+          type: array
+        benefitStageIndicatorCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        benefitStageIndicators:
+          items:
+            $ref: '#/components/schemas/NcpdpCountType'
+          type: array
+        dispensingFeeContractedOrReimbursableAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        dispensingFeePaid:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        empty:
+          type: boolean
+        estimatedGenericSavings:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        flatSalesTaxAmountPaid:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        healthPlanFundedAssistanceAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        incentiveAmountPaid:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        ingredientCostContractedOrReimbursableAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        ingredientCostPaid:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        otherAmountPaidCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        otherAmountPaidGroupings:
+          items:
+            $ref: '#/components/schemas/OtherAmountPaidGrouping'
+          type: array
+        otherPayerAmountRecognized:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        patientPayAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        patientPayComponentCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        patientPayComponentGroupings:
+          items:
+            $ref: '#/components/schemas/PatientPayComponentGrouping'
+          type: array
+        patientRegulatoryFeeAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        patientSalesTaxAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        percentageSalesTaxAmountPaid:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        percentageSalesTaxBasisPaid:
+          $ref: '#/components/schemas/NcpdpCodeType'
+          deprecated: true
+        percentageSalesTaxRatePaid:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        percentageTaxAmountPaid:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        percentageTaxBasisPaid:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        percentageTaxExemptIndicator:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        percentageTaxRatePaid:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        planSalesTaxAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        present:
+          type: boolean
+        professionalServiceFeeContractedOrReimbursementAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        professionalServiceFeePaid:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        regulatoryFeeCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        regulatoryFeeGroupings:
+          items:
+            $ref: '#/components/schemas/RegulatoryFeeGrouping'
+          type: array
+        remainingBenefitAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        remainingDeductibleAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        spendingAccountAmountRemaining:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        taxExemptIndicator:
+          $ref: '#/components/schemas/NcpdpCodeType'
+          deprecated: true
+        totalAmountPaid:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+      type: object
+    MessageV1:
+      properties:
+        message:
+          type: string
+      type: object
+    OtherPayerGrouping:
+      properties:
+        empty:
+          type: boolean
+        otherPayerAdjudicatedProgramType:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        otherPayerBenefitClassification:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        otherPayerBenefitEffectiveDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        otherPayerBenefitTerminationDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        otherPayerCardholderId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherPayerCoverageType:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        otherPayerGroupId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherPayerHelpDeskTelephoneNumber:
+          $ref: '#/components/schemas/NcpdpPhoneNumberType'
+        otherPayerHelpDeskTelephoneNumberExtension:
+          $ref: '#/components/schemas/NcpdpIntegerType'
+        otherPayerId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherPayerIdQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        otherPayerName:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherPayerPatientRelationshipCode:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        otherPayerPersonCode:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherPayerProcessorControlNumber:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherPayerRelationshipType:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        present:
+          type: boolean
+      type: object
+    HeaderV1:
+      properties:
+        chainID:
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 30.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 30
+          type: string
+        dateOfService:
+          errorMessage:
+            format: invalid date.
+            type: invalid type.
+          example: '2023-10-01'
+          format: rxn-date
+          type: string
+        externalMessageId:
+          errorMessage:
+            maxLength: exceeds the maximum limit of 30.
+            pattern: invalid value, only numeric characters are allowed.
+            type: invalid type, expected string.
+          maxLength: 30
+          pattern: ^[0-9]*$
+          type: string
+        sourceSystemId:
+          errorMessage:
+            maxLength: exceeds the maximum limit of 30.
+            pattern: invalid value, only numeric characters are allowed.
+            type: invalid type, expected string.
+          maxLength: 30
+          pattern: ^[0-9]*$
+          type: string
+        standard:
+          errorMessage:
+            required:
+              standardName: standardName is required.
+              transactionType: transactionType is required.
+              type: type is required.
+              versionOrReleaseNumber: versionOrReleaseNumber is required.
+          properties:
+            standardName:
+              enum:
+              - TELECOM
+              - ''
+              errorMessage:
+                enum: invalid value, only expected TELECOM.
+                type: invalid type, expected string.
+              type: string
+            transactionType:
+              enum:
+              - B1
+              - B2
+              - B3
+              - C1
+              - C2
+              - C3
+              - D1
+              - E1
+              - N1
+              - N2
+              - N3
+              - P1
+              - P2
+              - P3
+              - P4
+              - S1
+              - S2
+              - S3
+              - ''
+              errorMessage:
+                enum: invalid value, expected values are B1,B2,B3,C1,C2,C3,D1,E1,N1,N2,N3,P1,P2,P3,P4,S1,S2,S3.
+                maxLength: exceeds the maximum limit of 2.
+                type: invalid type, expected string.
+              maxLength: 2
+              type: string
+            type:
+              enum:
+              - request
+              - response
+              - ''
+              errorMessage:
+                enum: invalid value, expected values are request or response.
+                type: invalid type, expected string.
+              type: string
+            versionOrReleaseNumber:
+              enum:
+              - D0
+              - ''
+              errorMessage:
+                enum: invalid value, only expected D0.
+                maxLength: exceeds the maximum limit of 2.
+                type: invalid type, expected string.
+              maxLength: 2
+              type: string
+          required:
+          - standardName
+          - versionOrReleaseNumber
+          - transactionType
+          - type
+          type: object
+        transactionCode:
+          enum:
+          - B1
+          - B2
+          - B3
+          - C1
+          - C2
+          - C3
+          - D1
+          - E1
+          - N1
+          - N2
+          - N3
+          - P1
+          - P2
+          - P3
+          - P4
+          - S1
+          - S2
+          - S3
+          - ''
+          errorMessage:
+            enum: invalid value, expected values are B1,B2,B3,C1,C2,C3,D1,E1,N1,N2,N3,P1,P2,P3,P4,S1,S2,S3.
+            maxLength: exceeds the maximum limit of 2.
+            type: invalid type, expected string.
+          maxLength: 2
+          type: string
+      type: object
+    HelpDeskSupportTypeGrouping:
+      properties:
+        empty:
+          type: boolean
+        helpDeskBusinessUnitTypeCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        helpDeskBusinessUnitTypeGroupings:
+          items:
+            $ref: '#/components/schemas/HelpDeskBusinessUnitTypeGrouping'
+          type: array
+        helpDeskSupportType:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        present:
+          type: boolean
+      type: object
+    PriorAuthorizationV1:
+      properties:
+        authorizationNumber:
+          errorMessage:
+            format: invalid value for authorizationNumber
+            maxLength: exceeds the maximum limit of 60.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 60
+          type: string
+        authorizedRepresentative:
+          errorMessage:
+            minProperties: must have at least one property.
+          minProperties: 1
+          properties:
+            address:
+              errorMessage:
+                minProperties: must have at least one address property.
+              minProperties: 1
+              properties:
+                cityName:
+                  errorMessage:
+                    format: invalid city name.
+                    maxLength: exceeds the maximum limit of 60.
+                    type: invalid type, expected string.
+                  format: ncpdp-alphanumeric
+                  maxLength: 60
+                  type: string
+                postalCode:
+                  errorMessage:
+                    format: invalid postal code.
+                    maxLength: maximum length must be 15.
+                    type: invalid type, expected string.
+                  format: zip-or-postal-code
+                  maxLength: 15
+                  type: string
+                stateProvinceCode:
+                  enum:
+                  - AL
+                  - AK
+                  - AZ
+                  - AR
+                  - CA
+                  - CO
+                  - CT
+                  - DE
+                  - DC
+                  - FM
+                  - FL
+                  - GA
+                  - GU
+                  - HI
+                  - ID
+                  - IL
+                  - IN
+                  - IA
+                  - KS
+                  - KY
+                  - LA
+                  - ME
+                  - MD
+                  - MA
+                  - MI
+                  - MN
+                  - MS
+                  - MO
+                  - MT
+                  - NE
+                  - NV
+                  - NH
+                  - NJ
+                  - NM
+                  - NY
+                  - NC
+                  - ND
+                  - MP
+                  - OH
+                  - OK
+                  - OR
+                  - PW
+                  - PA
+                  - PR
+                  - RI
+                  - SC
+                  - SD
+                  - TN
+                  - TX
+                  - UT
+                  - VT
+                  - VI
+                  - VA
+                  - WA
+                  - WV
+                  - WI
+                  - WY
+                  - AB
+                  - BC
+                  - MB
+                  - NB
+                  - NF
+                  - NL
+                  - NS
+                  - NT
+                  - 'ON'
+                  - PE
+                  - QC
+                  - SK
+                  - YT
+                  - UM
+                  - ''
+                  errorMessage:
+                    enum: invalid state or province.
+                    maxLength: maximum length must be 2.
+                    type: invalid type, expected string.
+                  maxLength: 2
+                  type: string
+                streetLine1:
+                  errorMessage:
+                    format: invalid street line 1 value.
+                    maxLength: exceeds the maximum limit of 90.
+                    type: invalid type, expected string.
+                  format: ncpdp-alphanumeric
+                  maxLength: 90
+                  type: string
+              type: object
+            name:
+              errorMessage:
+                minProperties: must have at least one name property.
+              minProperties: 1
+              properties:
+                first:
+                  errorMessage:
+                    format: invalid first name
+                    maxLength: exceeds the maximum limit of 105.
+                    type: invalid type, expected string.
+                  format: ncpdp-alphanumeric
+                  maxLength: 105
+                  type: string
+                last:
+                  errorMessage:
+                    format: invalid last name
+                    maxLength: exceeds the maximum limit of 105.
+                    type: invalid type, expected string.
+                  format: ncpdp-alphanumeric
+                  maxLength: 105
+                  type: string
+                middle:
+                  errorMessage:
+                    format: invalid middle name
+                    maxLength: exceeds the maximum limit of 105.
+                    type: invalid type, expected string.
+                  format: ncpdp-alphanumeric
+                  maxLength: 105
+                  type: string
+                prefix:
+                  errorMessage:
+                    format: invalid prefix value
+                    maxLength: exceeds the maximum limit of 9.
+                    type: invalid type, expected string.
+                  format: ncpdp-alphanumeric
+                  maxLength: 9
+                  type: string
+                suffix:
+                  errorMessage:
+                    format: invalid suffix value
+                    maxLength: exceeds the maximum limit of 9.
+                    type: invalid type, expected string.
+                  format: ncpdp-alphanumeric
+                  maxLength: 9
+                  type: string
+              type: object
+          type: object
+        basisOfRequest:
+          description: Code describing the reason for prior authorization request. ME - Medical Exception, PR - Plan Requirement, PL - Increase Plan Limitation
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 6.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 6
+          type: string
+        idAssigned:
+          errorMessage:
+            maxLength: exceeds the maximum limit of 11.
+            pattern: invalid value for pAIdAssigned
+            type: invalid type, expected string.
+          maxLength: 11
+          pattern: ^[0-9]*$
+          type: string
+        requestPeriodBeginDate:
+          errorMessage:
+            format: invalid date.
+            type: invalid type, expected string.
+          example: '2023-10-01'
+          format: rxn-date
+          type: string
+        requestPeriodEndDate:
+          errorMessage:
+            format: invalid date.
+            type: invalid type, expected string.
+          example: '2023-10-01'
+          format: rxn-date
+          type: string
+        requestType:
+          description: Code identifying type of prior authorization request. 1 - Initial, 2 -Reauthorization, 3 - Deferred
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 3.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 3
+          type: string
+        supportingDocumentation:
+          errorMessage:
+            format: invalid value for pASupportingDocumentation
+            maxLength: exceeds the maximum limit of 1500.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 1500
+          type: string
+      type: object
+    TelecomRequestV1:
+      properties:
+        additionalDocumentation:
+          $ref: '#/components/schemas/AdditionalDocumentationV1'
+        coupon:
+          $ref: '#/components/schemas/CouponV1'
+        header:
+          $ref: '#/components/schemas/HeaderRequestV1'
+        patient:
+          $ref: '#/components/schemas/PatientRequestV1'
+        pharmacy:
+          $ref: '#/components/schemas/PharmacyV1'
+        prescription:
+          $ref: '#/components/schemas/PrescriptionV1'
+        priorAuthorization:
+          $ref: '#/components/schemas/PriorAuthorizationV1'
+        processor:
+          $ref: '#/components/schemas/ProcessorV1'
+      type: object
+    InsuranceV1:
+      properties:
+        cardholderId:
+          type: string
+        groupId:
+          type: string
+        medicaidAgencyNumber:
+          type: string
+        medicaidIdNumber:
+          type: string
+        networkReimbursementId:
+          type: string
+        payerId:
+          $ref: '#/components/schemas/IdentifierV1'
+        planId:
+          type: string
+      type: object
+    OtherAmountPaidGrouping:
+      properties:
+        empty:
+          type: boolean
+        otherAmountPaid:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        otherAmountPaidQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        present:
+          type: boolean
+      type: object
+    ProcessorV1:
+      properties:
+        binNumber:
+          errorMessage:
+            maxLength: exceeds the maximum limit of 6.
+            pattern: invalid value, only numeric characters are allowed.
+            type: invalid type, expected string.
+          maxLength: 6
+          pattern: ^[0-9]*$
+          type: string
+        claimFormatCode:
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 9.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 9
+          type: string
+        groupCode:
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 45.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 45
+          type: string
+        processorControlNumber:
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 30.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 30
+          type: string
+        rems:
+          enum:
+          - Y
+          - N
+          - y
+          - n
+          errorMessage:
+            enum: invalid Value, expected values are Y or N.
+            maxLength: exceeds the maximum limit of 1.
+            type: invalid type, expected string.
+          maxLength: 1
+          type: string
+        siteCode:
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 240.
+            type: invalid type, expected string or null.
+          format: ncpdp-alphanumeric
+          maxLength: 240
+          type:
+          - string
+          - 'null'
+        softwareVendorId:
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 30.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 30
+          type: string
+        transactionCount:
+          enum:
+          - '1'
+          - ''
+          errorMessage:
+            enum: invalid value, only expected value is 1.
+            maxLength: exceeds the maximum limit of 1.
+            type: invalid type, expected string.
+          maxLength: 1
+          type: string
+      type: object
+    RegulatoryFeeGrouping:
+      properties:
+        empty:
+          type: boolean
+        present:
+          type: boolean
+        regulatoryFeeAmountPaid:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        regulatoryFeeExemptIndicator:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        regulatoryFeeTypeCode:
+          $ref: '#/components/schemas/NcpdpCodeType'
+      type: object
+    NcpdpCountType:
+      properties:
+        empty:
+          type: boolean
+        present:
+          type: boolean
+        raw:
+          type: string
+        rawEmpty:
+          type: boolean
+        rawPresent:
+          type: boolean
+      type: object
+    RejectCodeGrouping:
+      properties:
+        empty:
+          type: boolean
+        present:
+          type: boolean
+        rejectCode:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        rejectFieldOccurrenceIndicator:
+          $ref: '#/components/schemas/NcpdpIntegerType'
+      type: object
+    NcpdpCodeType:
+      properties:
+        empty:
+          type: boolean
+        present:
+          type: boolean
+        raw:
+          type: string
+        rawEmpty:
+          type: boolean
+        rawPresent:
+          type: boolean
+      type: object
+    CouponV1:
+      properties:
+        number:
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 45.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 45
+          type: string
+        type:
+          errorMessage:
+            maxLength: exceeds the maximum limit of 2.
+            pattern: invalid value, only numeric characters are allowed.
+            type: invalid type, expected number.
+          maximum: 99
+          minimum: 0
+          type: number
+        valueAmount:
+          errorMessage:
+            maxLength: exceeds the maximum limit of 13.
+            pattern: not valid amount.
+            type: invalid type, expected string.
+          maxLength: 13
+          pattern: ^-?(\d{1,6}(?:[.]\d{1,6})?)?$
+          type: string
+      type: object
+    PricingV1:
+      properties:
+        accumulatedDeductibleAmount:
+          type: number
+        amountAppliedToPeriodicDeductible:
+          type: number
+        amountAttributedToCoverageGap:
+          type: number
+        amountAttributedToProcessorFee:
+          type: number
+        amountAttributedToProductSelectionOrBrandDrug:
+          type: number
+        amountAttributedToProductSelectionOrBrandNonPrefferedFormularySelection:
+          type: number
+        amountAttributedToProductSelectionOrNonPrefferedFormularySelection:
+          type: number
+        amountAttributedToProviderNetwork:
+          type: number
+        amountAttributedToSalesTax:
+          type: number
+        amountExceedingPeriodicBenefitMaximum:
+          type: number
+        amountOfCoinsurance:
+          type: number
+        amountOfCopay:
+          type: number
+        basisOfCalculationCoinsurance:
+          type: string
+        basisOfCalculationCopay:
+          type: string
+        basisOfCalculationDispensingFee:
+          type: string
+        basisOfCalculationFlatSalesTax:
+          type: string
+        basisOfCalculationPercentageSalesTax:
+          type: string
+        basisOfReimbursementDetermination:
+          type: string
+        benefitStage:
+          items:
+            $ref: '#/components/schemas/CodeValuePairV1'
+          type: array
+        dispensingFeeContractedOrReimbursableAmount:
+          type: number
+        dispensingFeePaid:
+          type: number
+        estimatedGenericSavings:
+          type: number
+        flatSalesTaxAmountPaid:
+          type: number
+        healthPlanFundedAssistanceAmount:
+          type: number
+        incentiveAmountPaid:
+          type: number
+        ingredientCostContractedOrReimbursableAmount:
+          type: number
+        ingredientCostPaid:
+          type: number
+        otherAmountPaid:
+          items:
+            $ref: '#/components/schemas/CodeValuePairV1'
+          type: array
+        otherPayerAmountRecognized:
+          type: number
+        patientPayAmount:
+          type: number
+        patientRegulatoryFeeAmount:
+          type: number
+        patientSalesTaxAmount:
+          type: number
+        percentageSalesTaxAmountPaid:
+          type: number
+        percentageSalesTaxBasisPaid:
+          type: string
+        percentageSalesTaxRatePaid:
+          type: number
+        percentageTaxExemptIndicator:
+          type: string
+        planSalesTaxAmount:
+          type: number
+        professionalServiceFeePaid:
+          type: number
+        remainingBenefitAmount:
+          type: number
+        remainingDeductibleAmount:
+          type: number
+        spendingAccountAmountRemaining:
+          type: number
+        totalAmountPaid:
+          type: number
+      type: object
+    MessageSegment:
+      properties:
+        empty:
+          type: boolean
+        message:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        present:
+          type: boolean
+      type: object
+    NcpdpDateType:
+      properties:
+        empty:
+          type: boolean
+        present:
+          type: boolean
+        raw:
+          type: string
+        rawEmpty:
+          type: boolean
+        rawPresent:
+          type: boolean
+      type: object
+    PatientIdGrouping:
+      properties:
+        empty:
+          type: boolean
+        patientId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        patientIdQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        present:
+          type: boolean
+      type: object
+    FormularyAlternativeProductGrouping:
+      properties:
+        empty:
+          type: boolean
+        formularyAlternativeDescription:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        formularyAlternativeEffectiveDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        formularyAlternativeEstimatedPatientCostShare:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        formularyAlternativeId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        formularyAlternativeIdQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        formularyAlternativeIncentive:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        formularyAlternativePlanBenefitTier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        formularyAlternativeReasonCode:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        formularyAlternativeRequiredTherapyIndicatorCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        formularyAlternativeRequiredTherapyIndicatorGroupings:
+          items:
+            $ref: '#/components/schemas/FormularyAlternativeRequiredTherapyIndicatorGrouping'
+          type: array
+        preferredProductCostShareIncentive:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        preferredProductDescription:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+          deprecated: true
+        preferredProductId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+          deprecated: true
+        preferredProductIdQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+          deprecated: true
+        preferredProductIncentive:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        present:
+          type: boolean
+      type: object
+    DurPpsResponseCodeV1:
+      properties:
+        clinicalSignificanceCode:
+          type: string
+        databaseIndicator:
+          type: string
+        durAdditionalText:
+          type: string
+        durFreeTextMessage:
+          type: string
+        otherPharmacyIndicator:
+          type: string
+        otherPrescriberIndicator:
+          type: string
+        previousDateOfFill:
+          format: date
+          type: string
+        quantityOfPreviousFill:
+          type: number
+        reasonForServiceCode:
+          type: string
+      type: object
+    PatientV1:
+      properties:
+        dateOfBirth:
+          format: date
+          type: string
+        name:
+          $ref: '#/components/schemas/NameV1'
+      type: object
+    CobOtherPaymentsV1:
+      properties:
+        otherPayerId:
+          items:
+            $ref: '#/components/schemas/OtherPayerIdsV1'
+          type: array
+      type: object
+    PayerOrHealthPlanIdGrouping:
+      properties:
+        empty:
+          type: boolean
+        payerOrHealthPlanId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        payerOrHealthPlanIdQualifier:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        present:
+          type: boolean
+      type: object
+    InsuranceAdditionalInformationSegment:
+      properties:
+        benefitId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        cmsLowIncomeCostSharingLevel:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+          deprecated: true
+        contractNumber:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        empty:
+          type: boolean
+        formularyId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        medicarePartDCoverageCode:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        nextMedicarePartDEffectiveDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        nextMedicarePartDTerminationDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        planName:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        present:
+          type: boolean
+      type: object
+    PharmacyV1:
+      properties:
+        professionalProvider:
+          properties:
+            providerId:
+              errorMessage:
+                minItems: must have at least one item.
+                type: invalid type, expected array.
+              items:
+                properties:
+                  code:
+                    description: 1 - Drug Enforcement Administration (DEA), 2 - State License, 3 - Social Security Number (SSN), 4 - Name, 5 - National Provider Identifier (NPI), 6 - Health Industry Number (HIN), 7 - State Issued, 8 - Other
+                    errorMessage:
+                      maxLength: exceeds the maximum limit of 2.
+                      pattern: invalid value, only numeric characters are allowed.
+                      type: invalid type, expected number.
+                    maximum: 99
+                    minimum: 0
+                    type: number
+                  value:
+                    errorMessage:
+                      format: invalid value, only printable characters are allowed.
+                      maxLength: exceeds the maximum limit of 90.
+                      type: invalid type, expected string.
+                    format: ncpdp-alphanumeric
+                    maxLength: 90
+                    type: string
+                type: object
+              minItems: 1
+              type: array
+          type: object
+        serviceProviderId:
+          errorMessage:
+            minItems: must have at least one item.
+            type: invalid type, expected array.
+          items:
+            properties:
+              code:
+                description: Code qualifying the service Provider. 1 - National Provider Identifier (NPI), 2 - Blue Cross, 3 - Blue Shield, 4 - Medicare, 5 - Medicaid, 6 - UPIN (Unique Physician/Practitioner Identification Number), 7 - NCPDP Provider Identification Number (National Council for Prescription Drug Programs Provider Identification Number), 8 - State License, 9 - TRICARE, 10 - Health Industry Number (HIN), 11 - Federal Tax ID, 12 - Drug Enforcement Administration (DEA) Number, 13 - State Issued, 14 - Plan Specific, 15 - HCIdea, 16 - Combat Methamphetamine Epidemic Act (CMEA) Certificate ID, 17 - Foreign Prescriber Identifier, 18 - No Prescriber Required, 99 - Other
+                errorMessage:
+                  maxLength: exceeds the maximum limit of 2.
+                  pattern: invalid value, only numeric characters are allowed.
+                  type: invalid type, expected number.
+                maximum: 99
+                minimum: 0
+                type: number
+              value:
+                errorMessage:
+                  format: invalid value, only printable characters are allowed.
+                  maxLength: exceeds the maximum limit of 90.
+                  type: invalid type, expected string.
+                format: ncpdp-alphanumeric
+                maxLength: 90
+                type: string
+            type: object
+          minItems: 1
+          type: array
+      type: object
+    RejectDetailsV1:
+      properties:
+        code:
+          type: string
+        fieldOccurrenceIndicator:
+          format: int32
+          type: integer
+      type: object
+    NCPDPRequestConverterV1Response:
+      properties:
+        ncpdpRequestString:
+          type: string
+        switchResponse:
+          $ref: '#/components/schemas/NCPDPResponseConverterV1Response'
+      type: object
+    IdentifierV1:
+      properties:
+        code:
+          format: int32
+          type: integer
+        value:
+          type: string
+      type: object
+    NcpdpIntegerType:
+      properties:
+        empty:
+          type: boolean
+        present:
+          type: boolean
+        raw:
+          type: string
+        rawEmpty:
+          type: boolean
+        rawPresent:
+          type: boolean
+      type: object
+    IntermediaryHelpDeskBusinessUnitTypeGrouping:
+      properties:
+        empty:
+          type: boolean
+        intermediaryHelpDeskBusinessUnitType:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        intermediaryHelpDeskContactInformation:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        intermediaryHelpDeskContactInformationExtension:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        intermediaryHelpDeskContactInformationQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        present:
+          type: boolean
+      type: object
+    NcpdpCounterType:
+      properties:
+        empty:
+          type: boolean
+        present:
+          type: boolean
+        raw:
+          type: string
+        rawEmpty:
+          type: boolean
+        rawPresent:
+          type: boolean
+      type: object
     OtherRelatedBenefitDetailSegment:
       properties:
         disabilityEffectiveDate:
@@ -2984,6 +2480,102 @@ components:
         present:
           type: boolean
       type: object
+    DurOrPpsSegment:
+      properties:
+        durOrPpsGroupings:
+          items:
+            $ref: '#/components/schemas/DurOrPpsGrouping'
+          type: array
+        empty:
+          type: boolean
+        present:
+          type: boolean
+      type: object
+    ResponseIntermediaryAuthorizationGrouping:
+      properties:
+        empty:
+          type: boolean
+        intermediaryMessage:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        present:
+          type: boolean
+        responseIntermediaryAuthorizationId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        responseIntermediaryAuthorizationTypeId:
+          $ref: '#/components/schemas/NcpdpCodeType'
+      type: object
+    ClaimSegment:
+      properties:
+        benefitTypeOpportunities:
+          items:
+            $ref: '#/components/schemas/NcpdpCodeType'
+          type: array
+        benefitTypeOpportunityCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        empty:
+          type: boolean
+        formularyAlternativeProductCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        formularyAlternativeProductGroupings:
+          items:
+            $ref: '#/components/schemas/FormularyAlternativeProductGrouping'
+          type: array
+        maximumAge:
+          $ref: '#/components/schemas/NcpdpIntegerType'
+        maximumAgeQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        maximumAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        maximumAmountQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        maximumAmountTimePeriod:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        maximumAmountTimePeriodEndDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        maximumAmountTimePeriodStartDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        maximumAmountTimePeriodUnits:
+          $ref: '#/components/schemas/NcpdpIntegerType'
+        medicaidSubrogationIcnOrTcn:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+          deprecated: true
+        minimumAge:
+          $ref: '#/components/schemas/NcpdpIntegerType'
+        minimumAgeQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        minimumAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        minimumAmountQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        planBenefitOverrideIndicator:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        planBenefitOverrideValueCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        planBenefitOverrideValues:
+          items:
+            $ref: '#/components/schemas/NcpdpAlphaNumericType'
+          type: array
+        preferredProductCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+          deprecated: true
+        preferredProductGroupings:
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/FormularyAlternativeProductGrouping'
+          type: array
+        prescriptionOrServiceReferenceNumber:
+          $ref: '#/components/schemas/NcpdpLongType'
+        prescriptionOrServiceReferenceNumberQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        present:
+          type: boolean
+        remainingAmount:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        remainingAmountQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        subrogationRequestorsReconciliationId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+      type: object
     BenefitStageGrouping:
       properties:
         benefitStageAmount:
@@ -2997,75 +2589,183 @@ components:
         present:
           type: boolean
       type: object
-    PatientV1:
+    AdditionalDocumentationV1:
       properties:
-        dateOfBirth:
-          format: date
-          type: string
-        name:
-          $ref: '#/components/schemas/NameV1'
-      type: object
-    InsuranceAdditionalInformationV1:
-      properties:
-        benefitId:
-          type: string
-        cmsLowIncomeCostSharingLevel:
-          type: string
-        contractNumber:
-          type: string
-        formularyId:
-          type: string
-        medicarePartDCoverageCode:
-          type: string
-        nextMedicarePartDEffectiveDate:
-          format: date
-          type: string
-        nextMedicarePartDExpirationDate:
-          format: date
-          type: string
-      type: object
-    NcpdpCodeType:
-      properties:
-        empty:
-          type: boolean
-        present:
-          type: boolean
-        raw:
-          type: string
-        rawEmpty:
-          type: boolean
-        rawPresent:
-          type: boolean
-      type: object
-    NcpdpFormatRequestData:
-      properties:
-        chainID:
+        additionalDocumentationTypeId:
+          description: 006 - Medicare equals 04.04B Lymphedema Pumps, 007 - Medicare equals 04.05C Osteogenesis Stimulator, 008 - Medicare equals 06.03B Transcutaneous Electrical NerveStimulator (TENS), 009 - Medicare equals 07.03A Seat Lift Mechanisms, 012 - Medicare equals 09.02 Infusion Pump, 015 - Medicare equals 484.03 Oxygen, 016 - Medicare equals 10.03 Enteral and Parenteral Nutrition, 017 - Medicare equals 11.02 Section C Continuation Form
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 9.
+            type: invalid type, expected string.
           format: ncpdp-alphanumeric
-          maxLength: 30
+          maxLength: 9
           type: string
-        externalMessageId:
-          maxLength: 30
-          pattern: ^[0-9]*$
+        lengthOfNeed:
+          errorMessage:
+            minProperties: must have at least one property.
+          minProperties: 1
+          properties:
+            days:
+              errorMessage:
+                maxLength: exceeds the maximum limit of 3.
+                pattern: invalid value, only numeric characters are allowed.
+                type: invalid type, expected string.
+              maxLength: 3
+              pattern: ^[0-9]*$
+              type: string
+            hours:
+              errorMessage:
+                maxLength: exceeds the maximum limit of 3.
+                pattern: invalid value, only numeric characters are allowed.
+                type: invalid type, expected string.
+              maxLength: 3
+              pattern: ^[0-9]*$
+              type: string
+            lifetime:
+              errorMessage:
+                maxLength: exceeds the maximum limit of 3.
+                pattern: invalid value, only numeric characters are allowed.
+                type: invalid type, expected string.
+              maxLength: 3
+              pattern: ^[0-9]*$
+              type: string
+            months:
+              errorMessage:
+                maxLength: exceeds the maximum limit of 3.
+                pattern: invalid value, only numeric characters are allowed.
+                type: invalid type, expected string.
+              maxLength: 3
+              pattern: ^[0-9]*$
+              type: string
+            weeks:
+              errorMessage:
+                maxLength: exceeds the maximum limit of 3.
+                pattern: invalid value, only numeric characters are allowed.
+                type: invalid type, expected string.
+              maxLength: 3
+              pattern: ^[0-9]*$
+              type: string
+            years:
+              errorMessage:
+                maxLength: exceeds the maximum limit of 3.
+                pattern: invalid value, only numeric characters are allowed.
+                type: invalid type, expected string.
+              maxLength: 3
+              pattern: ^[0-9]*$
+              type: string
+          required:
+          - hours
+          - days
+          - weeks
+          - months
+          - years
+          - lifetime
+          type: object
+        prescriberOrSupplierDateSigned:
+          errorMessage:
+            format: invalid date.
+            type: invalid type, expected string.
+          example: '2023-10-01'
+          format: rxn-date
           type: string
-        response:
-          $ref: '#/components/schemas/NcpdpResponse'
-        sourceSystemId:
-          maxLength: 30
-          pattern: ^[0-9]*$
+        question:
+          items:
+            errorMessage:
+              required:
+                alphanumericResponse: alphanumericResponse is required.
+                dateResponse: dateResponse is required.
+                dollarAmountResponse: dollarAmountResponse is required.
+                numberOrLetter: numberOrLetter is required.
+                numericResponse: numericResponse is required.
+                percentResponse: percentResponse is required.
+            properties:
+              alphanumericResponse:
+                errorMessage:
+                  format: invalid value, only printable characters are allowed.
+                  maxLength: exceeds the maximum limit of 90.
+                  type: invalid type, expected string.
+                format: ncpdp-alphanumeric
+                maxLength: 90
+                type: string
+              dateResponse:
+                errorMessage:
+                  format: invalid date.
+                  type: invalid type, expected string.
+                example: '2023-10-01'
+                format: rxn-date
+                type: string
+              dollarAmountResponse:
+                errorMessage:
+                  maxLength: exceeds the maximum limit of 16.
+                  pattern: not valid amount.
+                  type: invalid type, expected string.
+                maxLength: 16
+                pattern: ^-?(\d{1,9}(?:[.]\d{1,6})?)?$
+                type: string
+              numberOrLetter:
+                errorMessage:
+                  format: invalid value, only printable characters are allowed.
+                  maxLength: exceeds the maximum limit of 9.
+                  type: invalid type, expected string.
+                format: ncpdp-alphanumeric
+                maxLength: 9
+                type: string
+              numericResponse:
+                errorMessage:
+                  maxLength: exceeds the maximum limit of 11.
+                  pattern: invalid value,only numeric expected.
+                  type: invalid type, expected string.
+                maxLength: 11
+                pattern: ^[0-9]*$
+                type: string
+              percentResponse:
+                errorMessage:
+                  maxLength: exceeds the maximum limit of 5.
+                  pattern: not valid percent.
+                  type: invalid type, expected string.
+                maxLength: 5
+                pattern: ^(\d{1,3}(?:[.]\d{1,2})?)?$
+                type: string
+            required:
+            - numberOrLetter
+            - percentResponse
+            - dateResponse
+            - dollarAmountResponse
+            - numericResponse
+            - alphanumericResponse
+            type: object
+          type: array
+        requestPeriodBeginDate:
+          errorMessage:
+            format: invalid date.
+            type: invalid type, expected string.
+          example: '2023-10-01'
+          format: rxn-date
           type: string
-      type: object
-    NcpdpDateType:
-      properties:
-        empty:
-          type: boolean
-        present:
-          type: boolean
-        raw:
+        requestPeriodRecertOrRevisedDate:
+          errorMessage:
+            format: invalid date.
+            type: invalid type, expected string.
+          example: '2023-10-01'
+          format: rxn-date
           type: string
-        rawEmpty:
-          type: boolean
-        rawPresent:
-          type: boolean
+        requestStatus:
+          description: Code identifying type of request. 0 - Not Specified, 1 - Initial, 2 - Revision, 3 - Recertification
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 3.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 3
+          type: string
+        supportingDocumentation:
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 195.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 195
+          type: string
       type: object
     FormularyAlternativeRequiredTherapyIndicatorGrouping:
       properties:
@@ -3084,72 +2784,78 @@ components:
         present:
           type: boolean
       type: object
-    NCPDPResponseConverterV1Response:
+    DurOrPpsGrouping:
       properties:
-        header:
-          $ref: '#/components/schemas/HeaderV1'
-        insurance:
-          $ref: '#/components/schemas/InsuranceV1'
-        insuranceAdditionalInformation:
-          $ref: '#/components/schemas/InsuranceAdditionalInformationV1'
-        patient:
-          $ref: '#/components/schemas/PatientV1'
-        responseMessage:
-          $ref: '#/components/schemas/MessageV1'
-        transactions:
-          items:
-            $ref: '#/components/schemas/TransactionV1'
-          type: array
-      type: object
-    AdditionalMessageInformationGroupingV1:
-      properties:
-        code:
-          type: string
-        continuity:
-          type: string
-        value:
-          type: string
-      type: object
-    PhoneNumber:
-      properties:
-        countryCode:
-          format: int32
-          type: integer
-        countryCodeSource:
-          enum:
-          - FROM_NUMBER_WITH_PLUS_SIGN
-          - FROM_NUMBER_WITH_IDD
-          - FROM_NUMBER_WITHOUT_PLUS_SIGN
-          - FROM_DEFAULT_COUNTRY
-          - UNSPECIFIED
-          type: string
-        extension:
-          type: string
-        italianLeadingZero:
-          type: boolean
-        nationalNumber:
-          format: int64
-          type: integer
-        numberOfLeadingZeros:
-          format: int32
-          type: integer
-        preferredDomesticCarrierCode:
-          type: string
-        rawInput:
-          type: string
-      type: object
-    NcpdpLongType:
-      properties:
+        clinicalSignificanceCode:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        databaseIndicator:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        durAdditionalText:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+          deprecated: true
+        durFreeTextMessage:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+          deprecated: true
+        durOrDueCoAgentDescription:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        durOrDueCoAgentId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        durOrDueCoAgentIdQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        durOrDueCompoundProductId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        durOrDueCompoundProductIdQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        durOrDueFreeTextMessage:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        durOrDueMaximumDailyDoseQuantity:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        durOrDueMaximumDailyDoseUnitOfMeasure:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        durOrDueMinimumDailyDoseQuantity:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        durOrDueMinimumDailyDoseUnitOfMeasure:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        durOrPpsCodeCounter:
+          $ref: '#/components/schemas/NcpdpCounterType'
         empty:
           type: boolean
+        otherPharmacyId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherPharmacyIdQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        otherPharmacyIndicator:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        otherPharmacyName:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherPharmacyTelephone:
+          $ref: '#/components/schemas/NcpdpPhoneNumberType'
+        otherPrescriberId:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherPrescriberIdQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        otherPrescriberIndicator:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        otherPrescriberLastName:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherPrescriberTelephoneNumber:
+          $ref: '#/components/schemas/NcpdpPhoneNumberType'
         present:
           type: boolean
-        raw:
-          type: string
-        rawEmpty:
-          type: boolean
-        rawPresent:
-          type: boolean
+        previousDateOfFill:
+          $ref: '#/components/schemas/NcpdpDateType'
+          deprecated: true
+        previousDateOfService:
+          $ref: '#/components/schemas/NcpdpDateType'
+        quantityOfPreviousDispensing:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+        quantityOfPreviousFill:
+          $ref: '#/components/schemas/NcpdpDecimalType'
+          deprecated: true
+        reasonForServiceCode:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        unitOfMeasureForPreviousDispensedQuantity:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
       type: object
     PatientRequestV1:
       properties:
@@ -4141,78 +3847,31 @@ components:
               type: array
           type: object
       type: object
-    HeaderSegment:
-      properties:
-        dateOfService:
-          $ref: '#/components/schemas/NcpdpDateType'
-        empty:
-          type: boolean
-        headerResponseStatus:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        present:
-          type: boolean
-        serviceProviderId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        serviceProviderIdQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        transactionCode:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        transactionCount:
-          $ref: '#/components/schemas/NcpdpCountType'
-        versionOrReleaseNumber:
-          $ref: '#/components/schemas/NcpdpCodeType'
-      type: object
-    PriorAuthorizationSegment:
+    NcpdpDecimalType:
       properties:
         empty:
           type: boolean
         present:
           type: boolean
-        priorAuthorizationDollarsAuthorized:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        priorAuthorizationEffectiveDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        priorAuthorizationExpirationDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        priorAuthorizationIdAssigned:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        priorAuthorizationNumberAssigned:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-          deprecated: true
-        priorAuthorizationNumberOfRefillsAuthorized:
-          $ref: '#/components/schemas/NcpdpIntegerType'
-        priorAuthorizationProcessedDate:
-          $ref: '#/components/schemas/NcpdpDateType'
-        priorAuthorizationQuantity:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-        priorAuthorizationQuantityAccumulated:
-          $ref: '#/components/schemas/NcpdpDecimalType'
-      type: object
-    PatientIdGrouping:
-      properties:
-        empty:
+        raw:
+          type: string
+        rawEmpty:
           type: boolean
-        patientId:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        patientIdQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        present:
+        rawPresent:
           type: boolean
       type: object
-    HelpDeskBusinessUnitTypeGrouping:
+    NameV1:
       properties:
-        empty:
-          type: boolean
-        helpDeskBusinessUnitType:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        helpDeskContactInformation:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        helpDeskContactInformationExtension:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        helpDeskContactInformationQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        present:
-          type: boolean
+        first:
+          type: string
+        last:
+          type: string
+        middle:
+          type: string
+        prefix:
+          type: string
+        suffix:
+          type: string
       type: object
     ResponseTransaction:
       properties:
@@ -4239,18 +3898,49 @@ components:
           $ref: '#/components/schemas/StatusSegment'
           deprecated: true
       type: object
-    AdditionalMessageInformationGrouping:
+    OtherPayerIdsV1:
       properties:
-        additionalMessageInformation:
-          $ref: '#/components/schemas/NcpdpAlphaNumericType'
-        additionalMessageInformationContinuity:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        additionalMessageInformationQualifier:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        empty:
-          type: boolean
-        present:
-          type: boolean
+        otherPayerBenefitEffectiveDate:
+          format: date
+          type: string
+        otherPayerBenefitTerminationDate:
+          format: date
+          type: string
+        otherPayerCardholderId:
+          type: string
+        otherPayerCoverage:
+          type: string
+        otherPayerGroupId:
+          type: string
+        otherPayerHelpDeskPhoneNumber:
+          $ref: '#/components/schemas/PhoneNumber'
+        otherPayerId:
+          $ref: '#/components/schemas/IdentifierV1'
+        otherPayerPatientRelationshipCode:
+          type: string
+        otherPayerPersonCode:
+          type: string
+        otherPayerProcessorControlNumber:
+          type: string
+      type: object
+    InsuranceAdditionalInformationV1:
+      properties:
+        benefitId:
+          type: string
+        cmsLowIncomeCostSharingLevel:
+          type: string
+        contractNumber:
+          type: string
+        formularyId:
+          type: string
+        medicarePartDCoverageCode:
+          type: string
+        nextMedicarePartDEffectiveDate:
+          format: date
+          type: string
+        nextMedicarePartDExpirationDate:
+          format: date
+          type: string
       type: object
     NcpdpAlphaNumericType:
       properties:
@@ -4265,29 +3955,339 @@ components:
         rawPresent:
           type: boolean
       type: object
-    NameV1:
+    ClaimV1:
       properties:
-        first:
+        preferredProduct:
+          items:
+            $ref: '#/components/schemas/PreferredProductGroupingV1'
+          type: array
+        prescriptionServiceReferenceNumberId:
+          $ref: '#/components/schemas/IdentifierV1'
+      type: object
+    HeaderRequestV1:
+      properties:
+        chainID:
+          errorMessage:
+            format: invalid value, only printable characters are allowed.
+            maxLength: exceeds the maximum limit of 30.
+            type: invalid type, expected string.
+          format: ncpdp-alphanumeric
+          maxLength: 30
           type: string
-        last:
+        dateOfService:
+          errorMessage:
+            format: invalid date.
+            type: invalid type.
+          example: '2023-10-01'
+          format: rxn-date
           type: string
-        middle:
+        externalMessageId:
+          errorMessage:
+            maxLength: exceeds the maximum limit of 30.
+            pattern: invalid value, only numeric characters are allowed.
+            type: invalid type, expected string.
+          maxLength: 30
+          pattern: ^[0-9]*$
           type: string
-        prefix:
+        sourceSystemId:
+          errorMessage:
+            maxLength: exceeds the maximum limit of 30.
+            pattern: invalid value, only numeric characters are allowed.
+            type: invalid type, expected string.
+          maxLength: 30
+          pattern: ^[0-9]*$
           type: string
-        suffix:
+        standard:
+          errorMessage:
+            required:
+              standardName: standardName is required.
+              transactionType: transactionType is required.
+              type: type is required.
+              versionOrReleaseNumber: versionOrReleaseNumber is required.
+          properties:
+            standardName:
+              enum:
+              - TELECOM
+              - ''
+              errorMessage:
+                enum: invalid value, only expected TELECOM.
+                type: invalid type, expected string.
+              type: string
+            transactionType:
+              enum:
+              - B1
+              - B2
+              - B3
+              - C1
+              - C2
+              - C3
+              - D1
+              - E1
+              - N1
+              - N2
+              - N3
+              - P1
+              - P2
+              - P3
+              - P4
+              - S1
+              - S2
+              - S3
+              - ''
+              errorMessage:
+                enum: invalid value, expected values are B1,B2,B3,C1,C2,C3,D1,E1,N1,N2,N3,P1,P2,P3,P4,S1,S2,S3.
+                maxLength: exceeds the maximum limit of 2.
+                type: invalid type, expected string.
+              maxLength: 2
+              type: string
+            type:
+              enum:
+              - request
+              - response
+              - ''
+              errorMessage:
+                enum: invalid value, expected values are request or response.
+                type: invalid type, expected string.
+              type: string
+            versionOrReleaseNumber:
+              enum:
+              - D0
+              - ''
+              errorMessage:
+                enum: invalid value, only expected D0.
+                maxLength: exceeds the maximum limit of 2.
+                type: invalid type, expected string.
+              maxLength: 2
+              type: string
+          required:
+          - standardName
+          - versionOrReleaseNumber
+          - transactionType
+          - type
+          type: object
+        transactionCode:
+          enum:
+          - B1
+          - B2
+          - B3
+          - C1
+          - C2
+          - C3
+          - D1
+          - E1
+          - N1
+          - N2
+          - N3
+          - P1
+          - P2
+          - P3
+          - P4
+          - S1
+          - S2
+          - S3
+          - ''
+          errorMessage:
+            enum: invalid value, expected values are B1,B2,B3,C1,C2,C3,D1,E1,N1,N2,N3,P1,P2,P3,P4,S1,S2,S3.
+            maxLength: exceeds the maximum limit of 2.
+            type: invalid type, expected string.
+          maxLength: 2
           type: string
       type: object
-    RejectCodeGrouping:
+    PreferredProductGroupingV1:
       properties:
+        costShareIncentive:
+          type: number
+        description:
+          type: string
+        incentive:
+          type: number
+        productId:
+          $ref: '#/components/schemas/IdentifierV1'
+      type: object
+    CodeValuePairV1:
+      properties:
+        code:
+          type: string
+        value:
+          type: string
+      type: object
+    OtherBenefitDetailInformationGrouping:
+      properties:
+        empty:
+          type: boolean
+        otherBenefitDetailInformation:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherBenefitDetailInformationEffectiveDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        otherBenefitDetailInformationFacilityName:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherBenefitDetailInformationIndicator:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        otherBenefitDetailInformationProviderNumber:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        otherBenefitDetailInformationTerminationDate:
+          $ref: '#/components/schemas/NcpdpDateType'
+        otherBenefitFacilityDetailInformationTelephoneNumber:
+          $ref: '#/components/schemas/NcpdpPhoneNumberType'
+        present:
+          type: boolean
+      type: object
+    StatusV1:
+      properties:
+        additionalMessageInformation:
+          items:
+            $ref: '#/components/schemas/AdditionalMessageInformationGroupingV1'
+          type: array
+        additionalMessageInformationCount:
+          type: string
+        approvedMessageCode:
+          items:
+            type: string
+          type: array
+        approvedMessageCodeCount:
+          type: string
+        authorizationNumber:
+          type: string
+        helpDeskTelephone:
+          $ref: '#/components/schemas/IdentifierV1'
+        internalControlNumber:
+          type: string
+        rejectDetails:
+          items:
+            $ref: '#/components/schemas/RejectDetailsV1'
+          type: array
+        transactionReferenceNumber:
+          type: string
+        transactionResponseStatus:
+          type: string
+        url:
+          type: string
+      type: object
+    IntermediarySegment:
+      properties:
+        empty:
+          type: boolean
+        intermediaryHelpDeskSupportTypeCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        intermediaryHelpDeskSupportTypeGroupings:
+          items:
+            $ref: '#/components/schemas/IntermediaryHelpDeskSupportTypeGrouping'
+          type: array
+        present:
+          type: boolean
+        responseIntermediaryAuthorizationCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        responseIntermediaryAuthorizationGroupings:
+          items:
+            $ref: '#/components/schemas/ResponseIntermediaryAuthorizationGrouping'
+          type: array
+      type: object
+    AdditionalMessageInformationGrouping:
+      properties:
+        additionalMessageInformation:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        additionalMessageInformationContinuity:
+          $ref: '#/components/schemas/NcpdpCodeType'
+        additionalMessageInformationQualifier:
+          $ref: '#/components/schemas/NcpdpCodeType'
         empty:
           type: boolean
         present:
           type: boolean
-        rejectCode:
-          $ref: '#/components/schemas/NcpdpCodeType'
-        rejectFieldOccurrenceIndicator:
-          $ref: '#/components/schemas/NcpdpIntegerType'
+      type: object
+    OtherPayersSegment:
+      properties:
+        cobOrOtherPayersCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+          deprecated: true
+        cobOrOtherPayersGroupings:
+          deprecated: true
+          items:
+            $ref: '#/components/schemas/OtherPayerGrouping'
+          type: array
+        empty:
+          type: boolean
+        otherPayerGroupings:
+          items:
+            $ref: '#/components/schemas/OtherPayerGrouping'
+          type: array
+        otherPayerIdCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        present:
+          type: boolean
+      type: object
+    PatientSegment:
+      properties:
+        dateOfBirth:
+          $ref: '#/components/schemas/NcpdpDateType'
+        empty:
+          type: boolean
+        patientFirstName:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        patientIdCount:
+          $ref: '#/components/schemas/NcpdpCountType'
+        patientIdGroupings:
+          items:
+            $ref: '#/components/schemas/PatientIdGrouping'
+          type: array
+        patientLastName:
+          $ref: '#/components/schemas/NcpdpAlphaNumericType'
+        present:
+          type: boolean
+      type: object
+    AdditionalMessageInformationGroupingV1:
+      properties:
+        code:
+          type: string
+        continuity:
+          type: string
+        value:
+          type: string
+      type: object
+    NcpdpResponse:
+      properties:
+        claim:
+          $ref: '#/components/schemas/ClaimSegment'
+        durOrPps:
+          $ref: '#/components/schemas/DurOrPpsSegment'
+        empty:
+          type: boolean
+        header:
+          $ref: '#/components/schemas/HeaderSegment'
+        insurance:
+          $ref: '#/components/schemas/InsuranceSegment'
+        insuranceAdditionalInformation:
+          $ref: '#/components/schemas/InsuranceAdditionalInformationSegment'
+        intermediary:
+          $ref: '#/components/schemas/IntermediarySegment'
+        message:
+          $ref: '#/components/schemas/MessageSegment'
+        otherPayers:
+          $ref: '#/components/schemas/OtherPayersSegment'
+        otherRelatedBenefitDetail:
+          $ref: '#/components/schemas/OtherRelatedBenefitDetailSegment'
+        patient:
+          $ref: '#/components/schemas/PatientSegment'
+        present:
+          type: boolean
+        pricing:
+          $ref: '#/components/schemas/PricingSegment'
+        priorAuthorization:
+          $ref: '#/components/schemas/PriorAuthorizationSegment'
+        provider:
+          $ref: '#/components/schemas/ProviderSegment'
+        raw:
+          type: string
+        rawEmpty:
+          type: boolean
+        rawPresent:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/StatusSegment'
+        transactions:
+          items:
+            $ref: '#/components/schemas/ResponseTransaction'
+          type: array
       type: object
   securitySchemes:
     oauth2_security:

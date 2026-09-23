@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   version: v1
   description: 275 Attachments Transaction
-  title: Medical Network Attachments Submission v1 Attachment Submission API
+  title: Medical Network Attachments Submission v1 Attachment…
 servers:
 - url: https://sandbox-apigw.optum.com/medicalnetwork/attachments/submission/v1/
   description: Optum
@@ -60,9 +60,34 @@ paths:
       operationId: upload
 components:
   schemas:
+    Response:
+      type: object
+      properties:
+        status:
+          type: string
+        implementationTransactionSetSyntaxError:
+          type: string
+        attachmentId:
+          type: string
+        transactionSetAcknowledgement:
+          type: string
     InternalErrorResponse:
       type: object
       $ref: '#/components/schemas/InternalError'
+    Error:
+      type: object
+      properties:
+        followupAction:
+          type: string
+        field:
+          type: string
+        code:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+      description: Error
     InternalError:
       type: object
       properties:
@@ -91,28 +116,3 @@ components:
           items:
             $ref: '#/components/schemas/Error'
           type: array
-    Error:
-      type: object
-      properties:
-        followupAction:
-          type: string
-        field:
-          type: string
-        code:
-          type: string
-        description:
-          type: string
-        location:
-          type: string
-      description: Error
-    Response:
-      type: object
-      properties:
-        status:
-          type: string
-        implementationTransactionSetSyntaxError:
-          type: string
-        attachmentId:
-          type: string
-        transactionSetAcknowledgement:
-          type: string

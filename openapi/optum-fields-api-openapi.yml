@@ -56,6 +56,10 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
   schemas:
+    FieldsResponse:
+      type: object
+      additionalProperties: true
+      description: Fields response placeholder. Exact response schema was not provided in the source collection.
     ErrorResponse:
       type: object
       properties:
@@ -67,10 +71,6 @@ components:
           type: array
           items:
             type: string
-    FieldsResponse:
-      type: object
-      additionalProperties: true
-      description: Fields response placeholder. Exact response schema was not provided in the source collection.
   securitySchemes:
     bearerAuth:
       type: http

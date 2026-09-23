@@ -1,39 +1,7 @@
 openapi: 3.2.0
 info:
   title: Enhanced Eligibility Eligibility Requests API
-  description: 'Enhanced Eligibility provides real-time eligibility verification for medical benefit inquiries and optional Coverage Discovery workflows when additional coverage needs to be researched asynchronously.
-
-
-    Timing guidance:
-
-    - Real-Time Eligibility is synchronous, but payer and clearinghouse response time dominate the end-to-end latency.
-
-    - The OI Enterprise gateway times out at 110 seconds for this API.
-
-    - Request deduplication is customer-configurable and determines whether a request is sent to the clearinghouse or short-circuited by replaying a prior transaction response.
-
-    - RTCOB and Coverage Insight also use a separate non-configurable 72-hour request cache. When that cache is hit, the path is marked as skipped instead of creating a new downstream submission.
-
-    - Coverage Discovery is asynchronous because some paths involve chained clearinghouse work and additional connected workflow dependencies.
-
-    - Most non-Coverage-Insight discovery paths are near real time relative to traditional discovery workflows.
-
-    - Customers with strict turnaround sensitivity should evaluate Coverage Insight enrollment carefully.
-
-    - Coverage Discovery paths and add-ons are enabled per customer and are not included automatically.
-
-
-    Primary integration patterns:
-
-    1. Submit a real-time eligibility request as normalized JSON or as a JSON request body with `x12` set to the X12 270 payload, and receive a normalized JSON response.
-
-    2. If enrolled in Coverage Discovery, inspect the real-time response `link` header for related discovery task resources when discovery is automatically triggered from the real-time request/response.
-
-    3. For advanced use cases, submit Coverage Discovery requests directly when you already possess a processed canonical eligibility request and, when needed, a processed eligibility response, and want asynchronous follow-up processing using a callback URL or by polling the discovery task resource.
-
-    4. When using direct discovery, the X12 workflow is often easier than the canonical JSON workflow because it accepts the processed `x12-270` and `x12-271` rather than requiring mapping into both canonical models.
-
-    '
+  description: Enhanced Eligibility provides real-time eligibility verification for medical benefit inquiries and optional Coverage Discovery workflows when additional coverage needs to be researched asynchronously.
   version: v0.2.0
 servers:
 - url: https://sandbox-apigw.optum.com
@@ -42,9 +10,7 @@ servers:
   description: Production server (uses live data)
 tags:
 - name: Eligibility Requests
-  description: 'Submit new real-time eligibility transactions. These endpoints accept either a normalized JSON request or a JSON request body with `x12` set to the X12 270 payload, and return a normalized JSON eligibility response. When a customer is enrolled in integrated Coverage Discovery, these operations may also return related discovery task links in the response headers.
-
-    '
+  description: Submit new real-time eligibility transactions. These endpoints accept either a normalized JSON request or a JSON request body with `x12` set to the X12 270 payload, and return a normalized JSON eligibility response. When a customer is enrolled in integrated Coverage Discovery, these operations may also return related discovery task links in the response headers.
 paths:
   /rcm/eligibility/v1:
     post:
@@ -55,7 +21,45 @@ paths:
       security:
       - oAuth:
         - create_txn
-      description: "## Overview\nProvided a valid request, this endpoint submits a new real-time transaction for processing.\nThe submitted provider NPI must be a valid NPI and follow standard NPI validation rules. If no valid NPI is identified for the request, the transaction returns `status.value` of `processing_error` with this message: `No valid NPI identified for this request. Please reach out to the Enhanced Eligibility team if assistance is needed.`\nThe response is JSON and includes the raw `x12-271` response string so clients can extract the payer's original EDI response if needed.\nReal-time response time is driven primarily by payer and clearinghouse latency. The OI Enterprise gateway times out at 110 seconds for this API.\nIf your organization is enrolled in deduplication, that feature is evaluated before clearinghouse submission. Deduplication is customer-configurable, including the lookback window and whether prior-month requests are excluded. When a duplicate is found, the clearinghouse is skipped and the transaction `sourceType` is `duplicate`.\n## Coverage Discovery Integration\nIf you are enrolled in Coverage Discovery at the time of the request and your configured discovery conditions are met, the Coverage Discovery workflow will be started automatically. Common examples include real-time responses with `status.value` of `ineligible` or `patient_unknown`, or response-side HMO plan information that qualifies an HMO discovery path. In this scenario, the response `link` header contains one or more related Coverage Discovery task resource paths, e.g.:\n`</coverage-discovery/0716e3e8-87ee-11ee-b9d1-0242ac120002>; title=\"coverage discovery - Task 1\"; rel=\"related\", </coverage-discovery/0e565a58-87ee-11ee-b9d1-0242ac120002>; title=\"coverage discovery - Task 2\"; rel=\"related\"`\nParse this header as RFC 8288-style link values. When more than one discovery task is created, multiple related links may be returned in the same header.\nWhen discovery is triggered from this JSON real-time endpoint, the submitted request body is used as the `canonicalEligibilityRequest` later referenced by Coverage Discovery. If response-side facts are needed, the normalized real-time response body is used as `canonicalEligibilityResponse`.\nEach related resource can be retrieved through the `/coverage-discovery/{id}` endpoint.\nIf conditions are not met, the `link` response header will not contain any related `/coverage-discovery` references.\n### Callback Solution With Consolidated Real-Time Eligibility and Coverage Discovery Responses\nIf you are enrolled in the consolidated callback capability, you may receive the **Real-Time Eligibility (RTE)** response together with the **Coverage Discovery** response.\nWhen enabled, the abbreviated eligibility transaction will be included in the corresponding Coverage Discovery record.\n\n ⚠️ **Note:** This integrated response is **only available via callback** and **only if your organization is enrolled in this capability**.\n\nRefer to the `/coverage-discovery/{id}` response examples for data model references.\nFor predictable Sandbox canned-response testing, use the Sandbox Mock Scenarios guidance. JSON Sandbox requests continue to use the normal supported Sandbox request values."
+      description: '## Overview
+
+        Provided a valid request, this endpoint submits a new real-time transaction for processing.
+
+        The submitted provider NPI must be a valid NPI and follow standard NPI validation rules. If no valid NPI is identified for the request, the transaction returns `status.value` of `processing_error` with this message: `No valid NPI identified for this request. Please reach out to the Enhanced Eligibility team if assistance is needed.`
+
+        The response is JSON and includes the raw `x12-271` response string so clients can extract the payer''s original EDI response if needed.
+
+        Real-time response time is driven primarily by payer and clearinghouse latency. The OI Enterprise gateway times out at 110 seconds for this API.
+
+        If your organization is enrolled in deduplication, that feature is evaluated before clearinghouse submission. Deduplication is customer-configurable, including the lookback window and whether prior-month requests are excluded. When a duplicate is found, the clearinghouse is skipped and the transaction `sourceType` is `duplicate`.
+
+        ## Coverage Discovery Integration
+
+        If you are enrolled in Coverage Discovery at the time of the request and your configured discovery conditions are met, the Coverage Discovery workflow will be started automatically. Common examples include real-time responses with `status.value` of `ineligible` or `patient_unknown`, or response-side HMO plan information that qualifies an HMO discovery path. In this scenario, the response `link` header contains one or more related Coverage Discovery task resource paths, e.g.:
+
+        `; title="coverage discovery - Task 1"; rel="related", ; title="coverage discovery - Task 2"; rel="related"`
+
+        Parse this header as RFC 8288-style link values. When more than one discovery task is created, multiple related links may be returned in the same header.
+
+        When discovery is triggered from this JSON real-time endpoint, the submitted request body is used as the `canonicalEligibilityRequest` later referenced by Coverage Discovery. If response-side facts are needed, the normalized real-time response body is used as `canonicalEligibilityResponse`.
+
+        Each related resource can be retrieved through the `/coverage-discovery/{id}` endpoint.
+
+        If conditions are not met, the `link` response header will not contain any related `/coverage-discovery` references.
+
+        ### Callback Solution With Consolidated Real-Time Eligibility and Coverage Discovery Responses
+
+        If you are enrolled in the consolidated callback capability, you may receive the **Real-Time Eligibility (RTE)** response together with the **Coverage Discovery** response.
+
+        When enabled, the abbreviated eligibility transaction will be included in the corresponding Coverage Discovery record.
+
+
+        ⚠️ **Note:** This integrated response is **only available via callback** and **only if your organization is enrolled in this capability**.
+
+
+        Refer to the `/coverage-discovery/{id}` response examples for data model references.
+
+        For predictable Sandbox canned-response testing, use the Sandbox Mock Scenarios guidance. JSON Sandbox requests continue to use the normal supported Sandbox request values.'
       parameters:
       - $ref: '#/components/parameters/header-correlation-id'
       - $ref: '#/components/parameters/header-subtenant-id'
@@ -92,7 +96,47 @@ paths:
       security:
       - oAuth:
         - create_txn
-      description: "## Overview\nProvided a valid request, this endpoint accepts a JSON body whose `x12` field contains the raw EDI X12 270 payload and submits a new real-time transaction for processing.\nThe provider NPI sent in the X12 270 must be a valid NPI and follow standard NPI validation rules. If no valid NPI is identified for the request, the transaction returns `status.value` of `processing_error` with this message: `No valid NPI identified for this request. Please reach out to the Enhanced Eligibility team if assistance is needed.`\nThe response uses the same normalized JSON model returned by the JSON real-time endpoint. Both real-time endpoints return JSON, and that JSON includes the raw `x12-271` response string so clients can extract the payer's original EDI response if needed.\nReal-time response time is driven primarily by payer and clearinghouse latency. The OI Enterprise gateway times out at 110 seconds for this API.\nIf your organization is enrolled in deduplication, that feature is evaluated before clearinghouse submission. Deduplication is customer-configurable, including the lookback window and whether prior-month requests are excluded. When a duplicate is found, the clearinghouse is skipped and the transaction `sourceType` is `duplicate`.\n## Coverage Discovery Integration\nIf you are enrolled in Coverage Discovery at the time of the request and your configured discovery conditions are met, the Coverage Discovery workflow will be started automatically. Common examples include real-time responses with `status.value` of `ineligible` or `patient_unknown`, or response-side HMO plan information parsed from the returned `x12-271`. In this scenario, the response `link` header contains one or more related Coverage Discovery task resource paths, e.g.:\n`</coverage-discovery/0716e3e8-87ee-11ee-b9d1-0242ac120002>; title=\"coverage discovery - Task 1\"; rel=\"related\", </coverage-discovery/0e565a58-87ee-11ee-b9d1-0242ac120002>; title=\"coverage discovery - Task 2\"; rel=\"related\"`\nParse this header as RFC 8288-style link values. When more than one discovery task is created, multiple related links may be returned in the same header.\nWhen discovery is triggered from this X12 real-time endpoint, the submitted `x12` value is used to derive the `canonicalEligibilityRequest` used by Coverage Discovery. If response-side facts are needed, the normalized JSON response and its embedded `x12-271` are used as `canonicalEligibilityResponse`.\nEach related resource can be retrieved through the `/coverage-discovery/{id}` endpoint.\nIf conditions are not met, the `link` response header will not contain any related `/coverage-discovery` references.\n### Callback Solution With Consolidated Real-Time Eligibility and Coverage Discovery Responses\nIf you are enrolled in the consolidated callback capability, you may receive the **Real-Time Eligibility (RTE)** response together with the **Coverage Discovery** response.\nWhen enabled, the abbreviated eligibility transaction will be included in the corresponding Coverage Discovery record.\n\n ⚠️ **Note:** This integrated response is **only available via callback** and **only if your organization is enrolled in this capability**.\n\nRefer to the `/coverage-discovery/{id}` response examples for data model references.\n## Sandbox Mock Testing\nIn the Sandbox environment, you can optionally send `x-optum-rcmelig-mock-scenarios` to trigger a canned X12 mock response. This header is Sandbox-only, the value must be an exact case-sensitive match, and the payer id in `NM1*PR*2 ... PI*` must align to the selected scenario."
+      description: '## Overview
+
+        Provided a valid request, this endpoint accepts a JSON body whose `x12` field contains the raw EDI X12 270 payload and submits a new real-time transaction for processing.
+
+        The provider NPI sent in the X12 270 must be a valid NPI and follow standard NPI validation rules. If no valid NPI is identified for the request, the transaction returns `status.value` of `processing_error` with this message: `No valid NPI identified for this request. Please reach out to the Enhanced Eligibility team if assistance is needed.`
+
+        The response uses the same normalized JSON model returned by the JSON real-time endpoint. Both real-time endpoints return JSON, and that JSON includes the raw `x12-271` response string so clients can extract the payer''s original EDI response if needed.
+
+        Real-time response time is driven primarily by payer and clearinghouse latency. The OI Enterprise gateway times out at 110 seconds for this API.
+
+        If your organization is enrolled in deduplication, that feature is evaluated before clearinghouse submission. Deduplication is customer-configurable, including the lookback window and whether prior-month requests are excluded. When a duplicate is found, the clearinghouse is skipped and the transaction `sourceType` is `duplicate`.
+
+        ## Coverage Discovery Integration
+
+        If you are enrolled in Coverage Discovery at the time of the request and your configured discovery conditions are met, the Coverage Discovery workflow will be started automatically. Common examples include real-time responses with `status.value` of `ineligible` or `patient_unknown`, or response-side HMO plan information parsed from the returned `x12-271`. In this scenario, the response `link` header contains one or more related Coverage Discovery task resource paths, e.g.:
+
+        `; title="coverage discovery - Task 1"; rel="related", ; title="coverage discovery - Task 2"; rel="related"`
+
+        Parse this header as RFC 8288-style link values. When more than one discovery task is created, multiple related links may be returned in the same header.
+
+        When discovery is triggered from this X12 real-time endpoint, the submitted `x12` value is used to derive the `canonicalEligibilityRequest` used by Coverage Discovery. If response-side facts are needed, the normalized JSON response and its embedded `x12-271` are used as `canonicalEligibilityResponse`.
+
+        Each related resource can be retrieved through the `/coverage-discovery/{id}` endpoint.
+
+        If conditions are not met, the `link` response header will not contain any related `/coverage-discovery` references.
+
+        ### Callback Solution With Consolidated Real-Time Eligibility and Coverage Discovery Responses
+
+        If you are enrolled in the consolidated callback capability, you may receive the **Real-Time Eligibility (RTE)** response together with the **Coverage Discovery** response.
+
+        When enabled, the abbreviated eligibility transaction will be included in the corresponding Coverage Discovery record.
+
+
+        ⚠️ **Note:** This integrated response is **only available via callback** and **only if your organization is enrolled in this capability**.
+
+
+        Refer to the `/coverage-discovery/{id}` response examples for data model references.
+
+        ## Sandbox Mock Testing
+
+        In the Sandbox environment, you can optionally send `x-optum-rcmelig-mock-scenarios` to trigger a canned X12 mock response. This header is Sandbox-only, the value must be an exact case-sensitive match, and the payer id in `NM1*PR*2 ... PI*` must align to the selected scenario.'
       parameters:
       - $ref: '#/components/parameters/header-correlation-id'
       - $ref: '#/components/parameters/header-subtenant-id'
@@ -128,6 +172,16 @@ paths:
           $ref: '#/components/responses/UnexpectedError'
 components:
   schemas:
+    EligibilityRequestX12:
+      type: object
+      description: Real-time X12 request payload. The JSON field name is `x12`, and its value is the raw X12 270 request payload. The provider NPI in the X12 270 must be valid and follow standard NPI validation rules. The corresponding response is returned as normalized JSON, not as raw X12.
+      required:
+      - x12
+      properties:
+        x12:
+          type: string
+          description: Raw X12 270 eligibility inquiry payload. The provider NPI in the X12 270 must be valid and follow standard NPI validation rules.
+          example: ISA*00*          *01*SomePwd   *ZZ*TPG00000       *ZZ*EMDEON         *220304*0343*^*00501*123456789*0*T*:~GS*HS*LLX1210001*MTEXE*20131015*2219*123456789*X*005010X279A1~ST*270*0001*005010X279A1~BHT*0022*13*1-622233a9-6fca5eb41ae6862b269452c9*20220304*0343~HL*1**20*1~NM1*PR*2*CMS*****PI*CMSMED~HL*2*1*21*1~NM1*1P*2*HAPPY DOCTORS GROUP PRACTICE*****XX*1234567893~HL*3*2*22*0~TRN*1*123456789*9877281234~NM1*IL*1*DOEONE*JOHNONE*M***MI*0000000000~N3*123 address1~N4*SEATTLE*WA*981010000~DMG*D8*18800102*F~DTP*291*RD8*20210101-20211231~EQ*30~SE*20*0001~GE*1*123456789~IEA*1*123456789~
     EligibilityRequest:
       type: object
       description: Standalone JSON representation of a standard 270 eligibility request. This schema is fully inlined into this spec so the API definition stands on its own.
@@ -1259,234 +1313,6 @@ components:
                     items:
                       type: string
                       description: 'Loop: 2110C and 2110D, Segment: EQ, Element: EQ05, Notes: Composite Diagnosis Code Pointer'
-    TransactionMedicare:
-      type: object
-      description: 'Medicare eligibility transaction derived from an X12 271 response (005010X279A1). This model represents the normalized API view of the payer response.
-
-        '
-      properties:
-        id:
-          type: string
-          description: System-generated transaction identifier
-          example: 9fb77454-8c58-4345-aa50-43f133e06d20
-        correlationId:
-          type: string
-          description: 'Correlation identifier provided by the consumer in the request header and echoed back in the response. Not derived from X12.
-
-            '
-          example: corr-8b7c2f3a-1c9e-4d3b-a6f5-112233445566
-        sourceType:
-          type: string
-          enum:
-          - new
-          - historical
-          - duplicate
-          - autosubmit
-          description: How the transaction was created. `new` means the transaction was submitted through the Real-Time Eligibility flow. `duplicate` means customer-configured deduplication found a prior matching request, skipped clearinghouse submission, and returned the previous response. `autosubmit` means the transaction was generated by Coverage Discovery path execution. `historical` means the record originated from historical retrieval rather than a newly created request.
-          example: new
-        processedDate:
-          type: string
-          format: date-time
-          description: Time the 271 response was processed by the system
-          example: '2022-03-04T03:43:00Z'
-        status:
-          type: object
-          description: Normalized eligibility outcome derived from the X12 271.
-          properties:
-            value:
-              type: string
-              enum:
-              - eligible
-              - ineligible
-              - payer_unavailable
-              - payer_not_in_system
-              - processing_error
-              - patient_unknown
-              example: eligible
-            description:
-              type: string
-        patient:
-          type: object
-          description: Subscriber/patient information from NM1*IL, DMG, N3, N4
-          properties:
-            firstName:
-              type: string
-              example: JOHNONE
-            lastName:
-              type: string
-              example: DOEONE
-            middleName:
-              type: string
-              example: M
-            memberId:
-              type: string
-              description: Medicare beneficiary identifier
-              example: '0000000000'
-            gender:
-              type: string
-              example: F
-            dateOfBirth:
-              type: string
-              format: date
-              example: '1880-01-02'
-            relationship:
-              type: string
-              description: Normalized patient relationship when present on the transaction response.
-              example: CHILD
-            address:
-              type: object
-              properties:
-                lines:
-                  type: array
-                  items:
-                    type: string
-                  example:
-                  - 123 address1
-                city:
-                  type: string
-                  example: SEATTLE
-                state:
-                  type: string
-                  example: WA
-                zip:
-                  type: string
-                  example: '98101'
-        subscriber:
-          type: object
-          description: 'Subscriber details. For Medicare responses, the subscriber is the patient, so this object mirrors `patient` when both are present.
-
-            '
-          properties:
-            firstName:
-              type: string
-              example: JOHNONE
-            lastName:
-              type: string
-              example: DOEONE
-            memberId:
-              type: string
-              example: '0000000000'
-            gender:
-              type: string
-              example: F
-            dateOfBirth:
-              type: string
-              format: date
-              example: '1880-01-02'
-        payer:
-          type: object
-          description: Primary and additional payer information from the 271
-          properties:
-            chcId:
-              type: string
-              description: Normalized CHC payer identifier returned on the real-time transaction response.
-              example: '60054'
-            name:
-              type: string
-              example: CMSMED
-            phone:
-              type: string
-              example: '0000000000'
-            url:
-              type: string
-              example: www.testwebsite.com
-            otherPayer:
-              type: object
-              description: Additional payer from LS/2120 loop
-              properties:
-                name:
-                  type: string
-                  example: extra healthy insurance
-                address:
-                  type: object
-                  properties:
-                    lines:
-                      type: array
-                      items:
-                        type: string
-                      example:
-                      - 123 address1
-                    city:
-                      type: string
-                      example: Nashville
-                    state:
-                      type: string
-                      example: TN
-                    zip:
-                      type: string
-                      example: '37203'
-        plan:
-          type: object
-          description: Medicare plan and pharmacy information
-          properties:
-            insuranceType:
-              type: string
-              enum:
-              - Medicare
-              example: Medicare
-            beginDate:
-              type: string
-              format: date
-              description: Coverage start date (DTP*291)
-              example: '2004-11-01'
-            endDate:
-              type: string
-              format: date
-              description: Coverage end date (DTP*291 RD8)
-              example: '2021-12-31'
-            number:
-              type: string
-              description: Plan identifier from REF*18
-              example: S5601
-            description:
-              type: string
-              description: Plan description from REF*N6
-              example: SilverScript SmartRx
-        benefits:
-          type: array
-          description: Benefits derived from EB, DTP, and MSG segments
-          items:
-            type: object
-            properties:
-              service:
-                type: string
-                description: Service type derived from EB03
-                example: Health Coverage
-              name:
-                type: string
-                description: Benefit name derived from EB01
-                example: copay
-              value:
-                type: string
-                example: '1484'
-              type:
-                type: string
-                enum:
-                - string
-                - date
-                - number
-                - percent
-                - monetary
-                example: monetary
-              insuranceType:
-                type: string
-                enum:
-                - Medicare
-                example: Medicare
-              benefitQualifier:
-                type: string
-                description: EB segment qualifiers (EB01 / EB06 / EB09)
-                example: EB01=C
-        x12-271:
-          type: string
-          description: Raw X12 271 eligibility response payload.
-          example: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000       *220304*0343*^*00501*123456789*0*T*:~GS*HB*MTEXE*LLX1210001*20131015*2219*123456789*X*005010X279A1~ST*271*0001*005010X279A1~BHT*0022*11*1-622233a9-6fca5eb41ae6862b269452c9*20220304*0343~HL*1**20*1~NM1*PR*2*CMS*****PI*CMSMED~HL*2*1*21*1~NM1*1P*2*HAPPY DOCTORS GROUP PRACTICE*****XX*1234567893~HL*3*2*22*0~TRN*2*123456789*9877281234~TRN*2*1266798199*9MCK-TSHRT~NM1*IL*1*DOEONE*JOHNONE*M***MI*0000000000~N3*123 address1~N4*SEATTLE*WA*981010000~DMG*D8*18800102*F~INS*Y*18*001*25~DTP*307*RD8*20211020-20211020~EB*I**41^54~EB*1**88~EB*1**30^42^45^48^49^69^76^83^A5^A7^AG^BT^BU^BV*MA~DTP*291*D8*20041101~MSG*0-Beneficiary insured due to age OASI~EB*C**30*MA**26*1484~DTP*291*RD8*20210101-20211231~EB*C**30*MA**29*1484~DTP*291*RD8*20210101-20211231~EB*C**42^45*MA**26*0~DTP*292*RD8*20210101-20211231~EB*1**30^2^23^24^25^26^27^28^3^33^36^37^38^39^4^40^42^50^51^52^53^62^67^69^73^76^83^86^98^A4^A6^A8^AI^AJ^AK^AL^BT^BU^BV^DM^UC*MB~DTP*291*D8*20041101~MSG*0-Beneficiary insured due to age OASI~EB*C**30*MB**23*203~DTP*291*RD8*20210101-20211231~EB*C**30*MB**29*0~DTP*291*RD8*20210101-20211231~EB*A**30*MB**27**0.2~DTP*291*RD8*20210101-20211231~EB*C**42^67^AJ*MB**23*0~DTP*292*RD8*20210101-20211231~EB*A**42^67^AJ*MB**27**0~DTP*292*RD8*20210101-20211231~EB*R**88*OT~REF*18*S5601~REF*N6*203*SilverScript SmartRx~DTP*292*D8*20210101~LS*2120~NM1*PR*2*extra healthy insurance~N3*123 address1~N4*Nashville*TN*37203~PER*IC**TE*0000000000*UR*www.testwebsite.com~LE*2120~SE*50*0001~GE*1*123456789~IEA*1*123456789~
-    Error:
-      description: The base object model for errors returned from the workflow
-      type: array
-      items:
-        type: string
-        example: Internal - An unknown error occurred
     Transaction:
       type: object
       description: The base object model for the `/transactions` endpoints and the canonical model for Enhanced Eligibility
@@ -2178,156 +2004,378 @@ components:
           type: string
           description: Raw X12 271 eligibility response payload returned for the transaction.
           example: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000       *220304*0343*^*00501*123456789*0*T*:~GS*HB*MTEXE*LLX1210001*20131015*2219*123456789*X*005010X279A1~ST*271*0001*005010X279A1~BHT*0022*11*1-622233a9-6fca5eb41ae6862b269452c9*20220304*0343~HL*1**20*1~NM1*PR*2*CMS*****PI*CMSMED~HL*2*1*21*1~NM1*1P*2*HAPPY DOCTORS GROUP PRACTICE*****XX*1234567893~HL*3*2*22*0~TRN*2*123456789*9877281234~TRN*2*1266798199*9MCK-TSHRT~NM1*IL*1*DOEONE*JOHNONE*M***MI*0000000000~N3*123 address1~N4*SEATTLE*WA*981010000~DMG*D8*18800102*F~INS*Y*18*001*25~DTP*307*RD8*20211020-20211020~EB*I**41^54~EB*1**88~EB*1**30^42^45^48^49^69^76^83^A5^A7^AG^BT^BU^BV*MA~DTP*291*D8*20041101~MSG*0-Beneficiary insured due to age OASI~EB*C**30*MA**26*1484~DTP*291*RD8*20210101-20211231~EB*C**30*MA**29*1484~DTP*291*RD8*20210101-20211231~EB*C**42^45*MA**26*0~DTP*292*RD8*20210101-20211231~EB*1**30^2^23^24^25^26^27^28^3^33^36^37^38^39^4^40^42^50^51^52^53^62^67^69^73^76^83^86^98^A4^A6^A8^AI^AJ^AK^AL^BT^BU^BV^DM^UC*MB~DTP*291*D8*20041101~MSG*0-Beneficiary insured due to age OASI~EB*C**30*MB**23*203~DTP*291*RD8*20210101-20211231~EB*C**30*MB**29*0~DTP*291*RD8*20210101-20211231~EB*A**30*MB**27**0.2~DTP*291*RD8*20210101-20211231~EB*C**42^67^AJ*MB**23*0~DTP*292*RD8*20210101-20211231~EB*A**42^67^AJ*MB**27**0~DTP*292*RD8*20210101-20211231~EB*R**88*OT~REF*18*S5601~REF*N6*203*SilverScript SmartRx~DTP*292*D8*20210101~LS*2120~NM1*PR*2*extra healthy insurance~N3*123 address1~N4*Nashville*TN*37203~PER*IC**TE*0000000000*UR*www.testwebsite.com~LE*2120~SE*50*0001~GE*1*123456789~IEA*1*123456789~
-    EligibilityRequestX12:
+    Error:
+      description: The base object model for errors returned from the workflow
+      type: array
+      items:
+        type: string
+        example: Internal - An unknown error occurred
+    TransactionMedicare:
       type: object
-      description: Real-time X12 request payload. The JSON field name is `x12`, and its value is the raw X12 270 request payload. The provider NPI in the X12 270 must be valid and follow standard NPI validation rules. The corresponding response is returned as normalized JSON, not as raw X12.
-      required:
-      - x12
+      description: 'Medicare eligibility transaction derived from an X12 271 response (005010X279A1). This model represents the normalized API view of the payer response.
+
+        '
       properties:
-        x12:
+        id:
           type: string
-          description: Raw X12 270 eligibility inquiry payload. The provider NPI in the X12 270 must be valid and follow standard NPI validation rules.
-          example: ISA*00*          *01*SomePwd   *ZZ*TPG00000       *ZZ*EMDEON         *220304*0343*^*00501*123456789*0*T*:~GS*HS*LLX1210001*MTEXE*20131015*2219*123456789*X*005010X279A1~ST*270*0001*005010X279A1~BHT*0022*13*1-622233a9-6fca5eb41ae6862b269452c9*20220304*0343~HL*1**20*1~NM1*PR*2*CMS*****PI*CMSMED~HL*2*1*21*1~NM1*1P*2*HAPPY DOCTORS GROUP PRACTICE*****XX*1234567893~HL*3*2*22*0~TRN*1*123456789*9877281234~NM1*IL*1*DOEONE*JOHNONE*M***MI*0000000000~N3*123 address1~N4*SEATTLE*WA*981010000~DMG*D8*18800102*F~DTP*291*RD8*20210101-20211231~EQ*30~SE*20*0001~GE*1*123456789~IEA*1*123456789~
+          description: System-generated transaction identifier
+          example: 9fb77454-8c58-4345-aa50-43f133e06d20
+        correlationId:
+          type: string
+          description: 'Correlation identifier provided by the consumer in the request header and echoed back in the response. Not derived from X12.
+
+            '
+          example: corr-8b7c2f3a-1c9e-4d3b-a6f5-112233445566
+        sourceType:
+          type: string
+          enum:
+          - new
+          - historical
+          - duplicate
+          - autosubmit
+          description: How the transaction was created. `new` means the transaction was submitted through the Real-Time Eligibility flow. `duplicate` means customer-configured deduplication found a prior matching request, skipped clearinghouse submission, and returned the previous response. `autosubmit` means the transaction was generated by Coverage Discovery path execution. `historical` means the record originated from historical retrieval rather than a newly created request.
+          example: new
+        processedDate:
+          type: string
+          format: date-time
+          description: Time the 271 response was processed by the system
+          example: '2022-03-04T03:43:00Z'
+        status:
+          type: object
+          description: Normalized eligibility outcome derived from the X12 271.
+          properties:
+            value:
+              type: string
+              enum:
+              - eligible
+              - ineligible
+              - payer_unavailable
+              - payer_not_in_system
+              - processing_error
+              - patient_unknown
+              example: eligible
+            description:
+              type: string
+        patient:
+          type: object
+          description: Subscriber/patient information from NM1*IL, DMG, N3, N4
+          properties:
+            firstName:
+              type: string
+              example: JOHNONE
+            lastName:
+              type: string
+              example: DOEONE
+            middleName:
+              type: string
+              example: M
+            memberId:
+              type: string
+              description: Medicare beneficiary identifier
+              example: '0000000000'
+            gender:
+              type: string
+              example: F
+            dateOfBirth:
+              type: string
+              format: date
+              example: '1880-01-02'
+            relationship:
+              type: string
+              description: Normalized patient relationship when present on the transaction response.
+              example: CHILD
+            address:
+              type: object
+              properties:
+                lines:
+                  type: array
+                  items:
+                    type: string
+                  example:
+                  - 123 address1
+                city:
+                  type: string
+                  example: SEATTLE
+                state:
+                  type: string
+                  example: WA
+                zip:
+                  type: string
+                  example: '98101'
+        subscriber:
+          type: object
+          description: 'Subscriber details. For Medicare responses, the subscriber is the patient, so this object mirrors `patient` when both are present.
+
+            '
+          properties:
+            firstName:
+              type: string
+              example: JOHNONE
+            lastName:
+              type: string
+              example: DOEONE
+            memberId:
+              type: string
+              example: '0000000000'
+            gender:
+              type: string
+              example: F
+            dateOfBirth:
+              type: string
+              format: date
+              example: '1880-01-02'
+        payer:
+          type: object
+          description: Primary and additional payer information from the 271
+          properties:
+            chcId:
+              type: string
+              description: Normalized CHC payer identifier returned on the real-time transaction response.
+              example: '60054'
+            name:
+              type: string
+              example: CMSMED
+            phone:
+              type: string
+              example: '0000000000'
+            url:
+              type: string
+              example: www.testwebsite.com
+            otherPayer:
+              type: object
+              description: Additional payer from LS/2120 loop
+              properties:
+                name:
+                  type: string
+                  example: extra healthy insurance
+                address:
+                  type: object
+                  properties:
+                    lines:
+                      type: array
+                      items:
+                        type: string
+                      example:
+                      - 123 address1
+                    city:
+                      type: string
+                      example: Nashville
+                    state:
+                      type: string
+                      example: TN
+                    zip:
+                      type: string
+                      example: '37203'
+        plan:
+          type: object
+          description: Medicare plan and pharmacy information
+          properties:
+            insuranceType:
+              type: string
+              enum:
+              - Medicare
+              example: Medicare
+            beginDate:
+              type: string
+              format: date
+              description: Coverage start date (DTP*291)
+              example: '2004-11-01'
+            endDate:
+              type: string
+              format: date
+              description: Coverage end date (DTP*291 RD8)
+              example: '2021-12-31'
+            number:
+              type: string
+              description: Plan identifier from REF*18
+              example: S5601
+            description:
+              type: string
+              description: Plan description from REF*N6
+              example: SilverScript SmartRx
+        benefits:
+          type: array
+          description: Benefits derived from EB, DTP, and MSG segments
+          items:
+            type: object
+            properties:
+              service:
+                type: string
+                description: Service type derived from EB03
+                example: Health Coverage
+              name:
+                type: string
+                description: Benefit name derived from EB01
+                example: copay
+              value:
+                type: string
+                example: '1484'
+              type:
+                type: string
+                enum:
+                - string
+                - date
+                - number
+                - percent
+                - monetary
+                example: monetary
+              insuranceType:
+                type: string
+                enum:
+                - Medicare
+                example: Medicare
+              benefitQualifier:
+                type: string
+                description: EB segment qualifiers (EB01 / EB06 / EB09)
+                example: EB01=C
+        x12-271:
+          type: string
+          description: Raw X12 271 eligibility response payload.
+          example: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000       *220304*0343*^*00501*123456789*0*T*:~GS*HB*MTEXE*LLX1210001*20131015*2219*123456789*X*005010X279A1~ST*271*0001*005010X279A1~BHT*0022*11*1-622233a9-6fca5eb41ae6862b269452c9*20220304*0343~HL*1**20*1~NM1*PR*2*CMS*****PI*CMSMED~HL*2*1*21*1~NM1*1P*2*HAPPY DOCTORS GROUP PRACTICE*****XX*1234567893~HL*3*2*22*0~TRN*2*123456789*9877281234~TRN*2*1266798199*9MCK-TSHRT~NM1*IL*1*DOEONE*JOHNONE*M***MI*0000000000~N3*123 address1~N4*SEATTLE*WA*981010000~DMG*D8*18800102*F~INS*Y*18*001*25~DTP*307*RD8*20211020-20211020~EB*I**41^54~EB*1**88~EB*1**30^42^45^48^49^69^76^83^A5^A7^AG^BT^BU^BV*MA~DTP*291*D8*20041101~MSG*0-Beneficiary insured due to age OASI~EB*C**30*MA**26*1484~DTP*291*RD8*20210101-20211231~EB*C**30*MA**29*1484~DTP*291*RD8*20210101-20211231~EB*C**42^45*MA**26*0~DTP*292*RD8*20210101-20211231~EB*1**30^2^23^24^25^26^27^28^3^33^36^37^38^39^4^40^42^50^51^52^53^62^67^69^73^76^83^86^98^A4^A6^A8^AI^AJ^AK^AL^BT^BU^BV^DM^UC*MB~DTP*291*D8*20041101~MSG*0-Beneficiary insured due to age OASI~EB*C**30*MB**23*203~DTP*291*RD8*20210101-20211231~EB*C**30*MB**29*0~DTP*291*RD8*20210101-20211231~EB*A**30*MB**27**0.2~DTP*291*RD8*20210101-20211231~EB*C**42^67^AJ*MB**23*0~DTP*292*RD8*20210101-20211231~EB*A**42^67^AJ*MB**27**0~DTP*292*RD8*20210101-20211231~EB*R**88*OT~REF*18*S5601~REF*N6*203*SilverScript SmartRx~DTP*292*D8*20210101~LS*2120~NM1*PR*2*extra healthy insurance~N3*123 address1~N4*Nashville*TN*37203~PER*IC**TE*0000000000*UR*www.testwebsite.com~LE*2120~SE*50*0001~GE*1*123456789~IEA*1*123456789~
+  responses:
+    UnexpectedError:
+      description: Unexpected error.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ForbiddenError:
+      description: Forbidden.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+          - invalid tenant id
+    BadRequestError:
+      description: Bad request.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+          - Failed Precondition - Field 'example' is required
+    PermissionDeniedError:
+      description: Unauthorized.
+      headers:
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: invalid_product
+              error_description:
+                type: string
+                example: Permission Denied.
+              traceId:
+                type: string
+                example: 942537e6-d544-ed7c-469b-a27efc4a6cff
+    EligibilityResponseX12:
+      description: OK. Returns a normalized JSON representation of the X12 271 response, not a raw X12 payload.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+        link:
+          $ref: '#/components/headers/rte-link'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TransactionMedicare'
+          examples:
+            RTE Response Patient Unknown:
+              $ref: '#/components/examples/RTEEligibilityResponsePatientUnknown'
+            RTE Response Ineligible:
+              $ref: '#/components/examples/RTEEligibilityResponseIneligible'
+            RTE Response HMO:
+              $ref: '#/components/examples/RTEEligibilityResponseHMO'
+    EligibilityResponse:
+      description: OK. Returns the normalized real-time eligibility response. If Coverage Discovery was automatically started, the response `link` header contains related discovery task resource path(s).
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+        link:
+          $ref: '#/components/headers/rte-link'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Transaction'
+          examples:
+            RTE Response Patient Unknown:
+              $ref: '#/components/examples/RTEEligibilityResponsePatientUnknown'
+            RTE Response Ineligible:
+              $ref: '#/components/examples/RTEEligibilityResponseIneligible'
+            RTE Response HMO:
+              $ref: '#/components/examples/RTEEligibilityResponseHMO'
   headers:
-    correlationid:
-      schema:
-        type: string
-        example: 9fb77454-8c58-4345-aa50-43f133e06d20
-      description: A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
-    rte-link:
-      schema:
-        type: string
-        example: </coverage-discovery/0716e3e8-87ee-11ee-b9d1-0242ac120002>; title="coverage discovery - Default Discovery Task"; rel="related", </coverage-discovery/0e565a58-87ee-11ee-b9d1-0242ac120002>; title="coverage discovery - Chained Discovery Task"; rel="related"
-      description: (Optional) RFC 8288-style related-resource link header returned by real-time eligibility POST responses when Coverage Discovery task(s) are spawned. The header may include one or more related task paths. Each related path can be used with `GET /coverage-discovery/{id}` to retrieve task status. If you are enrolled in Coverage Discovery and this header is absent, no Coverage Discovery task was initiated for that transaction.
-    traceid:
-      schema:
-        type: string
-        example: 9fb77454-8c58-4345-aa50-43f133e06d20
-      description: A unique identifier value that is attached to the response that allow reference to the original request.
     tenantid:
       schema:
         type: string
         example: 9fb77454-8c58-4345-aa50-43f133e06d20
       description: The unique ID of the tenant that invoking user belongs to. Used to enforce data tenancy.
+    rte-link:
+      schema:
+        type: string
+        example: </coverage-discovery/0716e3e8-87ee-11ee-b9d1-0242ac120002>; title="coverage discovery - Default Discovery Task"; rel="related", </coverage-discovery/0e565a58-87ee-11ee-b9d1-0242ac120002>; title="coverage discovery - Chained Discovery Task"; rel="related"
+      description: (Optional) RFC 8288-style related-resource link header returned by real-time eligibility POST responses when Coverage Discovery task(s) are spawned. The header may include one or more related task paths. Each related path can be used with `GET /coverage-discovery/{id}` to retrieve task status. If you are enrolled in Coverage Discovery and this header is absent, no Coverage Discovery task was initiated for that transaction.
     subtenantid:
       schema:
         type: string
         example: 5e2f9f4f-6f1d-4b37-92b5-6c5a9d1f8a21
       description: (Optional) Identifies an Optum-assigned sub-tenant configuration for your organization. Include this header only when Optum has provided a value for a specific enabled customer configuration. Clients must not generate or infer this value.
+    traceid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: A unique identifier value that is attached to the response that allow reference to the original request.
+    correlationid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
   examples:
-    EligibilityRequestMinimal:
-      value:
-        tradingPartnerServiceId: CIGNA
-        provider:
-          organizationName: Example Medical Center
-          npi: '1234567893'
-        subscriber:
-          memberId: '12313423'
-          firstName: johnOne
-          lastName: doeOne
-          dateOfBirth: '18800102'
-          ssn: '144334555'
-        encounter:
-          dateOfService: '20250115'
-          serviceTypeCodes:
-          - '30'
-    RTEEligibilityResponseHMO:
-      value:
-        id: rte-hmo-123
-        sourceType: new
-        correlationId: corr-8b7c2f3a-1c9e-4d3b-a6f5-112233445566
-        payer:
-          chcId: CIGNA
-        processedDate: '2024-07-22T17:05:00Z'
-        status:
-          value: eligible
-        plan:
-          hmo:
-            name: Cigna HMO
-            planNumber: CIG991122
-        subscriber:
-          memberId: HMO123456
-          dateOfBirth: '1980-01-01'
-        x12-271: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000    *240722*1705*^*00501*000000002*0*T*:~GS*HB*CIGNA*PROVIDERID*20240722*1705*2*X*005010X279A1~ST*271*0002*005010X279A1~BHT*0022*11*2233445566*20240722*1705~HL*1**20*1~NM1*PR*2*CIGNA*****PI*62308~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*2*2233445566*1234567893~NM1*IL*1*DOE*JOHN****MI*HMO123456~N3*123 MAIN ST~N4*HARTFORD*CT*06103~DMG*D8*19800101*M~INS*Y*18*030*25~DTP*291*D8*20240722~EB*1**30*HMO PLAN~MSG*Eligibility confirmed for CIGNA HMO plan.~SE*25*0002~GE*1*2~IEA*1*000000002~
-    RTEEligibilityRequestHMOCandidate:
-      value:
-        controlNumber: '2233445566'
-        tradingPartnerServiceId: CIGNA
-        provider:
-          organizationName: Example Medical Center
-          npi: '1234567893'
-        subscriber:
-          memberId: HMO123456
-          firstName: JOHN
-          lastName: DOE
-          dateOfBirth: '19800101'
-          address:
-            address1: 123 Main St
-            city: Hartford
-            state: CT
-            postalCode: '06103'
-        encounter:
-          dateOfService: '20240722'
-          serviceTypeCodes:
-          - '30'
-    RTEEligibilityResponseIneligible:
-      value:
-        id: rte-ineligible-123
-        sourceType: new
-        correlationId: corr-8b7c2f3a-1c9e-4d3b-a6f5-112233445566
-        payer:
-          chcId: CIGNA
-        processedDate: '2025-01-15T16:05:10Z'
-        status:
-          value: ineligible
-        subscriber:
-          memberId: SUB123
-          dateOfBirth: '1950-01-02'
-        x12-271: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000       *250115*1605*^*00501*000000011*0*T*:~GS*HB*CIGNA*PROVIDERID*20250115*1605*11*X*005010X279A1~ST*271*0011*005010X279A1~BHT*0022*11*1234567891*20250115*1605~HL*1**20*1~NM1*PR*2*CIGNA*****PI*62308~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*2*1234567891*9876543210~NM1*IL*1*DOE*JOHN****MI*SUB123~DTP*291*D8*20250115~EB*6**30~MSG*Coverage not active for requested date of service.~SE*13*0011~GE*1*11~IEA*1*000000011~
-    RTEEligibilityResponsePatientUnknown:
-      value:
-        id: rte-patient-unknown-123
-        sourceType: new
-        correlationId: corr-8b7c2f3a-1c9e-4d3b-a6f5-112233445566
-        payer:
-          chcId: AETNA
-        processedDate: '2025-01-15T16:02:28Z'
-        status:
-          value: patient_unknown
-        subscriber:
-          memberId: SUB123
-          dateOfBirth: '1950-01-02'
-        x12-271: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000       *250115*1602*^*00501*000000010*0*T*:~GS*HB*AETNA*PROVIDERID*20250115*1602*10*X*005010X279A1~ST*271*0010*005010X279A1~BHT*0022*11*1234567890*20250115*1602~HL*1**20*1~NM1*PR*2*AETNA*****PI*60054~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*2*1234567890*9876543210~NM1*IL*1*DOE*JOHN****MI*SUB123~DTP*291*D8*20250115~EB*I**30~MSG*Patient not found.~SE*13*0010~GE*1*10~IEA*1*000000010~
-    RTEEligibilityRequestX12CoverageDiscoveryCandidate:
-      value:
-        x12: ISA*00*          *01*SomePwd   *ZZ*TPG00000       *ZZ*EMDEON         *240722*1617*^*00501*000000001*0*T*:~GS*HS*AETNA*PROVIDERID*20240722*1617*1*X*005010X279A1~ST*270*0001*005010X279A1~BHT*0022*13*1234567890*20240722*1617~HL*1**20*1~NM1*PR*2*AETNA*****PI*60054~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*1*1234567890*9876543210~NM1*IL*1*DOE*JOHN****MI*123456789~N3*123 MAIN ST~N4*DALLAS*TX*75001~DMG*D8*19500102*M~DTP*291*D8*20240722~EQ*30~SE*13*0001~GE*1*1~IEA*1*000000001~
-    RTEEligibilityRequestCoverageDiscoveryCandidate:
-      value:
-        controlNumber: '123456789'
-        tradingPartnerServiceId: AETNA
-        provider:
-          organizationName: Example Medical Center
-          npi: '1234567893'
-        informationReceiverName:
-          address:
-            state: TX
-        subscriber:
-          memberId: SUB123
-          firstName: JOHN
-          lastName: DOE
-          dateOfBirth: '19500102'
-          ssn: '111223333'
-          additionalIdentification:
-            patientAccountNumber: PAN-1001
-          address:
-            address1: 123 Main St
-            city: Dallas
-            state: TX
-            postalCode: '75001'
-        encounter:
-          dateOfService: '20250115'
-          serviceTypeCodes:
-          - '30'
     EligibilityRequestExpanded:
       value:
         submitterTransactionIdentifier: 1-622233a9-6fca5eb41ae6862b269452c9
@@ -2435,132 +2483,120 @@ components:
     RTEEligibilityRequestX12HMOCandidate:
       value:
         x12: ISA*00*          *01*SomePwd   *ZZ*TPG00000       *ZZ*EMDEON         *240722*1705*^*00501*000000002*0*T*:~GS*HS*CIGNA*PROVIDERID*20240722*1705*2*X*005010X279A1~ST*270*0002*005010X279A1~BHT*0022*13*2233445566*20240722*1705~HL*1**20*1~NM1*PR*2*CIGNA*****PI*62308~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*1*2233445566*1234567893~NM1*IL*1*DOE*JOHN****MI*HMO123456~N3*123 MAIN ST~N4*HARTFORD*CT*06103~DMG*D8*19800101*M~DTP*291*D8*20240722~EQ*30~SE*13*0002~GE*1*2~IEA*1*000000002~
-  responses:
-    ForbiddenError:
-      description: Forbidden.
-      headers:
-        x-optum-tenant-id:
-          $ref: '#/components/headers/tenantid'
-        x-optum-subtenant-id:
-          $ref: '#/components/headers/subtenantid'
-        x-optum-correlation-id:
-          $ref: '#/components/headers/correlationid'
-        x-optum-trace-id:
-          $ref: '#/components/headers/traceid'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-          - invalid tenant id
-    UnexpectedError:
-      description: Unexpected error.
-      headers:
-        x-optum-tenant-id:
-          $ref: '#/components/headers/tenantid'
-        x-optum-subtenant-id:
-          $ref: '#/components/headers/subtenantid'
-        x-optum-correlation-id:
-          $ref: '#/components/headers/correlationid'
-        x-optum-trace-id:
-          $ref: '#/components/headers/traceid'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    EligibilityResponse:
-      description: OK. Returns the normalized real-time eligibility response. If Coverage Discovery was automatically started, the response `link` header contains related discovery task resource path(s).
-      headers:
-        x-optum-tenant-id:
-          $ref: '#/components/headers/tenantid'
-        x-optum-subtenant-id:
-          $ref: '#/components/headers/subtenantid'
-        x-optum-correlation-id:
-          $ref: '#/components/headers/correlationid'
-        x-optum-trace-id:
-          $ref: '#/components/headers/traceid'
-        link:
-          $ref: '#/components/headers/rte-link'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Transaction'
-          examples:
-            RTE Response Patient Unknown:
-              $ref: '#/components/examples/RTEEligibilityResponsePatientUnknown'
-            RTE Response Ineligible:
-              $ref: '#/components/examples/RTEEligibilityResponseIneligible'
-            RTE Response HMO:
-              $ref: '#/components/examples/RTEEligibilityResponseHMO'
-    BadRequestError:
-      description: Bad request.
-      headers:
-        x-optum-tenant-id:
-          $ref: '#/components/headers/tenantid'
-        x-optum-subtenant-id:
-          $ref: '#/components/headers/subtenantid'
-        x-optum-correlation-id:
-          $ref: '#/components/headers/correlationid'
-        x-optum-trace-id:
-          $ref: '#/components/headers/traceid'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example:
-          - Failed Precondition - Field 'example' is required
-    PermissionDeniedError:
-      description: Unauthorized.
-      headers:
-        x-optum-subtenant-id:
-          $ref: '#/components/headers/subtenantid'
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: invalid_product
-              error_description:
-                type: string
-                example: Permission Denied.
-              traceId:
-                type: string
-                example: 942537e6-d544-ed7c-469b-a27efc4a6cff
-    EligibilityResponseX12:
-      description: OK. Returns a normalized JSON representation of the X12 271 response, not a raw X12 payload.
-      headers:
-        x-optum-tenant-id:
-          $ref: '#/components/headers/tenantid'
-        x-optum-subtenant-id:
-          $ref: '#/components/headers/subtenantid'
-        x-optum-correlation-id:
-          $ref: '#/components/headers/correlationid'
-        x-optum-trace-id:
-          $ref: '#/components/headers/traceid'
-        link:
-          $ref: '#/components/headers/rte-link'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TransactionMedicare'
-          examples:
-            RTE Response Patient Unknown:
-              $ref: '#/components/examples/RTEEligibilityResponsePatientUnknown'
-            RTE Response Ineligible:
-              $ref: '#/components/examples/RTEEligibilityResponseIneligible'
-            RTE Response HMO:
-              $ref: '#/components/examples/RTEEligibilityResponseHMO'
+    RTEEligibilityResponseHMO:
+      value:
+        id: rte-hmo-123
+        sourceType: new
+        correlationId: corr-8b7c2f3a-1c9e-4d3b-a6f5-112233445566
+        payer:
+          chcId: CIGNA
+        processedDate: '2024-07-22T17:05:00Z'
+        status:
+          value: eligible
+        plan:
+          hmo:
+            name: Cigna HMO
+            planNumber: CIG991122
+        subscriber:
+          memberId: HMO123456
+          dateOfBirth: '1980-01-01'
+        x12-271: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000    *240722*1705*^*00501*000000002*0*T*:~GS*HB*CIGNA*PROVIDERID*20240722*1705*2*X*005010X279A1~ST*271*0002*005010X279A1~BHT*0022*11*2233445566*20240722*1705~HL*1**20*1~NM1*PR*2*CIGNA*****PI*62308~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*2*2233445566*1234567893~NM1*IL*1*DOE*JOHN****MI*HMO123456~N3*123 MAIN ST~N4*HARTFORD*CT*06103~DMG*D8*19800101*M~INS*Y*18*030*25~DTP*291*D8*20240722~EB*1**30*HMO PLAN~MSG*Eligibility confirmed for CIGNA HMO plan.~SE*25*0002~GE*1*2~IEA*1*000000002~
+    RTEEligibilityResponseIneligible:
+      value:
+        id: rte-ineligible-123
+        sourceType: new
+        correlationId: corr-8b7c2f3a-1c9e-4d3b-a6f5-112233445566
+        payer:
+          chcId: CIGNA
+        processedDate: '2025-01-15T16:05:10Z'
+        status:
+          value: ineligible
+        subscriber:
+          memberId: SUB123
+          dateOfBirth: '1950-01-02'
+        x12-271: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000       *250115*1605*^*00501*000000011*0*T*:~GS*HB*CIGNA*PROVIDERID*20250115*1605*11*X*005010X279A1~ST*271*0011*005010X279A1~BHT*0022*11*1234567891*20250115*1605~HL*1**20*1~NM1*PR*2*CIGNA*****PI*62308~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*2*1234567891*9876543210~NM1*IL*1*DOE*JOHN****MI*SUB123~DTP*291*D8*20250115~EB*6**30~MSG*Coverage not active for requested date of service.~SE*13*0011~GE*1*11~IEA*1*000000011~
+    RTEEligibilityRequestCoverageDiscoveryCandidate:
+      value:
+        controlNumber: '123456789'
+        tradingPartnerServiceId: AETNA
+        provider:
+          organizationName: Example Medical Center
+          npi: '1234567893'
+        informationReceiverName:
+          address:
+            state: TX
+        subscriber:
+          memberId: SUB123
+          firstName: JOHN
+          lastName: DOE
+          dateOfBirth: '19500102'
+          ssn: '111223333'
+          additionalIdentification:
+            patientAccountNumber: PAN-1001
+          address:
+            address1: 123 Main St
+            city: Dallas
+            state: TX
+            postalCode: '75001'
+        encounter:
+          dateOfService: '20250115'
+          serviceTypeCodes:
+          - '30'
+    EligibilityRequestMinimal:
+      value:
+        tradingPartnerServiceId: CIGNA
+        provider:
+          organizationName: Example Medical Center
+          npi: '1234567893'
+        subscriber:
+          memberId: '12313423'
+          firstName: johnOne
+          lastName: doeOne
+          dateOfBirth: '18800102'
+          ssn: '144334555'
+        encounter:
+          dateOfService: '20250115'
+          serviceTypeCodes:
+          - '30'
+    RTEEligibilityRequestX12CoverageDiscoveryCandidate:
+      value:
+        x12: ISA*00*          *01*SomePwd   *ZZ*TPG00000       *ZZ*EMDEON         *240722*1617*^*00501*000000001*0*T*:~GS*HS*AETNA*PROVIDERID*20240722*1617*1*X*005010X279A1~ST*270*0001*005010X279A1~BHT*0022*13*1234567890*20240722*1617~HL*1**20*1~NM1*PR*2*AETNA*****PI*60054~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*1*1234567890*9876543210~NM1*IL*1*DOE*JOHN****MI*123456789~N3*123 MAIN ST~N4*DALLAS*TX*75001~DMG*D8*19500102*M~DTP*291*D8*20240722~EQ*30~SE*13*0001~GE*1*1~IEA*1*000000001~
+    RTEEligibilityResponsePatientUnknown:
+      value:
+        id: rte-patient-unknown-123
+        sourceType: new
+        correlationId: corr-8b7c2f3a-1c9e-4d3b-a6f5-112233445566
+        payer:
+          chcId: AETNA
+        processedDate: '2025-01-15T16:02:28Z'
+        status:
+          value: patient_unknown
+        subscriber:
+          memberId: SUB123
+          dateOfBirth: '1950-01-02'
+        x12-271: ISA*00*          *01*SomePwd   *ZZ*EMDEON         *ZZ*TPG00000       *250115*1602*^*00501*000000010*0*T*:~GS*HB*AETNA*PROVIDERID*20250115*1602*10*X*005010X279A1~ST*271*0010*005010X279A1~BHT*0022*11*1234567890*20250115*1602~HL*1**20*1~NM1*PR*2*AETNA*****PI*60054~HL*2*1*21*1~NM1*1P*2*TEST PROVIDER*****XX*1234567893~HL*3*2*22*0~TRN*2*1234567890*9876543210~NM1*IL*1*DOE*JOHN****MI*SUB123~DTP*291*D8*20250115~EB*I**30~MSG*Patient not found.~SE*13*0010~GE*1*10~IEA*1*000000010~
+    RTEEligibilityRequestHMOCandidate:
+      value:
+        controlNumber: '2233445566'
+        tradingPartnerServiceId: CIGNA
+        provider:
+          organizationName: Example Medical Center
+          npi: '1234567893'
+        subscriber:
+          memberId: HMO123456
+          firstName: JOHN
+          lastName: DOE
+          dateOfBirth: '19800101'
+          address:
+            address1: 123 Main St
+            city: Hartford
+            state: CT
+            postalCode: '06103'
+        encounter:
+          dateOfService: '20240722'
+          serviceTypeCodes:
+          - '30'
   parameters:
-    header-subtenant-id:
-      in: header
-      name: x-optum-subtenant-id
-      schema:
-        type: string
-        example: 5e2f9f4f-6f1d-4b37-92b5-6c5a9d1f8a21
-      required: false
-      description: (Optional) Identifies an Optum-assigned sub-tenant configuration for your organization. Include this header only when Optum has provided a value for a specific enabled customer configuration. Clients must not generate or infer this value.
     header-correlation-id:
       in: header
       name: x-optum-correlation-id
@@ -2569,6 +2605,14 @@ components:
         example: 9fb77454-8c58-4345-aa50-43f133e06d20
       required: false
       description: (Optional) A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
+    header-subtenant-id:
+      in: header
+      name: x-optum-subtenant-id
+      schema:
+        type: string
+        example: 5e2f9f4f-6f1d-4b37-92b5-6c5a9d1f8a21
+      required: false
+      description: (Optional) Identifies an Optum-assigned sub-tenant configuration for your organization. Include this header only when Optum has provided a value for a specific enabled customer configuration. Clients must not generate or infer this value.
   requestBodies:
     EligibilityRequestX12:
       description: New real-time eligibility transaction request using a JSON body whose `x12` field contains an X12 270 payload. The provider NPI in the X12 270 must be valid and follow standard NPI validation rules.

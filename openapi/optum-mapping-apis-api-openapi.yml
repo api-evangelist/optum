@@ -15,7 +15,7 @@ paths:
     get:
       tags:
       - Mapping APIs
-      summary: ' Fetches I10PCS to I9V3 mappings on requested codetype and code'
+      summary: Fetches I10PCS to I9V3 mappings on requested codetype and code
       operationId: i9v3Toi10pcsMapping
       parameters:
       - name: codetype
@@ -148,7 +148,7 @@ paths:
     get:
       tags:
       - Mapping APIs
-      summary: ' Fetches I9v1 To I10CM CodeMapping on requested codetype and code'
+      summary: Fetches I9v1 To I10CM CodeMapping on requested codetype and code
       operationId: i9v1Toi10cmMapping
       parameters:
       - name: codetype
@@ -255,7 +255,7 @@ paths:
     get:
       tags:
       - Mapping APIs
-      summary: ' Fetches I10PCS to I9V3 mappings on requested Codetype and code'
+      summary: Fetches I10PCS to I9V3 mappings on requested Codetype and code
       operationId: i10pcsToi9v3Mapping
       parameters:
       - name: codetype
@@ -329,7 +329,7 @@ paths:
     get:
       tags:
       - Mapping APIs
-      summary: ' Fetches I10CM to I9V1 mappings on requested Codetype and code'
+      summary: Fetches I10CM to I9V1 mappings on requested Codetype and code
       operationId: i10cmToi9v1Mapping
       parameters:
       - name: codetype

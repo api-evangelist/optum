@@ -18,7 +18,111 @@ paths:
       summary: Prior Auth API Endpoint
       tags:
       - prior auth api
+      operationId: postAbmPriorauthV1
+      x-operation-id-source: derived
 components:
+  responses:
+    priorauthdata:
+      content:
+        application/json:
+          schema:
+            properties:
+              error:
+                example: null
+                type: object
+              errorDetails:
+                example: null
+                type: object
+              results:
+                items:
+                  properties:
+                    certificationIssueDate:
+                      example: 2020/01/01
+                      type: string
+                    clientName:
+                      example: Client Name
+                      type: string
+                    dependentDob:
+                      example: 2002/01/01
+                      type: string
+                    dependentFirstName:
+                      example: EFG
+                      type: string
+                    dependentIdNum:
+                      example: '02'
+                      type: string
+                    paActionOutcomeCode:
+                      example: A
+                      type: string
+                    paEndDate:
+                      example: 2020/01/31
+                      type: string
+                    paStartDate:
+                      example: 2020/01/01
+                      type: string
+                    payerId:
+                      example: 9060
+                      type: integer
+                    priorAuthNum:
+                      example: PA101
+                      type: string
+                    procModifier1:
+                      example: '13'
+                      type: string
+                    procModifier2:
+                      example: ''
+                      type: string
+                    procModifier3:
+                      example: ''
+                      type: string
+                    procModifier4:
+                      example: ''
+                      type: string
+                    profProcedureCode:
+                      example: T10293
+                      type: string
+                    profUnitApprovedCount:
+                      example: '1'
+                      type: integer
+                    profUnitDeniedCount:
+                      example: 1
+                      type: integer
+                    profUnitRemainingCount:
+                      example: 1
+                      type: integer
+                    profUnitRequestedCount:
+                      example: 2
+                      type: integer
+                    provNpi:
+                      example: '25252'
+                      type: string
+                    provZipCode:
+                      example: 123V45
+                      type: string
+                    serviceLineAmount:
+                      example: 10.5
+                      type: number
+                    subscriberDob:
+                      example: 2001/01/01
+                      type: string
+                    subscriberFirstName:
+                      example: ABC
+                      type: string
+                    subscriberIdNum:
+                      example: '92929244'
+                      type: string
+                    subscriberLastOrgName:
+                      example: XYZ
+                      type: string
+                    vendorId:
+                      example: 2
+                      type: integer
+                    vendorZcodeField:
+                      example: Z20203
+                      type: string
+                type: array
+            type: object
+      description: response for priorauthdata API
   requestBodies:
     priorauthdata:
       content:
@@ -139,108 +243,6 @@ components:
             type: object
       description: payload for priorauthdata API
       required: true
-  responses:
-    priorauthdata:
-      content:
-        application/json:
-          schema:
-            properties:
-              error:
-                example: null
-                type: object
-              errorDetails:
-                example: null
-                type: object
-              results:
-                items:
-                  properties:
-                    certificationIssueDate:
-                      example: 2020/01/01
-                      type: string
-                    clientName:
-                      example: Client Name
-                      type: string
-                    dependentDob:
-                      example: 2002/01/01
-                      type: string
-                    dependentFirstName:
-                      example: EFG
-                      type: string
-                    dependentIdNum:
-                      example: '02'
-                      type: string
-                    paActionOutcomeCode:
-                      example: A
-                      type: string
-                    paEndDate:
-                      example: 2020/01/31
-                      type: string
-                    paStartDate:
-                      example: 2020/01/01
-                      type: string
-                    payerId:
-                      example: 9060
-                      type: integer
-                    priorAuthNum:
-                      example: PA101
-                      type: string
-                    procModifier1:
-                      example: '13'
-                      type: string
-                    procModifier2:
-                      example: ''
-                      type: string
-                    procModifier3:
-                      example: ''
-                      type: string
-                    procModifier4:
-                      example: ''
-                      type: string
-                    profProcedureCode:
-                      example: T10293
-                      type: string
-                    profUnitApprovedCount:
-                      example: '1'
-                      type: integer
-                    profUnitDeniedCount:
-                      example: 1
-                      type: integer
-                    profUnitRemainingCount:
-                      example: 1
-                      type: integer
-                    profUnitRequestedCount:
-                      example: 2
-                      type: integer
-                    provNpi:
-                      example: '25252'
-                      type: string
-                    provZipCode:
-                      example: 123V45
-                      type: string
-                    serviceLineAmount:
-                      example: 10.5
-                      type: number
-                    subscriberDob:
-                      example: 2001/01/01
-                      type: string
-                    subscriberFirstName:
-                      example: ABC
-                      type: string
-                    subscriberIdNum:
-                      example: '92929244'
-                      type: string
-                    subscriberLastOrgName:
-                      example: XYZ
-                      type: string
-                    vendorId:
-                      example: 2
-                      type: integer
-                    vendorZcodeField:
-                      example: Z20203
-                      type: string
-                type: array
-            type: object
-      description: response for priorauthdata API
 x-readme:
   explorer-enabled: true
   proxy-enabled: true

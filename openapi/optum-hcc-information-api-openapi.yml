@@ -326,6 +326,19 @@ paths:
           description: Service Unavailable
 components:
   schemas:
+    RxHccV04:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
     Link:
       type: object
       properties:
@@ -335,45 +348,6 @@ components:
             attribute: true
         value:
           type: string
-    RxHcc:
-      type: object
-      properties:
-        hccCode:
-          type: string
-          xml:
-            name: hcc-code
-        desc:
-          type: string
-        href:
-          type: string
-          xml:
-            attribute: true
-    CmsHccEsrdPace:
-      type: object
-      properties:
-        hccCode:
-          type: string
-          xml:
-            name: hcc-code
-        desc:
-          type: string
-        href:
-          type: string
-          xml:
-            attribute: true
-    CmsHccVx:
-      type: object
-      properties:
-        hccCode:
-          type: string
-          xml:
-            name: hcc-code
-        desc:
-          type: string
-        href:
-          type: string
-          xml:
-            attribute: true
     Hcc:
       required:
       - cmsHccEsrdPace
@@ -421,7 +395,7 @@ components:
             $ref: '#/components/schemas/RxHcc'
       xml:
         name: hcc
-    RxHccV04:
+    CmsHccV12:
       type: object
       properties:
         hccCode:
@@ -434,7 +408,33 @@ components:
           type: string
           xml:
             attribute: true
-    CmsHccV12:
+    CmsHccV22:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    CmsHccEsrdPace:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    CmsHccVx:
       type: object
       properties:
         hccCode:
@@ -495,7 +495,7 @@ components:
             $ref: '#/components/schemas/RxHcc'
       xml:
         name: diagnosis-code-list
-    CmsHccV22:
+    RxHcc:
       type: object
       properties:
         hccCode:

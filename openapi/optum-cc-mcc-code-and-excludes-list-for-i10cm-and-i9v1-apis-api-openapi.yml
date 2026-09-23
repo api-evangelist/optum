@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: CMS Common Facility CC/MCC Code and Excludes List for I10CM and I9V1 APIs API
+  title: CMS Common Facility CC/MCC Code and Excludes List for I10CM…
   description: MicroService that contains CMS related information
   contact:
     name: Ken Kracker
