@@ -80,38 +80,6 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    Notification:
-      type: object
-      properties:
-        error:
-          type: array
-          items:
-            type: string
-        warning:
-          type: array
-          items:
-            type: string
-        info:
-          type: array
-          items:
-            type: string
-    ClaimLine:
-      type: object
-      properties:
-        cptHcpcs:
-          type: string
-        unit:
-          type: string
-        revCode:
-          type: string
-        modifiers:
-          type: string
-        dateStr:
-          type: string
-        charge:
-          type: string
-        cptHcpcsDesc:
-          type: string
     ApcCalculatorRequest:
       required:
       - dxCode
@@ -155,6 +123,38 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ClaimLine'
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
+    ClaimLine:
+      type: object
+      properties:
+        cptHcpcs:
+          type: string
+        unit:
+          type: string
+        revCode:
+          type: string
+        modifiers:
+          type: string
+        dateStr:
+          type: string
+        charge:
+          type: string
+        cptHcpcsDesc:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

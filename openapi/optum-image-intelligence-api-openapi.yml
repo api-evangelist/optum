@@ -236,6 +236,58 @@ paths:
       - bearerAuth: []
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+          default: about/blank
+          example: https://api-stg.uhg.com/errors/attachment-type-detection
+          description: The problem type URI. Defaults to `about:blank`.
+        title:
+          type: string
+          example: Invalid Attachment Format
+          description: A short, human-readable summary of the problem.
+        detail:
+          type: string
+          example: The provided attachment format is not supported.
+          description: A detailed explanation of the problem.
+        status:
+          type: integer
+          format: int32
+          example: 400
+          maximum: 599
+          minimum: 100
+          description: The HTTP status code for the problem.
+        instance:
+          type: string
+          format: uri
+          example: https://api-stg.uhg.com/errors/attachment-type-detection/12345
+          description: A URI reference that identifies the specific occurrence of the problem.
+        properties:
+          type: object
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: DENTATT_113
+                    description: A code that can be correlated to this error.
+                  field:
+                    type: string
+                    example: DataService.attachments.find.notFound
+                    description: The field in a request that is related to this error, if applicable.
+                  message:
+                    type: string
+                    example: Attachment not found.
+                    description: A human readable message that describes the error.
+              description: A collection that gives specifics about the errors that occurred.
+          description: A map of additional, non-standard properties.
+      description: Representation for an RFC 9457 problem detail.
     ImageIntelligenceMetadata:
       type: object
       required:
@@ -300,58 +352,6 @@ components:
         imageIntelligenceTransactionId:
           type: string
           description: If the request included image intelligence metadata and the files were successfully processed by Optum Image Intelligence, this field will be populated with the transaction id for reference
-    ErrorResponse:
-      type: object
-      properties:
-        type:
-          type: string
-          format: uri
-          default: about/blank
-          example: https://api-stg.uhg.com/errors/attachment-type-detection
-          description: The problem type URI. Defaults to `about:blank`.
-        title:
-          type: string
-          example: Invalid Attachment Format
-          description: A short, human-readable summary of the problem.
-        detail:
-          type: string
-          example: The provided attachment format is not supported.
-          description: A detailed explanation of the problem.
-        status:
-          type: integer
-          format: int32
-          example: 400
-          maximum: 599
-          minimum: 100
-          description: The HTTP status code for the problem.
-        instance:
-          type: string
-          format: uri
-          example: https://api-stg.uhg.com/errors/attachment-type-detection/12345
-          description: A URI reference that identifies the specific occurrence of the problem.
-        properties:
-          type: object
-          properties:
-            errors:
-              type: array
-              items:
-                type: object
-                properties:
-                  code:
-                    type: string
-                    example: DENTATT_113
-                    description: A code that can be correlated to this error.
-                  field:
-                    type: string
-                    example: DataService.attachments.find.notFound
-                    description: The field in a request that is related to this error, if applicable.
-                  message:
-                    type: string
-                    example: Attachment not found.
-                    description: A human readable message that describes the error.
-              description: A collection that gives specifics about the errors that occurred.
-          description: A map of additional, non-standard properties.
-      description: Representation for an RFC 9457 problem detail.
   securitySchemes:
     bearerAuth:
       type: http

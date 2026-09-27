@@ -99,91 +99,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Identifier:
-      type: object
-      properties:
-        system:
-          type: string
-          example: http://example.org/cdex/acn
-        value:
-          type: string
-          example: '123456'
-    Entry:
-      type: object
-      properties:
-        resource:
-          $ref: '#/components/schemas/Claim'
-    Coding:
-      type: object
-      description: Coding structure for answers
-      properties:
-        code:
-          type: string
-          example: '1'
-        display:
-          type: string
-          example: Age ≥ 50
-    Reference:
-      type: object
-      description: FHIR Reference
-      properties:
-        reference:
-          type: string
-          example: Patient/anonymous
-    Link:
-      type: object
-      description: Card action link
-      properties:
-        label:
-          type: string
-          description: Link label
-          example: CompleteDocumentation(DTR)
-        url:
-          type: string
-          description: Link URL
-          example: ''
-        type:
-          type: string
-          description: Link type
-          example: absolute
-        appContext:
-          type: string
-          description: Application context identifier
-          example: f48ed17f-dc96-457d-8dc3-906a12f0a294
-    OrderSignRequest:
-      type: object
-      description: CDS Hooks Order Sign Request payload
-      properties:
-        hook:
-          type: string
-          description: CDS Hooks hook name
-          example: order-sign
-        hookInstance:
-          type: string
-          description: Unique hook instance identifier
-          example: serviceRequestCoverageRequirements
-        fhirServer:
-          type: string
-          description: FHIR server base URL
-          example: http://hooks.smarthealth.org:9121
-        fhirAuthorization:
-          $ref: '#/components/schemas/FhirAuthorization'
-        context:
-          $ref: '#/components/schemas/Context'
-        prefetch:
-          $ref: '#/components/schemas/Prefetch'
-    Source:
-      type: object
-      description: Source information for the card
-      properties:
-        label:
-          type: string
-          description: Source label
-          example: UnitedHealthcarePriorAuthorizationRequirements
-        url:
-          type: string
-          description: Source URL
-          example: https://apimarketplace.uhcprovider.com/#/all-apis/prior-auth-api
     CodeableConcept:
       type: object
       description: FHIR CodeableConcept
@@ -200,55 +115,6 @@ components:
         responsible:
           type: boolean
           example: true
-    Bundle:
-      type: object
-      description: FHIR Bundle resource
-      properties:
-        resourceType:
-          type: string
-          example: Bundle
-        type:
-          type: string
-          example: collection
-        entry:
-          type: array
-          description: Bundle entries
-          items:
-            $ref: '#/components/schemas/Entry'
-    Meta:
-      type: object
-      description: FHIR metadata
-      properties:
-        profile:
-          type: array
-          description: FHIR profile URLs
-          items:
-            type: string
-            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
-    FhirAuthorization:
-      type: object
-      description: FHIR authorization details
-      properties:
-        access_token:
-          type: string
-          description: Access token for FHIR server
-          example: some-opaque-fhir-access-token
-        token_type:
-          type: string
-          description: Token type
-          example: Bearer
-        expires_in:
-          type: integer
-          description: Token expiration time in seconds
-          example: 300
-        scope:
-          type: string
-          description: Authorized scope
-          example: user/Patient.read user/DeviceRequest.read
-        subject:
-          type: string
-          description: Subject identifier
-          example: cds-service4
     Context:
       type: object
       description: CDS Hooks context information
@@ -294,21 +160,64 @@ components:
           description: Links for additional actions or documentation
           items:
             $ref: '#/components/schemas/Link'
-    OrderSignResponseWrapper:
+    Meta:
       type: object
-      description: Wrapper for Order Sign response
+      description: FHIR metadata
       properties:
-        cards:
+        profile:
           type: array
-          description: List of CDS Hooks cards
+          description: FHIR profile URLs
           items:
-            $ref: '#/components/schemas/Card'
-        systemActions:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    Source:
+      type: object
+      description: Source information for the card
+      properties:
+        label:
+          type: string
+          description: Source label
+          example: UnitedHealthcarePriorAuthorizationRequirements
+        url:
+          type: string
+          description: Source URL
+          example: https://apimarketplace.uhcprovider.com/#/all-apis/prior-auth-api
+    Bundle:
+      type: object
+      description: FHIR Bundle resource
+      properties:
+        resourceType:
+          type: string
+          example: Bundle
+        type:
+          type: string
+          example: collection
+        entry:
           type: array
-          description: System actions returned by CDS service
+          description: Bundle entries
           items:
-            type: object
-          example: []
+            $ref: '#/components/schemas/Entry'
+    Entry:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Claim'
+    Reference:
+      type: object
+      description: FHIR Reference
+      properties:
+        reference:
+          type: string
+          example: Patient/anonymous
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
     Prefetch:
       type: object
       properties:
@@ -339,6 +248,38 @@ components:
         practitionerRole:
           type: string
           example: PractitionerRole?practitioner={{%context.userId}}
+    OrderSignRequest:
+      type: object
+      description: CDS Hooks Order Sign Request payload
+      properties:
+        hook:
+          type: string
+          description: CDS Hooks hook name
+          example: order-sign
+        hookInstance:
+          type: string
+          description: Unique hook instance identifier
+          example: serviceRequestCoverageRequirements
+        fhirServer:
+          type: string
+          description: FHIR server base URL
+          example: http://hooks.smarthealth.org:9121
+        fhirAuthorization:
+          $ref: '#/components/schemas/FhirAuthorization'
+        context:
+          $ref: '#/components/schemas/Context'
+        prefetch:
+          $ref: '#/components/schemas/Prefetch'
+    Coding:
+      type: object
+      description: Coding structure for answers
+      properties:
+        code:
+          type: string
+          example: '1'
+        display:
+          type: string
+          example: Age ≥ 50
     Claim:
       type: object
       description: FHIR Claim Inquiry Request
@@ -373,6 +314,65 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CareTeam'
+    Link:
+      type: object
+      description: Card action link
+      properties:
+        label:
+          type: string
+          description: Link label
+          example: CompleteDocumentation(DTR)
+        url:
+          type: string
+          description: Link URL
+          example: ''
+        type:
+          type: string
+          description: Link type
+          example: absolute
+        appContext:
+          type: string
+          description: Application context identifier
+          example: f48ed17f-dc96-457d-8dc3-906a12f0a294
+    FhirAuthorization:
+      type: object
+      description: FHIR authorization details
+      properties:
+        access_token:
+          type: string
+          description: Access token for FHIR server
+          example: some-opaque-fhir-access-token
+        token_type:
+          type: string
+          description: Token type
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Token expiration time in seconds
+          example: 300
+        scope:
+          type: string
+          description: Authorized scope
+          example: user/Patient.read user/DeviceRequest.read
+        subject:
+          type: string
+          description: Subject identifier
+          example: cds-service4
+    OrderSignResponseWrapper:
+      type: object
+      description: Wrapper for Order Sign response
+      properties:
+        cards:
+          type: array
+          description: List of CDS Hooks cards
+          items:
+            $ref: '#/components/schemas/Card'
+        systemActions:
+          type: array
+          description: System actions returned by CDS service
+          items:
+            type: object
+          example: []
   securitySchemes:
     oAuth:
       type: oauth2

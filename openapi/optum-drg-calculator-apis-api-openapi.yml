@@ -78,21 +78,6 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    Notification:
-      type: object
-      properties:
-        error:
-          type: array
-          items:
-            type: string
-        warning:
-          type: array
-          items:
-            type: string
-        info:
-          type: array
-          items:
-            type: string
     DrgCalculatorRequest:
       required:
       - admitDate
@@ -111,6 +96,21 @@ components:
         disChargeDate:
           type: string
           format: date-time
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
   securitySchemes:
     bearerAuth:
       type: http

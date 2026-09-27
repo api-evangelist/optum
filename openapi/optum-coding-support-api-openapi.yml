@@ -85,6 +85,15 @@ paths:
           description: Service Unavailable
 components:
   schemas:
+    CodingSupportResources:
+      type: object
+      properties:
+        codingSupportResource:
+          type: array
+          items:
+            $ref: '#/components/schemas/CodingSupportResource'
+      xml:
+        name: codingSupportResources
     CodingSupportResource:
       required:
       - code
@@ -108,15 +117,6 @@ components:
             name: referenced-content-example
         document:
           type: string
-    CodingSupportResources:
-      type: object
-      properties:
-        codingSupportResource:
-          type: array
-          items:
-            $ref: '#/components/schemas/CodingSupportResource'
-      xml:
-        name: codingSupportResources
   securitySchemes:
     bearerAuth:
       type: http

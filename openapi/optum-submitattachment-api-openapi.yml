@@ -143,44 +143,24 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Content:
+    AttachmentResponse:
       type: object
+      description: FHIR OperationOutcome response
       properties:
-        attachment:
-          $ref: '#/components/schemas/Attachment'
-    Issue:
-      type: object
-      description: OperationOutcome issue details
-      properties:
-        severity:
+        resourceType:
           type: string
-          example: information
-        code:
+          example: OperationOutcome
+        id:
           type: string
-          example: informational
-        details:
-          type: object
-          properties:
-            text:
-              type: string
-              example: Attachments accepted and associated...
-        diagnostics:
-          type: string
-          example: TrackingId=123456;ReferenceSRN=AL26082223...
-        location:
+          example: '23345435456574'
+        meta:
+          $ref: '#/components/schemas/Meta'
+        issue:
           type: array
           items:
-            type: string
-            example: Parameters.Attachment.part.Content/DocumentReference/docref-hp-002
-    Identifier:
-      type: object
-      properties:
-        system:
-          type: string
-          example: http://example.org/cdex/acn
-        value:
-          type: string
-          example: '123456'
+            $ref: '#/components/schemas/Issue'
+        text:
+          $ref: '#/components/schemas/Narrative'
     Narrative:
       type: object
       properties:
@@ -209,6 +189,22 @@ components:
         title:
           type: string
           example: History and Physical data
+    Parameter:
+      type: object
+      description: Parameter entry in Parameters resource
+      properties:
+        name:
+          type: string
+          example: TrackingId
+        valueIdentifier:
+          $ref: '#/components/schemas/Identifier'
+        valueCode:
+          type: string
+          example: preauthorization
+        part:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParameterPart'
     DocumentReference:
       type: object
       description: FHIR DocumentReference used inside attachment
@@ -229,49 +225,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Content'
-    Parameter:
-      type: object
-      description: Parameter entry in Parameters resource
-      properties:
-        name:
-          type: string
-          example: TrackingId
-        valueIdentifier:
-          $ref: '#/components/schemas/Identifier'
-        valueCode:
-          type: string
-          example: preauthorization
-        part:
-          type: array
-          items:
-            $ref: '#/components/schemas/ParameterPart'
-    AttachmentResponse:
-      type: object
-      description: FHIR OperationOutcome response
-      properties:
-        resourceType:
-          type: string
-          example: OperationOutcome
-        id:
-          type: string
-          example: '23345435456574'
-        meta:
-          $ref: '#/components/schemas/Meta'
-        issue:
-          type: array
-          items:
-            $ref: '#/components/schemas/Issue'
-        text:
-          $ref: '#/components/schemas/Narrative'
-    ParameterPart:
-      type: object
-      description: Nested parameter part (used for Attachment)
-      properties:
-        name:
-          type: string
-          example: Content
-        resource:
-          $ref: '#/components/schemas/DocumentReference'
     Meta:
       type: object
       description: FHIR metadata
@@ -282,6 +235,29 @@ components:
           items:
             type: string
             example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    ParameterPart:
+      type: object
+      description: Nested parameter part (used for Attachment)
+      properties:
+        name:
+          type: string
+          example: Content
+        resource:
+          $ref: '#/components/schemas/DocumentReference'
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
+    Content:
+      type: object
+      properties:
+        attachment:
+          $ref: '#/components/schemas/Attachment'
     AttachmentRequest:
       type: object
       description: FHIR Parameters resource for attachment submission
@@ -293,6 +269,30 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Parameter'
+    Issue:
+      type: object
+      description: OperationOutcome issue details
+      properties:
+        severity:
+          type: string
+          example: information
+        code:
+          type: string
+          example: informational
+        details:
+          type: object
+          properties:
+            text:
+              type: string
+              example: Attachments accepted and associated...
+        diagnostics:
+          type: string
+          example: TrackingId=123456;ReferenceSRN=AL26082223...
+        location:
+          type: array
+          items:
+            type: string
+            example: Parameters.Attachment.part.Content/DocumentReference/docref-hp-002
   securitySchemes:
     oAuth:
       type: oauth2

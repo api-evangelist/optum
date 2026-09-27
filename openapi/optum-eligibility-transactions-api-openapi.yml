@@ -107,79 +107,6 @@ paths:
       x-operation-id-source: derived
 components:
   parameters:
-    path-txn-id:
-      in: path
-      name: id
-      description: The unique ID of the target transaction
-      required: true
-      schema:
-        type: string
-        example: 36743735-3303-4d9d-9f21-20dd5f6d7ab2
-    query-npi:
-      in: query
-      name: npi
-      schema:
-        type: string
-        example: '1234567893'
-      description: (Optional) NPI of the primary care provider.
-    header-correlation-id:
-      in: header
-      name: x-optum-correlation-id
-      schema:
-        type: string
-        example: 9fb77454-8c58-4345-aa50-43f133e06d20
-      required: false
-      description: (Optional) A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
-    query-start-date-time:
-      in: query
-      name: startDateTime
-      required: false
-      schema:
-        type: string
-        example: '2017-07-21T17:32:28Z'
-      description: (Optional) The start date for the report. Start date must be before the end date
-    query-return-total-count:
-      in: query
-      name: returnTotalCount
-      schema:
-        type:
-        - boolean
-        - 'null'
-        example: true
-      description: (Optional) Whether or not to return the total number of records matching the supplied query parameters under the x-total-number HTTP response header. Defaults to false
-    query-patientAccountNumber:
-      in: query
-      name: patientAccountNumber
-      schema:
-        type: string
-        example: '38300904'
-      description: (Optional) Patient's account number.
-    query-limit:
-      in: query
-      name: limit
-      schema:
-        type:
-        - integer
-        - 'null'
-        minimum: 1
-        maximum: 100
-        example: 30
-      description: (Optional) Number of transactions to return per page. Must be greater than 0 and less than or equal to 100. Defaults to 30.
-    query-end-date-time:
-      in: query
-      name: endDateTime
-      required: false
-      schema:
-        type: string
-        example: '2017-09-21T17:32:28Z'
-      description: (Optional) The end date for the report. Must occur after the provided start date
-    query-payerId:
-      in: query
-      name: payerId
-      schema:
-        type: string
-        example: '12345'
-      description: (Optional) Payer ID (CHC ID).
     query-sort-txns:
       in: query
       name: sort
@@ -194,13 +121,21 @@ components:
         example:
         - -processedDate
       description: (Optional) The property to order the results of the report by. Defaults to '-processedDate', negative sign is 'desc'
-    query-correlationid:
-      in: query
-      name: correlationId
+    header-correlation-id:
+      in: header
+      name: x-optum-correlation-id
       schema:
         type: string
         example: 9fb77454-8c58-4345-aa50-43f133e06d20
-      description: (Optional) The correlationId associated with the original request.
+      required: false
+      description: (Optional) A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
+    query-payerId:
+      in: query
+      name: payerId
+      schema:
+        type: string
+        example: '12345'
+      description: (Optional) Payer ID (CHC ID).
     query-memberId:
       in: query
       name: memberId
@@ -208,13 +143,37 @@ components:
         type: string
         example: XKY933M53442
       description: (Optional) Member Id.
-    query-patientDateOfBirth:
-      in: query
-      name: patientDateOfBirth
+    path-txn-id:
+      in: path
+      name: id
+      description: The unique ID of the target transaction
+      required: true
       schema:
         type: string
-        example: '1995-01-15'
-      description: (Optional) Patient's date of birth.
+        example: 36743735-3303-4d9d-9f21-20dd5f6d7ab2
+    query-correlationid:
+      in: query
+      name: correlationId
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: (Optional) The correlationId associated with the original request.
+    query-return-total-count:
+      in: query
+      name: returnTotalCount
+      schema:
+        type:
+        - boolean
+        - 'null'
+        example: true
+      description: (Optional) Whether or not to return the total number of records matching the supplied query parameters under the x-total-number HTTP response header. Defaults to false
+    query-offset:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+      description: (Optional) Pagination. The offset number to retrieve, which is determined by the limit. For example,if limit is 30 and offset is 0, then the response data will include records 1~30; If offset is 30 and limit is 30 then the response data will include records 30~59.
     query-patientFirstName:
       in: query
       name: patientFirstName
@@ -222,6 +181,68 @@ components:
         type: string
         example: Jane
       description: (Optional) Patient's first name.
+    query-patientAccountNumber:
+      in: query
+      name: patientAccountNumber
+      schema:
+        type: string
+        example: '38300904'
+      description: (Optional) Patient's account number.
+    query-start-date-time:
+      in: query
+      name: startDateTime
+      required: false
+      schema:
+        type: string
+        example: '2017-07-21T17:32:28Z'
+      description: (Optional) The start date for the report. Start date must be before the end date
+    query-limit:
+      in: query
+      name: limit
+      schema:
+        type:
+        - integer
+        - 'null'
+        minimum: 1
+        maximum: 100
+        example: 30
+      description: (Optional) Number of transactions to return per page. Must be greater than 0 and less than or equal to 100. Defaults to 30.
+    query-medicalRecordNumber:
+      in: query
+      name: medicalRecordNumber
+      schema:
+        type: string
+        example: '194570'
+      description: (Optional) Medical Record Number.
+    query-patientLastName:
+      in: query
+      name: patientLastName
+      schema:
+        type: string
+        example: Doe
+      description: (Optional) Patient's last name.
+    query-patientDateOfBirth:
+      in: query
+      name: patientDateOfBirth
+      schema:
+        type: string
+        example: '1995-01-15'
+      description: (Optional) Patient's date of birth.
+    query-npi:
+      in: query
+      name: npi
+      schema:
+        type: string
+        example: '1234567893'
+      description: (Optional) NPI of the primary care provider.
+    query-end-date-time:
+      in: query
+      name: endDateTime
+      required: false
+      schema:
+        type: string
+        example: '2017-09-21T17:32:28Z'
+      description: (Optional) The end date for the report. Must occur after the provided start date
     query-status:
       in: query
       name: status
@@ -238,45 +259,9 @@ components:
           - processing_error
           - patient_unknown
       description: (Optional) The status of the eligibility transaction. Valid values match `Transaction.status.value`.
-    query-offset:
-      in: query
-      name: offset
-      required: false
-      schema:
-        type: integer
-      description: (Optional) Pagination. The offset number to retrieve, which is determined by the limit. For example,if limit is 30 and offset is 0, then the response data will include records 1~30; If offset is 30 and limit is 30 then the response data will include records 30~59.
-    query-medicalRecordNumber:
-      in: query
-      name: medicalRecordNumber
-      schema:
-        type: string
-        example: '194570'
-      description: (Optional) Medical Record Number.
-    query-patientLastName:
-      in: query
-      name: patientLastName
-      schema:
-        type: string
-        example: Doe
-      description: (Optional) Patient's last name.
   responses:
-    UnexpectedError:
-      description: Unexpected error.
-      headers:
-        x-optum-tenant-id:
-          $ref: '#/components/headers/tenantid'
-        x-optum-subtenant-id:
-          $ref: '#/components/headers/subtenantid'
-        x-optum-correlation-id:
-          $ref: '#/components/headers/correlationid'
-        x-optum-trace-id:
-          $ref: '#/components/headers/traceid'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ForbiddenError:
-      description: Forbidden.
+    UnprocessableEntityError:
+      description: Unprocessable Entity.
       headers:
         x-optum-tenant-id:
           $ref: '#/components/headers/tenantid'
@@ -291,7 +276,7 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-          - invalid tenant id
+          - Unprocessable Entity - Unable to deserialize record
     PermissionDeniedError:
       description: Unauthorized.
       headers:
@@ -328,8 +313,23 @@ components:
             $ref: '#/components/schemas/Error'
           example:
           - Not Found - record not found
-    UnprocessableEntityError:
-      description: Unprocessable Entity.
+    UnexpectedError:
+      description: Unexpected error.
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-subtenant-id:
+          $ref: '#/components/headers/subtenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ForbiddenError:
+      description: Forbidden.
       headers:
         x-optum-tenant-id:
           $ref: '#/components/headers/tenantid'
@@ -344,38 +344,7 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
           example:
-          - Unprocessable Entity - Unable to deserialize record
-  headers:
-    tenantid:
-      schema:
-        type: string
-        example: 9fb77454-8c58-4345-aa50-43f133e06d20
-      description: The unique ID of the tenant that invoking user belongs to. Used to enforce data tenancy.
-    total-count:
-      schema:
-        type: string
-        example: '1440'
-      description: The total number of records associated with the query. For example, with the query `?correlationId=123456579`, `x-total-count` returns the total amount of records associated with the given correlationId.
-    subtenantid:
-      schema:
-        type: string
-        example: 5e2f9f4f-6f1d-4b37-92b5-6c5a9d1f8a21
-      description: (Optional) Identifies an Optum-assigned sub-tenant configuration for your organization. Include this header only when Optum has provided a value for a specific enabled customer configuration. Clients must not generate or infer this value.
-    link:
-      schema:
-        type: string
-        example: </?limit=30&offset=2>; rel="next"
-      description: RFC 8288-style pagination link header used by list endpoints such as `GET /transactions` and `GET /coverage-discovery`. This header is separate from the related-task `link` header used by real-time eligibility responses.
-    traceid:
-      schema:
-        type: string
-        example: 9fb77454-8c58-4345-aa50-43f133e06d20
-      description: A unique identifier value that is attached to the response that allow reference to the original request.
-    correlationid:
-      schema:
-        type: string
-        example: 9fb77454-8c58-4345-aa50-43f133e06d20
-      description: A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
+          - invalid tenant id
   schemas:
     Transaction:
       type: object
@@ -1074,6 +1043,37 @@ components:
       items:
         type: string
         example: Internal - An unknown error occurred
+  headers:
+    total-count:
+      schema:
+        type: string
+        example: '1440'
+      description: The total number of records associated with the query. For example, with the query `?correlationId=123456579`, `x-total-count` returns the total amount of records associated with the given correlationId.
+    correlationid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
+    subtenantid:
+      schema:
+        type: string
+        example: 5e2f9f4f-6f1d-4b37-92b5-6c5a9d1f8a21
+      description: (Optional) Identifies an Optum-assigned sub-tenant configuration for your organization. Include this header only when Optum has provided a value for a specific enabled customer configuration. Clients must not generate or infer this value.
+    link:
+      schema:
+        type: string
+        example: </?limit=30&offset=2>; rel="next"
+      description: RFC 8288-style pagination link header used by list endpoints such as `GET /transactions` and `GET /coverage-discovery`. This header is separate from the related-task `link` header used by real-time eligibility responses.
+    traceid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: A unique identifier value that is attached to the response that allow reference to the original request.
+    tenantid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: The unique ID of the tenant that invoking user belongs to. Used to enforce data tenancy.
   securitySchemes:
     oAuth:
       type: oauth2

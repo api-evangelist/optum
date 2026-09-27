@@ -103,31 +103,6 @@ paths:
                 status: 401
 components:
   schemas:
-    ClaimResponse:
-      type: object
-      properties:
-        edit:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClaimLineEdit'
-        claimId:
-          type: string
-          xml:
-            name: claim-id
-            attribute: true
-    ClaimResponses:
-      required:
-      - claimResponse
-      type: object
-      properties:
-        claimResponse:
-          type: array
-          xml:
-            name: claim-response
-          items:
-            $ref: '#/components/schemas/ClaimResponse'
-      xml:
-        name: claim-responses
     ClaimLineEdit:
       required:
       - description
@@ -152,6 +127,31 @@ components:
           type: integer
           format: int32
           xml:
+            attribute: true
+    ClaimResponses:
+      required:
+      - claimResponse
+      type: object
+      properties:
+        claimResponse:
+          type: array
+          xml:
+            name: claim-response
+          items:
+            $ref: '#/components/schemas/ClaimResponse'
+      xml:
+        name: claim-responses
+    ClaimResponse:
+      type: object
+      properties:
+        edit:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClaimLineEdit'
+        claimId:
+          type: string
+          xml:
+            name: claim-id
             attribute: true
   securitySchemes:
     bearerAuth:

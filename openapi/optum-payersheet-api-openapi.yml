@@ -86,6 +86,146 @@ paths:
       - Payersheet
 components:
   schemas:
+    JsonSegmentField:
+      properties:
+        customName:
+          type: string
+          maxLength: 250
+          format: ncpdp-alphanumeric
+          example: custom field name
+        customProcessingCode:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 10
+          example: A1
+        description:
+          type: string
+          maxLength: 250
+          format: ncpdp-alphanumeric
+          example: field description
+        fieldDataType:
+          type: string
+          maxLength: 250
+          format: ncpdp-alphanumeric
+          example: Integer
+        fieldDataTypeId:
+          format: int64
+          type: integer
+          example: '1'
+        fieldGroups:
+          items:
+            $ref: '#/components/schemas/JsonFieldGroup'
+          type: array
+          example: []
+        fieldIdentifier:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 3
+          example: A1
+        fieldNumber:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 4
+          example: '101'
+        fieldType:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 1
+          example: I
+        includeIfNull:
+          type: boolean
+          example: 'true'
+        mantissaSize:
+          format: int32
+          type: integer
+          example: '1'
+        maximumLength:
+          format: int32
+          type: integer
+          example: '10'
+        segmentFieldQualifiers:
+          items:
+            $ref: '#/components/schemas/JsonSegmentFieldQualifier'
+          type: array
+          example: []
+        sequence:
+          format: int32
+          type: integer
+          example: '1'
+        usageCode:
+          type: string
+          maxLength: 10
+          format: ncpdp-alphanumeric
+          example: M
+        useIfNull:
+          type: string
+          maxLength: 250
+          format: ncpdp-alphanumeric
+          example: '   '
+      type: object
+    JsonSegment:
+      properties:
+        segmentFields:
+          items:
+            $ref: '#/components/schemas/JsonSegmentField'
+          type: array
+        segmentIdentifier:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 32
+          example: HEADER
+        sequence:
+          format: int32
+          type: integer
+          example: '2'
+        usageCode:
+          type: string
+          maxLength: 10
+          format: ncpdp-alphanumeric
+          example: M
+      type: object
+    JsonTransmission:
+      properties:
+        code:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 10
+          example: B1
+        segments:
+          items:
+            $ref: '#/components/schemas/JsonSegment'
+          type: array
+        standard:
+          type: string
+          maxLength: 2
+          example: D0
+          enum:
+          - D0
+          - ''
+        type:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 50
+          example: request
+      type: object
+    JsonSegmentFieldQualifier:
+      properties:
+        qualifierCode:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 10
+        qualifierDescription:
+          type: string
+          maxLength: 250
+        sequence:
+          format: int32
+          type: integer
+      type: object
+    SaveClaimFormatRequest:
+      properties:
+        claimFormat:
+          $ref: '#/components/schemas/JsonClaimFormat'
+      type: object
     JsonClaimFormat:
       properties:
         billingSequence:
@@ -166,146 +306,6 @@ components:
         claimFormat:
           $ref: '#/components/schemas/JsonClaimFormat'
       type: object
-    GetClaimFormatResponse:
-      properties:
-        claimFormat:
-          $ref: '#/components/schemas/JsonClaimFormat'
-      type: object
-    JsonSegmentField:
-      properties:
-        customName:
-          type: string
-          maxLength: 250
-          format: ncpdp-alphanumeric
-          example: custom field name
-        customProcessingCode:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 10
-          example: A1
-        description:
-          type: string
-          maxLength: 250
-          format: ncpdp-alphanumeric
-          example: field description
-        fieldDataType:
-          type: string
-          maxLength: 250
-          format: ncpdp-alphanumeric
-          example: Integer
-        fieldDataTypeId:
-          format: int64
-          type: integer
-          example: '1'
-        fieldGroups:
-          items:
-            $ref: '#/components/schemas/JsonFieldGroup'
-          type: array
-          example: []
-        fieldIdentifier:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 3
-          example: A1
-        fieldNumber:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 4
-          example: '101'
-        fieldType:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 1
-          example: I
-        includeIfNull:
-          type: boolean
-          example: 'true'
-        mantissaSize:
-          format: int32
-          type: integer
-          example: '1'
-        maximumLength:
-          format: int32
-          type: integer
-          example: '10'
-        segmentFieldQualifiers:
-          items:
-            $ref: '#/components/schemas/JsonSegmentFieldQualifier'
-          type: array
-          example: []
-        sequence:
-          format: int32
-          type: integer
-          example: '1'
-        usageCode:
-          type: string
-          maxLength: 10
-          format: ncpdp-alphanumeric
-          example: M
-        useIfNull:
-          type: string
-          maxLength: 250
-          format: ncpdp-alphanumeric
-          example: '   '
-      type: object
-    JsonSegmentFieldQualifier:
-      properties:
-        qualifierCode:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 10
-        qualifierDescription:
-          type: string
-          maxLength: 250
-        sequence:
-          format: int32
-          type: integer
-      type: object
-    JsonTransmission:
-      properties:
-        code:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 10
-          example: B1
-        segments:
-          items:
-            $ref: '#/components/schemas/JsonSegment'
-          type: array
-        standard:
-          type: string
-          maxLength: 2
-          example: D0
-          enum:
-          - D0
-          - ''
-        type:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 50
-          example: request
-      type: object
-    JsonSegment:
-      properties:
-        segmentFields:
-          items:
-            $ref: '#/components/schemas/JsonSegmentField'
-          type: array
-        segmentIdentifier:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 32
-          example: HEADER
-        sequence:
-          format: int32
-          type: integer
-          example: '2'
-        usageCode:
-          type: string
-          maxLength: 10
-          format: ncpdp-alphanumeric
-          example: M
-      type: object
     JsonFieldGroup:
       properties:
         fieldGroupId:
@@ -327,7 +327,7 @@ components:
           type: string
           example: '10'
       type: object
-    SaveClaimFormatRequest:
+    GetClaimFormatResponse:
       properties:
         claimFormat:
           $ref: '#/components/schemas/JsonClaimFormat'

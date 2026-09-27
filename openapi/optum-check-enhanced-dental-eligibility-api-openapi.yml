@@ -47,17 +47,6 @@ paths:
       - BearerAuth: []
 components:
   schemas:
-    EligibilityInfo:
-      type: object
-      properties:
-        trnId:
-          type:
-          - string
-          - 'null'
-        member:
-          $ref: '#/components/schemas/Member'
-        insuranceInfo:
-          $ref: '#/components/schemas/InsuranceInfo'
     Eligibility:
       type: object
       properties:
@@ -69,42 +58,122 @@ components:
           $ref: '#/components/schemas/BenefitSummary'
         benefitUtilization:
           $ref: '#/components/schemas/BenefitUtilization'
-    EligibilityInput:
+    EligibilityResponse:
       type: object
-      required:
-      - dateOfBirth
-      - firstName
-      - lastName
-      - memberId
-      - payerId
       properties:
+        data:
+          type: object
+          properties:
+            checkEnhancedEligibility:
+              type: object
+              properties:
+                eligibility:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Eligibility'
+    BenefitSummary:
+      type: object
+      properties:
+        member:
+          type: object
+          properties:
+            subscriberId:
+              type: string
+              example: '042137147'
+            groupId:
+              type: string
+              example: '101651'
+        planLevelBenefits:
+          type: array
+          items:
+            type: object
+        categoryLevelBenefits:
+          type: array
+          items:
+            type: object
+    Member:
+      type: object
+      properties:
+        memberId:
+          type: string
+          example: '042137147'
+        firstName:
+          type: string
+          example: MUHAMMAD
+        lastName:
+          type: string
+          example: ATA
+        middleName:
+          type:
+          - string
+          - 'null'
         dateOfBirth:
           type: string
           format: date
-        firstName:
+          example: '1974-09-07'
+        gender:
           type: string
-        lastName:
+          example: M
+        relationshipCode:
           type: string
-        memberId:
+    Procedure:
+      type: object
+      properties:
+        procedure:
+          type: object
+          properties:
+            codeValue:
+              type: string
+              example: D0120
+            codeDesc:
+              type: string
+              example: periodic oral evaluation - established patient
+        procedureCategory:
           type: string
-        payerId:
+          example: '01'
+        inNetworkFrequency:
           type: string
-        providerFirstName:
+          example: 2 - F - 12M
+        outOfNetworkFrequency:
           type: string
-        providerLastName:
+          example: 2 - F - 12M
+        ageLimit:
           type: string
-        providerNPI:
+        alternateBenefit:
           type: string
-        serviceStartDate:
-          type: string
-          format: date
-        serviceEndDate:
-          type: string
-          format: date
-        coverageTypes:
+        serviceCount:
+          type: integer
+          example: 0
+        relatedCode:
           type: array
           items:
             type: string
+        services:
+          type: array
+          items:
+            type: object
+    EligibilityInfo:
+      type: object
+      properties:
+        trnId:
+          type:
+          - string
+          - 'null'
+        member:
+          $ref: '#/components/schemas/Member'
+        insuranceInfo:
+          $ref: '#/components/schemas/InsuranceInfo'
+    EligibilityRequest:
+      type: object
+      required:
+      - query
+      - variables
+      properties:
+        query:
+          type: string
+          description: GraphQL query string
+        variables:
+          $ref: '#/components/schemas/EligibilityVariables'
     BenefitNotes:
       type: object
       properties:
@@ -153,6 +222,58 @@ components:
           type: string
         productCode:
           type: string
+    FootNoteInfo:
+      type: object
+      properties:
+        benefitSummaryType:
+          type: string
+        benefitSummaryDescription:
+          type: string
+        benefitSummarySequenceNumber:
+          type: string
+        benefitSummaryText:
+          type: string
+    EligibilityVariables:
+      type: object
+      properties:
+        input:
+          $ref: '#/components/schemas/EligibilityInput'
+    EligibilityInput:
+      type: object
+      required:
+      - dateOfBirth
+      - firstName
+      - lastName
+      - memberId
+      - payerId
+      properties:
+        dateOfBirth:
+          type: string
+          format: date
+        firstName:
+          type: string
+        lastName:
+          type: string
+        memberId:
+          type: string
+        payerId:
+          type: string
+        providerFirstName:
+          type: string
+        providerLastName:
+          type: string
+        providerNPI:
+          type: string
+        serviceStartDate:
+          type: string
+          format: date
+        serviceEndDate:
+          type: string
+          format: date
+        coverageTypes:
+          type: array
+          items:
+            type: string
     BenefitUtilization:
       type: object
       properties:
@@ -165,127 +286,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Procedure'
-    EligibilityVariables:
-      type: object
-      properties:
-        input:
-          $ref: '#/components/schemas/EligibilityInput'
-    EligibilityRequest:
-      type: object
-      required:
-      - query
-      - variables
-      properties:
-        query:
-          type: string
-          description: GraphQL query string
-        variables:
-          $ref: '#/components/schemas/EligibilityVariables'
-    EligibilityResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            checkEnhancedEligibility:
-              type: object
-              properties:
-                eligibility:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/Eligibility'
-    BenefitSummary:
-      type: object
-      properties:
-        member:
-          type: object
-          properties:
-            subscriberId:
-              type: string
-              example: '042137147'
-            groupId:
-              type: string
-              example: '101651'
-        planLevelBenefits:
-          type: array
-          items:
-            type: object
-        categoryLevelBenefits:
-          type: array
-          items:
-            type: object
-    Procedure:
-      type: object
-      properties:
-        procedure:
-          type: object
-          properties:
-            codeValue:
-              type: string
-              example: D0120
-            codeDesc:
-              type: string
-              example: periodic oral evaluation - established patient
-        procedureCategory:
-          type: string
-          example: '01'
-        inNetworkFrequency:
-          type: string
-          example: 2 - F - 12M
-        outOfNetworkFrequency:
-          type: string
-          example: 2 - F - 12M
-        ageLimit:
-          type: string
-        alternateBenefit:
-          type: string
-        serviceCount:
-          type: integer
-          example: 0
-        relatedCode:
-          type: array
-          items:
-            type: string
-        services:
-          type: array
-          items:
-            type: object
-    Member:
-      type: object
-      properties:
-        memberId:
-          type: string
-          example: '042137147'
-        firstName:
-          type: string
-          example: MUHAMMAD
-        lastName:
-          type: string
-          example: ATA
-        middleName:
-          type:
-          - string
-          - 'null'
-        dateOfBirth:
-          type: string
-          format: date
-          example: '1974-09-07'
-        gender:
-          type: string
-          example: M
-        relationshipCode:
-          type: string
-    FootNoteInfo:
-      type: object
-      properties:
-        benefitSummaryType:
-          type: string
-        benefitSummaryDescription:
-          type: string
-        benefitSummarySequenceNumber:
-          type: string
-        benefitSummaryText:
-          type: string
   securitySchemes:
     BearerAuth:
       type: http

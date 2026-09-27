@@ -176,27 +176,6 @@ components:
           type: string
         message:
           type: string
-    ProviderParticipation:
-      type: object
-      properties:
-        vendor_orgId:
-          type: string
-        vendorName:
-          type: string
-          description: Vendor name. Possible values are Athena, Veradigm, Moxe, EPP etc.
-        emrInternalOrgs:
-          type: array
-          items:
-            type: object
-            properties:
-              emr_id:
-                type: string
-              emr:
-                type: string
-              providerInfo:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProviderInfo'
     ApiErrorResponse:
       type: object
       properties:
@@ -257,6 +236,27 @@ components:
         optInEndDate:
           type: string
           format: date
+    ProviderParticipation:
+      type: object
+      properties:
+        vendor_orgId:
+          type: string
+        vendorName:
+          type: string
+          description: Vendor name. Possible values are Athena, Veradigm, Moxe, EPP etc.
+        emrInternalOrgs:
+          type: array
+          items:
+            type: object
+            properties:
+              emr_id:
+                type: string
+              emr:
+                type: string
+              providerInfo:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProviderInfo'
   securitySchemes:
     bearerAuth:
       type: http

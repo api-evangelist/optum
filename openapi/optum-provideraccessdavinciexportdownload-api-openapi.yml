@@ -109,15 +109,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Coding:
-      type: object
-      properties:
-        system:
-          type: string
-        code:
-          type: string
-        display:
-          type: string
     Narrative:
       type: object
       properties:
@@ -125,20 +116,13 @@ components:
           type: string
         div:
           type: string
-    IdentifierWithType:
+    CodeableConcept:
       type: object
       properties:
-        type:
-          $ref: '#/components/schemas/CodeableConcept'
-        system:
-          type: string
-        value:
-          type: string
-        assigner:
-          type: object
-          properties:
-            display:
-              type: string
+        coding:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coding'
     Patient:
       type: object
       properties:
@@ -161,13 +145,6 @@ components:
           type: string
         birthDate:
           type: string
-    CodeableConcept:
-      type: object
-      properties:
-        coding:
-          type: array
-          items:
-            $ref: '#/components/schemas/Coding'
     HumanName:
       type: object
       properties:
@@ -179,6 +156,29 @@ components:
           type: array
           items:
             type: string
+    Coding:
+      type: object
+      properties:
+        system:
+          type: string
+        code:
+          type: string
+        display:
+          type: string
+    IdentifierWithType:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/CodeableConcept'
+        system:
+          type: string
+        value:
+          type: string
+        assigner:
+          type: object
+          properties:
+            display:
+              type: string
   securitySchemes:
     oAuth:
       type: oauth2

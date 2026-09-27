@@ -360,32 +360,6 @@ components:
           type: array
           items:
             type: string
-    PolicySearchRequest:
-      type: object
-      properties:
-        policyType:
-          type: string
-          enum:
-          - NCD_PART_A
-          - NCD_PART_B
-          - LCD_DME
-          - NCD_DME
-          - LCD_PART_A
-          - LCD_PART_B
-          - NCD_LAB
-        searchType:
-          type: string
-        procedureCode:
-          type: string
-        termSearch:
-          $ref: '#/components/schemas/TermSearch'
-        diagnosisCode:
-          $ref: '#/components/schemas/DiagnosisCode'
-        effectiveDate:
-          type: string
-          format: date-time
-        lcd:
-          $ref: '#/components/schemas/Lcd'
     PolicyValue:
       type: object
       properties:
@@ -444,6 +418,41 @@ components:
           type: string
         codeType:
           type: string
+    TermSearch:
+      type: object
+      properties:
+        keyword:
+          type: string
+        searchBy:
+          type: string
+        searchLogic:
+          type: string
+    PolicySearchRequest:
+      type: object
+      properties:
+        policyType:
+          type: string
+          enum:
+          - NCD_PART_A
+          - NCD_PART_B
+          - LCD_DME
+          - NCD_DME
+          - LCD_PART_A
+          - LCD_PART_B
+          - NCD_LAB
+        searchType:
+          type: string
+        procedureCode:
+          type: string
+        termSearch:
+          $ref: '#/components/schemas/TermSearch'
+        diagnosisCode:
+          $ref: '#/components/schemas/DiagnosisCode'
+        effectiveDate:
+          type: string
+          format: date-time
+        lcd:
+          $ref: '#/components/schemas/Lcd'
     Lcd:
       type: object
       properties:
@@ -458,15 +467,6 @@ components:
           format: int32
         retiredPolicies:
           type: boolean
-    TermSearch:
-      type: object
-      properties:
-        keyword:
-          type: string
-        searchBy:
-          type: string
-        searchLogic:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http

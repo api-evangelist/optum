@@ -1649,16 +1649,6 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    OptumPageImplColorCodes:
-      type: object
-      properties:
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/ColorCodes'
-        totalCount:
-          type: integer
-          format: int64
     Link:
       type: object
       properties:
@@ -1705,6 +1695,16 @@ components:
           type: string
         coverage:
           type: string
+    OptumPageImplColorCodes:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColorCodes'
+        totalCount:
+          type: integer
+          format: int64
   securitySchemes:
     bearerAuth:
       type: http

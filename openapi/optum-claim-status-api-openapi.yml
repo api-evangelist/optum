@@ -130,28 +130,6 @@ components:
         payerId:
           type: string
           example: '87726'
-    GraphQLClaimStatusRequest:
-      type: object
-      required:
-      - query
-      - variables
-      properties:
-        operationName:
-          type: string
-          description: GraphQL operation name.
-        query:
-          type: string
-          description: GraphQL query.
-        variables:
-          type: object
-          description: GraphQL variables.
-          properties:
-            searchClaimInput:
-              $ref: '#/components/schemas/SearchClaimInput'
-            search277CAInput:
-              $ref: '#/components/schemas/Search277CAInput'
-          additionalProperties: false
-      additionalProperties: false
     GraphQLClaimStatusResponse:
       type: object
       properties:
@@ -224,6 +202,28 @@ components:
         serviceEndDate:
           type: string
           example: '20100102'
+    GraphQLClaimStatusRequest:
+      type: object
+      required:
+      - query
+      - variables
+      properties:
+        operationName:
+          type: string
+          description: GraphQL operation name.
+        query:
+          type: string
+          description: GraphQL query.
+        variables:
+          type: object
+          description: GraphQL variables.
+          properties:
+            searchClaimInput:
+              $ref: '#/components/schemas/SearchClaimInput'
+            search277CAInput:
+              $ref: '#/components/schemas/Search277CAInput'
+          additionalProperties: false
+      additionalProperties: false
   securitySchemes:
     bearerAuth:
       type: http

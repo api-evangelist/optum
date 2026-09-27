@@ -88,6 +88,25 @@ paths:
     - url: https://sandbox-apigw.optum.com/
 components:
   schemas:
+    JobSubmission_Response_Success:
+      type: object
+      properties:
+        JobId:
+          type: string
+          description: Field that provides the Job identifier for this initialized job
+          example: '729'
+        BatchName:
+          type: string
+          description: Field that returns the name of the batch defined in the configuration file sent
+          example: HQXclaims0421
+        Status:
+          type: string
+          description: Field that provides the status of the initialized job
+          example: Processing
+        Message:
+          type: string
+          description: Field that provides successful or non-error messages
+          example: Job has queued for processing.
     JobSubmission_Response_Failure_500:
       type: object
       properties:
@@ -110,48 +129,12 @@ components:
           type: string
           description: Long description of the error that further explains why the request was unsuccessful
           example: The request was not properly formatted.
-    JobSubmission_Response_Success:
-      type: object
-      properties:
-        JobId:
-          type: string
-          description: Field that provides the Job identifier for this initialized job
-          example: '729'
-        BatchName:
-          type: string
-          description: Field that returns the name of the batch defined in the configuration file sent
-          example: HQXclaims0421
-        Status:
-          type: string
-          description: Field that provides the status of the initialized job
-          example: Processing
-        Message:
-          type: string
-          description: Field that provides successful or non-error messages
-          example: Job has queued for processing.
     JobSummission_Request:
       type: object
       properties:
         controlFileName:
           type: string
           example: control.tsv.gz
-    CheckJob_Response_Failure_500:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Short description of the error encountered
-          example: Internal error occurred
-        error_description:
-          type: string
-          description: Long description of the error that further explains why the request was unsuccessful
-          example: Internal error occurred. Support has been notified.
-    CheckJob_Request:
-      type: object
-      properties:
-        JobId:
-          type: string
-          example: '729'
     CheckJob_Response_Success:
       type: object
       properties:
@@ -191,6 +174,23 @@ components:
           type: string
           description: Field that provides successful or non-error messages
           example: 'Current batch status: Finished'
+    CheckJob_Request:
+      type: object
+      properties:
+        JobId:
+          type: string
+          example: '729'
+    CheckJob_Response_Failure_500:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Short description of the error encountered
+          example: Internal error occurred
+        error_description:
+          type: string
+          description: Long description of the error that further explains why the request was unsuccessful
+          example: Internal error occurred. Support has been notified.
     CheckJob_Response_Failure_400:
       type: object
       properties:

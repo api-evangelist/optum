@@ -687,168 +687,130 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PayerInfo:
+    OperatorInfo:
       type: object
       properties:
-        payerId:
-          description: The payer id of the health insurance company.
-          example: '87726'
+        name:
+          description: The Name of the Operator.
+          example: Joe C Davis
           type: string
-        payerName:
-          description: The name of the health insurance company.
-          example: UnitedHealthcare
+        emailId:
+          description: The email id of the Operator.
+          example: abcd@test.com
           type: string
-      description: Payer information associated with the ticket
-    Pagination:
+        phoneNumber:
+          description: The phone number of the Operator.
+          example: 999-999-9999
+          type: string
+      description: Operator information who created/updated the ticket
+    ClaimTicketComment:
       type: object
       properties:
-        hasMoreRecords:
-          description: Indicates if more results are available
-          example: false
-          type: boolean
-        nextPageToken:
-          description: Page identifier for pagination
-          example: trwmem123451416167
+        addedBy:
+          description: The user who added the comments.
+          example: '12344455'
           type: string
-      description: Pagination
-    LineIndicators:
+        addedOn:
+          description: The date the comments were added.
+          example: 03/04/2025
+          type: string
+        comment:
+          description: Field comment
+          type: string
+      description: ClaimTicketComment
+    CobInfoType:
       type: object
       properties:
-        inventoryControlNumberSuffix:
-          description: An Inventory Control Number (ICN) is a unique identifier assigned to each claim as it enters the payer’s system. It is used to track, manage, and audit the claim throughout its lifecycle — from submission to adjudication and payment. A ICN suffix refers to part of the claim if the claim is split for any reason.
-          example: '01'
+        cobPayerId:
+          description: COB Payer ID refers to the Coordination of Benefits (COB) Payer Identifier or the payer id of the other Insurance Company the member is covered.
+          example: LIFE1
           type: string
-        inventoryControlNumberSuffixVersion:
-          description: An Inventory Control Number (ICN) is a unique identifier assigned to each claim as it enters the payer’s system. It is used to track, manage, and audit the claim throughout its lifecycle — from submission to adjudication and payment. A ICN suffix version refers to claim instance in case the claim is adjudicated multiple times during a given point of date and time.
-          example: '1'
+        claimOIPaidAmount:
+          description: The claimOIPaidAmount refers to the amount paid by another insurance provider (Other Insurance) in a Coordination of Benefits (COB) scenario. When a patient has multiple insurance plans, the primary insurer pays first, and the secondary (or tertiary) insurer may cover remaining costs. The claimOIPaidAmount captures how much the secondary insurer has paid toward the claim. This value is essential for accurate claims processing, ensuring providers are reimbursed correctly and patients are not overcharged. It helps prevent duplicate payments and supports proper financial reconciliation between insurers involved in the claim.
+          example: '25.00'
           type: string
-        providerNetworkStatus:
-          description: The providerNetworkStatus refers to the contractual relationship between the healthcare provider and the insurance payer at the time of service. It indicates whether the provider is in-network or out-of-network, which directly affects how the claim is processed and reimbursed.
-          example: I
+        otherInsuredName:
+          description: The otherInsuredName refers to the name of an individual who holds another insurance policy that may provide coverage for the patient. This is commonly used in Coordination of Benefits (COB) scenarios, where a patient is covered by more than one insurance plan. The otherInsuredName field helps identify the policyholder of the secondary or tertiary insurance—often a spouse, parent, or guardian. Accurate entry of this information ensures proper routing and processing of claims between insurers. It is essential for determining the order of benefit payments and avoiding duplicate or incorrect reimbursements.
+          example: XYZ Health Insurance
           type: string
-        transactionCode:
-          description: In claim adjudication, the transactionCode identifies the type of claim transaction being processed. It indicates whether the claim is an original submission, an adjustment to a previously processed claim, a void or cancellation, or a reversal.
-          example: '00'
+        submittedCobIndicator:
+          description: The submittedCobIndicator is a flag or field used in healthcare claims processing to indicate whether a Coordination of Benefits (COB) claim has been submitted. It helps payers understand if the claim involves multiple insurance coverages and whether the primary, secondary, or tertiary payer has already processed the claim.
+          example: P
           type: string
-        causeCode:
-          description: A Benefit Cause Code in claim adjudication identifies the reason a healthcare claim is submitted. It explains the underlying cause for seeking benefits, such as illness, injury, accident, maternity, or preventive care. This code helps payers apply the correct adjudication rules, determine eligibility, and coordinate benefits. For example, if the cause is an auto accident, the claim may be routed differently than one for preventive care.
-          example: '0'
+        cobPayerType:
+          description: cobPayerType refers to the classification of the payer's role in a Coordination of Benefits (COB) scenario—essentially identifying whether the payer is commercial, medicare or medicaid.
+          example: COM
           type: string
-        overrideCode:
-          description: An override code is a special code used to bypass or override standard claim processing rules under specific, justified circumstances. These codes are typically used when a claim would otherwise be denied or flagged due to standard edits, but there is a valid reason to allow it.
-          example: '23'
+        cobDesc:
+          description: cobDesc typically stands for Coordination of Benefits Description in healthcare or insurance claims. It provides a textual explanation or label for the type of COB arrangement or payer involved in a claim.
           type: string
-        planCoveragePercent:
-          description: The calculated percentage of the members responsibility twards the coinsurance
-          example: '1.00'
+        cobPolicyDesc:
+          description: cobPolicyDesc stands for Coordination of Benefits Policy Description. It provides a textual explanation or label describing the type or nature of the other insurance policy involved in a COB scenario.
           type: string
-        capitationIndicator:
-          description: If the service is capitated, this is the capitation indicator
-          example: Y
+        cobPaymentType:
+          description: cobPaymentType refers to the method or classification of payment made by another insurance provider in a Coordination of Benefits (COB) scenario. It helps define how the secondary or tertiary payer contributed to the claim.
           type: string
-        capFundType:
-          description: If the service is capitated, this is the capitation fund type code
-          example: B
-          type: string
-        lineLevelPlaceOfService:
-          description: The unique coder which identifies a clinical setting where a medical service is performed.
-          example: '12'
-          type: string
-        surpriseMedicalBillingIndicator:
-          description: A code that will identify if the surprise medical billing is applied. The surprise medical billing could be applied to the state (S) or federal(F) level.
+        adjudicatedCobIndicator:
+          description: Identifies the level of payment responsibility determined by the payer that adjudicated the specific instance of the claim. e.g Primary Secondary
           example: S
           type: string
-        surpriseMedicalBillingState:
-          description: A state code that will identify the level of authority that surprise medical billing will be applied. e.g. NJ, NY, SC, MN etc
-          example: CA
+        cobMedicalCalcType:
+          description: The term cobMedicalCalcType is not widely standardized across all healthcare systems, but based on naming conventions and usage in claims processing, it likely refers to the method or formula used to calculate the Coordination of Benefits (COB) payment for medical claims.
+          example: '612'
           type: string
-        providerGroupOfferPercentage:
-          description: The percentage of the Qualifying Payment Amount (QPA) that a provider group is requesting or offering during the Independent Dispute Resolution (IDR) process. Also the percentage discount or negotiated reduction offered by a provider group (e.g., hospital system, physician network) off the total billed charges during the resolution of a surprise medical bill.
-          example: '1.00'
+        cobCommercialCalcType:
+          description: The cobCommercialCalcType describes the method a commercial insurance company uses to calculate its share of payment in a Coordination of Benefits (COB) scenario. This field helps determine how much the commercial payer owes after the primary insurer has paid. Calculation types may include methods like “standard COB,” “non-duplication,” or “maintenance of benefits,” each with different rules for how payments are coordinated. This ensures accurate reimbursement, prevents overpayments, and aligns with payer-specific policies. Understanding this field is essential for claims processors to apply the correct logic when multiple insurers are involved.
+          example: '612'
           type: string
-      description: LineIndicators
-    AdjudicatedProviderInfo:
+      description: CobInfoType
+    ClaimInfo:
       type: object
       properties:
-        billingTinPrefix:
-          description: Prefix for the tax identification number
-          example: '2'
+        claimNumber:
+          description: Field claimNumber
+          example: '12344455'
           type: string
-        billingTin:
-          description: Identifies a Tax Identification number issued by the Internal Revenue Service. Payer uses this identifier in claims processing to identify who is accountable for tax reporting back to the Internal Revenue Service. This identification can be defined as a social security number or an algorithmic number assigned by the Internal Revenue Service (IRS).
-          example: '12345678'
+        isOwedAmountUnknown:
+          description: A boolean field and is set to true or false if the Owed Amount is not known to the user.
+          example: false
+          type: boolean
+        claimAmountOwed:
+          description: The total amount owed.
+          example: '123.45'
           type: string
-        billingTinSuffix:
-          description: Suffix for the tax identification number
-          example: '00003'
+        totalBilledChargedAmount:
+          description: The total amount a healthcare provider charges for all services or items listed on a claim.
+          example: '46.00'
           type: string
-        billingProviderName:
-          description: Name of the billing provider
-          example: Test SPECIALTY
+        claimStatus:
+          description: The status of the claim.
+          example: F
           type: string
-        billingNpi:
-          description: Identifies the standard 10 digit identifier mandated by the HIPAA (Health Insurance Portability and Accountability Act). Healthcare Professional s can only have one while Healthcare Organizations can have multiple.
-          example: billingNpi
+        serviceStartDate:
+          description: The earliest date on which a claimed service was delivered, based on all the claim service lines.
+          example: 06/01/2025
           type: string
-        billingProviderMpin:
-          description: The UHC internal identifier for the billing provider.
-          example: '73123456'
+        patientAccountNumber:
+          description: Patient's account number
+          example: I-57258454
           type: string
-        renderingProviderName:
-          description: The rendering provider name.
-          example: Joe Cole
+        claimType:
+          description: Indicates Facility or professional code
+          example: P
           type: string
-        renderingProviderMpin:
-          description: The UHC internal identifier for the rendering provider.
-          example: '12345678'
+        inventoryControlNumber:
+          description: An Inventory Control Number (ICN) is a unique identifier assigned to each claim as it enters the payer’s system. It is used to track, manage, and audit the claim throughout its lifecycle — from submission to adjudication and payment.
+          example: AB123456789
           type: string
-      description: AdjudicatedProviderInfo
-    ClaimLineActions:
+      description: ClaimInfo
+    DocumentDownloadResponse:
       type: object
       properties:
-        ticketType:
-          description: Ticket Type
-          example: RECON
+        base64Document:
+          description: Base64 encoded document content.
+          example: JVBERi0xLjQKJcfs...
           type: string
-        allowedAction:
-          description: Allowed actions
-          example: Create
-          type: string
-        actionMessage:
-          description: msg when allowedAction='Stop Process'
-          example: This insured member is covered under an AARP Supplemental Health Plan. For claim appeals or reconsiderations, use the claim address on the back of the insured member ID card.
-          type: string
-        allowedReconReasons:
-          description: List of allowed reasons for recon
-          example:
-          - RECON_REASON_1
-          - RECON_REASON_2
-          items:
-            type: string
-          type: array
-        allowedReconsiderationReasons:
-          description: List of allowed reconsideration reasons with attachment requirements
-          items:
-            $ref: '#/components/schemas/AllowedReconsiderationReason'
-          type: array
-        requiredConsentForm:
-          description: Required Consent Form
-          example: AOR
-          type: string
-        note:
-          description: Notes
-          example: Consent form is required only when the appeal is submitted on behalf of member.
-          type: string
-        documentLink:
-          description: Document Link
-          example: https://maelstrom-dmz-nonprod.uhcprovider.com/cdn/uhcp/documents/claims/appeal-messaging/WOL.pdf
-          type: string
-        ticketDetails:
-          description: Ticket details
-          items:
-            $ref: '#/components/schemas/TicketDetails'
-          type: array
-      description: ClaimLineActions
+      description: DocumentDownloadResponse
     ClaimLevelInformation:
       type: object
       properties:
@@ -877,130 +839,69 @@ components:
           example: NY
           type: string
       description: ClaimLevelInformation
-    Member:
+    PayeeAddressType:
       type: object
       properties:
-        subscriberId:
-          description: Identifies the source specific identifier of the Subscriber. The person responsible for payment of premiums, or whose employment is the basis for eligibility for membership in a Health insurance plan.
-          example: 0536219151
+        addressLine:
+          description: Address line
+          example: PO BOX 406152
           type: string
-        policyNumber:
-          description: The policyNumber is a unique identifier assigned to an insurance policy. It is used by insurance companies, healthcare providers, and billing systems to track and manage a specific policyholder’s coverage.
-          example: '911302'
+        cityName:
+          description: City name
+          example: ATLANTA
           type: string
-        firstName:
-          description: Member's first name
-          example: John
+        state:
+          description: State code
+          example: GA
           type: string
-        lastName:
-          description: Member's last name
-          example: Cena
+        zip:
+          description: ZIP code
+          example: '303846152'
           type: string
-        middleInitial:
-          description: Member's middle initial
-          example: Doe
-          type: string
-        dateOfBirth:
-          description: Member's date of birth
-          example: 09/16/1965
-          type: string
-        relationshipCode:
-          description: Relationship Code
-          example: EE
-          type: string
-        dependentSequenceNumber:
-          description: The dependent sequence number
-          example: '01'
-          type: string
-        memberId:
-          description: The member identifier
-          example: '483865773'
-          type: string
-      description: Member
-    ClaimLevelTotalAmount:
+      description: PayeeAddressType
+    ClaimPaymentInfo:
       type: object
       properties:
-        totalBilledChargeAmount:
-          description: Total Amount of all services submitted on the claim by the provider for services rendered.
-          example: '1144.21'
+        paymentNumber:
+          description: paymentNumber is a unique identifier assigned to a specific payment issued for a healthcare claim. It can represent various payment types, including a check, Electronic Funds Transfer (EFT), Virtual Card Payment (VCP), or even a zero-dollar check (used for explanation of benefits without actual funds). This number is crucial for tracking and reconciling payments across systems. It links the adjudicated claim to the financial transaction, enabling providers and payers to audit, verify, and resolve payment issues. Even when no money is transferred, a paymentNumber ensures transparency and traceability in the claim settlement process.
+          example: TZ12341212
           type: string
-        totalProviderWriteOffAmount:
-          description: Amount discounted from the claim requested amount due to contract agreements, Prompt Pay discounts, etc.
-          example: '137.31'
+        adjudicatedClaimPaymentNumber:
+          description: adjudicatedClaimPaymentNumber is an internal identifier assigned by the claim adjudication engine to uniquely track a specific payment instance for a claim. This number is especially important when a claim is split into multiple parts or processed in multiple cycles (e.g., adjustments, reprocessing, or partial payments). Each adjudicated portion receives a distinct payment number, allowing systems to trace the exact adjudication event and its associated payment. Also known as a draft Number.
+          example: '32112121221'
           type: string
-        totalPatientNotCoveredAmount:
-          description: Breaks out the the total amount not covered for all services on the claim to the patient.
-          example: '0.00'
+        adjudicatedClaimPaymentAmount:
+          description: The adjudicatedClaimPaymentAmount refers to the final dollar amount paid by the payer after a healthcare claim has been fully processed (adjudicated). This amount reflects the outcome of the claim review, including adjustments for allowed charges, deductibles, co-pays, coinsurance, and any denials. It represents what the payer has agreed to pay the provider or member, and may differ from the billed amount.
+          example: '671.13'
           type: string
-        totalProviderNotCoveredAmount:
-          description: Breaks out the The total amount not covered for all services on the claim to the provider.
-          example: '0.00'
+        checkSeriesDesignator:
+          description: The payment system designator code, could be same or different than the check series designator.
+          example: '806'
           type: string
-        totalAllowedAmount:
-          description: The maximum amount determined by the payer as being allowable under the provisions of the contract prior to the determination of actual payment.
-          example: '1006.90'
+        paymentModeCode:
+          description: The mode of payment like Electronic Fund Transfer or Virtual Card Payment or Paper Check.
+          example: E
           type: string
-        totaldeductibleAmount:
-          description: The set amount a member pays for services until they reach a specified limit (usually defined on an annual basis). After the limit is reached, the members payment for services changes to a percentage of covered amount. This dollar amount is derived using the members benefit rules. The Members Benefits are determined based on their eligibility using the claim service date spans. This is the sum of the Deductible Line Amount for all service lines.
-          example: '0.00'
+        paymentAmount:
+          description: The paymentAmount refers to the total dollar value of a payment issued to a provider or member, covering one or more adjudicated claims. This amount may be disbursed through various methods such as check, Electronic Funds Transfer (EFT), Virtual Card Payment (VCP), or even a zero-dollar payment (used for explanation of benefits without funds). It represents the aggregate reimbursement tied to a specific paymentNumber, which helps in tracking and reconciling payments across multiple claims. This field is essential for financial reporting, auditing, and ensuring that all claims included in the payment batch are properly accounted for.
+          example: '109999.89'
           type: string
-        totalCopayAmount:
-          description: The sum of all service level copay amounts
-          example: '0.00'
+        paymentIssueDate:
+          description: paymentIssueDate is the date on which a payment—via check, Electronic Funds Transfer (EFT), or Virtual Card Payment (VCP)—was officially issued by the payer. This date marks when the funds were released or made available to the provider or member. It is critical for tracking payment timelines, reconciling accounts, and determining interest or late payment penalties. Even for zero-dollar payments (used for explanation of benefits without actual funds), the paymentIssueDate provides a reference point for when the adjudication was finalized and communicated.
+          example: 02/18/2025
           type: string
-        totalCoinsAmount:
-          description: The total of the Benefit Coinsurance amount for all service lines. The Coinsurance amount (usually calculated as a percent of the providers submitted charges) the member pays for a specific service as defined in their benefit plan. For example, 80 of the cost of an outpatient physical therapy visit. This dollar amount is derived using the members benefit rules. The Members Benefits are determined based on their eligibility using the claim service date spans.
-          example: '0.00'
+        claimPayeeAssignmentCode:
+          description: The claimPayeeAssignmentCode is a code used in healthcare claims processing to indicate who the payment is assigned to—typically either the provider or the member (patient) or a special payee as well like the state.
+          example: P
           type: string
-        totalPaidAmount:
-          description: The actual amount paid to the provider or member for all the services performed after all deductions and calculations are performed. This does not include the amount calculated as fee for service on a capitated service.
-          example: '1006.90'
+        payeeName:
+          description: payeeName refers to the individual or entity receiving the payment for a healthcare claim. This could be a provider (such as a hospital, clinic, or physician), a billing agency, or the insured member (patient), depending on the claim’s assignment of benefits.
+          example: XYZ HOSPITAL INC
           type: string
-        totalPatientResponsibilityAmount:
-          description: Required when the Patient Responsibility Amount is applicable to the claim. The amount applies to all service lines.
-          example: '0.00'
-          type: string
-      description: ClaimLevelTotalAmount
-    ClaimSearchResponse:
-      type: object
-      properties:
-        claims:
-          description: Full claim information including summary and details
-          items:
-            $ref: '#/components/schemas/Claims'
-          type: array
-        pagination:
-          description: Pagination details
-          $ref: '#/components/schemas/Pagination'
-      description: Search claim response.
-    ClaimLevelIndicators:
-      type: object
-      properties:
-        claimReprocessedIndicator:
-          description: 'The claimReprocessedIndicator is a flag that indicates whether a claim has been reprocessed after its initial adjudication. '
-          example: N
-          type: string
-        paymentToEnrolleeCode:
-          description: The paymentToEnrolleeCode is a code that indicates whether a payment was made directly to the enrollee (the insured individual) rather than to the healthcare provider
-          example: N
-          type: string
-        isCapitationIndicator:
-          description: The isCapitationIndicator is a Boolean flag that indicates whether the claim is associated with a capitated payment arrangement.
-          example: false
-          type: boolean
-        electronicPayerID:
-          description: The electronicPayerID is a unique identifier assigned to a health insurance payer (such as an insurance company or third-party administrator) for the purpose of electronic data interchange (EDI).
-          example: '87726'
-          type: string
-        placeOfService:
-          description: The placeOfService (POS) refers to a code that identifies the location where the medical service was provided.
-          example: '12'
-          type: string
-        payerType:
-          description: the payerType field identifies the category of the insurance provider responsible for processing the claim. It helps determine the applicable rules, coverage policies, and reimbursement methods. Common values include COM for commercial insurance (typically employer-sponsored or private plans), MDR for Medicare (a federal program for seniors and certain disabled individuals), and MCD for Medicaid (a state-administered program for low-income individuals and families). This classification is essential for routing claims correctly, applying the right adjudication logic, and coordinating benefits when multiple payers are involved.
-          example: COM
-          type: string
-      description: ClaimLevelIndicators
+        payeeAddress:
+          description: Payee address type
+          $ref: '#/components/schemas/PayeeAddressType'
+      description: ClaimPaymentInfo
     SubmittedProviderInfo:
       type: object
       properties:
@@ -1021,110 +922,6 @@ components:
           example: Test SPECIALTY
           type: string
       description: SubmittedProviderInfo
-    DiagnosisCodeType:
-      type: object
-      properties:
-        diagnosisSequenceNumber:
-          description: The diagnosisSequenceNumber refers to the order in which a diagnosis is listed or prioritized in a medical record or claim. In healthcare data, multiple diagnoses may be associated with a patient encounter, and this field helps identify the primary diagnosis (usually sequence 1) and any secondary or supporting diagnoses (sequence 2, 3, etc.). This sequencing is important for billing, clinical documentation, and analytics, as it indicates the relative importance or relevance of each diagnosis to the treatment provided. A lower sequence number typically means higher clinical or financial significance in the context of the patient’s care.
-          example: '1'
-          type: string
-        diagnosisCode:
-          description: The diagnosisCode is a standardized alphanumeric code used in healthcare to identify a specific medical condition, disease, or diagnosis. These codes are typically based on classification systems like ICD-10-CM (International Classification of Diseases, 10th Revision, Clinical Modification). Each diagnosis code corresponds to a particular health issue and is used in clinical documentation, billing, insurance claims, and data analysis. For example, the code E11.9 represents Type 2 diabetes mellitus without complications. Accurate use of diagnosis codes ensures proper treatment tracking, reimbursement, and reporting. They are essential for maintaining consistency and clarity across healthcare systems and provider.
-          example: R509
-          type: string
-        diagnosisCodeType:
-          description: The diagnosisCodeType refers to the classification system used to assign a diagnosis code in healthcare data. It identifies the coding standard applied, such as value 0 indicates ICD-10-CM (International Classification of Diseases, 10th Revision, Clinical Modification) vs 9 as ICD-9-CM (9th Revision).
-          example: '0'
-          type: string
-      description: DiagnosisCodeType
-    LineAdjudicationCodeTypes:
-      type: object
-      properties:
-        type:
-          description: Type of code
-          example: REMARK
-          type: string
-        code:
-          description: Code value
-          example: YL
-          type: string
-        description:
-          description: Description of the code
-          example: Benefits for this claim are based on the provider's contracted rate.
-          type: string
-      description: LineAdjudicationCodeTypes
-    AllowedReconsiderationReason:
-      type: object
-      properties:
-        isAttachmentRequired:
-          description: Indicates if an attachment is required for this reconsideration reason
-          example: 'Yes'
-          type: string
-        requestReason:
-          description: The reconsideration request reason code
-          example: Medical Records Provided
-          type: string
-        requestReasonDesc:
-          description: Description of the reconsideration request reason
-          example: Select this option to submit additional medical records
-          type: string
-        requestReasonMsg:
-          description: Message providing additional guidance for the reconsideration reason
-          example: Attachments should include all requested documents
-          type: string
-      description: AllowedReconsiderationReason
-    AttachmentList:
-      type: object
-      properties:
-        ticketNumber:
-          description: The type of ticket.
-          example: AT-12345678
-          type: string
-        ticketType:
-          description: The type of ticket.
-          example: RECON
-          type: string
-        fileName:
-          description: The name of the file uploaded.
-          example: attachment.pdf
-          type: string
-        reportTypeCode:
-          description: The type of attachment that was uploaded.
-          example: M1
-          type: string
-        reportTypeDesc:
-          description: The description of attachment that was uploaded.
-          example: Medical Record Attachment
-          type: string
-        documentId:
-          description: The document identifier which was was uploaded.
-          example: abcd-efgh-ijkl-mnop
-          type: string
-      description: AttachmentList
-    Documents:
-      type: object
-      properties:
-        documentType:
-          description: A  type of document
-          example: Commercial/Detailed PRAs
-          type: string
-        documentCreatedDate:
-          description: The date when the document was created.
-          example: 06/18/2025
-          type: string
-        documentReceivedDate:
-          description: The date when the document was received.
-          example: 06/18/2025
-          type: string
-        documentName:
-          description: The name of the document.
-          example: ABCD
-          type: string
-        documentId:
-          description: A unique identifier for the document, typically a UUID or composite key.
-          example: abcdef-aaaa-aaaa-aa-aaaa%ee-08_v4~repoid~fdsid~cloudspaceid
-          type: string
-      description: Documents
     LineLevelTotalAmounts:
       type: object
       properties:
@@ -1185,112 +982,58 @@ components:
           example: '0.00'
           type: string
       description: LineLevelTotalAmounts
-    PatientInfo:
+    LineEvents:
       type: object
       properties:
-        patientName:
-          description: patientName refers to the full legal name of the individual who received the medical service or treatment. It typically includes the first name, last name, and sometimes middle name or initial. This field is essential for identifying the claim's beneficiary and ensuring accurate matching with patient records.
-          example: John
+        processedDate:
+          description: The lineProcessedDate refers to the date on which a specific service line within a claim was adjudicated by the insurance company
+          example: 06/06/2025
           type: string
-        patientGroupNumber:
-          description: The patientGroupNumber refers to the unique identifier assigned to the group health insurance plan under which the patient is covered. This number is typically issued by the insurance provider to an employer or organization offering the group policy. It helps link the patient’s claim to the correct group benefits, coverage rules, and billing arrangements. The patientGroupNumber is essential for verifying eligibility, processing claims accurately, and ensuring the correct application of deductibles, copays, and coverage limits. It is usually found on the patient’s insurance card and is required for both electronic and paper claim submissions.
-          example: TNEONX
+        processedTime:
+          description: The lineProcessedTime refers to the time on which a specific service line within a claim was adjudicated by the insurance company
+          example: 04.40.07
           type: string
-        patientSubscriberNumber:
-          description: The patientSubscriberNumber is a unique identifier assigned to the primary policyholder—the person who holds the insurance plan. Even if the patient is a dependent (like a spouse or child), the claim is often linked to the subscriber’s number. This number is crucial for verifying coverage, processing claims, and coordinating benefits. It is typically found on the insurance card and used alongside the patientName and groupNumber to ensure accurate claim routing. In electronic data interchange (EDI), this field is often required to match the claim to the correct member record in the payer’s system.
-          example: '992111233'
+        serviceStartDate:
+          description: 'The serviceStartDate refers to the first date on which a healthcare service was provided to the patient for a particular service line. It marks the beginning of the treatment or service period '
+          example: 06/01/2025
           type: string
-        patientRelationship:
-          description: The patientRelationship field indicates the relationship between the patient and the subscriber (the primary policyholder). This information is essential for determining eligibility, coordinating benefits, and processing claims correctly.
-          example: EE
+        serviceEndDate:
+          description: The serviceEndDate refers to the last date on which a healthcare service was provided to the patient for a particular claim or service line. It marks the end of the treatment or service period, especially for services that span multiple days, such as inpatient stays, therapy sessions, or ongoing treatments
+          example: 06/01/2025
           type: string
-      description: PatientInfo
-    ClaimTicketComment:
+      description: LineEvents
+    ClaimTicketSearchResponse:
       type: object
       properties:
-        addedBy:
-          description: The user who added the comments.
-          example: '12344455'
-          type: string
-        addedOn:
-          description: The date the comments were added.
-          example: 03/04/2025
-          type: string
-        comment:
-          description: Field comment
-          type: string
-      description: ClaimTicketComment
-    ClaimDetailedInformation:
-      type: object
-      properties:
-        claimNumber:
-          description: The payer assigned Original Document Control NumberInternal Control Number (DCNICN) assigned to this claim by the payer identified in the 2010BB loop of this claim (Payer to payer claim). This number would be received from a payer in a case where the payer had received the original claim and, for whatever reason, had (1) asked the provider to resubmit the claim and (2) had given the provider the payers claim identification number. In this case the payer is expecting the provider to give them back their (the payers) claim number so that the payer can match it in their adjudication system. By matching this number in the adjudication system, the payer knows this is not a duplicate claim. In simple terms this is the number that is assigned by the Claim Adjudication engine of the payer.
-          example: AB123456789
-          type: string
-        adjudicatedClaimSummaryStatus:
-          description: ' AI generated claim sumamry message detailing denial reasons and suggested next steps.'
-          example: 'Denial Reason: Filing Time Limit Has Expired We are unable to process payment because the deadline to file this claim has elapsed.'
-          type: string
-        claimActionIdentifier:
-          description: The claimActionIdentifier is typically a unique reference or token associated with a specific claim that enables authorized users or systems to perform actions on that claim, such as  Pend – Temporarily hold the claim for further review or missing information. Recon (Reconsideration) – Request a re-evaluation of the claim decision. Appeal – Formally dispute a denied or partially paid claim.
-          example: 12345-123391-129910-1192010
-          type: string
-        allowedActions:
-          description: The allowedActions flag is typically a Boolean indicator (true or false) that tells whether any user-initiated actions are currently permitted on a given claim.
-          example: 'true'
-          type: string
-        payerId:
-          description: payerId (derived) for the claim-unique identifier assigned to a health insurance payer.
-          example: '87726'
-          type: string
-        coordinationOfBenefits:
-          description: Cob information type
-          $ref: '#/components/schemas/CobInfoType'
-        diagnosisCodes:
-          description: Diagnosis codes type
+        ticketDetails:
+          description: Ticket details
+          $ref: '#/components/schemas/TicketDetails'
+        comments:
+          description: List of comments associated with the ticket
           items:
-            $ref: '#/components/schemas/DiagnosisCodeType'
+            $ref: '#/components/schemas/ClaimTicketComment'
           type: array
-        claimDetailEvents:
-          description: Claim detail event
-          $ref: '#/components/schemas/ClaimDetailEvent'
-        claimLevelIndicators:
-          description: Claim level indicators
-          $ref: '#/components/schemas/ClaimLevelIndicators'
-        patientInfo:
-          description: Patient information
-          $ref: '#/components/schemas/PatientInfo'
-        claimLineActions:
-          description: Claim line actions
+        claimInfo:
+          description: Claim information associated with the ticket
+          $ref: '#/components/schemas/ClaimInfo'
+        member:
+          description: Member information associated with the ticket
+          $ref: '#/components/schemas/Member'
+        provider:
+          description: Provider information associated with the ticket
+          $ref: '#/components/schemas/Provider'
+        operatorInfo:
+          description: Operator information who created/updated the ticket
+          $ref: '#/components/schemas/OperatorInfo'
+        payerInfo:
+          description: Payer information associated with the ticket
+          $ref: '#/components/schemas/PayerInfo'
+        attachmentList:
+          description: List of attachments associated with the ticket
           items:
-            $ref: '#/components/schemas/ClaimLineActions'
+            $ref: '#/components/schemas/AttachmentList'
           type: array
-        lines:
-          description: Claim line type
-          items:
-            $ref: '#/components/schemas/ClaimLineType'
-          type: array
-      description: ClaimDetailedInformation
-    ClaimAck277SearchResponse:
-      type: object
-      properties:
-        responseType:
-          description: Response type
-          example: ACK
-          type: string
-        x12ResponseData:
-          description: X12 response data
-          example: ISA*00*          *00*          *ZZ*ABCDEFGHIJKLMNO*12*123456789012345*210101*1253*^*00501*000000905*0*T*:~GS*HN*123456789*987654321*20210101*1253*1*X*005010X279A1~ST*277*0001~BHT*0019*00*0123*20210101*1253*RP~HL*1**20*1~NM1*PR*2*PAYER NAME*****PI*12345~HL*2*1*21*1~NM1*41*2*SENDER NAME*****46*54321~HL*3*2*22*0~TRN*1*1234567890~STC*A1:19:PR~SE*10*0001~GE*1*1~IEA*1*000000905~
-          type: string
-        statuscode:
-          description: Status code
-          example: '200'
-          type: string
-        message:
-          description: Message
-          example: Transaction processed successfully
-          type: string
-      description: Search 277CA response.
+      description: Search claim ticket response.
     ClaimLineType:
       type: object
       properties:
@@ -1357,6 +1100,578 @@ components:
             $ref: '#/components/schemas/LineAdjudicationCodeTypes'
           type: array
       description: ClaimLineType
+    LineIndicators:
+      type: object
+      properties:
+        inventoryControlNumberSuffix:
+          description: An Inventory Control Number (ICN) is a unique identifier assigned to each claim as it enters the payer’s system. It is used to track, manage, and audit the claim throughout its lifecycle — from submission to adjudication and payment. A ICN suffix refers to part of the claim if the claim is split for any reason.
+          example: '01'
+          type: string
+        inventoryControlNumberSuffixVersion:
+          description: An Inventory Control Number (ICN) is a unique identifier assigned to each claim as it enters the payer’s system. It is used to track, manage, and audit the claim throughout its lifecycle — from submission to adjudication and payment. A ICN suffix version refers to claim instance in case the claim is adjudicated multiple times during a given point of date and time.
+          example: '1'
+          type: string
+        providerNetworkStatus:
+          description: The providerNetworkStatus refers to the contractual relationship between the healthcare provider and the insurance payer at the time of service. It indicates whether the provider is in-network or out-of-network, which directly affects how the claim is processed and reimbursed.
+          example: I
+          type: string
+        transactionCode:
+          description: In claim adjudication, the transactionCode identifies the type of claim transaction being processed. It indicates whether the claim is an original submission, an adjustment to a previously processed claim, a void or cancellation, or a reversal.
+          example: '00'
+          type: string
+        causeCode:
+          description: A Benefit Cause Code in claim adjudication identifies the reason a healthcare claim is submitted. It explains the underlying cause for seeking benefits, such as illness, injury, accident, maternity, or preventive care. This code helps payers apply the correct adjudication rules, determine eligibility, and coordinate benefits. For example, if the cause is an auto accident, the claim may be routed differently than one for preventive care.
+          example: '0'
+          type: string
+        overrideCode:
+          description: An override code is a special code used to bypass or override standard claim processing rules under specific, justified circumstances. These codes are typically used when a claim would otherwise be denied or flagged due to standard edits, but there is a valid reason to allow it.
+          example: '23'
+          type: string
+        planCoveragePercent:
+          description: The calculated percentage of the members responsibility twards the coinsurance
+          example: '1.00'
+          type: string
+        capitationIndicator:
+          description: If the service is capitated, this is the capitation indicator
+          example: Y
+          type: string
+        capFundType:
+          description: If the service is capitated, this is the capitation fund type code
+          example: B
+          type: string
+        lineLevelPlaceOfService:
+          description: The unique coder which identifies a clinical setting where a medical service is performed.
+          example: '12'
+          type: string
+        surpriseMedicalBillingIndicator:
+          description: A code that will identify if the surprise medical billing is applied. The surprise medical billing could be applied to the state (S) or federal(F) level.
+          example: S
+          type: string
+        surpriseMedicalBillingState:
+          description: A state code that will identify the level of authority that surprise medical billing will be applied. e.g. NJ, NY, SC, MN etc
+          example: CA
+          type: string
+        providerGroupOfferPercentage:
+          description: The percentage of the Qualifying Payment Amount (QPA) that a provider group is requesting or offering during the Independent Dispute Resolution (IDR) process. Also the percentage discount or negotiated reduction offered by a provider group (e.g., hospital system, physician network) off the total billed charges during the resolution of a surprise medical bill.
+          example: '1.00'
+          type: string
+      description: LineIndicators
+    ClaimDetailedInformation:
+      type: object
+      properties:
+        claimNumber:
+          description: The payer assigned Original Document Control NumberInternal Control Number (DCNICN) assigned to this claim by the payer identified in the 2010BB loop of this claim (Payer to payer claim). This number would be received from a payer in a case where the payer had received the original claim and, for whatever reason, had (1) asked the provider to resubmit the claim and (2) had given the provider the payers claim identification number. In this case the payer is expecting the provider to give them back their (the payers) claim number so that the payer can match it in their adjudication system. By matching this number in the adjudication system, the payer knows this is not a duplicate claim. In simple terms this is the number that is assigned by the Claim Adjudication engine of the payer.
+          example: AB123456789
+          type: string
+        adjudicatedClaimSummaryStatus:
+          description: ' AI generated claim sumamry message detailing denial reasons and suggested next steps.'
+          example: 'Denial Reason: Filing Time Limit Has Expired We are unable to process payment because the deadline to file this claim has elapsed.'
+          type: string
+        claimActionIdentifier:
+          description: The claimActionIdentifier is typically a unique reference or token associated with a specific claim that enables authorized users or systems to perform actions on that claim, such as  Pend – Temporarily hold the claim for further review or missing information. Recon (Reconsideration) – Request a re-evaluation of the claim decision. Appeal – Formally dispute a denied or partially paid claim.
+          example: 12345-123391-129910-1192010
+          type: string
+        allowedActions:
+          description: The allowedActions flag is typically a Boolean indicator (true or false) that tells whether any user-initiated actions are currently permitted on a given claim.
+          example: 'true'
+          type: string
+        payerId:
+          description: payerId (derived) for the claim-unique identifier assigned to a health insurance payer.
+          example: '87726'
+          type: string
+        coordinationOfBenefits:
+          description: Cob information type
+          $ref: '#/components/schemas/CobInfoType'
+        diagnosisCodes:
+          description: Diagnosis codes type
+          items:
+            $ref: '#/components/schemas/DiagnosisCodeType'
+          type: array
+        claimDetailEvents:
+          description: Claim detail event
+          $ref: '#/components/schemas/ClaimDetailEvent'
+        claimLevelIndicators:
+          description: Claim level indicators
+          $ref: '#/components/schemas/ClaimLevelIndicators'
+        patientInfo:
+          description: Patient information
+          $ref: '#/components/schemas/PatientInfo'
+        claimLineActions:
+          description: Claim line actions
+          items:
+            $ref: '#/components/schemas/ClaimLineActions'
+          type: array
+        lines:
+          description: Claim line type
+          items:
+            $ref: '#/components/schemas/ClaimLineType'
+          type: array
+      description: ClaimDetailedInformation
+    ClaimLevelIndicators:
+      type: object
+      properties:
+        claimReprocessedIndicator:
+          description: 'The claimReprocessedIndicator is a flag that indicates whether a claim has been reprocessed after its initial adjudication. '
+          example: N
+          type: string
+        paymentToEnrolleeCode:
+          description: The paymentToEnrolleeCode is a code that indicates whether a payment was made directly to the enrollee (the insured individual) rather than to the healthcare provider
+          example: N
+          type: string
+        isCapitationIndicator:
+          description: The isCapitationIndicator is a Boolean flag that indicates whether the claim is associated with a capitated payment arrangement.
+          example: false
+          type: boolean
+        electronicPayerID:
+          description: The electronicPayerID is a unique identifier assigned to a health insurance payer (such as an insurance company or third-party administrator) for the purpose of electronic data interchange (EDI).
+          example: '87726'
+          type: string
+        placeOfService:
+          description: The placeOfService (POS) refers to a code that identifies the location where the medical service was provided.
+          example: '12'
+          type: string
+        payerType:
+          description: the payerType field identifies the category of the insurance provider responsible for processing the claim. It helps determine the applicable rules, coverage policies, and reimbursement methods. Common values include COM for commercial insurance (typically employer-sponsored or private plans), MDR for Medicare (a federal program for seniors and certain disabled individuals), and MCD for Medicaid (a state-administered program for low-income individuals and families). This classification is essential for routing claims correctly, applying the right adjudication logic, and coordinating benefits when multiple payers are involved.
+          example: COM
+          type: string
+      description: ClaimLevelIndicators
+    ClaimAck277SearchResponse:
+      type: object
+      properties:
+        responseType:
+          description: Response type
+          example: ACK
+          type: string
+        x12ResponseData:
+          description: X12 response data
+          example: ISA*00*          *00*          *ZZ*ABCDEFGHIJKLMNO*12*123456789012345*210101*1253*^*00501*000000905*0*T*:~GS*HN*123456789*987654321*20210101*1253*1*X*005010X279A1~ST*277*0001~BHT*0019*00*0123*20210101*1253*RP~HL*1**20*1~NM1*PR*2*PAYER NAME*****PI*12345~HL*2*1*21*1~NM1*41*2*SENDER NAME*****46*54321~HL*3*2*22*0~TRN*1*1234567890~STC*A1:19:PR~SE*10*0001~GE*1*1~IEA*1*000000905~
+          type: string
+        statuscode:
+          description: Status code
+          example: '200'
+          type: string
+        message:
+          description: Message
+          example: Transaction processed successfully
+          type: string
+      description: Search 277CA response.
+    AdjudicationCodeType:
+      type: object
+      properties:
+        claimCodeType:
+          description: The type of code
+          example: REMARK
+          type: string
+        code:
+          description: Code value
+          example: YL
+          type: string
+        description:
+          description: Description of the code
+          example: Benefits for this claim are based on the provider's contracted rate.
+          type: string
+      description: AdjudicationCodeType
+    Provider:
+      type: object
+      properties:
+        submitted:
+          description: Submitted provider information
+          $ref: '#/components/schemas/SubmittedProviderInfo'
+        adjudicated:
+          description: Adjudicated provider info
+          $ref: '#/components/schemas/AdjudicatedProviderInfo'
+      description: Provider
+    TicketDetails:
+      type: object
+      properties:
+        ticketNumber:
+          description: A ticket number is a unique identifier assigned to an Appeal, Reconsideration or Pending ticket.
+          example: AT-12345678
+          type: string
+        ticketSubmitDate:
+          description: The date the ticket number was submitted.
+          example: 03/01/2025
+          type: string
+        ticketStatus:
+          description: The status of the ticket.
+          example: Create
+          type: string
+        ticketOutcome:
+          description: The outcome of the ticket.
+          example: The final outcome of the ticket
+          type: string
+        ticketReason:
+          description: The reason why the ticket was submitted.
+          example: The reason why the ticket was submitted.
+          type: string
+        isClosed:
+          description: A flag which indicates if the ticket was closed or not.
+          example: false
+          type: boolean
+        lastUpdatedDate:
+          description: The latest date on which an update was made on the ticket.
+          example: 09/01/2025
+          type: string
+        lastComment:
+          description: The latest comments on the ticket.
+          example: The latest comments on the ticket.
+          type: string
+        ticketType:
+          description: The type of ticket.
+          example: RECON
+          type: string
+      description: TicketDetails
+    LineAdjudicationCodeTypes:
+      type: object
+      properties:
+        type:
+          description: Type of code
+          example: REMARK
+          type: string
+        code:
+          description: Code value
+          example: YL
+          type: string
+        description:
+          description: Description of the code
+          example: Benefits for this claim are based on the provider's contracted rate.
+          type: string
+      description: LineAdjudicationCodeTypes
+    Pagination:
+      type: object
+      properties:
+        hasMoreRecords:
+          description: Indicates if more results are available
+          example: false
+          type: boolean
+        nextPageToken:
+          description: Page identifier for pagination
+          example: trwmem123451416167
+          type: string
+      description: Pagination
+    AdjudicatedProviderInfo:
+      type: object
+      properties:
+        billingTinPrefix:
+          description: Prefix for the tax identification number
+          example: '2'
+          type: string
+        billingTin:
+          description: Identifies a Tax Identification number issued by the Internal Revenue Service. Payer uses this identifier in claims processing to identify who is accountable for tax reporting back to the Internal Revenue Service. This identification can be defined as a social security number or an algorithmic number assigned by the Internal Revenue Service (IRS).
+          example: '12345678'
+          type: string
+        billingTinSuffix:
+          description: Suffix for the tax identification number
+          example: '00003'
+          type: string
+        billingProviderName:
+          description: Name of the billing provider
+          example: Test SPECIALTY
+          type: string
+        billingNpi:
+          description: Identifies the standard 10 digit identifier mandated by the HIPAA (Health Insurance Portability and Accountability Act). Healthcare Professional s can only have one while Healthcare Organizations can have multiple.
+          example: billingNpi
+          type: string
+        billingProviderMpin:
+          description: The UHC internal identifier for the billing provider.
+          example: '73123456'
+          type: string
+        renderingProviderName:
+          description: The rendering provider name.
+          example: Joe Cole
+          type: string
+        renderingProviderMpin:
+          description: The UHC internal identifier for the rendering provider.
+          example: '12345678'
+          type: string
+      description: AdjudicatedProviderInfo
+    ClaimLineActionValidationResponse:
+      type: object
+      properties:
+        claimLineActions:
+          description: Claim line actions
+          items:
+            $ref: '#/components/schemas/ClaimLineActions'
+          type: array
+      description: Claim line action response.
+    PayerInfo:
+      type: object
+      properties:
+        payerId:
+          description: The payer id of the health insurance company.
+          example: '87726'
+          type: string
+        payerName:
+          description: The name of the health insurance company.
+          example: UnitedHealthcare
+          type: string
+      description: Payer information associated with the ticket
+    ClaimSearchResponse:
+      type: object
+      properties:
+        claims:
+          description: Full claim information including summary and details
+          items:
+            $ref: '#/components/schemas/Claims'
+          type: array
+        pagination:
+          description: Pagination details
+          $ref: '#/components/schemas/Pagination'
+      description: Search claim response.
+    ClaimDetailEvent:
+      type: object
+      properties:
+        receivedDate:
+          description: The receivedDate refers to the date when the claim was officially received by the payer or claims system. It is a critical timestamp used to initiate the claim lifecycle. This date helps determine whether the claim was submitted within the allowable filing period and is used to calculate processing timelines and compliance metrics. It may differ from the service date or submission date, depending on when the claim was transmitted and logged. Accurate tracking of receivedDate ensures timely adjudication, supports audit trails, and helps in meeting regulatory and contractual obligations for claim handling.
+          example: 06/04/2025
+          type: string
+        initialDecisionDate:
+          description: The initialDecisionDate refers to the date on which the first adjudication decision was made for a submitted claim.
+          example: 06/06/2025
+          type: string
+        lastDenialDate:
+          description: The lastDenialDate refers to the most recent date on which the claim—or a specific line item within the claim—was denied by the payer. This date is crucial for tracking the claim’s adjudication history and managing follow-up actions such as appeals or reconsiderations.
+          example: 06/06/2025
+          type: string
+      description: ClaimDetailEvent
+    AllowedReconsiderationReason:
+      type: object
+      properties:
+        isAttachmentRequired:
+          description: Indicates if an attachment is required for this reconsideration reason
+          example: 'Yes'
+          type: string
+        requestReason:
+          description: The reconsideration request reason code
+          example: Medical Records Provided
+          type: string
+        requestReasonDesc:
+          description: Description of the reconsideration request reason
+          example: Select this option to submit additional medical records
+          type: string
+        requestReasonMsg:
+          description: Message providing additional guidance for the reconsideration reason
+          example: Attachments should include all requested documents
+          type: string
+      description: AllowedReconsiderationReason
+    ClaimLineActions:
+      type: object
+      properties:
+        ticketType:
+          description: Ticket Type
+          example: RECON
+          type: string
+        allowedAction:
+          description: Allowed actions
+          example: Create
+          type: string
+        actionMessage:
+          description: msg when allowedAction='Stop Process'
+          example: This insured member is covered under an AARP Supplemental Health Plan. For claim appeals or reconsiderations, use the claim address on the back of the insured member ID card.
+          type: string
+        allowedReconReasons:
+          description: List of allowed reasons for recon
+          example:
+          - RECON_REASON_1
+          - RECON_REASON_2
+          items:
+            type: string
+          type: array
+        allowedReconsiderationReasons:
+          description: List of allowed reconsideration reasons with attachment requirements
+          items:
+            $ref: '#/components/schemas/AllowedReconsiderationReason'
+          type: array
+        requiredConsentForm:
+          description: Required Consent Form
+          example: AOR
+          type: string
+        note:
+          description: Notes
+          example: Consent form is required only when the appeal is submitted on behalf of member.
+          type: string
+        documentLink:
+          description: Document Link
+          example: https://maelstrom-dmz-nonprod.uhcprovider.com/cdn/uhcp/documents/claims/appeal-messaging/WOL.pdf
+          type: string
+        ticketDetails:
+          description: Ticket details
+          items:
+            $ref: '#/components/schemas/TicketDetails'
+          type: array
+      description: ClaimLineActions
+    DiagnosisCodeType:
+      type: object
+      properties:
+        diagnosisSequenceNumber:
+          description: The diagnosisSequenceNumber refers to the order in which a diagnosis is listed or prioritized in a medical record or claim. In healthcare data, multiple diagnoses may be associated with a patient encounter, and this field helps identify the primary diagnosis (usually sequence 1) and any secondary or supporting diagnoses (sequence 2, 3, etc.). This sequencing is important for billing, clinical documentation, and analytics, as it indicates the relative importance or relevance of each diagnosis to the treatment provided. A lower sequence number typically means higher clinical or financial significance in the context of the patient’s care.
+          example: '1'
+          type: string
+        diagnosisCode:
+          description: The diagnosisCode is a standardized alphanumeric code used in healthcare to identify a specific medical condition, disease, or diagnosis. These codes are typically based on classification systems like ICD-10-CM (International Classification of Diseases, 10th Revision, Clinical Modification). Each diagnosis code corresponds to a particular health issue and is used in clinical documentation, billing, insurance claims, and data analysis. For example, the code E11.9 represents Type 2 diabetes mellitus without complications. Accurate use of diagnosis codes ensures proper treatment tracking, reimbursement, and reporting. They are essential for maintaining consistency and clarity across healthcare systems and provider.
+          example: R509
+          type: string
+        diagnosisCodeType:
+          description: The diagnosisCodeType refers to the classification system used to assign a diagnosis code in healthcare data. It identifies the coding standard applied, such as value 0 indicates ICD-10-CM (International Classification of Diseases, 10th Revision, Clinical Modification) vs 9 as ICD-9-CM (9th Revision).
+          example: '0'
+          type: string
+      description: DiagnosisCodeType
+    ClaimEvents:
+      type: object
+      properties:
+        receivedDate:
+          description: The receivedDate refers to the date when the claim was officially received by the payer or claims system. It is a critical timestamp used to initiate the claim lifecycle. This date helps determine whether the claim was submitted within the allowable filing period and is used to calculate processing timelines and compliance metrics. It may differ from the service date or submission date, depending on when the claim was transmitted and logged. Accurate tracking of receivedDate ensures timely adjudication, supports audit trails, and helps in meeting regulatory and contractual obligations for claim handling.
+          example: 06/10/2025
+          type: string
+        processedDate:
+          description: Date of final adjudication or denial determination by Claim Payer. Sometimes used as a Paid ready.
+          example: 06/25/2025
+          type: string
+        processedTime:
+          description: Time of final adjudication or denial determination by Claim Payer. Sometimes used as a Paid ready.
+          example: 07.42.49
+          type: string
+        serviceStartDate:
+          description: Identifies the starting (earliest) service date based on all of the claim service lines. Most commonly used on an inpatient facility claim where a patient stays multiple days.
+          example: 06/01/2025
+          type: string
+        serviceEndDate:
+          description: Identifies the ending service date based on all of the claim service lines. Most commonly used on an inpatient facility claim where a patient stays multiple days.
+          example: 06/01/2025
+          type: string
+        statusEffectiveDate:
+          description: Effective date of the status of the Claim
+          example: 06/27/2025
+          type: string
+      description: ClaimEvents
+    Member:
+      type: object
+      properties:
+        subscriberId:
+          description: Identifies the source specific identifier of the Subscriber. The person responsible for payment of premiums, or whose employment is the basis for eligibility for membership in a Health insurance plan.
+          example: 0536219151
+          type: string
+        policyNumber:
+          description: The policyNumber is a unique identifier assigned to an insurance policy. It is used by insurance companies, healthcare providers, and billing systems to track and manage a specific policyholder’s coverage.
+          example: '911302'
+          type: string
+        firstName:
+          description: Member's first name
+          example: John
+          type: string
+        lastName:
+          description: Member's last name
+          example: Cena
+          type: string
+        middleInitial:
+          description: Member's middle initial
+          example: Doe
+          type: string
+        dateOfBirth:
+          description: Member's date of birth
+          example: 09/16/1965
+          type: string
+        relationshipCode:
+          description: Relationship Code
+          example: EE
+          type: string
+        dependentSequenceNumber:
+          description: The dependent sequence number
+          example: '01'
+          type: string
+        memberId:
+          description: The member identifier
+          example: '483865773'
+          type: string
+      description: Member
+    PatientInfo:
+      type: object
+      properties:
+        patientName:
+          description: patientName refers to the full legal name of the individual who received the medical service or treatment. It typically includes the first name, last name, and sometimes middle name or initial. This field is essential for identifying the claim's beneficiary and ensuring accurate matching with patient records.
+          example: John
+          type: string
+        patientGroupNumber:
+          description: The patientGroupNumber refers to the unique identifier assigned to the group health insurance plan under which the patient is covered. This number is typically issued by the insurance provider to an employer or organization offering the group policy. It helps link the patient’s claim to the correct group benefits, coverage rules, and billing arrangements. The patientGroupNumber is essential for verifying eligibility, processing claims accurately, and ensuring the correct application of deductibles, copays, and coverage limits. It is usually found on the patient’s insurance card and is required for both electronic and paper claim submissions.
+          example: TNEONX
+          type: string
+        patientSubscriberNumber:
+          description: The patientSubscriberNumber is a unique identifier assigned to the primary policyholder—the person who holds the insurance plan. Even if the patient is a dependent (like a spouse or child), the claim is often linked to the subscriber’s number. This number is crucial for verifying coverage, processing claims, and coordinating benefits. It is typically found on the insurance card and used alongside the patientName and groupNumber to ensure accurate claim routing. In electronic data interchange (EDI), this field is often required to match the claim to the correct member record in the payer’s system.
+          example: '992111233'
+          type: string
+        patientRelationship:
+          description: The patientRelationship field indicates the relationship between the patient and the subscriber (the primary policyholder). This information is essential for determining eligibility, coordinating benefits, and processing claims correctly.
+          example: EE
+          type: string
+      description: PatientInfo
+    ClaimLevelTotalAmount:
+      type: object
+      properties:
+        totalBilledChargeAmount:
+          description: Total Amount of all services submitted on the claim by the provider for services rendered.
+          example: '1144.21'
+          type: string
+        totalProviderWriteOffAmount:
+          description: Amount discounted from the claim requested amount due to contract agreements, Prompt Pay discounts, etc.
+          example: '137.31'
+          type: string
+        totalPatientNotCoveredAmount:
+          description: Breaks out the the total amount not covered for all services on the claim to the patient.
+          example: '0.00'
+          type: string
+        totalProviderNotCoveredAmount:
+          description: Breaks out the The total amount not covered for all services on the claim to the provider.
+          example: '0.00'
+          type: string
+        totalAllowedAmount:
+          description: The maximum amount determined by the payer as being allowable under the provisions of the contract prior to the determination of actual payment.
+          example: '1006.90'
+          type: string
+        totaldeductibleAmount:
+          description: The set amount a member pays for services until they reach a specified limit (usually defined on an annual basis). After the limit is reached, the members payment for services changes to a percentage of covered amount. This dollar amount is derived using the members benefit rules. The Members Benefits are determined based on their eligibility using the claim service date spans. This is the sum of the Deductible Line Amount for all service lines.
+          example: '0.00'
+          type: string
+        totalCopayAmount:
+          description: The sum of all service level copay amounts
+          example: '0.00'
+          type: string
+        totalCoinsAmount:
+          description: The total of the Benefit Coinsurance amount for all service lines. The Coinsurance amount (usually calculated as a percent of the providers submitted charges) the member pays for a specific service as defined in their benefit plan. For example, 80 of the cost of an outpatient physical therapy visit. This dollar amount is derived using the members benefit rules. The Members Benefits are determined based on their eligibility using the claim service date spans.
+          example: '0.00'
+          type: string
+        totalPaidAmount:
+          description: The actual amount paid to the provider or member for all the services performed after all deductions and calculations are performed. This does not include the amount calculated as fee for service on a capitated service.
+          example: '1006.90'
+          type: string
+        totalPatientResponsibilityAmount:
+          description: Required when the Patient Responsibility Amount is applicable to the claim. The amount applies to all service lines.
+          example: '0.00'
+          type: string
+      description: ClaimLevelTotalAmount
+    Documents:
+      type: object
+      properties:
+        documentType:
+          description: A  type of document
+          example: Commercial/Detailed PRAs
+          type: string
+        documentCreatedDate:
+          description: The date when the document was created.
+          example: 06/18/2025
+          type: string
+        documentReceivedDate:
+          description: The date when the document was received.
+          example: 06/18/2025
+          type: string
+        documentName:
+          description: The name of the document.
+          example: ABCD
+          type: string
+        documentId:
+          description: A unique identifier for the document, typically a UUID or composite key.
+          example: abcdef-aaaa-aaaa-aa-aaaa%ee-08_v4~repoid~fdsid~cloudspaceid
+          type: string
+      description: Documents
     Claims:
       type: object
       properties:
@@ -1423,77 +1738,6 @@ components:
           description: Claim detailed information
           $ref: '#/components/schemas/ClaimDetailedInformation'
       description: Claims
-    Provider:
-      type: object
-      properties:
-        submitted:
-          description: Submitted provider information
-          $ref: '#/components/schemas/SubmittedProviderInfo'
-        adjudicated:
-          description: Adjudicated provider info
-          $ref: '#/components/schemas/AdjudicatedProviderInfo'
-      description: Provider
-    ClaimLineActionValidationResponse:
-      type: object
-      properties:
-        claimLineActions:
-          description: Claim line actions
-          items:
-            $ref: '#/components/schemas/ClaimLineActions'
-          type: array
-      description: Claim line action response.
-    PayeeAddressType:
-      type: object
-      properties:
-        addressLine:
-          description: Address line
-          example: PO BOX 406152
-          type: string
-        cityName:
-          description: City name
-          example: ATLANTA
-          type: string
-        state:
-          description: State code
-          example: GA
-          type: string
-        zip:
-          description: ZIP code
-          example: '303846152'
-          type: string
-      description: PayeeAddressType
-    ClaimTicketSearchResponse:
-      type: object
-      properties:
-        ticketDetails:
-          description: Ticket details
-          $ref: '#/components/schemas/TicketDetails'
-        comments:
-          description: List of comments associated with the ticket
-          items:
-            $ref: '#/components/schemas/ClaimTicketComment'
-          type: array
-        claimInfo:
-          description: Claim information associated with the ticket
-          $ref: '#/components/schemas/ClaimInfo'
-        member:
-          description: Member information associated with the ticket
-          $ref: '#/components/schemas/Member'
-        provider:
-          description: Provider information associated with the ticket
-          $ref: '#/components/schemas/Provider'
-        operatorInfo:
-          description: Operator information who created/updated the ticket
-          $ref: '#/components/schemas/OperatorInfo'
-        payerInfo:
-          description: Payer information associated with the ticket
-          $ref: '#/components/schemas/PayerInfo'
-        attachmentList:
-          description: List of attachments associated with the ticket
-          items:
-            $ref: '#/components/schemas/AttachmentList'
-          type: array
-      description: Search claim ticket response.
     ClaimStatusCrosswalkData:
       type: object
       properties:
@@ -1522,278 +1766,34 @@ components:
           example: 0087637641
           type: string
       description: ClaimStatusCrosswalkData
-    ClaimDetailEvent:
-      type: object
-      properties:
-        receivedDate:
-          description: The receivedDate refers to the date when the claim was officially received by the payer or claims system. It is a critical timestamp used to initiate the claim lifecycle. This date helps determine whether the claim was submitted within the allowable filing period and is used to calculate processing timelines and compliance metrics. It may differ from the service date or submission date, depending on when the claim was transmitted and logged. Accurate tracking of receivedDate ensures timely adjudication, supports audit trails, and helps in meeting regulatory and contractual obligations for claim handling.
-          example: 06/04/2025
-          type: string
-        initialDecisionDate:
-          description: The initialDecisionDate refers to the date on which the first adjudication decision was made for a submitted claim.
-          example: 06/06/2025
-          type: string
-        lastDenialDate:
-          description: The lastDenialDate refers to the most recent date on which the claim—or a specific line item within the claim—was denied by the payer. This date is crucial for tracking the claim’s adjudication history and managing follow-up actions such as appeals or reconsiderations.
-          example: 06/06/2025
-          type: string
-      description: ClaimDetailEvent
-    ClaimPaymentInfo:
-      type: object
-      properties:
-        paymentNumber:
-          description: paymentNumber is a unique identifier assigned to a specific payment issued for a healthcare claim. It can represent various payment types, including a check, Electronic Funds Transfer (EFT), Virtual Card Payment (VCP), or even a zero-dollar check (used for explanation of benefits without actual funds). This number is crucial for tracking and reconciling payments across systems. It links the adjudicated claim to the financial transaction, enabling providers and payers to audit, verify, and resolve payment issues. Even when no money is transferred, a paymentNumber ensures transparency and traceability in the claim settlement process.
-          example: TZ12341212
-          type: string
-        adjudicatedClaimPaymentNumber:
-          description: adjudicatedClaimPaymentNumber is an internal identifier assigned by the claim adjudication engine to uniquely track a specific payment instance for a claim. This number is especially important when a claim is split into multiple parts or processed in multiple cycles (e.g., adjustments, reprocessing, or partial payments). Each adjudicated portion receives a distinct payment number, allowing systems to trace the exact adjudication event and its associated payment. Also known as a draft Number.
-          example: '32112121221'
-          type: string
-        adjudicatedClaimPaymentAmount:
-          description: The adjudicatedClaimPaymentAmount refers to the final dollar amount paid by the payer after a healthcare claim has been fully processed (adjudicated). This amount reflects the outcome of the claim review, including adjustments for allowed charges, deductibles, co-pays, coinsurance, and any denials. It represents what the payer has agreed to pay the provider or member, and may differ from the billed amount.
-          example: '671.13'
-          type: string
-        checkSeriesDesignator:
-          description: The payment system designator code, could be same or different than the check series designator.
-          example: '806'
-          type: string
-        paymentModeCode:
-          description: The mode of payment like Electronic Fund Transfer or Virtual Card Payment or Paper Check.
-          example: E
-          type: string
-        paymentAmount:
-          description: The paymentAmount refers to the total dollar value of a payment issued to a provider or member, covering one or more adjudicated claims. This amount may be disbursed through various methods such as check, Electronic Funds Transfer (EFT), Virtual Card Payment (VCP), or even a zero-dollar payment (used for explanation of benefits without funds). It represents the aggregate reimbursement tied to a specific paymentNumber, which helps in tracking and reconciling payments across multiple claims. This field is essential for financial reporting, auditing, and ensuring that all claims included in the payment batch are properly accounted for.
-          example: '109999.89'
-          type: string
-        paymentIssueDate:
-          description: paymentIssueDate is the date on which a payment—via check, Electronic Funds Transfer (EFT), or Virtual Card Payment (VCP)—was officially issued by the payer. This date marks when the funds were released or made available to the provider or member. It is critical for tracking payment timelines, reconciling accounts, and determining interest or late payment penalties. Even for zero-dollar payments (used for explanation of benefits without actual funds), the paymentIssueDate provides a reference point for when the adjudication was finalized and communicated.
-          example: 02/18/2025
-          type: string
-        claimPayeeAssignmentCode:
-          description: The claimPayeeAssignmentCode is a code used in healthcare claims processing to indicate who the payment is assigned to—typically either the provider or the member (patient) or a special payee as well like the state.
-          example: P
-          type: string
-        payeeName:
-          description: payeeName refers to the individual or entity receiving the payment for a healthcare claim. This could be a provider (such as a hospital, clinic, or physician), a billing agency, or the insured member (patient), depending on the claim’s assignment of benefits.
-          example: XYZ HOSPITAL INC
-          type: string
-        payeeAddress:
-          description: Payee address type
-          $ref: '#/components/schemas/PayeeAddressType'
-      description: ClaimPaymentInfo
-    ClaimEvents:
-      type: object
-      properties:
-        receivedDate:
-          description: The receivedDate refers to the date when the claim was officially received by the payer or claims system. It is a critical timestamp used to initiate the claim lifecycle. This date helps determine whether the claim was submitted within the allowable filing period and is used to calculate processing timelines and compliance metrics. It may differ from the service date or submission date, depending on when the claim was transmitted and logged. Accurate tracking of receivedDate ensures timely adjudication, supports audit trails, and helps in meeting regulatory and contractual obligations for claim handling.
-          example: 06/10/2025
-          type: string
-        processedDate:
-          description: Date of final adjudication or denial determination by Claim Payer. Sometimes used as a Paid ready.
-          example: 06/25/2025
-          type: string
-        processedTime:
-          description: Time of final adjudication or denial determination by Claim Payer. Sometimes used as a Paid ready.
-          example: 07.42.49
-          type: string
-        serviceStartDate:
-          description: Identifies the starting (earliest) service date based on all of the claim service lines. Most commonly used on an inpatient facility claim where a patient stays multiple days.
-          example: 06/01/2025
-          type: string
-        serviceEndDate:
-          description: Identifies the ending service date based on all of the claim service lines. Most commonly used on an inpatient facility claim where a patient stays multiple days.
-          example: 06/01/2025
-          type: string
-        statusEffectiveDate:
-          description: Effective date of the status of the Claim
-          example: 06/27/2025
-          type: string
-      description: ClaimEvents
-    LineEvents:
-      type: object
-      properties:
-        processedDate:
-          description: The lineProcessedDate refers to the date on which a specific service line within a claim was adjudicated by the insurance company
-          example: 06/06/2025
-          type: string
-        processedTime:
-          description: The lineProcessedTime refers to the time on which a specific service line within a claim was adjudicated by the insurance company
-          example: 04.40.07
-          type: string
-        serviceStartDate:
-          description: 'The serviceStartDate refers to the first date on which a healthcare service was provided to the patient for a particular service line. It marks the beginning of the treatment or service period '
-          example: 06/01/2025
-          type: string
-        serviceEndDate:
-          description: The serviceEndDate refers to the last date on which a healthcare service was provided to the patient for a particular claim or service line. It marks the end of the treatment or service period, especially for services that span multiple days, such as inpatient stays, therapy sessions, or ongoing treatments
-          example: 06/01/2025
-          type: string
-      description: LineEvents
-    AdjudicationCodeType:
-      type: object
-      properties:
-        claimCodeType:
-          description: The type of code
-          example: REMARK
-          type: string
-        code:
-          description: Code value
-          example: YL
-          type: string
-        description:
-          description: Description of the code
-          example: Benefits for this claim are based on the provider's contracted rate.
-          type: string
-      description: AdjudicationCodeType
-    TicketDetails:
+    AttachmentList:
       type: object
       properties:
         ticketNumber:
-          description: A ticket number is a unique identifier assigned to an Appeal, Reconsideration or Pending ticket.
+          description: The type of ticket.
           example: AT-12345678
-          type: string
-        ticketSubmitDate:
-          description: The date the ticket number was submitted.
-          example: 03/01/2025
-          type: string
-        ticketStatus:
-          description: The status of the ticket.
-          example: Create
-          type: string
-        ticketOutcome:
-          description: The outcome of the ticket.
-          example: The final outcome of the ticket
-          type: string
-        ticketReason:
-          description: The reason why the ticket was submitted.
-          example: The reason why the ticket was submitted.
-          type: string
-        isClosed:
-          description: A flag which indicates if the ticket was closed or not.
-          example: false
-          type: boolean
-        lastUpdatedDate:
-          description: The latest date on which an update was made on the ticket.
-          example: 09/01/2025
-          type: string
-        lastComment:
-          description: The latest comments on the ticket.
-          example: The latest comments on the ticket.
           type: string
         ticketType:
           description: The type of ticket.
           example: RECON
           type: string
-      description: TicketDetails
-    OperatorInfo:
-      type: object
-      properties:
-        name:
-          description: The Name of the Operator.
-          example: Joe C Davis
+        fileName:
+          description: The name of the file uploaded.
+          example: attachment.pdf
           type: string
-        emailId:
-          description: The email id of the Operator.
-          example: abcd@test.com
+        reportTypeCode:
+          description: The type of attachment that was uploaded.
+          example: M1
           type: string
-        phoneNumber:
-          description: The phone number of the Operator.
-          example: 999-999-9999
+        reportTypeDesc:
+          description: The description of attachment that was uploaded.
+          example: Medical Record Attachment
           type: string
-      description: Operator information who created/updated the ticket
-    DocumentDownloadResponse:
-      type: object
-      properties:
-        base64Document:
-          description: Base64 encoded document content.
-          example: JVBERi0xLjQKJcfs...
+        documentId:
+          description: The document identifier which was was uploaded.
+          example: abcd-efgh-ijkl-mnop
           type: string
-      description: DocumentDownloadResponse
-    ClaimInfo:
-      type: object
-      properties:
-        claimNumber:
-          description: Field claimNumber
-          example: '12344455'
-          type: string
-        isOwedAmountUnknown:
-          description: A boolean field and is set to true or false if the Owed Amount is not known to the user.
-          example: false
-          type: boolean
-        claimAmountOwed:
-          description: The total amount owed.
-          example: '123.45'
-          type: string
-        totalBilledChargedAmount:
-          description: The total amount a healthcare provider charges for all services or items listed on a claim.
-          example: '46.00'
-          type: string
-        claimStatus:
-          description: The status of the claim.
-          example: F
-          type: string
-        serviceStartDate:
-          description: The earliest date on which a claimed service was delivered, based on all the claim service lines.
-          example: 06/01/2025
-          type: string
-        patientAccountNumber:
-          description: Patient's account number
-          example: I-57258454
-          type: string
-        claimType:
-          description: Indicates Facility or professional code
-          example: P
-          type: string
-        inventoryControlNumber:
-          description: An Inventory Control Number (ICN) is a unique identifier assigned to each claim as it enters the payer’s system. It is used to track, manage, and audit the claim throughout its lifecycle — from submission to adjudication and payment.
-          example: AB123456789
-          type: string
-      description: ClaimInfo
-    CobInfoType:
-      type: object
-      properties:
-        cobPayerId:
-          description: COB Payer ID refers to the Coordination of Benefits (COB) Payer Identifier or the payer id of the other Insurance Company the member is covered.
-          example: LIFE1
-          type: string
-        claimOIPaidAmount:
-          description: The claimOIPaidAmount refers to the amount paid by another insurance provider (Other Insurance) in a Coordination of Benefits (COB) scenario. When a patient has multiple insurance plans, the primary insurer pays first, and the secondary (or tertiary) insurer may cover remaining costs. The claimOIPaidAmount captures how much the secondary insurer has paid toward the claim. This value is essential for accurate claims processing, ensuring providers are reimbursed correctly and patients are not overcharged. It helps prevent duplicate payments and supports proper financial reconciliation between insurers involved in the claim.
-          example: '25.00'
-          type: string
-        otherInsuredName:
-          description: The otherInsuredName refers to the name of an individual who holds another insurance policy that may provide coverage for the patient. This is commonly used in Coordination of Benefits (COB) scenarios, where a patient is covered by more than one insurance plan. The otherInsuredName field helps identify the policyholder of the secondary or tertiary insurance—often a spouse, parent, or guardian. Accurate entry of this information ensures proper routing and processing of claims between insurers. It is essential for determining the order of benefit payments and avoiding duplicate or incorrect reimbursements.
-          example: XYZ Health Insurance
-          type: string
-        submittedCobIndicator:
-          description: The submittedCobIndicator is a flag or field used in healthcare claims processing to indicate whether a Coordination of Benefits (COB) claim has been submitted. It helps payers understand if the claim involves multiple insurance coverages and whether the primary, secondary, or tertiary payer has already processed the claim.
-          example: P
-          type: string
-        cobPayerType:
-          description: cobPayerType refers to the classification of the payer's role in a Coordination of Benefits (COB) scenario—essentially identifying whether the payer is commercial, medicare or medicaid.
-          example: COM
-          type: string
-        cobDesc:
-          description: cobDesc typically stands for Coordination of Benefits Description in healthcare or insurance claims. It provides a textual explanation or label for the type of COB arrangement or payer involved in a claim.
-          type: string
-        cobPolicyDesc:
-          description: cobPolicyDesc stands for Coordination of Benefits Policy Description. It provides a textual explanation or label describing the type or nature of the other insurance policy involved in a COB scenario.
-          type: string
-        cobPaymentType:
-          description: cobPaymentType refers to the method or classification of payment made by another insurance provider in a Coordination of Benefits (COB) scenario. It helps define how the secondary or tertiary payer contributed to the claim.
-          type: string
-        adjudicatedCobIndicator:
-          description: Identifies the level of payment responsibility determined by the payer that adjudicated the specific instance of the claim. e.g Primary Secondary
-          example: S
-          type: string
-        cobMedicalCalcType:
-          description: The term cobMedicalCalcType is not widely standardized across all healthcare systems, but based on naming conventions and usage in claims processing, it likely refers to the method or formula used to calculate the Coordination of Benefits (COB) payment for medical claims.
-          example: '612'
-          type: string
-        cobCommercialCalcType:
-          description: The cobCommercialCalcType describes the method a commercial insurance company uses to calculate its share of payment in a Coordination of Benefits (COB) scenario. This field helps determine how much the commercial payer owes after the primary insurer has paid. Calculation types may include methods like “standard COB,” “non-duplication,” or “maintenance of benefits,” each with different rules for how payments are coordinated. This ensures accurate reimbursement, prevents overpayments, and aligns with payer-specific policies. Understanding this field is essential for claims processors to apply the correct logic when multiple insurers are involved.
-          example: '612'
-          type: string
-      description: CobInfoType
+      description: AttachmentList
   securitySchemes:
     oAuth:
       type: oauth2

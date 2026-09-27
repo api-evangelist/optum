@@ -326,7 +326,7 @@ paths:
           description: Service Unavailable
 components:
   schemas:
-    RxHccV04:
+    CmsHccEsrdPace:
       type: object
       properties:
         hccCode:
@@ -339,15 +339,6 @@ components:
           type: string
           xml:
             attribute: true
-    Link:
-      type: object
-      properties:
-        href:
-          type: string
-          xml:
-            attribute: true
-        value:
-          type: string
     Hcc:
       required:
       - cmsHccEsrdPace
@@ -408,45 +399,6 @@ components:
           type: string
           xml:
             attribute: true
-    CmsHccV22:
-      type: object
-      properties:
-        hccCode:
-          type: string
-          xml:
-            name: hcc-code
-        desc:
-          type: string
-        href:
-          type: string
-          xml:
-            attribute: true
-    CmsHccEsrdPace:
-      type: object
-      properties:
-        hccCode:
-          type: string
-          xml:
-            name: hcc-code
-        desc:
-          type: string
-        href:
-          type: string
-          xml:
-            attribute: true
-    CmsHccVx:
-      type: object
-      properties:
-        hccCode:
-          type: string
-          xml:
-            name: hcc-code
-        desc:
-          type: string
-        href:
-          type: string
-          xml:
-            attribute: true
     DiagnosisCodeList:
       required:
       - cmsHccEsrdPace
@@ -495,7 +447,55 @@ components:
             $ref: '#/components/schemas/RxHcc'
       xml:
         name: diagnosis-code-list
+    CmsHccV22:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    CmsHccVx:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
     RxHcc:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    RxHccV04:
       type: object
       properties:
         hccCode:

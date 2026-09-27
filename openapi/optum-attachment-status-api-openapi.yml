@@ -154,73 +154,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    DetailedResponse:
-      type: object
-      properties:
-        transactionDetails:
-          type: object
-          allOf:
-          - $ref: '#/components/schemas/TransactionDetails'
-        status:
-          type: array
-          items:
-            $ref: '#/components/schemas/StatusDetails'
-    BadRequest:
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponse'
-    ErrorResponse:
-      type: object
-      properties:
-        statusCode:
-          type: string
-        statusMessage:
-          type: string
-      example:
-        statusCode: ErrorResponseCode
-        statusMessage: SystemErrors.INTERNAL_ERROR
-    NotAuthorized:
-      allOf:
-      - $ref: '#/components/schemas/UnAuthorized'
-    MetadataResponses:
-      type: array
-      items:
-        $ref: '#/components/schemas/MetadataResponse'
-    StatusDetails:
-      type: object
-      properties:
-        statusMessage:
-          type: string
-        statusCode:
-          type: string
-        statusTimeStamp:
-          type: string
-        documents:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentDetails'
-    MetadataResponse:
-      type: object
-      properties:
-        traceId:
-          type: string
-        transactionDetails:
-          type: object
-          allOf:
-          - $ref: '#/components/schemas/TransactionDetails'
-        status:
-          type: array
-          items:
-            $ref: '#/components/schemas/StatusDetails'
-    UnAuthorized:
-      type: object
-      properties:
-        error:
-          type: string
-        error_description:
-          type: string
-      example:
-        error: invalid_request
-        error_description: The access token is missing
     TransactionDetails:
       type: object
       properties:
@@ -246,6 +179,73 @@ components:
           type: string
         rejectionInformation:
           type: string
+    DetailedResponse:
+      type: object
+      properties:
+        transactionDetails:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/TransactionDetails'
+        status:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusDetails'
+    BadRequest:
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponse'
+    MetadataResponses:
+      type: array
+      items:
+        $ref: '#/components/schemas/MetadataResponse'
+    UnAuthorized:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string
+      example:
+        error: invalid_request
+        error_description: The access token is missing
+    NotAuthorized:
+      allOf:
+      - $ref: '#/components/schemas/UnAuthorized'
+    ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: string
+        statusMessage:
+          type: string
+      example:
+        statusCode: ErrorResponseCode
+        statusMessage: SystemErrors.INTERNAL_ERROR
+    MetadataResponse:
+      type: object
+      properties:
+        traceId:
+          type: string
+        transactionDetails:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/TransactionDetails'
+        status:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusDetails'
+    StatusDetails:
+      type: object
+      properties:
+        statusMessage:
+          type: string
+        statusCode:
+          type: string
+        statusTimeStamp:
+          type: string
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentDetails'
     DocumentDetails:
       type: object
       properties:

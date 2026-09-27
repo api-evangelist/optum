@@ -452,139 +452,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    FacilityServiceDetailInput:
-      type: object
-      properties:
-        facilityServiceStartDate:
-          description: First date of service or admission date. The Facility start date will default to the current date. Services can be performed any time during this date range.
-          example: '2025-08-01'
-          type: string
-        facilityServiceEndDate:
-          description: Last date of service or discharge date. The Facility end date will default to 90 Days after the Facility Start Date. Services can be performed any time during this date range.
-          example: '2025-08-01'
-          type: string
-        isPatientAdmitted:
-          description: Boolean flag if patient is admitted. Required when OPF or IP, Optional for OP
-          example: false
-          type: boolean
-        isPatientDischarged:
-          description: Boolean flag if patient is discharged. Required when OPF or IP, Optional for OP
-          example: false
-          type: boolean
-      required:
-      - facilityServiceStartDate
-      - facilityServiceEndDate
-      description: Details of the facility service.
-    CheckPlanBenefitCategory:
-      type: object
-      properties:
-        eligibilityTransactionId:
-          description: transaction id returned on the previous eligibility lookup (valid only for certain timeperiod)
-          example: abcdefg
-          type: string
-        newBenefits:
-          description: boolean value:- true=>Benefit Language can be called for further details; false=>Benefit Language not supported.
-          example: true
-          type: boolean
-        benefitCategory:
-          description: List of benefit categories.
-          items:
-            $ref: '#/components/schemas/BenefitCategory'
-          type: array
-      description: Response containing benefit categories available to the member.
-    BenefitLanguageResponseWrapper:
-      type: object
-      properties:
-        checkPlanBenefitLanguage:
-          description: Benefit Language response
-          $ref: '#/components/schemas/CheckPlanBenefitLanguage'
-      description: Benefit Language response wrapper.
-    ServicePriorAuth:
-      type: object
-      properties:
-        isPriorAuthOnFile:
-          description: boolean field to suggest if an existing prior auth is found for the procedure code
-          example: false
-          type: boolean
-        messages:
-          description: Message related to the request outcome
-          items:
-            $ref: '#/components/schemas/Message'
-          type: array
-        serviceOutcomeCode:
-          description: prior auth outcome code at service level (valid values:-1/2/3/4/5)
-          example: '1'
-          type: string
-      description: Prior authorization details for a service
-    MatchedPriorAuths:
-      type: object
-      properties:
-        caseDecision:
-          description: decision outcome on the matching prior auth existing in the system
-          example: Approved
-          type: string
-        caseServices:
-          description: List of services included in the matched prior authorization case
-          items:
-            $ref: '#/components/schemas/CaseService'
-          type: array
-        caseStatus:
-          description: current status of the existing prior auth
-          example: Closed
-          type: string
-        serviceReferenceNumber:
-          description: prior auth reference number for an existing matched prior auth submitted by the provider for the member
-          example: AUTH123456
-          type: string
-      description: Details of matched prior authorization cases
-    ReferralInquiry:
-      type: object
-      properties:
-        referralIndicator:
-          description: referral indicator to describe if referral is required or not for the member policy/plan
-          example: Y
-          type: string
-      description: Response indicating whether a referral is required for the member's plan.
-    ServiceOutcome:
-      type: object
-      properties:
-        procedureCode:
-          description: cpt/hcpcs service procedure code
-          example: '98941'
-          type: string
-        procedureCodeDescription:
-          description: Description of the procedure code
-          example: Chiropractic adjustment involving 3-4 areas of the spine
-          type: string
-        servicePriorAuth:
-          description: Prior authorization details for the service
-          $ref: '#/components/schemas/ServicePriorAuth'
-      description: Outcome details for a requested service
-    ServiceLocationInput:
-      type: object
-      properties:
-        placeOfServiceCode:
-          description: CLM05-01 [Place of Service Code or Bill Type Code] from EDI837. Code identifying where services were, or may be, performed.
-          example: '11'
-          type: string
-        claimType:
-          description: Code identifying the type of facility referenced (I=Instituitional, P=Professional or D=Dental
-          example: I
-          type: string
-        serviceDetail:
-          description: Describes the nature of the service
-          example: Medical
-          type: string
-        serviceDescription:
-          description: Describes the nature of the service (Scheduled, Emergent or Urgent)
-          example: Scheduled
-          type: string
-      required:
-      - placeOfServiceCode
-      - claimType
-      - serviceDetail
-      - serviceDescription
-      description: Location and type of service.
     ProcedureDetailsInput:
       type: object
       properties:
@@ -641,6 +508,29 @@ components:
       - diagnosisCode
       - serviceDetailDescription
       description: Details of the procedure being checked.
+    FacilityServiceDetailInput:
+      type: object
+      properties:
+        facilityServiceStartDate:
+          description: First date of service or admission date. The Facility start date will default to the current date. Services can be performed any time during this date range.
+          example: '2025-08-01'
+          type: string
+        facilityServiceEndDate:
+          description: Last date of service or discharge date. The Facility end date will default to 90 Days after the Facility Start Date. Services can be performed any time during this date range.
+          example: '2025-08-01'
+          type: string
+        isPatientAdmitted:
+          description: Boolean flag if patient is admitted. Required when OPF or IP, Optional for OP
+          example: false
+          type: boolean
+        isPatientDischarged:
+          description: Boolean flag if patient is discharged. Required when OPF or IP, Optional for OP
+          example: false
+          type: boolean
+      required:
+      - facilityServiceStartDate
+      - facilityServiceEndDate
+      description: Details of the facility service.
     ProviderDetailInput:
       type: object
       properties:
@@ -659,25 +549,124 @@ components:
       required:
       - providerLastOrOrganizationName
       description: Details of the provider for referral inquiry.
-    BenefitCategoryResponse:
+    BenefitCategoryResponseWrapper:
       type: object
       properties:
-        data:
-          description: Benefit Category response wrapper.
-          $ref: '#/components/schemas/BenefitCategoryResponseWrapper'
-      description: Benefit Category response data wrapper.
-    Member:
+        checkPlanBenefitCategory:
+          description: Benefit Category response
+          $ref: '#/components/schemas/CheckPlanBenefitCategory'
+      description: Benefit Category response wrapper.
+    ProviderRoleInput:
       type: object
       properties:
-        groupNumber:
-          description: Group or policy number of the member
-          example: M123456789
+        role:
+          description: Role of the provider (BI:Billing/Requesting; AT:Attending; SF:Servicing; FA:Facility)
+          example: Requesting
           type: string
-        memberId:
-          description: Unique identifier for the member
-          example: G123456
+      required:
+      - role
+      description: Role of the provider in the case.
+    ReferralInquiry:
+      type: object
+      properties:
+        referralIndicator:
+          description: referral indicator to describe if referral is required or not for the member policy/plan
+          example: Y
           type: string
-      description: Member information
+      description: Response indicating whether a referral is required for the member's plan.
+    ServicePriorAuth:
+      type: object
+      properties:
+        isPriorAuthOnFile:
+          description: boolean field to suggest if an existing prior auth is found for the procedure code
+          example: false
+          type: boolean
+        messages:
+          description: Message related to the request outcome
+          items:
+            $ref: '#/components/schemas/Message'
+          type: array
+        serviceOutcomeCode:
+          description: prior auth outcome code at service level (valid values:-1/2/3/4/5)
+          example: '1'
+          type: string
+      description: Prior authorization details for a service
+    Message:
+      type: object
+      properties:
+        messageText:
+          description: Text of the message
+          example: Prior authorization required for the requested service
+          type: string
+      description: Message related to prior authorization or service outcome
+    DiagnosisCodesInput:
+      type: object
+      properties:
+        diagnosisTypeCode:
+          description: Diagnosis type code (ex:ABK/ABJ for Primary ICD10 and BK/BJ for Primary ICD9; ABF/APR for Secondary ICD10 and BF/BR for Secondary ICD9)
+          example: ABK
+          type: string
+        diagnosisCode:
+          description: Diagnosis Code example J01.90
+          example: J01.90
+          type: string
+      required:
+      - diagnosisTypeCode
+      - diagnosisCode
+      description: Diagnosis codes relevant to the case.
+    CasePriorAuth:
+      type: object
+      properties:
+        requestMessages:
+          description: Messages related to the prior authorization request
+          items:
+            $ref: '#/components/schemas/Message'
+          type: array
+        requestOutcomeCode:
+          description: prior auth case outcome code (valid values:-1/2/3/4/5)
+          example: '1'
+          type: string
+        requestOutcomeCodeDescription:
+          description: Description of the outcome code
+          example: Authorization Required
+          type: string
+        requestReferenceNumber:
+          description: unique payer identifier assigned to prior auth case
+          example: REQ123456789
+          type: string
+      description: Details of the prior authorization request
+    CheckPlanBenefitCategory:
+      type: object
+      properties:
+        eligibilityTransactionId:
+          description: transaction id returned on the previous eligibility lookup (valid only for certain timeperiod)
+          example: abcdefg
+          type: string
+        newBenefits:
+          description: boolean value:- true=>Benefit Language can be called for further details; false=>Benefit Language not supported.
+          example: true
+          type: boolean
+        benefitCategory:
+          description: List of benefit categories.
+          items:
+            $ref: '#/components/schemas/BenefitCategory'
+          type: array
+      description: Response containing benefit categories available to the member.
+    ServiceOutcome:
+      type: object
+      properties:
+        procedureCode:
+          description: cpt/hcpcs service procedure code
+          example: '98941'
+          type: string
+        procedureCodeDescription:
+          description: Description of the procedure code
+          example: Chiropractic adjustment involving 3-4 areas of the spine
+          type: string
+        servicePriorAuth:
+          description: Prior authorization details for the service
+          $ref: '#/components/schemas/ServicePriorAuth'
+      description: Outcome details for a requested service
     BenefitDetail:
       type: object
       properties:
@@ -694,13 +683,95 @@ components:
           example: UnitedHealthcare X-Ray Program
           type: string
       description: Details of a specific benefit.
-    BenefitLanguageResponse:
+    ServiceLocationInput:
       type: object
       properties:
-        data:
-          description: Benefit Language response wrapper.
-          $ref: '#/components/schemas/BenefitLanguageResponseWrapper'
-      description: Benefit Language response data wrapper.
+        placeOfServiceCode:
+          description: CLM05-01 [Place of Service Code or Bill Type Code] from EDI837. Code identifying where services were, or may be, performed.
+          example: '11'
+          type: string
+        claimType:
+          description: Code identifying the type of facility referenced (I=Instituitional, P=Professional or D=Dental
+          example: I
+          type: string
+        serviceDetail:
+          description: Describes the nature of the service
+          example: Medical
+          type: string
+        serviceDescription:
+          description: Describes the nature of the service (Scheduled, Emergent or Urgent)
+          example: Scheduled
+          type: string
+      required:
+      - placeOfServiceCode
+      - claimType
+      - serviceDetail
+      - serviceDescription
+      description: Location and type of service.
+    CaseSummary:
+      type: object
+      properties:
+        member:
+          description: Member information
+          $ref: '#/components/schemas/Member'
+        placeOfServiceCode:
+          description: place of service code (edi837 compliant two byte value)
+          example: '11'
+          type: string
+        requestingProviderNPI:
+          description: NPI of the requesting provider
+          example: '9876543210'
+          type: string
+        requestingProviderTin:
+          description: Tax ID of the requesting provider
+          example: '123456789'
+          type: string
+      description: Summary of the benefit check case
+    CheckPlanBenefitLanguage:
+      type: object
+      properties:
+        newBenefits:
+          description: boolean value:- true=>Benefit Language can be called for further details; false=>Benefit Language not supported.
+          example: true
+          type: boolean
+        benefits:
+          description: Detailed benefit language including cost shares, limits, and exceptions.
+          $ref: '#/components/schemas/BenefitLanguage'
+      description: Response containing language details for a specific benefit.
+    CheckPriorAuthBenefitCoverage:
+      type: object
+      properties:
+        caseOutcome:
+          description: Outcome of the benefit check case including prior authorization details
+          $ref: '#/components/schemas/CaseOutcome'
+        caseSummary:
+          description: Summary of the case including member and provider details
+          $ref: '#/components/schemas/CaseSummary'
+        matchedPriorAuths:
+          description: List of matched prior authorization cases
+          items:
+            $ref: '#/components/schemas/MatchedPriorAuths'
+          type: array
+        serviceOutcomes:
+          description: List of outcomes for each requested service
+          items:
+            $ref: '#/components/schemas/ServiceOutcome'
+          type: array
+      description: Response type for Benefit Check operation
+    BenefitCheckResponseWrapper:
+      type: object
+      properties:
+        checkPriorAuthBenefitCoverage:
+          description: Benefit Check response
+          $ref: '#/components/schemas/CheckPriorAuthBenefitCoverage'
+      description: Benefit Check response wrapper.
+    BenefitLanguageResponseWrapper:
+      type: object
+      properties:
+        checkPlanBenefitLanguage:
+          description: Benefit Language response
+          $ref: '#/components/schemas/CheckPlanBenefitLanguage'
+      description: Benefit Language response wrapper.
     CaseDetailProviderInput:
       type: object
       properties:
@@ -754,158 +825,65 @@ components:
       - providerRoles
       - procedureDetails
       description: Details of the provider involved in the case.
-    BenefitLanguage:
+    AddressInput:
       type: object
       properties:
-        benefitName:
-          description: Name of the benefit.
-          example: Hearing Aids
+        line1:
+          description: First line of street address
+          example: 1234 CHARDAVE
           type: string
-        benefitDetails:
-          description: Detailed explanation of the benefit.
-          example: 'What are hearing aids: Electronic amplifying devices designed to bring sound more effectively into the ear.'
+        line2:
+          description: Second line of street address
           type: string
-        benefitInformationSection:
-          description: Informational data for the benefitId
-          example: text
-          items:
-            type: string
-          type: array
-        benefitNetworkSection:
-          description: Network-specific cost and coverage details.
-          items:
-            $ref: '#/components/schemas/BenefitNetworkSection'
-          type: array
-        limitsAndExceptions:
-          description: Limitations and exceptions applicable to the benefit.
-          items:
-            $ref: '#/components/schemas/LimitException'
-          type: array
-      description: Language details of a benefit including costs, network status, and exceptions.
-    CasePriorAuth:
-      type: object
-      properties:
-        requestMessages:
-          description: Messages related to the prior authorization request
-          items:
-            $ref: '#/components/schemas/Message'
-          type: array
-        requestOutcomeCode:
-          description: prior auth case outcome code (valid values:-1/2/3/4/5)
-          example: '1'
+        city:
+          description: City
+          example: Hastings
           type: string
-        requestOutcomeCodeDescription:
-          description: Description of the outcome code
-          example: Authorization Required
+        state:
+          description: State code
+          example: TX
           type: string
-        requestReferenceNumber:
-          description: unique payer identifier assigned to prior auth case
-          example: REQ123456789
+        zip:
+          description: ZIP code
+          example: '12133'
           type: string
-      description: Details of the prior authorization request
-    CaseService:
-      type: object
-      properties:
-        procedureCode:
-          description: Procedure code for which the prior auth was submitted
-          example: '99213'
-          type: string
-        serviceDecision:
-          description: Decision for the service.
-          example: Approved
-          type: string
-        serviceMessage:
-          description: Message related to the service decision.
-          example: Prior authorization valid through 2025-12-31
-          type: string
-      description: Details of a service in a matched prior authorization case
-    DiagnosisCodesInput:
-      type: object
-      properties:
-        diagnosisTypeCode:
-          description: Diagnosis type code (ex:ABK/ABJ for Primary ICD10 and BK/BJ for Primary ICD9; ABF/APR for Secondary ICD10 and BF/BR for Secondary ICD9)
-          example: ABK
-          type: string
-        diagnosisCode:
-          description: Diagnosis Code example J01.90
-          example: J01.90
+        zip4:
+          description: Extended ZIP+4 code
+          example: '1001'
           type: string
       required:
-      - diagnosisTypeCode
-      - diagnosisCode
-      description: Diagnosis codes relevant to the case.
-    CaseSummary:
-      type: object
-      properties:
-        member:
-          description: Member information
-          $ref: '#/components/schemas/Member'
-        placeOfServiceCode:
-          description: place of service code (edi837 compliant two byte value)
-          example: '11'
-          type: string
-        requestingProviderNPI:
-          description: NPI of the requesting provider
-          example: '9876543210'
-          type: string
-        requestingProviderTin:
-          description: Tax ID of the requesting provider
-          example: '123456789'
-          type: string
-      description: Summary of the benefit check case
-    BenefitNetworkSection:
-      type: object
-      properties:
-        costs:
-          description: cost details for the benefit
-          example: 'UHC Network: co-insurance after you pay the deductible. Is prior-auth needed? No'
-          type: string
-        networkStatus:
-          description: network status details on the benefit
-          example: Your cost if you use Network benefits
-          items:
-            type: string
-          type: array
-      description: Details of benefit coverage within a specific network.
-    CheckPriorAuthBenefitCoverage:
-      type: object
-      properties:
-        caseOutcome:
-          description: Outcome of the benefit check case including prior authorization details
-          $ref: '#/components/schemas/CaseOutcome'
-        caseSummary:
-          description: Summary of the case including member and provider details
-          $ref: '#/components/schemas/CaseSummary'
-        matchedPriorAuths:
-          description: List of matched prior authorization cases
-          items:
-            $ref: '#/components/schemas/MatchedPriorAuths'
-          type: array
-        serviceOutcomes:
-          description: List of outcomes for each requested service
-          items:
-            $ref: '#/components/schemas/ServiceOutcome'
-          type: array
-      description: Response type for Benefit Check operation
-    BenefitCheckResponse:
+      - line1
+      - city
+      - state
+      - zip
+      description: Address of the provider.
+    BenefitLanguageResponse:
       type: object
       properties:
         data:
-          description: Benefit Check response wrapper.
-          $ref: '#/components/schemas/BenefitCheckResponseWrapper'
-      description: Benefit Check response data wrapper.
-    LimitException:
+          description: Benefit Language response wrapper.
+          $ref: '#/components/schemas/BenefitLanguageResponseWrapper'
+      description: Benefit Language response data wrapper.
+    BenefitCategory:
       type: object
       properties:
-        description:
-          description: Summary of the limitation or exception.
-          example: General
+        categoryName:
+          description: Parent category of the benefit.
+          example: MRI services
           type: string
-        details:
-          description: Detailed explanation of the limitation or exception.
-          example: No coverage for bone anchored hearing aids except Craniofacial anomalies.
-          type: string
-      description: Limitations and exceptions for a benefit.
+        categoryDetail:
+          description: Details of the benefit sub-category.
+          items:
+            $ref: '#/components/schemas/BenefitDetail'
+          type: array
+      description: Benefit category and its details.
+    BenefitCategoryResponse:
+      type: object
+      properties:
+        data:
+          description: Benefit Category response wrapper.
+          $ref: '#/components/schemas/BenefitCategoryResponseWrapper'
+      description: Benefit Category response data wrapper.
     BeneficiaryDetailInput:
       type: object
       properties:
@@ -944,13 +922,6 @@ components:
       - lastName
       - groupNumber
       description: Details of the member for benefit check.
-    ReferralInquiryResponse:
-      type: object
-      properties:
-        data:
-          description: Referral Inquiry response wrapper.
-          $ref: '#/components/schemas/ReferralInquiryResponseWrapper'
-      description: Referral Inquiry response data wrapper.
     ReferralInquiryResponseWrapper:
       type: object
       properties:
@@ -958,34 +929,95 @@ components:
           description: Referral Inquiry response
           $ref: '#/components/schemas/ReferralInquiry'
       description: Referral Inquiry response wrapper.
-    BenefitCheckResponseWrapper:
+    BenefitLanguage:
       type: object
       properties:
-        checkPriorAuthBenefitCoverage:
-          description: Benefit Check response
-          $ref: '#/components/schemas/CheckPriorAuthBenefitCoverage'
-      description: Benefit Check response wrapper.
-    BenefitCategory:
-      type: object
-      properties:
-        categoryName:
-          description: Parent category of the benefit.
-          example: MRI services
+        benefitName:
+          description: Name of the benefit.
+          example: Hearing Aids
           type: string
-        categoryDetail:
-          description: Details of the benefit sub-category.
+        benefitDetails:
+          description: Detailed explanation of the benefit.
+          example: 'What are hearing aids: Electronic amplifying devices designed to bring sound more effectively into the ear.'
+          type: string
+        benefitInformationSection:
+          description: Informational data for the benefitId
+          example: text
           items:
-            $ref: '#/components/schemas/BenefitDetail'
+            type: string
           type: array
-      description: Benefit category and its details.
-    Message:
+        benefitNetworkSection:
+          description: Network-specific cost and coverage details.
+          items:
+            $ref: '#/components/schemas/BenefitNetworkSection'
+          type: array
+        limitsAndExceptions:
+          description: Limitations and exceptions applicable to the benefit.
+          items:
+            $ref: '#/components/schemas/LimitException'
+          type: array
+      description: Language details of a benefit including costs, network status, and exceptions.
+    Member:
       type: object
       properties:
-        messageText:
-          description: Text of the message
-          example: Prior authorization required for the requested service
+        groupNumber:
+          description: Group or policy number of the member
+          example: M123456789
           type: string
-      description: Message related to prior authorization or service outcome
+        memberId:
+          description: Unique identifier for the member
+          example: G123456
+          type: string
+      description: Member information
+    BenefitCheckResponse:
+      type: object
+      properties:
+        data:
+          description: Benefit Check response wrapper.
+          $ref: '#/components/schemas/BenefitCheckResponseWrapper'
+      description: Benefit Check response data wrapper.
+    MatchedPriorAuths:
+      type: object
+      properties:
+        caseDecision:
+          description: decision outcome on the matching prior auth existing in the system
+          example: Approved
+          type: string
+        caseServices:
+          description: List of services included in the matched prior authorization case
+          items:
+            $ref: '#/components/schemas/CaseService'
+          type: array
+        caseStatus:
+          description: current status of the existing prior auth
+          example: Closed
+          type: string
+        serviceReferenceNumber:
+          description: prior auth reference number for an existing matched prior auth submitted by the provider for the member
+          example: AUTH123456
+          type: string
+      description: Details of matched prior authorization cases
+    ReferralInquiryResponse:
+      type: object
+      properties:
+        data:
+          description: Referral Inquiry response wrapper.
+          $ref: '#/components/schemas/ReferralInquiryResponseWrapper'
+      description: Referral Inquiry response data wrapper.
+    BenefitNetworkSection:
+      type: object
+      properties:
+        costs:
+          description: cost details for the benefit
+          example: 'UHC Network: co-insurance after you pay the deductible. Is prior-auth needed? No'
+          type: string
+        networkStatus:
+          description: network status details on the benefit
+          example: Your cost if you use Network benefits
+          items:
+            type: string
+          type: array
+      description: Details of benefit coverage within a specific network.
     CaseOutcome:
       type: object
       properties:
@@ -993,66 +1025,34 @@ components:
           description: Prior authorization details for the case
           $ref: '#/components/schemas/CasePriorAuth'
       description: Outcome details for the benefit check case
-    CheckPlanBenefitLanguage:
+    LimitException:
       type: object
       properties:
-        newBenefits:
-          description: boolean value:- true=>Benefit Language can be called for further details; false=>Benefit Language not supported.
-          example: true
-          type: boolean
-        benefits:
-          description: Detailed benefit language including cost shares, limits, and exceptions.
-          $ref: '#/components/schemas/BenefitLanguage'
-      description: Response containing language details for a specific benefit.
-    AddressInput:
+        description:
+          description: Summary of the limitation or exception.
+          example: General
+          type: string
+        details:
+          description: Detailed explanation of the limitation or exception.
+          example: No coverage for bone anchored hearing aids except Craniofacial anomalies.
+          type: string
+      description: Limitations and exceptions for a benefit.
+    CaseService:
       type: object
       properties:
-        line1:
-          description: First line of street address
-          example: 1234 CHARDAVE
+        procedureCode:
+          description: Procedure code for which the prior auth was submitted
+          example: '99213'
           type: string
-        line2:
-          description: Second line of street address
+        serviceDecision:
+          description: Decision for the service.
+          example: Approved
           type: string
-        city:
-          description: City
-          example: Hastings
+        serviceMessage:
+          description: Message related to the service decision.
+          example: Prior authorization valid through 2025-12-31
           type: string
-        state:
-          description: State code
-          example: TX
-          type: string
-        zip:
-          description: ZIP code
-          example: '12133'
-          type: string
-        zip4:
-          description: Extended ZIP+4 code
-          example: '1001'
-          type: string
-      required:
-      - line1
-      - city
-      - state
-      - zip
-      description: Address of the provider.
-    ProviderRoleInput:
-      type: object
-      properties:
-        role:
-          description: Role of the provider (BI:Billing/Requesting; AT:Attending; SF:Servicing; FA:Facility)
-          example: Requesting
-          type: string
-      required:
-      - role
-      description: Role of the provider in the case.
-    BenefitCategoryResponseWrapper:
-      type: object
-      properties:
-        checkPlanBenefitCategory:
-          description: Benefit Category response
-          $ref: '#/components/schemas/CheckPlanBenefitCategory'
-      description: Benefit Category response wrapper.
+      description: Details of a service in a matched prior authorization case
   securitySchemes:
     oAuth:
       type: oauth2

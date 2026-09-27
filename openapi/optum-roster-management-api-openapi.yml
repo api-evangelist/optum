@@ -126,16 +126,13 @@ paths:
                       message: Something failed during the search of your package. Please try again.
 components:
   schemas:
-    ApiErrorResponse:
+    Error:
       type: object
       properties:
         status:
-          type: integer
-          format: int32
-        statusMessage:
           type: string
-        error:
-          $ref: '#/components/schemas/Error'
+        detail:
+          $ref: '#/components/schemas/ErrorDetail'
     ErrorDetail:
       type: object
       properties:
@@ -197,13 +194,16 @@ components:
               type: string
               format: date-time
               example: '2023-08-24T10:17:19'
-    Error:
+    ApiErrorResponse:
       type: object
       properties:
         status:
+          type: integer
+          format: int32
+        statusMessage:
           type: string
-        detail:
-          $ref: '#/components/schemas/ErrorDetail'
+        error:
+          $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

@@ -199,13 +199,6 @@ paths:
     - url: /v1/optumcommonms
 components:
   schemas:
-    ContractorValue:
-      type: object
-      properties:
-        contractorNumber:
-          type: string
-        contractorName:
-          type: string
     ABNForm:
       type: object
       properties:
@@ -227,25 +220,12 @@ components:
           type: string
         isEnglishPDF:
           type: boolean
-    ABNItemService:
+    ContractorValue:
       type: object
       properties:
-        codeItemService:
+        contractorNumber:
           type: string
-        estimatedCost:
-          type: string
-        patientAction:
-          type: string
-        medicareNoPayReason:
-          type: string
-        spanishMedicareReason:
-          type: string
-    PlaceOfServiceValue:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
+        contractorName:
           type: string
     PhysicianClaimSourceRationale:
       type: object
@@ -265,6 +245,26 @@ components:
         sourceUrl:
           type: string
         description:
+          type: string
+    PlaceOfServiceValue:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    ABNItemService:
+      type: object
+      properties:
+        codeItemService:
+          type: string
+        estimatedCost:
+          type: string
+        patientAction:
+          type: string
+        medicareNoPayReason:
+          type: string
+        spanishMedicareReason:
           type: string
   securitySchemes:
     bearerAuth:

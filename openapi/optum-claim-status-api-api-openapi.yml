@@ -158,6 +158,69 @@ paths:
                 $ref: '#/components/schemas/Response'
 components:
   schemas:
+    Subscriber:
+      type: object
+      properties:
+        memberId:
+          type: string
+          description: 'Loop: 2100D, Segment: NM1, Element: NM109, Notes: The subscriber''s insurance member ID. Maps to subscriberId.'
+          example: '0000000000'
+          maxLength: 80
+          minLength: 2
+        firstName:
+          type: string
+          description: 'Loop: 2100D, Segment: NM1, Element: NM104, Notes: The subscriber''s first name as specified on their policy'
+          example: johnone
+          maxLength: 35
+          minLength: 1
+        lastName:
+          type: string
+          description: 'Loop: 2100D, Segment: NM1, Element: NM103, Notes: The subscriber''s last name as specified on their policy.'
+          example: doeone
+          maxLength: 60
+          minLength: 1
+        gender:
+          type: string
+          description: 'Loop: 2000D, 2000E, Segment: DMG, Element: DMG03, Notes: The subscriber''s gender as specified on their policy.'
+          enum:
+          - M
+          - F
+          - U
+          example: M
+          pattern: F|M|U
+        dateOfBirth:
+          type: string
+          description: 'Loop: 2000D, Segment: DMG, Element: DMG02, Notes: The birth date as specified on the policy for the subscriber. Maps to BirthDate'
+          example: '18800102'
+        groupNumber:
+          type: string
+          description: 'Loop: 2200D, Segment: REF, Element: REF01, Notes: The group number associated with the subscriber.'
+          example: '0000000000'
+          maxLength: 50
+          minLength: 1
+      required:
+      - firstName
+      - lastName
+      - memberId
+    ResponseExtensions:
+      type: object
+      properties:
+        statusCode:
+          type: string
+          description: 'NOTE: Allowed Values are: ''0'' Success, ''1'' Not Authorized, ''2'' Internal Error,''3'' Extension Not Applicable, ''4'' Extension Not Available At This time, ''5''Invalid Request Extension Type'
+          enum:
+          - '0'
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+        statusDescription:
+          type: string
+        extensions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extensions'
     HealthCheckResponse:
       type: object
       properties:
@@ -169,80 +232,292 @@ components:
           type: string
           description: API version
           example: V2
-    ErrorResponse:
+    Claim:
       type: object
       properties:
-        code:
-          type: string
-          description: Code for the error.
-          example: INVALIDMISSINGINPUTDATA
-        description:
-          type: string
-          description: Description of the error code. Value provided in payer id should be a valid CHC assigned ERA payer Id.
-        transactionIdentifier:
-          $ref: '#/components/schemas/TransactionIdentifier'
-        errors:
+        claimStatus:
+          $ref: '#/components/schemas/ClaimStatus'
+          description: 'Loop: 2200D, 2200E'
+        serviceDetails:
           type: array
+          description: 'Loop: 2220D, 2220E'
           items:
-            $ref: '#/components/schemas/ErrorDetail'
-    ServiceDetail:
+            $ref: '#/components/schemas/ServiceDetail'
+    Request:
       type: object
       properties:
-        service:
-          $ref: '#/components/schemas/Service'
-          description: 'Loop: 2220D, 2220E, Segment: SVC, Notes: Service Line Information'
-        status:
-          type: array
-          description: 'Loop: 2220D, 2220E, Segment: STC, Notes: Service Line Status Information'
-          items:
-            $ref: '#/components/schemas/Status'
-    Extensions:
-      type: object
-      properties:
-        type:
+        controlNumber:
           type: string
-          description: 'NOTE: Allowed Values are: ''CLAIM_STATUS'' Request to include claim, check and cob extended claim status data in addition to the 277 response.'
-          enum:
-          - CLAIM_STATUS
+          description: 'Header, Segment: ST02 (no loop), Notes: Transaction Set Control Number'
+          example: '123456789'
+          maxLength: 9
+          minLength: 9
+        tradingPartnerName:
+          type: string
+          description: 'Loop: 2100A, Segment: NM1, Element: NM103, Notes: organizational name'
+          example: TestPayer
+        tradingPartnerServiceId:
+          type: string
+          description: 'Loop: 2100A Segment: NM1, Element: NM109, Notes: we send this as MN108 as PI = Payer Identification'
+          example: serviceId
+          maxLength: 80
+          minLength: 2
+        providers:
+          type: array
+          description: 'Loop: 2100B, Loop: 2100C'
+          items:
+            $ref: '#/components/schemas/Provider'
+          maxItems: 2147483647
+          minItems: 1
+        subscriber:
+          $ref: '#/components/schemas/Subscriber'
+          description: 'Loop: 2000D'
+        dependent:
+          $ref: '#/components/schemas/Member'
+          description: 'Loop: 2000E'
+        encounter:
+          $ref: '#/components/schemas/Encounter'
+          description: 'Loop: 2200D or 2200E'
+        serviceLineInformation:
+          $ref: '#/components/schemas/ServiceLineInformation'
+          description: 'Loop: 2220D or 2220E'
       required:
-      - type
-    Member:
+      - controlNumber
+      - providers
+      - subscriber
+    ContactInformation:
       type: object
       properties:
-        firstName:
+        name:
           type: string
-          description: 'Loop: 2100E, Segment: NM1, Element: NM104, Notes: The dependent''s first name as specified on their policy.'
-          example: janeone
-          maxLength: 35
-          minLength: 1
-        lastName:
+          description: 'Segment: PER, Element: PER02, Notes: Payer’s name.'
+          example: TEST PAYER DEPARTMENT
+        electronicDataInterChangeAccessNumber:
           type: string
-          description: 'Loop: 2100E, Segment: NM1, Element: NM103, Notes: The dependent''s last name as specified on their policy.'
-          example: doeone
-          maxLength: 60
-          minLength: 1
-        gender:
+          description: 'Segment: PER, Element: PER04, PER06 or PER08, Notes: Payer''s electronic data interchange access number. PER03=PER05=PER07=ED'
+          example: '111111'
+        email:
           type: string
-          description: 'Loop: 2000E, Segment: DMG, Element: DMG03, Notes: dependent''s gender as specified on their policy.'
-          enum:
-          - M
-          - F
-          - U
-          example: F
-          pattern: F|M|U
-        dateOfBirth:
+          description: 'Segment: PER, Element: PER04, PER06 or PER08, Notes: Payer''s email. PER03=PER05=PER07=EM'
+          example: test@test.com
+        fax:
           type: string
-          description: 'Loop: 2000E, Segment: DMG, Element: DMG02, Notes: The birth date as specified on the policy for the dependent.'
-          example: '18800101'
-        groupNumber:
+          description: 'Segment: PER, Element: PER04, PER06 or PER08, Notes: Payer''s facsimile number. PER03=PER05=PER07=FX'
+          example: 123-456-7890
+        phone:
           type: string
-          description: 'Loop: 2200E, Segment: REF, Element: REF02 when REF01=6P, Notes: The group number associated with the subscriber and dependent. Maps to dependent groupNumber.'
-          example: '0000000000'
+          description: 'Segment: PER, Element: PER04, PER06 or PER08, Notes: Payer''s telephone number. PER03=PER05=PER07=TE'
+          example: 123-456-7890
+        phoneExtension:
+          type: string
+          description: 'Segment: PER, Element: PER04, PER06 or PER08, Notes: Payer''s telephone extension. PER05=PER07=EX'
+          example: '0000'
+    Encounter:
+      type: object
+      properties:
+        beginningDateOfService:
+          type: string
+          description: 'Loop: 2200D or 2200E, Segment: DTP, Element: DTP03, Notes: Date Time Period - Start Date'
+          example: '20100101'
+        endDateOfService:
+          type: string
+          description: 'Loop: 2200D or 2200E, Segment: DTP, Element: DTP03, Notes: Date Time Period - End Date'
+          example: '20100102'
+        trackingNumber:
+          type: string
+          description: 'Loop: 2200D or 2200E, Segment: TRN, Element: TRN02, Notes: This is the claim status tracking number assigned to the status query for the claim.'
+          example: ABCD
           maxLength: 50
           minLength: 1
-      required:
-      - firstName
-      - lastName
+        tradingPartnerClaimNumber:
+          type: string
+          description: 'Loop: 2200D or 2200E, Segment: REF, Element: REF02, Notes: This is the payer assigned claim number. descriptions goes in REF02 where REF01=1K'
+          maxLength: 50
+          minLength: 1
+          example: '1234567890'
+        locationIdentifier:
+          type: string
+          description: 'Loop: 2200D or 2200E, Segment: REF, Element: REF02, Notes: Required if application or location system identifier is known. descriptions goes in REF02 where REF01=LU'
+          maxLength: 50
+          minLength: 1
+          example: LU12345
+        billingType:
+          type: string
+          description: 'Loop: 2200D or 2200E, Segment: REF, Element: REF02, Notes: Billing type reference ID. Example: billing type for inpatient services is 111. descriptions goes in REF02 where REF01=BLT'
+          maxLength: 50
+          minLength: 1
+          example: '111'
+        patientAccountNumber:
+          type: string
+          description: 'Loop: 2200D or 2200E, Segment: REF, Element: REF02, Notes: Patient account number provided by service provider. description goes in REF02 where REF01=EJ'
+          maxLength: 50
+          minLength: 1
+          example: PAT123456
+        pharmacyPrescriptionNumber:
+          type: string
+          description: 'Loop: 2200D or 2200E, Segment: REF, Element: REF02, Notes: Patient pharmacy prescription number. description goes in REF02 where REF01=XZ'
+          maxLength: 50
+          minLength: 1
+          example: RX123456
+        clearingHouseClaimNumber:
+          type: string
+          description: 'Loop: 2200D or 2200E, Segment: REF, Element: REF02, Notes: Claim number provided by clearing house. description goes in REF02 where REF01=D9'
+          maxLength: 50
+          minLength: 1
+          example: D9123456
+        submittedAmount:
+          type: string
+          description: 'Loop: 2200D or 2200E, Segment: AMT, Element: AMT02, Notes: Submitted total charges. description goes in AMT02 where AMT01=T3'
+          maxLength: 18
+          minLength: 1
+          example: '100.00'
+    Payer:
+      type: object
+      description: Payer
+      properties:
+        organizationName:
+          type: string
+          description: 'Segment: NM1, Element: NM103, Notes: Payers’s organization name.'
+          example: TestPayer
+        payerIdentification:
+          type: string
+          description: 'Segment: NM1, Element: NM109, Notes: Payers’s identification number established through trading partner agreement. NM108=PI'
+          example: '12345'
+        centersForMedicareAndMedicaidServicePlanId:
+          type: string
+          description: 'Segment: NM1, Element: NM109, Notes: Use when reporting Health Plan ID (HPID) or Other Entity Identifier (OEID). NM108=XV'
+          example: '12345'
+        contactInformation:
+          $ref: '#/components/schemas/ContactInformation'
+          description: 'Segment: PER'
+    ErrorDetail:
+      type: object
+      properties:
+        field:
+          type: string
+          description: Attribute that is bad
+        value:
+          type: string
+          description: Value of bad attribute
+        code:
+          type: string
+          description: 'Code for the error. Example: INVALID_VALUE'
+        description:
+          type: string
+          description: Description of the error code. Value provided in payer id should be a valid CHC assigned ERA payer ID
+        location:
+          type: string
+          description: 'Segment/location where the error occurred. If this is a network/system error, there is no location attribute. Example: $.payerBenefits[0].payer'
+        followupAction:
+          type: string
+          description: Any follow action required for the error. For AAA errors, this would be value for AAA04
+    Service:
+      type: object
+      properties:
+        serviceIdQualifierCode:
+          type: string
+          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC01-1, Notes: Code identifying the type/source of the descriptive number used in Product/Service ID. Code Example: AD, Allowed Values are ''AD'' American Dental Association Codes, ''ER'' Jurisdiction Specific Procedure and Supply Codes, ''HC'' Health Care Financing Administration Common Procedural Coding System (HCPCS) Codes, ''HP'' Health Insurance Prospective Payment System (HIPPS) Skilled Nursing Facility Rate Code, ''IV'' Home Infusion EDI Coalition (HIEC) Product/Service Code, ''N4'' National Drug Code in 5-4-2 Format, ''NU'' National Uniform Billing Committee (NUBC) UB92 Codes, ''WK'' Advanced Billing Concepts (ABC) Codes'
+          enum:
+          - AD
+          - ER
+          - HC
+          - HP
+          - IV
+          - N4
+          - NU
+          - WK
+        serviceIdQualifier:
+          type: string
+          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC01-1, Notes: description associated with the service code. Example: American Dental Association Codes'
+        procedureId:
+          type: string
+          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC01-2, Notes: Identifying number for a product or service.'
+        submittedAmount:
+          type: string
+          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC02, Notes: Amount submitted for the service. This is the line item total on the current claim service status.'
+        amountPaid:
+          type: string
+          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC03, Notes: Amount paid for the service.'
+        revenueCode:
+          type: string
+          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC04, Notes: National uniform billing committee revenue code.'
+        submittedUnits:
+          type: string
+          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC07, Notes: Original submitted units of service.'
+    RawX12RequestExtension:
+      type: object
+      properties:
+        x12:
+          type: string
+        extensions:
+          $ref: '#/components/schemas/RequestExtensions'
+    Status:
+      type: object
+      properties:
+        statusCategoryCode:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC01-1, Notes: The health care claim status category code. Example: F3'
+        statusCategoryCodeValue:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC01-1, Notes: Value of the category code. F3 = Finalized/Revised - Adjudication information has been changed'
+        statusCode:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC01-2, Notes: Status code used to identify the status of an entire claim or a service line. Example: 3'
+        statusCodeValue:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC01-2, Notes: Status Code value. 3 = Claim has been adjudicated and is awaiting payment cycle.'
+        entityCode:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element STC01-3, Notes:Code for the entity. Example: 2P'
+        entity:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element STC01-3, Notes: Value of the entity code. Example: 2P=Public Health Service Facility'
+        secondaryStatusCategoryCode:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC10-1, Notes: The health care claim status category code. Example: F3'
+        secondaryStatusCategoryCodeValue:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC10-1, Notes: Value of the category code. F3 = Finalized/Revised - Adjudication information has been changed'
+        secondaryStatusCode:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC10-2, Notes: Status code used to identify the status of an entire claim or a service line. Example: 3'
+        secondaryStatusCodeValue:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC10-2, Notes: Status Code value. 3 = Claim has been adjudicated and is awaiting payment cycle.'
+        secondaryEntityCode:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element STC10-3, Notes:Code for the entity. Example: 2P'
+        secondaryEntity:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element STC10-3, Notes: Value of the entity code. Example: 2P=Public Health Service Facility'
+        tertiaryStatusCategoryCode:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC11-1, Notes: The health care claim status category code. Example: F3'
+        tertiaryStatusCategoryCodeValue:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC11-1, Notes: Value of the category code. F3 = Finalized/Revised - Adjudication information has been changed'
+        tertiaryStatusCode:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC11-2, Notes: Status code used to identify the status of an entire claim or a service line. Example: 3'
+        tertiaryStatusCodeValue:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC11-2, Notes: Status Code value. 3 = Claim has been adjudicated and is awaiting payment cycle.'
+        tertiaryEntityCode:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element STC11-3, Notes:Code for the entity. Example: 2P'
+        tertiaryEntity:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element STC11-3, Notes: Value of the entity code. Example: 2P=Public Health Service Facility'
+        effectiveDate:
+          type: string
+          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC02, Notes: Effective date of the status information. Date the service was placed in this status by the information source’s adjudication process. Date or Date range, format YYYYMMDD'
+    ExtendedClaimStatusResponse:
+      type: object
+      properties:
+        x12:
+          type: string
+        extensions:
+          $ref: '#/components/schemas/ResponseExtensions'
     ServiceLineInformation:
       type: object
       properties:
@@ -294,36 +569,99 @@ components:
           type: string
           description: 'Loop: 2210D, 2210E, Segment: DTP, Element: DTP03, Notes: DTP03 enddate and DTP02=RD8'
           example: '20100102'
-    ResponseExtensions:
+    ServiceDetail:
       type: object
       properties:
-        statusCode:
+        service:
+          $ref: '#/components/schemas/Service'
+          description: 'Loop: 2220D, 2220E, Segment: SVC, Notes: Service Line Information'
+        status:
+          type: array
+          description: 'Loop: 2220D, 2220E, Segment: STC, Notes: Service Line Status Information'
+          items:
+            $ref: '#/components/schemas/Status'
+    Provider:
+      type: object
+      properties:
+        organizationName:
           type: string
-          description: 'NOTE: Allowed Values are: ''0'' Success, ''1'' Not Authorized, ''2'' Internal Error,''3'' Extension Not Applicable, ''4'' Extension Not Available At This time, ''5''Invalid Request Extension Type'
+          description: 'Segment: NM1, Element: NM103, Notes: Provider’s organization name. Can use organization or last name.'
+          example: TestProvider
+          maxLength: 60
+          minLength: 1
+        firstName:
+          type: string
+          description: 'Segment: NM1, Element: NM104, Notes: Maps to providerName'
+          maxLength: 35
+          minLength: 1
+          example: John
+        lastName:
+          type: string
+          description: 'Segment: NM1, Element: NM103, Notes: Provider last name. Can use organization or last name.'
+          maxLength: 60
+          minLength: 1
+          example: Doe
+        npi:
+          type: string
+          description: 'Loop: 2100B, 2100C, Segment: NM1, Element: NM109, Notes: National Provider Identification. Maps to provider NPI. NM108=XX'
+          maxLength: 80
+          minLength: 2
+          example: '1234567893'
+        spn:
+          type: string
+          description: 'Loop: 2100B, 2100C, Segment: NM1, Element: NM109, Notes: Service Provider Number. Maps to provider SPN. NM108=SV'
+          maxLength: 80
+          minLength: 2
+          example: '123456'
+        tin:
+          type: string
+          description: 'Loop: 2100B, 2100C, Segment: NM1, Element: NM109, Notes: Taxpayer’s Identification Number. Maps to provider TIN. NM108=FI'
+          maxLength: 80
+          minLength: 2
+          example: 0123456789
+        taxId:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: Taxpayer’s Identification Number used when ProviderType = BillingProvider'
+          example: 0123456789
+          maxLength: 80
+          minLength: 2
+        etin:
+          type: string
+          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: Electronic transmitter identification Number (ETIN) used when ProviderType = BillingProvider'
+          maxLength: 80
+          minLength: 2
+          example: ETIN12345
+        providerType:
+          type: string
+          description: 'Segment: NM1, Notes: Code for entity (Billing or Service) Billing Provider: Loop 2100B, NM101=41 (required), Service Provider: Loop 2100C, NM101=1P if not present it is added and assigned tin = BillingProvider taxId'
           enum:
-          - '0'
-          - '1'
-          - '2'
-          - '3'
-          - '4'
-          - '5'
-        statusDescription:
+          - BillingProvider
+          - ServiceProvider
+          example: BillingProvider
+          pattern: BillingProvider|ServiceProvider
+      required:
+      - providerType
+    TransactionIdentifier:
+      type: object
+      properties:
+        customerTransactionId:
           type: string
+          description: The number assigned by the originator to identify the transaction within the originator's business application system
+        transactionId:
+          type: string
+          description: The number assigned by the originator to identify the transaction within the originator's business application system
+    RawX12Request:
+      type: object
+      properties:
+        x12:
+          type: string
+    RequestExtensions:
+      type: object
+      properties:
         extensions:
           type: array
           items:
             $ref: '#/components/schemas/Extensions'
-    Claim:
-      type: object
-      properties:
-        claimStatus:
-          $ref: '#/components/schemas/ClaimStatus'
-          description: 'Loop: 2200D, 2200E'
-        serviceDetails:
-          type: array
-          description: 'Loop: 2220D, 2220E'
-          items:
-            $ref: '#/components/schemas/ServiceDetail'
     Response:
       type: object
       description: Response
@@ -373,11 +711,87 @@ components:
         meta:
           $ref: '#/components/schemas/ResponseMeta'
           description: Meta data about the request
-    RawX12Request:
+    ErrorResponse:
       type: object
       properties:
-        x12:
+        code:
           type: string
+          description: Code for the error.
+          example: INVALIDMISSINGINPUTDATA
+        description:
+          type: string
+          description: Description of the error code. Value provided in payer id should be a valid CHC assigned ERA payer Id.
+        transactionIdentifier:
+          $ref: '#/components/schemas/TransactionIdentifier'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    Member:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: 'Loop: 2100E, Segment: NM1, Element: NM104, Notes: The dependent''s first name as specified on their policy.'
+          example: janeone
+          maxLength: 35
+          minLength: 1
+        lastName:
+          type: string
+          description: 'Loop: 2100E, Segment: NM1, Element: NM103, Notes: The dependent''s last name as specified on their policy.'
+          example: doeone
+          maxLength: 60
+          minLength: 1
+        gender:
+          type: string
+          description: 'Loop: 2000E, Segment: DMG, Element: DMG03, Notes: dependent''s gender as specified on their policy.'
+          enum:
+          - M
+          - F
+          - U
+          example: F
+          pattern: F|M|U
+        dateOfBirth:
+          type: string
+          description: 'Loop: 2000E, Segment: DMG, Element: DMG02, Notes: The birth date as specified on the policy for the dependent.'
+          example: '18800101'
+        groupNumber:
+          type: string
+          description: 'Loop: 2200E, Segment: REF, Element: REF02 when REF01=6P, Notes: The group number associated with the subscriber and dependent. Maps to dependent groupNumber.'
+          example: '0000000000'
+          maxLength: 50
+          minLength: 1
+      required:
+      - firstName
+      - lastName
+    ResponseMeta:
+      type: object
+      properties:
+        submitterId:
+          type: string
+          description: submitterId assigned to this request
+        senderId:
+          type: string
+          description: senderId assigned to this request
+        billerId:
+          type: string
+          description: billerId assigned to this request
+        traceId:
+          type: string
+          description: Unique Id assigned to each request by Optum
+        applicationMode:
+          type: string
+          description: Used by Optum to identify where this request can be found for support
+    Extensions:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'NOTE: Allowed Values are: ''CLAIM_STATUS'' Request to include claim, check and cob extended claim status data in addition to the 277 response.'
+          enum:
+          - CLAIM_STATUS
+      required:
+      - type
     ClaimStatus:
       type: object
       properties:
@@ -468,420 +882,6 @@ components:
         clearingHouseClaimNumber:
           type: string
           description: 'Segment: REF, Element: REF02, Notes: REF01 for this will be D9'
-    ExtendedClaimStatusResponse:
-      type: object
-      properties:
-        x12:
-          type: string
-        extensions:
-          $ref: '#/components/schemas/ResponseExtensions'
-    ContactInformation:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 'Segment: PER, Element: PER02, Notes: Payer’s name.'
-          example: TEST PAYER DEPARTMENT
-        electronicDataInterChangeAccessNumber:
-          type: string
-          description: 'Segment: PER, Element: PER04, PER06 or PER08, Notes: Payer''s electronic data interchange access number. PER03=PER05=PER07=ED'
-          example: '111111'
-        email:
-          type: string
-          description: 'Segment: PER, Element: PER04, PER06 or PER08, Notes: Payer''s email. PER03=PER05=PER07=EM'
-          example: test@test.com
-        fax:
-          type: string
-          description: 'Segment: PER, Element: PER04, PER06 or PER08, Notes: Payer''s facsimile number. PER03=PER05=PER07=FX'
-          example: 123-456-7890
-        phone:
-          type: string
-          description: 'Segment: PER, Element: PER04, PER06 or PER08, Notes: Payer''s telephone number. PER03=PER05=PER07=TE'
-          example: 123-456-7890
-        phoneExtension:
-          type: string
-          description: 'Segment: PER, Element: PER04, PER06 or PER08, Notes: Payer''s telephone extension. PER05=PER07=EX'
-          example: '0000'
-    Subscriber:
-      type: object
-      properties:
-        memberId:
-          type: string
-          description: 'Loop: 2100D, Segment: NM1, Element: NM109, Notes: The subscriber''s insurance member ID. Maps to subscriberId.'
-          example: '0000000000'
-          maxLength: 80
-          minLength: 2
-        firstName:
-          type: string
-          description: 'Loop: 2100D, Segment: NM1, Element: NM104, Notes: The subscriber''s first name as specified on their policy'
-          example: johnone
-          maxLength: 35
-          minLength: 1
-        lastName:
-          type: string
-          description: 'Loop: 2100D, Segment: NM1, Element: NM103, Notes: The subscriber''s last name as specified on their policy.'
-          example: doeone
-          maxLength: 60
-          minLength: 1
-        gender:
-          type: string
-          description: 'Loop: 2000D, 2000E, Segment: DMG, Element: DMG03, Notes: The subscriber''s gender as specified on their policy.'
-          enum:
-          - M
-          - F
-          - U
-          example: M
-          pattern: F|M|U
-        dateOfBirth:
-          type: string
-          description: 'Loop: 2000D, Segment: DMG, Element: DMG02, Notes: The birth date as specified on the policy for the subscriber. Maps to BirthDate'
-          example: '18800102'
-        groupNumber:
-          type: string
-          description: 'Loop: 2200D, Segment: REF, Element: REF01, Notes: The group number associated with the subscriber.'
-          example: '0000000000'
-          maxLength: 50
-          minLength: 1
-      required:
-      - firstName
-      - lastName
-      - memberId
-    Payer:
-      type: object
-      description: Payer
-      properties:
-        organizationName:
-          type: string
-          description: 'Segment: NM1, Element: NM103, Notes: Payers’s organization name.'
-          example: TestPayer
-        payerIdentification:
-          type: string
-          description: 'Segment: NM1, Element: NM109, Notes: Payers’s identification number established through trading partner agreement. NM108=PI'
-          example: '12345'
-        centersForMedicareAndMedicaidServicePlanId:
-          type: string
-          description: 'Segment: NM1, Element: NM109, Notes: Use when reporting Health Plan ID (HPID) or Other Entity Identifier (OEID). NM108=XV'
-          example: '12345'
-        contactInformation:
-          $ref: '#/components/schemas/ContactInformation'
-          description: 'Segment: PER'
-    Service:
-      type: object
-      properties:
-        serviceIdQualifierCode:
-          type: string
-          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC01-1, Notes: Code identifying the type/source of the descriptive number used in Product/Service ID. Code Example: AD, Allowed Values are ''AD'' American Dental Association Codes, ''ER'' Jurisdiction Specific Procedure and Supply Codes, ''HC'' Health Care Financing Administration Common Procedural Coding System (HCPCS) Codes, ''HP'' Health Insurance Prospective Payment System (HIPPS) Skilled Nursing Facility Rate Code, ''IV'' Home Infusion EDI Coalition (HIEC) Product/Service Code, ''N4'' National Drug Code in 5-4-2 Format, ''NU'' National Uniform Billing Committee (NUBC) UB92 Codes, ''WK'' Advanced Billing Concepts (ABC) Codes'
-          enum:
-          - AD
-          - ER
-          - HC
-          - HP
-          - IV
-          - N4
-          - NU
-          - WK
-        serviceIdQualifier:
-          type: string
-          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC01-1, Notes: description associated with the service code. Example: American Dental Association Codes'
-        procedureId:
-          type: string
-          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC01-2, Notes: Identifying number for a product or service.'
-        submittedAmount:
-          type: string
-          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC02, Notes: Amount submitted for the service. This is the line item total on the current claim service status.'
-        amountPaid:
-          type: string
-          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC03, Notes: Amount paid for the service.'
-        revenueCode:
-          type: string
-          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC04, Notes: National uniform billing committee revenue code.'
-        submittedUnits:
-          type: string
-          description: 'Loop: 2220D, 2220E, Segment: SVC, Element: SVC07, Notes: Original submitted units of service.'
-    Encounter:
-      type: object
-      properties:
-        beginningDateOfService:
-          type: string
-          description: 'Loop: 2200D or 2200E, Segment: DTP, Element: DTP03, Notes: Date Time Period - Start Date'
-          example: '20100101'
-        endDateOfService:
-          type: string
-          description: 'Loop: 2200D or 2200E, Segment: DTP, Element: DTP03, Notes: Date Time Period - End Date'
-          example: '20100102'
-        trackingNumber:
-          type: string
-          description: 'Loop: 2200D or 2200E, Segment: TRN, Element: TRN02, Notes: This is the claim status tracking number assigned to the status query for the claim.'
-          example: ABCD
-          maxLength: 50
-          minLength: 1
-        tradingPartnerClaimNumber:
-          type: string
-          description: 'Loop: 2200D or 2200E, Segment: REF, Element: REF02, Notes: This is the payer assigned claim number. descriptions goes in REF02 where REF01=1K'
-          maxLength: 50
-          minLength: 1
-          example: '1234567890'
-        locationIdentifier:
-          type: string
-          description: 'Loop: 2200D or 2200E, Segment: REF, Element: REF02, Notes: Required if application or location system identifier is known. descriptions goes in REF02 where REF01=LU'
-          maxLength: 50
-          minLength: 1
-          example: LU12345
-        billingType:
-          type: string
-          description: 'Loop: 2200D or 2200E, Segment: REF, Element: REF02, Notes: Billing type reference ID. Example: billing type for inpatient services is 111. descriptions goes in REF02 where REF01=BLT'
-          maxLength: 50
-          minLength: 1
-          example: '111'
-        patientAccountNumber:
-          type: string
-          description: 'Loop: 2200D or 2200E, Segment: REF, Element: REF02, Notes: Patient account number provided by service provider. description goes in REF02 where REF01=EJ'
-          maxLength: 50
-          minLength: 1
-          example: PAT123456
-        pharmacyPrescriptionNumber:
-          type: string
-          description: 'Loop: 2200D or 2200E, Segment: REF, Element: REF02, Notes: Patient pharmacy prescription number. description goes in REF02 where REF01=XZ'
-          maxLength: 50
-          minLength: 1
-          example: RX123456
-        clearingHouseClaimNumber:
-          type: string
-          description: 'Loop: 2200D or 2200E, Segment: REF, Element: REF02, Notes: Claim number provided by clearing house. description goes in REF02 where REF01=D9'
-          maxLength: 50
-          minLength: 1
-          example: D9123456
-        submittedAmount:
-          type: string
-          description: 'Loop: 2200D or 2200E, Segment: AMT, Element: AMT02, Notes: Submitted total charges. description goes in AMT02 where AMT01=T3'
-          maxLength: 18
-          minLength: 1
-          example: '100.00'
-    Request:
-      type: object
-      properties:
-        controlNumber:
-          type: string
-          description: 'Header, Segment: ST02 (no loop), Notes: Transaction Set Control Number'
-          example: '123456789'
-          maxLength: 9
-          minLength: 9
-        tradingPartnerName:
-          type: string
-          description: 'Loop: 2100A, Segment: NM1, Element: NM103, Notes: organizational name'
-          example: TestPayer
-        tradingPartnerServiceId:
-          type: string
-          description: 'Loop: 2100A Segment: NM1, Element: NM109, Notes: we send this as MN108 as PI = Payer Identification'
-          example: serviceId
-          maxLength: 80
-          minLength: 2
-        providers:
-          type: array
-          description: 'Loop: 2100B, Loop: 2100C'
-          items:
-            $ref: '#/components/schemas/Provider'
-          maxItems: 2147483647
-          minItems: 1
-        subscriber:
-          $ref: '#/components/schemas/Subscriber'
-          description: 'Loop: 2000D'
-        dependent:
-          $ref: '#/components/schemas/Member'
-          description: 'Loop: 2000E'
-        encounter:
-          $ref: '#/components/schemas/Encounter'
-          description: 'Loop: 2200D or 2200E'
-        serviceLineInformation:
-          $ref: '#/components/schemas/ServiceLineInformation'
-          description: 'Loop: 2220D or 2220E'
-      required:
-      - controlNumber
-      - providers
-      - subscriber
-    RawX12RequestExtension:
-      type: object
-      properties:
-        x12:
-          type: string
-        extensions:
-          $ref: '#/components/schemas/RequestExtensions'
-    TransactionIdentifier:
-      type: object
-      properties:
-        customerTransactionId:
-          type: string
-          description: The number assigned by the originator to identify the transaction within the originator's business application system
-        transactionId:
-          type: string
-          description: The number assigned by the originator to identify the transaction within the originator's business application system
-    Provider:
-      type: object
-      properties:
-        organizationName:
-          type: string
-          description: 'Segment: NM1, Element: NM103, Notes: Provider’s organization name. Can use organization or last name.'
-          example: TestProvider
-          maxLength: 60
-          minLength: 1
-        firstName:
-          type: string
-          description: 'Segment: NM1, Element: NM104, Notes: Maps to providerName'
-          maxLength: 35
-          minLength: 1
-          example: John
-        lastName:
-          type: string
-          description: 'Segment: NM1, Element: NM103, Notes: Provider last name. Can use organization or last name.'
-          maxLength: 60
-          minLength: 1
-          example: Doe
-        npi:
-          type: string
-          description: 'Loop: 2100B, 2100C, Segment: NM1, Element: NM109, Notes: National Provider Identification. Maps to provider NPI. NM108=XX'
-          maxLength: 80
-          minLength: 2
-          example: '1234567893'
-        spn:
-          type: string
-          description: 'Loop: 2100B, 2100C, Segment: NM1, Element: NM109, Notes: Service Provider Number. Maps to provider SPN. NM108=SV'
-          maxLength: 80
-          minLength: 2
-          example: '123456'
-        tin:
-          type: string
-          description: 'Loop: 2100B, 2100C, Segment: NM1, Element: NM109, Notes: Taxpayer’s Identification Number. Maps to provider TIN. NM108=FI'
-          maxLength: 80
-          minLength: 2
-          example: 0123456789
-        taxId:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: Taxpayer’s Identification Number used when ProviderType = BillingProvider'
-          example: 0123456789
-          maxLength: 80
-          minLength: 2
-        etin:
-          type: string
-          description: 'Loop: 2100B, Segment: NM1, Element: NM109, Notes: Electronic transmitter identification Number (ETIN) used when ProviderType = BillingProvider'
-          maxLength: 80
-          minLength: 2
-          example: ETIN12345
-        providerType:
-          type: string
-          description: 'Segment: NM1, Notes: Code for entity (Billing or Service) Billing Provider: Loop 2100B, NM101=41 (required), Service Provider: Loop 2100C, NM101=1P if not present it is added and assigned tin = BillingProvider taxId'
-          enum:
-          - BillingProvider
-          - ServiceProvider
-          example: BillingProvider
-          pattern: BillingProvider|ServiceProvider
-      required:
-      - providerType
-    ResponseMeta:
-      type: object
-      properties:
-        submitterId:
-          type: string
-          description: submitterId assigned to this request
-        senderId:
-          type: string
-          description: senderId assigned to this request
-        billerId:
-          type: string
-          description: billerId assigned to this request
-        traceId:
-          type: string
-          description: Unique Id assigned to each request by Optum
-        applicationMode:
-          type: string
-          description: Used by Optum to identify where this request can be found for support
-    Status:
-      type: object
-      properties:
-        statusCategoryCode:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC01-1, Notes: The health care claim status category code. Example: F3'
-        statusCategoryCodeValue:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC01-1, Notes: Value of the category code. F3 = Finalized/Revised - Adjudication information has been changed'
-        statusCode:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC01-2, Notes: Status code used to identify the status of an entire claim or a service line. Example: 3'
-        statusCodeValue:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC01-2, Notes: Status Code value. 3 = Claim has been adjudicated and is awaiting payment cycle.'
-        entityCode:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element STC01-3, Notes:Code for the entity. Example: 2P'
-        entity:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element STC01-3, Notes: Value of the entity code. Example: 2P=Public Health Service Facility'
-        secondaryStatusCategoryCode:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC10-1, Notes: The health care claim status category code. Example: F3'
-        secondaryStatusCategoryCodeValue:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC10-1, Notes: Value of the category code. F3 = Finalized/Revised - Adjudication information has been changed'
-        secondaryStatusCode:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC10-2, Notes: Status code used to identify the status of an entire claim or a service line. Example: 3'
-        secondaryStatusCodeValue:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC10-2, Notes: Status Code value. 3 = Claim has been adjudicated and is awaiting payment cycle.'
-        secondaryEntityCode:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element STC10-3, Notes:Code for the entity. Example: 2P'
-        secondaryEntity:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element STC10-3, Notes: Value of the entity code. Example: 2P=Public Health Service Facility'
-        tertiaryStatusCategoryCode:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC11-1, Notes: The health care claim status category code. Example: F3'
-        tertiaryStatusCategoryCodeValue:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC11-1, Notes: Value of the category code. F3 = Finalized/Revised - Adjudication information has been changed'
-        tertiaryStatusCode:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC11-2, Notes: Status code used to identify the status of an entire claim or a service line. Example: 3'
-        tertiaryStatusCodeValue:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC11-2, Notes: Status Code value. 3 = Claim has been adjudicated and is awaiting payment cycle.'
-        tertiaryEntityCode:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element STC11-3, Notes:Code for the entity. Example: 2P'
-        tertiaryEntity:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element STC11-3, Notes: Value of the entity code. Example: 2P=Public Health Service Facility'
-        effectiveDate:
-          type: string
-          description: 'Loop: 2220D and 2220E, Segment: STC, Element: STC02, Notes: Effective date of the status information. Date the service was placed in this status by the information source’s adjudication process. Date or Date range, format YYYYMMDD'
-    RequestExtensions:
-      type: object
-      properties:
-        extensions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Extensions'
-    ErrorDetail:
-      type: object
-      properties:
-        field:
-          type: string
-          description: Attribute that is bad
-        value:
-          type: string
-          description: Value of bad attribute
-        code:
-          type: string
-          description: 'Code for the error. Example: INVALID_VALUE'
-        description:
-          type: string
-          description: Description of the error code. Value provided in payer id should be a valid CHC assigned ERA payer ID
-        location:
-          type: string
-          description: 'Segment/location where the error occurred. If this is a network/system error, there is no location attribute. Example: $.payerBenefits[0].payer'
-        followupAction:
-          type: string
-          description: Any follow action required for the error. For AAA errors, this would be value for AAA04
   securitySchemes:
     bearer-key:
       type: http

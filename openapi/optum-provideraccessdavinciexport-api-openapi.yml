@@ -106,6 +106,17 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    OperationOutcome:
+      type: object
+      description: FHIR OperationOutcome resource
+      properties:
+        resourceType:
+          type: string
+          example: OperationOutcome
+        issue:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationOutcomeIssue'
     OperationOutcomeIssue:
       type: object
       properties:
@@ -121,17 +132,6 @@ components:
           example: informational
         diagnostics:
           type: string
-    OperationOutcome:
-      type: object
-      description: FHIR OperationOutcome resource
-      properties:
-        resourceType:
-          type: string
-          example: OperationOutcome
-        issue:
-          type: array
-          items:
-            $ref: '#/components/schemas/OperationOutcomeIssue'
   securitySchemes:
     oAuth:
       type: oauth2

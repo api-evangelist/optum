@@ -160,16 +160,34 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Coding:
+    ExtensionGeneric:
       type: object
-      description: Coding structure for answers
+      description: Generic extension supporting multiple value types
       properties:
-        code:
+        url:
           type: string
-          example: '1'
-        display:
+          example: http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink
+        valueBoolean:
+          type: boolean
+          example: true
+        valueUri:
           type: string
-          example: Age ≥ 50
+          example: https://apimarketplace.uhcprovider.com/DTR_DOC_REF_API
+    AnswerOption:
+      type: object
+      description: Answer choice option
+      properties:
+        valueCoding:
+          $ref: '#/components/schemas/Coding'
+    Extension:
+      type: object
+      description: FHIR extension with Reference
+      properties:
+        url:
+          type: string
+          example: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
+        valueReference:
+          $ref: '#/components/schemas/Reference'
     Reference:
       type: object
       description: FHIR Reference
@@ -177,6 +195,83 @@ components:
         reference:
           type: string
           example: Patient/anonymous
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    NextQuestionRequest:
+      type: object
+      description: FHIR QuestionnaireResponse request containing current answers and context to fetch next adaptive question
+      properties:
+        resourceType:
+          type: string
+          description: FHIR resource type
+          example: QuestionnaireResponse
+        id:
+          type: string
+          description: Unique QuestionnaireResponse identifier
+          example: 62b12331-3b16-4345-a1a6-6e60b236e6a5
+        meta:
+          $ref: '#/components/schemas/Meta'
+        contained:
+          type: array
+          description: Contained Questionnaire resource
+          items:
+            $ref: '#/components/schemas/Questionnaire'
+        extension:
+          type: array
+          description: FHIR extensions providing additional context
+          items:
+            $ref: '#/components/schemas/Extension'
+        questionnaire:
+          type: string
+          description: Reference to Questionnaire
+          example: '#12345'
+        status:
+          type: string
+          description: QuestionnaireResponse status
+          example: in-progress
+        subject:
+          $ref: '#/components/schemas/Reference'
+        authored:
+          type: string
+          description: Date/time when response was authored
+          example: '2025-11-04T12:12:59.7131+00:00'
+    NextQuestionResponse:
+      type: object
+      description: FHIR QuestionnaireResponse response containing next adaptive question
+      properties:
+        resourceType:
+          type: string
+          example: QuestionnaireResponse
+        meta:
+          $ref: '#/components/schemas/Meta'
+        contained:
+          type: array
+          description: Contained Questionnaire with next question items
+          items:
+            $ref: '#/components/schemas/Questionnaire'
+        extension:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
+        questionnaire:
+          type: string
+          example: '#12345'
+        status:
+          type: string
+          example: in-progress
+        subject:
+          $ref: '#/components/schemas/Reference'
+        authored:
+          type: string
+          example: '2025-11-04T12:12:59.7131+00:00'
     Item:
       type: object
       description: Questionnaire item (question)
@@ -212,19 +307,16 @@ components:
           description: Nested child questions
           items:
             $ref: '#/components/schemas/Item'
-    ExtensionGeneric:
+    Coding:
       type: object
-      description: Generic extension supporting multiple value types
+      description: Coding structure for answers
       properties:
-        url:
+        code:
           type: string
-          example: http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink
-        valueBoolean:
-          type: boolean
-          example: true
-        valueUri:
+          example: '1'
+        display:
           type: string
-          example: https://apimarketplace.uhcprovider.com/DTR_DOC_REF_API
+          example: Age ≥ 50
     Questionnaire:
       type: object
       description: FHIR Questionnaire resource
@@ -267,98 +359,6 @@ components:
           description: List of questions
           items:
             $ref: '#/components/schemas/Item'
-    AnswerOption:
-      type: object
-      description: Answer choice option
-      properties:
-        valueCoding:
-          $ref: '#/components/schemas/Coding'
-    Meta:
-      type: object
-      description: FHIR metadata
-      properties:
-        profile:
-          type: array
-          description: FHIR profile URLs
-          items:
-            type: string
-            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
-    NextQuestionResponse:
-      type: object
-      description: FHIR QuestionnaireResponse response containing next adaptive question
-      properties:
-        resourceType:
-          type: string
-          example: QuestionnaireResponse
-        meta:
-          $ref: '#/components/schemas/Meta'
-        contained:
-          type: array
-          description: Contained Questionnaire with next question items
-          items:
-            $ref: '#/components/schemas/Questionnaire'
-        extension:
-          type: array
-          items:
-            $ref: '#/components/schemas/Extension'
-        questionnaire:
-          type: string
-          example: '#12345'
-        status:
-          type: string
-          example: in-progress
-        subject:
-          $ref: '#/components/schemas/Reference'
-        authored:
-          type: string
-          example: '2025-11-04T12:12:59.7131+00:00'
-    Extension:
-      type: object
-      description: FHIR extension with Reference
-      properties:
-        url:
-          type: string
-          example: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
-        valueReference:
-          $ref: '#/components/schemas/Reference'
-    NextQuestionRequest:
-      type: object
-      description: FHIR QuestionnaireResponse request containing current answers and context to fetch next adaptive question
-      properties:
-        resourceType:
-          type: string
-          description: FHIR resource type
-          example: QuestionnaireResponse
-        id:
-          type: string
-          description: Unique QuestionnaireResponse identifier
-          example: 62b12331-3b16-4345-a1a6-6e60b236e6a5
-        meta:
-          $ref: '#/components/schemas/Meta'
-        contained:
-          type: array
-          description: Contained Questionnaire resource
-          items:
-            $ref: '#/components/schemas/Questionnaire'
-        extension:
-          type: array
-          description: FHIR extensions providing additional context
-          items:
-            $ref: '#/components/schemas/Extension'
-        questionnaire:
-          type: string
-          description: Reference to Questionnaire
-          example: '#12345'
-        status:
-          type: string
-          description: QuestionnaireResponse status
-          example: in-progress
-        subject:
-          $ref: '#/components/schemas/Reference'
-        authored:
-          type: string
-          description: Date/time when response was authored
-          example: '2025-11-04T12:12:59.7131+00:00'
   securitySchemes:
     oAuth:
       type: oauth2

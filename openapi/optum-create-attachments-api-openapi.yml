@@ -193,39 +193,6 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    CreateAttachmentResponse:
-      type: object
-      required:
-      - attachmentControlNumber
-      - attachmentIds
-      - status
-      - createdAt
-      properties:
-        status:
-          enum:
-          - CREATED
-          - ACTIVE
-          - CLOSED
-          - ARCHIVED
-          type: string
-        claimId:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        attachmentIds:
-          type: array
-          items:
-            type: string
-            example: CHC#023981023345
-            pattern: ^[A-Z]{3}#[0-9]{12}$
-        attachmentControlNumber:
-          type: string
-          example: CHC#507f1f77bcf86cd799439011
-          pattern: ^[A-Z]{3}#[0-9a-fA-F]{24}$
-        imageIntelligenceTransactionId:
-          type: string
-          description: If the request included image intelligence metadata and the files were successfully processed by Optum Image Intelligence, this field will be populated with the transaction id for reference
     ErrorResponse:
       type: object
       properties:
@@ -278,6 +245,39 @@ components:
               description: A collection that gives specifics about the errors that occurred.
           description: A map of additional, non-standard properties.
       description: Representation for an RFC 9457 problem detail.
+    CreateAttachmentResponse:
+      type: object
+      required:
+      - attachmentControlNumber
+      - attachmentIds
+      - status
+      - createdAt
+      properties:
+        status:
+          enum:
+          - CREATED
+          - ACTIVE
+          - CLOSED
+          - ARCHIVED
+          type: string
+        claimId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        attachmentIds:
+          type: array
+          items:
+            type: string
+            example: CHC#023981023345
+            pattern: ^[A-Z]{3}#[0-9]{12}$
+        attachmentControlNumber:
+          type: string
+          example: CHC#507f1f77bcf86cd799439011
+          pattern: ^[A-Z]{3}#[0-9a-fA-F]{24}$
+        imageIntelligenceTransactionId:
+          type: string
+          description: If the request included image intelligence metadata and the files were successfully processed by Optum Image Intelligence, this field will be populated with the transaction id for reference
   securitySchemes:
     bearerAuth:
       type: http

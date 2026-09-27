@@ -134,20 +134,22 @@ components:
         div:
           type: string
           example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
-    CapabilityStatementRest:
+    CapabilityStatementInteraction:
       type: object
       properties:
-        mode:
+        code:
           type: string
-          example: server
-        resource:
-          type: array
-          items:
-            $ref: '#/components/schemas/CapabilityStatementResource'
-        operation:
-          type: array
-          items:
-            $ref: '#/components/schemas/CapabilityStatementOperation'
+          example: read
+    CapabilityStatementImplementation:
+      type: object
+      properties:
+        description:
+          type: string
+          example: uhcpp-paan-pas-server implementation
+        url:
+          type: string
+          format: uri
+          example: https://apimarketplace-stg.uhc.com/PriorAuth/v1
     CapabilityStatementResource:
       type: object
       properties:
@@ -169,15 +171,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CapabilityStatementOperation'
-    CapabilityStatementOperation:
+    CapabilityStatementSoftware:
       type: object
       properties:
         name:
           type: string
-          example: submit
-        definition:
+          example: uhcpp-paan-pas-server
+        version:
           type: string
-          format: uri
+          example: 8.8.0
     PasCapabilityStatementResponse:
       type: object
       properties:
@@ -222,31 +224,29 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CapabilityStatementRest'
-    CapabilityStatementImplementation:
-      type: object
-      properties:
-        description:
-          type: string
-          example: uhcpp-paan-pas-server implementation
-        url:
-          type: string
-          format: uri
-          example: https://apimarketplace-stg.uhc.com/PriorAuth/v1
-    CapabilityStatementSoftware:
+    CapabilityStatementOperation:
       type: object
       properties:
         name:
           type: string
-          example: uhcpp-paan-pas-server
-        version:
+          example: submit
+        definition:
           type: string
-          example: 8.8.0
-    CapabilityStatementInteraction:
+          format: uri
+    CapabilityStatementRest:
       type: object
       properties:
-        code:
+        mode:
           type: string
-          example: read
+          example: server
+        resource:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapabilityStatementResource'
+        operation:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapabilityStatementOperation'
   securitySchemes:
     oAuth:
       type: oauth2

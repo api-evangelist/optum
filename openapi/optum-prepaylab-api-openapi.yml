@@ -23,9 +23,10 @@ paths:
       operationId: postAbmPrepaylabV1
       x-operation-id-source: derived
 components:
-  responses:
+  requestBodies:
     prepaylabdata:
-      description: response for PREPAY Lab API
+      description: payload for Lab PREPAY API
+      required: true
       content:
         application/xml:
           schema:
@@ -68,10 +69,9 @@ components:
                         xml:
                           name: procedure-code
             example: "<request>\n    <environment>live</environment>\n    <enterprise-id>ENTERPRISEID</enterprise-id>\n    <claim>\n        <id>ClaimId</id>\n        <subscriber-id>54654</subscriber-id>\n        <line>\n            <id>1</id>\n            <procedure-code>EXXXX</procedure-code>\n        </line>\n    </claim>\n</request>"
-  requestBodies:
+  responses:
     prepaylabdata:
-      description: payload for Lab PREPAY API
-      required: true
+      description: response for PREPAY Lab API
       content:
         application/xml:
           schema:

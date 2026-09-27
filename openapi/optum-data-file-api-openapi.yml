@@ -116,6 +116,13 @@ paths:
           description: Service Unavailable
 components:
   schemas:
+    EntityTag:
+      type: object
+      properties:
+        value:
+          type: string
+        weak:
+          type: boolean
     Response:
       type: object
       properties:
@@ -234,13 +241,6 @@ components:
             attribute: true
         value:
           type: string
-    EntityTag:
-      type: object
-      properties:
-        value:
-          type: string
-        weak:
-          type: boolean
     StatusType:
       type: object
       properties:

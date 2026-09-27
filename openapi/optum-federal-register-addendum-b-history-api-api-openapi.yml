@@ -170,6 +170,15 @@ paths:
       - bearerAuth: []
 components:
   schemas:
+    FederalRegAddBHistoryRequest:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+        year:
+          type: string
     Notification:
       type: object
       properties:
@@ -185,15 +194,6 @@ components:
           type: array
           items:
             type: string
-    FederalRegAddBHistoryRequest:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
-          type: string
-        year:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http
