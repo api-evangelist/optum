@@ -95,37 +95,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    DiscoveryService:
-      type: object
-      properties:
-        id:
-          type: string
-          example: coverageRequirements-serviceRequest
-        hook:
-          type: string
-          example: order-sign
-        title:
-          type: string
-          example: United Health Care Order Sign Decision Support
-        description:
-          type: string
-          example: Coverage Requirement Guidance related to orders being signed
-        prefetch:
-          $ref: '#/components/schemas/Prefetch'
-        usageRequirements:
-          type: string
-          example: requirement-1, requirement-2
-      required:
-      - id
-      - hook
-      - title
-    DiscoveryResponse:
-      type: object
-      properties:
-        services:
-          type: array
-          items:
-            $ref: '#/components/schemas/DiscoveryService'
     Prefetch:
       type: object
       properties:
@@ -156,6 +125,37 @@ components:
         practitionerRole:
           type: string
           example: PractitionerRole?practitioner={{%context.userId}}
+    DiscoveryResponse:
+      type: object
+      properties:
+        services:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscoveryService'
+    DiscoveryService:
+      type: object
+      properties:
+        id:
+          type: string
+          example: coverageRequirements-serviceRequest
+        hook:
+          type: string
+          example: order-sign
+        title:
+          type: string
+          example: United Health Care Order Sign Decision Support
+        description:
+          type: string
+          example: Coverage Requirement Guidance related to orders being signed
+        prefetch:
+          $ref: '#/components/schemas/Prefetch'
+        usageRequirements:
+          type: string
+          example: requirement-1, requirement-2
+      required:
+      - id
+      - hook
+      - title
   securitySchemes:
     oAuth:
       type: oauth2

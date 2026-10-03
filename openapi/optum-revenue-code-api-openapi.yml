@@ -349,15 +349,6 @@ components:
           type: string
           xml:
             attribute: true
-    Link:
-      type: object
-      properties:
-        href:
-          type: string
-          xml:
-            attribute: true
-        value:
-          type: string
     RevenueCodeToProcedure:
       type: object
       properties:
@@ -401,6 +392,15 @@ components:
             name: desc-full
       xml:
         name: code-properties
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

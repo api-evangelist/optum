@@ -143,6 +143,43 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    Attachment:
+      type: object
+      description: Attachment content details
+      properties:
+        contentType:
+          type: string
+          example: application/pdf
+        creation:
+          type: string
+          example: '2025-11-05T10:25:00-05:00'
+        data:
+          type: string
+          example: PHN0c
+        url:
+          type: string
+          example: attachment_url
+        title:
+          type: string
+          example: History and Physical data
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
+    ParameterPart:
+      type: object
+      description: Nested parameter part (used for Attachment)
+      properties:
+        name:
+          type: string
+          example: Content
+        resource:
+          $ref: '#/components/schemas/DocumentReference'
     AttachmentResponse:
       type: object
       description: FHIR OperationOutcome response
@@ -170,25 +207,21 @@ components:
         div:
           type: string
           example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
-    Attachment:
+    Content:
       type: object
-      description: Attachment content details
       properties:
-        contentType:
-          type: string
-          example: application/pdf
-        creation:
-          type: string
-          example: '2025-11-05T10:25:00-05:00'
-        data:
-          type: string
-          example: PHN0c
-        url:
-          type: string
-          example: attachment_url
-        title:
-          type: string
-          example: History and Physical data
+        attachment:
+          $ref: '#/components/schemas/Attachment'
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
     Parameter:
       type: object
       description: Parameter entry in Parameters resource
@@ -205,6 +238,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ParameterPart'
+    AttachmentRequest:
+      type: object
+      description: FHIR Parameters resource for attachment submission
+      properties:
+        resourceType:
+          type: string
+          example: Parameters
+        parameter:
+          type: array
+          items:
+            $ref: '#/components/schemas/Parameter'
     DocumentReference:
       type: object
       description: FHIR DocumentReference used inside attachment
@@ -225,50 +269,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Content'
-    Meta:
-      type: object
-      description: FHIR metadata
-      properties:
-        profile:
-          type: array
-          description: FHIR profile URLs
-          items:
-            type: string
-            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
-    ParameterPart:
-      type: object
-      description: Nested parameter part (used for Attachment)
-      properties:
-        name:
-          type: string
-          example: Content
-        resource:
-          $ref: '#/components/schemas/DocumentReference'
-    Identifier:
-      type: object
-      properties:
-        system:
-          type: string
-          example: http://example.org/cdex/acn
-        value:
-          type: string
-          example: '123456'
-    Content:
-      type: object
-      properties:
-        attachment:
-          $ref: '#/components/schemas/Attachment'
-    AttachmentRequest:
-      type: object
-      description: FHIR Parameters resource for attachment submission
-      properties:
-        resourceType:
-          type: string
-          example: Parameters
-        parameter:
-          type: array
-          items:
-            $ref: '#/components/schemas/Parameter'
     Issue:
       type: object
       description: OperationOutcome issue details

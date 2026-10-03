@@ -988,6 +988,26 @@ components:
           items:
             $ref: '#/components/schemas/Link'
       additionalProperties: false
+    Link:
+      type: object
+      properties:
+        rel:
+          type:
+          - string
+          - 'null'
+        href:
+          type:
+          - string
+          - 'null'
+        action:
+          type:
+          - string
+          - 'null'
+        types:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
     ErrorResponse:
       type: object
       description: Describes an error that occurred while processing the request.
@@ -1016,26 +1036,6 @@ components:
           description: An object that gives specifics on what error or errors occurred. An error code is given as the property key followed by an error description in plain English.
           additionalProperties:
             type: string
-    Link:
-      type: object
-      properties:
-        rel:
-          type:
-          - string
-          - 'null'
-        href:
-          type:
-          - string
-          - 'null'
-        action:
-          type:
-          - string
-          - 'null'
-        types:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
     AttachmentFile:
       type: object
       properties:

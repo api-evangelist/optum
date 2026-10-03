@@ -121,24 +121,6 @@ paths:
                 statusCode: 500
 components:
   schemas:
-    Variables:
-      type: object
-      properties:
-        input:
-          description: Input data for the Claims Pre-Check operation
-          $ref: '#/components/schemas/Input'
-    ClaimPreCheckRequest:
-      type: object
-      properties:
-        query:
-          description: GraphQL query for the Claims Pre-Check operation
-          example: 'query claimPreCheck($input: ClaimInput!) { claimPreCheck(input: $input) { transactionId x12ResponseData responseType x12Response277CA message statusCode } }
-
-            '
-          type: string
-        variables:
-          description: Variables for the Claims Pre-Check operation
-          $ref: '#/components/schemas/Variables'
     ClaimPreCheckResponse:
       type: object
       properties:
@@ -181,6 +163,24 @@ components:
       required:
       - payerId
       - x12RequestData
+    ClaimPreCheckRequest:
+      type: object
+      properties:
+        query:
+          description: GraphQL query for the Claims Pre-Check operation
+          example: 'query claimPreCheck($input: ClaimInput!) { claimPreCheck(input: $input) { transactionId x12ResponseData responseType x12Response277CA message statusCode } }
+
+            '
+          type: string
+        variables:
+          description: Variables for the Claims Pre-Check operation
+          $ref: '#/components/schemas/Variables'
+    Variables:
+      type: object
+      properties:
+        input:
+          description: Input data for the Claims Pre-Check operation
+          $ref: '#/components/schemas/Input'
     ClaimPreCheckResponseWrapper:
       type: object
       properties:

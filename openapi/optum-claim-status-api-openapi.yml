@@ -130,42 +130,6 @@ components:
         payerId:
           type: string
           example: '87726'
-    GraphQLClaimStatusResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            searchClaim:
-              type: object
-              properties:
-                claims:
-                  type: array
-                  items:
-                    type: object
-                pagination:
-                  type: object
-                  properties:
-                    hasMoreRecords:
-                      type: boolean
-                    nextPageToken:
-                      type: string
-            search277CA:
-              type: object
-              properties:
-                responseType:
-                  type: string
-                x12ResponseData:
-                  type: string
-                statuscode:
-                  type: string
-                message:
-                  type: string
-        errors:
-          type: array
-          items:
-            type: object
-      additionalProperties: true
     SearchClaimInput:
       type: object
       required:
@@ -224,6 +188,42 @@ components:
               $ref: '#/components/schemas/Search277CAInput'
           additionalProperties: false
       additionalProperties: false
+    GraphQLClaimStatusResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            searchClaim:
+              type: object
+              properties:
+                claims:
+                  type: array
+                  items:
+                    type: object
+                pagination:
+                  type: object
+                  properties:
+                    hasMoreRecords:
+                      type: boolean
+                    nextPageToken:
+                      type: string
+            search277CA:
+              type: object
+              properties:
+                responseType:
+                  type: string
+                x12ResponseData:
+                  type: string
+                statuscode:
+                  type: string
+                message:
+                  type: string
+        errors:
+          type: array
+          items:
+            type: object
+      additionalProperties: true
   securitySchemes:
     bearerAuth:
       type: http

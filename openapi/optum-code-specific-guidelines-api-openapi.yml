@@ -147,6 +147,19 @@ paths:
           description: Service Unavailable
 components:
   schemas:
+    Icd10pcsCodeSpecificGuidelines:
+      required:
+      - icd10pcsCodeSpecificGuideline
+      type: object
+      properties:
+        icd10pcsCodeSpecificGuideline:
+          type: array
+          xml:
+            name: icd-10-pcs-code-specific-guideline
+          items:
+            $ref: '#/components/schemas/Icd10pcsCodeSpecificGuideline'
+      xml:
+        name: icd-10-pcs-code-specific-guidelines
     Icd10CmColorCodes:
       type: object
       properties:
@@ -254,19 +267,6 @@ components:
           type: string
       xml:
         name: icd-10-cm-color-codes
-    Icd10pcsCodeSpecificGuidelines:
-      required:
-      - icd10pcsCodeSpecificGuideline
-      type: object
-      properties:
-        icd10pcsCodeSpecificGuideline:
-          type: array
-          xml:
-            name: icd-10-pcs-code-specific-guideline
-          items:
-            $ref: '#/components/schemas/Icd10pcsCodeSpecificGuideline'
-      xml:
-        name: icd-10-pcs-code-specific-guidelines
     Icd10pcsCodeSpecificGuideline:
       type: object
       properties:

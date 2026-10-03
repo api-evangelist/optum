@@ -1037,6 +1037,137 @@ paths:
       - Order Management
 components:
   schemas:
+    VendorOrder:
+      type: object
+      properties:
+        vendorOrgId:
+          type: integer
+          format: int32
+        vendorOrgName:
+          type: string
+        vendorOrderId:
+          type: integer
+          format: int64
+        vendorOrderStatus:
+          type: string
+        vendorOrderStatusDetail:
+          type: string
+        orderResult:
+          $ref: '#/components/schemas/OrderResult'
+    ApiResponseVendorOrderDetailsResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        statusMessage:
+          type: string
+        error:
+          $ref: '#/components/schemas/ApiErrorResponse'
+        result:
+          $ref: '#/components/schemas/VendorOrderDetailsResponse'
+    PlaceOrderResult:
+      type: object
+      properties:
+        clientOrderId:
+          type: integer
+          format: int64
+          description: Client order identifier for reference
+        statusMessage:
+          type: string
+          description: status message for client order.
+        clientOrderStatus:
+          type: string
+          enum:
+          - ORDER_ACCEPTED
+          - VALIDATION_ERRORS
+          - AUTHORIZATION_FAILURE
+    ApiResponseClientOrderStatusResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        statusMessage:
+          type: string
+        error:
+          $ref: '#/components/schemas/ApiErrorResponse'
+        result:
+          $ref: '#/components/schemas/ClientOrderStatusResponse'
+    VendorOrderDetailsResponse:
+      type: object
+      properties:
+        clientOrderId:
+          type: integer
+          format: int64
+        vendorOrderId:
+          type: integer
+          format: int64
+        vendorOrgId:
+          type: integer
+          format: int64
+        vendorOrgName:
+          type: string
+        vendorOrderStatus:
+          type: string
+        vendorOrderStatusDetail:
+          type: string
+        submissionDate:
+          type: string
+          format: date-time
+        vendorOrderExpDate:
+          type: string
+          format: date-time
+        newExpirationDate:
+          type: string
+          format: date-time
+    PlaceOrderRequest:
+      type: object
+      required:
+      - tenantId
+      - clientOrgId
+      - campaignId
+      - requestingPartyId
+      - rosterFilePath
+      - clientOrderName
+      - serviceStartDate
+      - serviceEndDate
+      - vendors
+      properties:
+        tenantId:
+          type: integer
+          format: int64
+        clientOrgId:
+          type: integer
+          format: int64
+        campaignId:
+          type: integer
+          format: int64
+          description: Campaign ID to place order. Either one of campaignId or campaignName is required
+        campaignName:
+          type: string
+          description: Campaign name to place order. Either one of campaignId or campaignName is required
+        requestingPartyId:
+          type: integer
+          format: int64
+          description: Requesting party ID to place order. Either one of requestingPartyId or requestingPartyName is required
+        requestingPartyName:
+          type: string
+          description: Requesting party name to place order. Either one of requestingPartyId or requestingPartyName is required
+        rosterFilePath:
+          type: string
+        clientOrderName:
+          type: string
+        serviceStartDate:
+          type: string
+          format: date-time
+        serviceEndDate:
+          type: string
+          format: date-time
+        vendors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vendor'
     ApiResponseClientOrderResponse:
       type: object
       properties:
@@ -1066,7 +1197,57 @@ components:
           type: string
         clientOrderStatusDetail:
           type: string
-    ApiResponseClientOrderDetailsResponse:
+    ApiResponsePlaceOrderResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        statusMessage:
+          type: string
+        result:
+          $ref: '#/components/schemas/PlaceOrderResult'
+    ClientOrderDetailsResponse:
+      type: object
+      properties:
+        clientOrderId:
+          type: integer
+          format: int64
+        clientOrderSubmittedDate:
+          type: string
+          format: date-time
+        clientOrderStatus:
+          type: string
+        clientOrderStatusDetail:
+          type: string
+        vendorOrders:
+          type: array
+          items:
+            $ref: '#/components/schemas/VendorOrder'
+    Vendor:
+      type: object
+      required:
+      - vendorOrgId
+      - interfaces
+      properties:
+        vendorOrgId:
+          type: integer
+          format: int64
+          description: Data vendor org ID.
+        vendorName:
+          type: string
+          description: Data vendor name.
+        interfaces:
+          type: array
+          description: List of MODXI interfaces to process order.
+          items:
+            type: string
+        subVendorNames:
+          type: array
+          description: List of internal vendor emr names for placing an order for internal vendor. There should not be any sub vendor names specified for external vendor.
+          items:
+            type: string
+    ApiResponseVendorOrderStatusResponse:
       type: object
       properties:
         status:
@@ -1077,17 +1258,30 @@ components:
         error:
           $ref: '#/components/schemas/ApiErrorResponse'
         result:
-          $ref: '#/components/schemas/ClientOrderDetailsResponse'
-    ApiErrorResponse:
+          $ref: '#/components/schemas/VendorOrderStatusResponse'
+    ErrorDetail:
       type: object
       properties:
-        status:
+        code:
+          type: string
+        message:
+          type: string
+    clientOrderResult:
+      type: object
+      properties:
+        clientOrderId:
           type: integer
-          format: int32
+          format: int64
+          description: Client order identifier for reference
         statusMessage:
           type: string
-        error:
-          $ref: '#/components/schemas/Error'
+          description: status message for client order.
+        clientOrderStatus:
+          type: string
+          enum:
+          - ORDER_ACCEPTED
+          - VALIDATION_ERRORS
+          - AUTHORIZATION_FAILURE
     clientOrderRequest:
       type: object
       required:
@@ -1145,40 +1339,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Vendor'
-    PlaceOrderResult:
+    OrderMetric:
       type: object
       properties:
-        clientOrderId:
-          type: integer
-          format: int64
-          description: Client order identifier for reference
-        statusMessage:
-          type: string
-          description: status message for client order.
-        clientOrderStatus:
-          type: string
-          enum:
-          - ORDER_ACCEPTED
-          - VALIDATION_ERRORS
-          - AUTHORIZATION_FAILURE
-    VendorOrder:
-      type: object
-      properties:
-        vendorOrgId:
+        count:
           type: integer
           format: int32
-        vendorOrgName:
+        downloadUrl:
           type: string
-        vendorOrderId:
-          type: integer
-          format: int64
-        vendorOrderStatus:
-          type: string
-        vendorOrderStatusDetail:
-          type: string
-        orderResult:
-          $ref: '#/components/schemas/OrderResult'
-    ApiResponseClientOrderStatusResponse:
+    ApiResponseClientOrderDetailsResponse:
       type: object
       properties:
         status:
@@ -1189,35 +1358,8 @@ components:
         error:
           $ref: '#/components/schemas/ApiErrorResponse'
         result:
-          $ref: '#/components/schemas/ClientOrderStatusResponse'
-    VendorOrderDetailsResponse:
-      type: object
-      properties:
-        clientOrderId:
-          type: integer
-          format: int64
-        vendorOrderId:
-          type: integer
-          format: int64
-        vendorOrgId:
-          type: integer
-          format: int64
-        vendorOrgName:
-          type: string
-        vendorOrderStatus:
-          type: string
-        vendorOrderStatusDetail:
-          type: string
-        submissionDate:
-          type: string
-          format: date-time
-        vendorOrderExpDate:
-          type: string
-          format: date-time
-        newExpirationDate:
-          type: string
-          format: date-time
-    ApiResponsePlaceOrderResponse:
+          $ref: '#/components/schemas/ClientOrderDetailsResponse'
+    ApiErrorResponse:
       type: object
       properties:
         status:
@@ -1225,55 +1367,15 @@ components:
           format: int32
         statusMessage:
           type: string
-        result:
-          $ref: '#/components/schemas/PlaceOrderResult'
-    PlaceOrderRequest:
+        error:
+          $ref: '#/components/schemas/Error'
+    Error:
       type: object
-      required:
-      - tenantId
-      - clientOrgId
-      - campaignId
-      - requestingPartyId
-      - rosterFilePath
-      - clientOrderName
-      - serviceStartDate
-      - serviceEndDate
-      - vendors
       properties:
-        tenantId:
-          type: integer
-          format: int64
-        clientOrgId:
-          type: integer
-          format: int64
-        campaignId:
-          type: integer
-          format: int64
-          description: Campaign ID to place order. Either one of campaignId or campaignName is required
-        campaignName:
+        status:
           type: string
-          description: Campaign name to place order. Either one of campaignId or campaignName is required
-        requestingPartyId:
-          type: integer
-          format: int64
-          description: Requesting party ID to place order. Either one of requestingPartyId or requestingPartyName is required
-        requestingPartyName:
-          type: string
-          description: Requesting party name to place order. Either one of requestingPartyId or requestingPartyName is required
-        rosterFilePath:
-          type: string
-        clientOrderName:
-          type: string
-        serviceStartDate:
-          type: string
-          format: date-time
-        serviceEndDate:
-          type: string
-          format: date-time
-        vendors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Vendor'
+        detail:
+          $ref: '#/components/schemas/ErrorDetail'
     VendorOrderStatusResponse:
       type: object
       properties:
@@ -1287,108 +1389,6 @@ components:
           type: string
         vendorOrderStatusDetail:
           type: string
-    ErrorDetail:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-    ClientOrderDetailsResponse:
-      type: object
-      properties:
-        clientOrderId:
-          type: integer
-          format: int64
-        clientOrderSubmittedDate:
-          type: string
-          format: date-time
-        clientOrderStatus:
-          type: string
-        clientOrderStatusDetail:
-          type: string
-        vendorOrders:
-          type: array
-          items:
-            $ref: '#/components/schemas/VendorOrder'
-    ApiResponseVendorOrderDetailsResponse:
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-        statusMessage:
-          type: string
-        error:
-          $ref: '#/components/schemas/ApiErrorResponse'
-        result:
-          $ref: '#/components/schemas/VendorOrderDetailsResponse'
-    Error:
-      type: object
-      properties:
-        status:
-          type: string
-        detail:
-          $ref: '#/components/schemas/ErrorDetail'
-    OrderMetric:
-      type: object
-      properties:
-        count:
-          type: integer
-          format: int32
-        downloadUrl:
-          type: string
-    Vendor:
-      type: object
-      required:
-      - vendorOrgId
-      - interfaces
-      properties:
-        vendorOrgId:
-          type: integer
-          format: int64
-          description: Data vendor org ID.
-        vendorName:
-          type: string
-          description: Data vendor name.
-        interfaces:
-          type: array
-          description: List of MODXI interfaces to process order.
-          items:
-            type: string
-        subVendorNames:
-          type: array
-          description: List of internal vendor emr names for placing an order for internal vendor. There should not be any sub vendor names specified for external vendor.
-          items:
-            type: string
-    ApiResponseVendorOrderStatusResponse:
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-        statusMessage:
-          type: string
-        error:
-          $ref: '#/components/schemas/ApiErrorResponse'
-        result:
-          $ref: '#/components/schemas/VendorOrderStatusResponse'
-    clientOrderResult:
-      type: object
-      properties:
-        clientOrderId:
-          type: integer
-          format: int64
-          description: Client order identifier for reference
-        statusMessage:
-          type: string
-          description: status message for client order.
-        clientOrderStatus:
-          type: string
-          enum:
-          - ORDER_ACCEPTED
-          - VALIDATION_ERRORS
-          - AUTHORIZATION_FAILURE
   securitySchemes:
     bearerAuth:
       type: http

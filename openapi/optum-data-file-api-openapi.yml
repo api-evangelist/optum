@@ -123,6 +123,23 @@ components:
           type: string
         weak:
           type: boolean
+    StatusType:
+      type: object
+      properties:
+        reasonPhrase:
+          type: string
+        family:
+          type: string
+          enum:
+          - INFORMATIONAL
+          - SUCCESSFUL
+          - REDIRECTION
+          - CLIENT_ERROR
+          - SERVER_ERROR
+          - OTHER
+        statusCode:
+          type: integer
+          format: int32
     Response:
       type: object
       properties:
@@ -232,32 +249,6 @@ components:
             type: array
             items:
               type: string
-    Link:
-      type: object
-      properties:
-        href:
-          type: string
-          xml:
-            attribute: true
-        value:
-          type: string
-    StatusType:
-      type: object
-      properties:
-        reasonPhrase:
-          type: string
-        family:
-          type: string
-          enum:
-          - INFORMATIONAL
-          - SUCCESSFUL
-          - REDIRECTION
-          - CLIENT_ERROR
-          - SERVER_ERROR
-          - OTHER
-        statusCode:
-          type: integer
-          format: int32
     NewCookie:
       type: object
       properties:
@@ -305,6 +296,15 @@ components:
           type: boolean
         wildcardSubtype:
           type: boolean
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

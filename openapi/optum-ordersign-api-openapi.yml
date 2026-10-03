@@ -99,22 +99,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    CodeableConcept:
-      type: object
-      description: FHIR CodeableConcept
-      properties:
-        coding:
-          type: array
-          items:
-            $ref: '#/components/schemas/Coding'
-    CareTeam:
-      type: object
-      properties:
-        provider:
-          $ref: '#/components/schemas/Reference'
-        responsible:
-          type: boolean
-          example: true
     Context:
       type: object
       description: CDS Hooks context information
@@ -133,143 +117,14 @@ components:
           example: encounter_id
         draftOrders:
           $ref: '#/components/schemas/Bundle'
-    Card:
-      type: object
-      description: CDS Hooks card response
-      properties:
-        summary:
-          type: string
-          description: Short summary of the card
-          example: Required
-        indicator:
-          type: string
-          description: Severity indicator
-          example: info
-        detail:
-          type: string
-          description: Detailed description
-          example: A9521DMESUP/ACCESS/SRV-COMPON/OTHHCPCS
-        uuid:
-          type: string
-          description: Unique card identifier
-          example: uuid
-        source:
-          $ref: '#/components/schemas/Source'
-        links:
-          type: array
-          description: Links for additional actions or documentation
-          items:
-            $ref: '#/components/schemas/Link'
-    Meta:
-      type: object
-      description: FHIR metadata
-      properties:
-        profile:
-          type: array
-          description: FHIR profile URLs
-          items:
-            type: string
-            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
-    Source:
-      type: object
-      description: Source information for the card
-      properties:
-        label:
-          type: string
-          description: Source label
-          example: UnitedHealthcarePriorAuthorizationRequirements
-        url:
-          type: string
-          description: Source URL
-          example: https://apimarketplace.uhcprovider.com/#/all-apis/prior-auth-api
-    Bundle:
-      type: object
-      description: FHIR Bundle resource
-      properties:
-        resourceType:
-          type: string
-          example: Bundle
-        type:
-          type: string
-          example: collection
-        entry:
-          type: array
-          description: Bundle entries
-          items:
-            $ref: '#/components/schemas/Entry'
-    Entry:
+    CareTeam:
       type: object
       properties:
-        resource:
-          $ref: '#/components/schemas/Claim'
-    Reference:
-      type: object
-      description: FHIR Reference
-      properties:
-        reference:
-          type: string
-          example: Patient/anonymous
-    Identifier:
-      type: object
-      properties:
-        system:
-          type: string
-          example: http://example.org/cdex/acn
-        value:
-          type: string
-          example: '123456'
-    Prefetch:
-      type: object
-      properties:
-        claimResponse:
-          type: string
-          example: ClaimResponse?patient={{%context.patientId}}
-        condition:
-          type: string
-          example: Condition?patient={{%context.patientId}}
-        coverage:
-          type: string
-          example: Coverage?patient={{%context.patientId}}&status=active
-        device:
-          type: string
-          example: Device?patient={{%context.patientId}}
-        encounter:
-          type: string
-          example: Encounter/{{%context.encounterId}}
-        location:
-          type: string
-          example: Location?_id={{%context.locationId}}
-        patient:
-          type: string
-          example: Patient/{{%context.patientId}}
-        practitioner:
-          type: string
-          example: Practitioner/{{%context.userId}}
-        practitionerRole:
-          type: string
-          example: PractitionerRole?practitioner={{%context.userId}}
-    OrderSignRequest:
-      type: object
-      description: CDS Hooks Order Sign Request payload
-      properties:
-        hook:
-          type: string
-          description: CDS Hooks hook name
-          example: order-sign
-        hookInstance:
-          type: string
-          description: Unique hook instance identifier
-          example: serviceRequestCoverageRequirements
-        fhirServer:
-          type: string
-          description: FHIR server base URL
-          example: http://hooks.smarthealth.org:9121
-        fhirAuthorization:
-          $ref: '#/components/schemas/FhirAuthorization'
-        context:
-          $ref: '#/components/schemas/Context'
-        prefetch:
-          $ref: '#/components/schemas/Prefetch'
+        provider:
+          $ref: '#/components/schemas/Reference'
+        responsible:
+          type: boolean
+          example: true
     Coding:
       type: object
       description: Coding structure for answers
@@ -280,6 +135,45 @@ components:
         display:
           type: string
           example: Age ≥ 50
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
+    Entry:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Claim'
+    CodeableConcept:
+      type: object
+      description: FHIR CodeableConcept
+      properties:
+        coding:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coding'
+    Reference:
+      type: object
+      description: FHIR Reference
+      properties:
+        reference:
+          type: string
+          example: Patient/anonymous
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
     Claim:
       type: object
       description: FHIR Claim Inquiry Request
@@ -314,6 +208,45 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CareTeam'
+    Card:
+      type: object
+      description: CDS Hooks card response
+      properties:
+        summary:
+          type: string
+          description: Short summary of the card
+          example: Required
+        indicator:
+          type: string
+          description: Severity indicator
+          example: info
+        detail:
+          type: string
+          description: Detailed description
+          example: A9521DMESUP/ACCESS/SRV-COMPON/OTHHCPCS
+        uuid:
+          type: string
+          description: Unique card identifier
+          example: uuid
+        source:
+          $ref: '#/components/schemas/Source'
+        links:
+          type: array
+          description: Links for additional actions or documentation
+          items:
+            $ref: '#/components/schemas/Link'
+    Source:
+      type: object
+      description: Source information for the card
+      properties:
+        label:
+          type: string
+          description: Source label
+          example: UnitedHealthcarePriorAuthorizationRequirements
+        url:
+          type: string
+          description: Source URL
+          example: https://apimarketplace.uhcprovider.com/#/all-apis/prior-auth-api
     Link:
       type: object
       description: Card action link
@@ -358,6 +291,43 @@ components:
           type: string
           description: Subject identifier
           example: cds-service4
+    Bundle:
+      type: object
+      description: FHIR Bundle resource
+      properties:
+        resourceType:
+          type: string
+          example: Bundle
+        type:
+          type: string
+          example: collection
+        entry:
+          type: array
+          description: Bundle entries
+          items:
+            $ref: '#/components/schemas/Entry'
+    OrderSignRequest:
+      type: object
+      description: CDS Hooks Order Sign Request payload
+      properties:
+        hook:
+          type: string
+          description: CDS Hooks hook name
+          example: order-sign
+        hookInstance:
+          type: string
+          description: Unique hook instance identifier
+          example: serviceRequestCoverageRequirements
+        fhirServer:
+          type: string
+          description: FHIR server base URL
+          example: http://hooks.smarthealth.org:9121
+        fhirAuthorization:
+          $ref: '#/components/schemas/FhirAuthorization'
+        context:
+          $ref: '#/components/schemas/Context'
+        prefetch:
+          $ref: '#/components/schemas/Prefetch'
     OrderSignResponseWrapper:
       type: object
       description: Wrapper for Order Sign response
@@ -373,6 +343,36 @@ components:
           items:
             type: object
           example: []
+    Prefetch:
+      type: object
+      properties:
+        claimResponse:
+          type: string
+          example: ClaimResponse?patient={{%context.patientId}}
+        condition:
+          type: string
+          example: Condition?patient={{%context.patientId}}
+        coverage:
+          type: string
+          example: Coverage?patient={{%context.patientId}}&status=active
+        device:
+          type: string
+          example: Device?patient={{%context.patientId}}
+        encounter:
+          type: string
+          example: Encounter/{{%context.encounterId}}
+        location:
+          type: string
+          example: Location?_id={{%context.locationId}}
+        patient:
+          type: string
+          example: Patient/{{%context.patientId}}
+        practitioner:
+          type: string
+          example: Practitioner/{{%context.userId}}
+        practitionerRole:
+          type: string
+          example: PractitionerRole?practitioner={{%context.userId}}
   securitySchemes:
     oAuth:
       type: oauth2

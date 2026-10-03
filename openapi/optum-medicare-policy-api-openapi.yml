@@ -321,17 +321,21 @@ paths:
           description: Service Unavailable
 components:
   schemas:
-    Code:
+    Contractors:
       type: object
       properties:
-        policy:
-          type: array
-          items:
-            $ref: '#/components/schemas/Policy'
-        value:
-          type: string
-          xml:
-            attribute: true
+        type:
+          $ref: '#/components/schemas/Links'
+        fi:
+          $ref: '#/components/schemas/Links'
+        ca:
+          $ref: '#/components/schemas/Links'
+        na:
+          $ref: '#/components/schemas/Links'
+        nb:
+          $ref: '#/components/schemas/Links'
+      xml:
+        name: Contractors
     Policies:
       type: object
       properties:
@@ -354,30 +358,6 @@ components:
             name: Link
           items:
             $ref: '#/components/schemas/Link'
-    Contractors:
-      type: object
-      properties:
-        type:
-          $ref: '#/components/schemas/Links'
-        fi:
-          $ref: '#/components/schemas/Links'
-        ca:
-          $ref: '#/components/schemas/Links'
-        na:
-          $ref: '#/components/schemas/Links'
-        nb:
-          $ref: '#/components/schemas/Links'
-      xml:
-        name: Contractors
-    Link:
-      type: object
-      properties:
-        href:
-          type: string
-          xml:
-            attribute: true
-        value:
-          type: string
     Policy:
       type: object
       properties:
@@ -401,6 +381,26 @@ components:
           type: string
           xml:
             attribute: true
+    Code:
+      type: object
+      properties:
+        policy:
+          type: array
+          items:
+            $ref: '#/components/schemas/Policy'
+        value:
+          type: string
+          xml:
+            attribute: true
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

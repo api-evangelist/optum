@@ -125,31 +125,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Narrative:
-      type: object
-      properties:
-        status:
-          type: string
-          example: generated
-        div:
-          type: string
-          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
-    CapabilityStatementInteraction:
-      type: object
-      properties:
-        code:
-          type: string
-          example: read
-    CapabilityStatementImplementation:
-      type: object
-      properties:
-        description:
-          type: string
-          example: uhcpp-paan-pas-server implementation
-        url:
-          type: string
-          format: uri
-          example: https://apimarketplace-stg.uhc.com/PriorAuth/v1
     CapabilityStatementResource:
       type: object
       properties:
@@ -171,15 +146,30 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CapabilityStatementOperation'
-    CapabilityStatementSoftware:
+    CapabilityStatementOperation:
       type: object
       properties:
         name:
           type: string
-          example: uhcpp-paan-pas-server
-        version:
+          example: submit
+        definition:
           type: string
-          example: 8.8.0
+          format: uri
+    CapabilityStatementInteraction:
+      type: object
+      properties:
+        code:
+          type: string
+          example: read
+    Narrative:
+      type: object
+      properties:
+        status:
+          type: string
+          example: generated
+        div:
+          type: string
+          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
     PasCapabilityStatementResponse:
       type: object
       properties:
@@ -224,15 +214,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CapabilityStatementRest'
-    CapabilityStatementOperation:
+    CapabilityStatementImplementation:
+      type: object
+      properties:
+        description:
+          type: string
+          example: uhcpp-paan-pas-server implementation
+        url:
+          type: string
+          format: uri
+          example: https://apimarketplace-stg.uhc.com/PriorAuth/v1
+    CapabilityStatementSoftware:
       type: object
       properties:
         name:
           type: string
-          example: submit
-        definition:
+          example: uhcpp-paan-pas-server
+        version:
           type: string
-          format: uri
+          example: 8.8.0
     CapabilityStatementRest:
       type: object
       properties:

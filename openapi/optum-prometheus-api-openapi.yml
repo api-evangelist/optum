@@ -107,17 +107,6 @@ components:
           type: string
           description: Field that provides successful or non-error messages
           example: Job has queued for processing.
-    JobSubmission_Response_Failure_500:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Short description of the error encountered
-          example: Internal error occurred
-        error_description:
-          type: string
-          description: Long description of the error that further explains why the request was unsuccessful
-          example: Internal error occurred. Support has been notified.
     JobSubmission_Response_Failure_400:
       type: object
       properties:
@@ -129,12 +118,51 @@ components:
           type: string
           description: Long description of the error that further explains why the request was unsuccessful
           example: The request was not properly formatted.
+    JobSubmission_Response_Failure_500:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Short description of the error encountered
+          example: Internal error occurred
+        error_description:
+          type: string
+          description: Long description of the error that further explains why the request was unsuccessful
+          example: Internal error occurred. Support has been notified.
     JobSummission_Request:
       type: object
       properties:
         controlFileName:
           type: string
           example: control.tsv.gz
+    CheckJob_Request:
+      type: object
+      properties:
+        JobId:
+          type: string
+          example: '729'
+    CheckJob_Response_Failure_500:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Short description of the error encountered
+          example: Internal error occurred
+        error_description:
+          type: string
+          description: Long description of the error that further explains why the request was unsuccessful
+          example: Internal error occurred. Support has been notified.
+    CheckJob_Response_Failure_400:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Short description of the error encountered
+          example: Invalid Request
+        error_description:
+          type: string
+          description: Long description of the error that further explains why the request was unsuccessful
+          example: The request was not properly formatted.
     CheckJob_Response_Success:
       type: object
       properties:
@@ -174,34 +202,6 @@ components:
           type: string
           description: Field that provides successful or non-error messages
           example: 'Current batch status: Finished'
-    CheckJob_Request:
-      type: object
-      properties:
-        JobId:
-          type: string
-          example: '729'
-    CheckJob_Response_Failure_500:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Short description of the error encountered
-          example: Internal error occurred
-        error_description:
-          type: string
-          description: Long description of the error that further explains why the request was unsuccessful
-          example: Internal error occurred. Support has been notified.
-    CheckJob_Response_Failure_400:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Short description of the error encountered
-          example: Invalid Request
-        error_description:
-          type: string
-          description: Long description of the error that further explains why the request was unsuccessful
-          example: The request was not properly formatted.
 x-refined-from:
 - optum-prometheus-analytics-api-job-submission-openapi.yml
 - optum-prometheus-analytics-checkjob-openapi.yml

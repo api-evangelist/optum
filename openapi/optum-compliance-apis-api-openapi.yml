@@ -199,6 +199,52 @@ paths:
     - url: /v1/optumcommonms
 components:
   schemas:
+    ABNItemService:
+      type: object
+      properties:
+        codeItemService:
+          type: string
+        estimatedCost:
+          type: string
+        patientAction:
+          type: string
+        medicareNoPayReason:
+          type: string
+        spanishMedicareReason:
+          type: string
+    PlaceOfServiceValue:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    PhysicianClaimSourceRationale:
+      type: object
+      properties:
+        ddrId:
+          type: string
+        mnemonic:
+          type: string
+        editMessage:
+          type: string
+        source:
+          type: string
+        editType:
+          type: string
+        sourceInfo:
+          type: string
+        sourceUrl:
+          type: string
+        description:
+          type: string
+    ContractorValue:
+      type: object
+      properties:
+        contractorNumber:
+          type: string
+        contractorName:
+          type: string
     ABNForm:
       type: object
       properties:
@@ -220,52 +266,6 @@ components:
           type: string
         isEnglishPDF:
           type: boolean
-    ContractorValue:
-      type: object
-      properties:
-        contractorNumber:
-          type: string
-        contractorName:
-          type: string
-    PhysicianClaimSourceRationale:
-      type: object
-      properties:
-        ddrId:
-          type: string
-        mnemonic:
-          type: string
-        editMessage:
-          type: string
-        source:
-          type: string
-        editType:
-          type: string
-        sourceInfo:
-          type: string
-        sourceUrl:
-          type: string
-        description:
-          type: string
-    PlaceOfServiceValue:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
-          type: string
-    ABNItemService:
-      type: object
-      properties:
-        codeItemService:
-          type: string
-        estimatedCost:
-          type: string
-        patientAction:
-          type: string
-        medicareNoPayReason:
-          type: string
-        spanishMedicareReason:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http

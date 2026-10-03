@@ -60,6 +60,43 @@ paths:
       operationId: upload
 components:
   schemas:
+    Response:
+      type: object
+      properties:
+        status:
+          type: string
+        implementationTransactionSetSyntaxError:
+          type: string
+        attachmentId:
+          type: string
+        transactionSetAcknowledgement:
+          type: string
+    Error:
+      type: object
+      properties:
+        followupAction:
+          type: string
+        field:
+          type: string
+        code:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+      description: Error
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        errors:
+          items:
+            $ref: '#/components/schemas/Error'
+          type: array
+    InternalErrorResponse:
+      type: object
+      $ref: '#/components/schemas/InternalError'
     InternalError:
       type: object
       properties:
@@ -79,40 +116,3 @@ components:
           type: string
           example: Internal Server Error
       description: Error
-    Error:
-      type: object
-      properties:
-        followupAction:
-          type: string
-        field:
-          type: string
-        code:
-          type: string
-        description:
-          type: string
-        location:
-          type: string
-      description: Error
-    Response:
-      type: object
-      properties:
-        status:
-          type: string
-        implementationTransactionSetSyntaxError:
-          type: string
-        attachmentId:
-          type: string
-        transactionSetAcknowledgement:
-          type: string
-    InternalErrorResponse:
-      type: object
-      $ref: '#/components/schemas/InternalError'
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type: string
-        errors:
-          items:
-            $ref: '#/components/schemas/Error'
-          type: array

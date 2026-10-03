@@ -587,170 +587,6 @@ paths:
           description: Service Unavailable
 components:
   schemas:
-    RangeItem:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
-          type: string
-        tabulardata:
-          $ref: '#/components/schemas/Tabulardata'
-        href:
-          type: string
-          xml:
-            attribute: true
-    ExcludesNotes1:
-      required:
-      - note
-      type: object
-      properties:
-        excludesHeader1:
-          type: string
-          xml:
-            name: excludes-header-1
-        note:
-          type: array
-          items:
-            $ref: '#/components/schemas/Note'
-    IncludesExcludesNotes:
-      type: object
-      properties:
-        includesNotes:
-          $ref: '#/components/schemas/IncludesNotes'
-        excludesNotes:
-          $ref: '#/components/schemas/ExcludesNotes'
-        excludesNotes1:
-          $ref: '#/components/schemas/ExcludesNotes1'
-        excludesNotes2:
-          $ref: '#/components/schemas/ExcludesNotes2'
-      xml:
-        name: includes-excludes-notes
-    CodeRange:
-      type: object
-      properties:
-        headers:
-          type: string
-        rangeId:
-          type: integer
-          format: int32
-          xml:
-            name: range-id
-        rangeItem:
-          type: array
-          xml:
-            name: range-item
-          items:
-            $ref: '#/components/schemas/RangeItem'
-        link:
-          type: array
-          items:
-            $ref: '#/components/schemas/Link'
-      xml:
-        name: code-range
-    ExcludesNotes2:
-      required:
-      - note
-      type: object
-      properties:
-        excludesHeader2:
-          type: string
-          xml:
-            name: excludes-header-2
-        note:
-          type: array
-          items:
-            $ref: '#/components/schemas/Note'
-    Note:
-      type: object
-      properties:
-        content:
-          type: string
-        indentation:
-          type: integer
-          format: int32
-          xml:
-            attribute: true
-    ExcludesNotes:
-      required:
-      - note
-      type: object
-      properties:
-        excludesHeader:
-          type: string
-          xml:
-            name: excludes-header
-        note:
-          type: array
-          items:
-            $ref: '#/components/schemas/Note'
-    IncludesNotes:
-      required:
-      - note
-      type: object
-      properties:
-        includesHeader:
-          type: string
-          xml:
-            name: includes-header
-        note:
-          type: array
-          items:
-            $ref: '#/components/schemas/Note'
-    Link:
-      type: object
-      properties:
-        href:
-          type: string
-          xml:
-            attribute: true
-        value:
-          type: string
-    Tabulardata:
-      type: object
-      properties:
-        dataLine:
-          type: array
-          xml:
-            name: data-line
-          items:
-            type: string
-            xml:
-              name: data-line
-    TermSearchResult:
-      required:
-      - code
-      type: object
-      properties:
-        code:
-          type: string
-        rank:
-          type: integer
-          format: int64
-        desc:
-          type: string
-        descFull:
-          type: string
-          xml:
-            name: desc-full
-        href:
-          type: string
-          xml:
-            attribute: true
-        codeType:
-          type: integer
-          format: int32
-    TermSearchGroups:
-      type: object
-      properties:
-        termSearchGroup:
-          type: array
-          xml:
-            name: term-search-group
-          items:
-            $ref: '#/components/schemas/Node'
-      xml:
-        name: term-search-groups
     Node:
       required:
       - code
@@ -785,6 +621,32 @@ components:
           xml:
             name: href-end
             attribute: true
+    RangeItem:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+        tabulardata:
+          $ref: '#/components/schemas/Tabulardata'
+        href:
+          type: string
+          xml:
+            attribute: true
+    IncludesNotes:
+      required:
+      - note
+      type: object
+      properties:
+        includesHeader:
+          type: string
+          xml:
+            name: includes-header
+        note:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
     Items:
       type: object
       properties:
@@ -794,6 +656,28 @@ components:
             type: string
       xml:
         name: items
+    CodeRange:
+      type: object
+      properties:
+        headers:
+          type: string
+        rangeId:
+          type: integer
+          format: int32
+          xml:
+            name: range-id
+        rangeItem:
+          type: array
+          xml:
+            name: range-item
+          items:
+            $ref: '#/components/schemas/RangeItem'
+        link:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+      xml:
+        name: code-range
     TermSearchResults:
       type: object
       properties:
@@ -809,6 +693,122 @@ components:
             $ref: '#/components/schemas/Link'
       xml:
         name: term-search-results
+    ExcludesNotes1:
+      required:
+      - note
+      type: object
+      properties:
+        excludesHeader1:
+          type: string
+          xml:
+            name: excludes-header-1
+        note:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
+    Tabulardata:
+      type: object
+      properties:
+        dataLine:
+          type: array
+          xml:
+            name: data-line
+          items:
+            type: string
+            xml:
+              name: data-line
+    ExcludesNotes2:
+      required:
+      - note
+      type: object
+      properties:
+        excludesHeader2:
+          type: string
+          xml:
+            name: excludes-header-2
+        note:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
+    Note:
+      type: object
+      properties:
+        content:
+          type: string
+        indentation:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+    IncludesExcludesNotes:
+      type: object
+      properties:
+        includesNotes:
+          $ref: '#/components/schemas/IncludesNotes'
+        excludesNotes:
+          $ref: '#/components/schemas/ExcludesNotes'
+        excludesNotes1:
+          $ref: '#/components/schemas/ExcludesNotes1'
+        excludesNotes2:
+          $ref: '#/components/schemas/ExcludesNotes2'
+      xml:
+        name: includes-excludes-notes
+    ExcludesNotes:
+      required:
+      - note
+      type: object
+      properties:
+        excludesHeader:
+          type: string
+          xml:
+            name: excludes-header
+        note:
+          type: array
+          items:
+            $ref: '#/components/schemas/Note'
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    TermSearchResult:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+        rank:
+          type: integer
+          format: int64
+        desc:
+          type: string
+        descFull:
+          type: string
+          xml:
+            name: desc-full
+        href:
+          type: string
+          xml:
+            attribute: true
+        codeType:
+          type: integer
+          format: int32
+    TermSearchGroups:
+      type: object
+      properties:
+        termSearchGroup:
+          type: array
+          xml:
+            name: term-search-group
+          items:
+            $ref: '#/components/schemas/Node'
+      xml:
+        name: term-search-groups
   securitySchemes:
     bearerAuth:
       type: http

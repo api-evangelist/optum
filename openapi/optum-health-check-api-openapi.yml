@@ -505,6 +505,10 @@ components:
         version:
           type: string
           description: API version
+    HealthCheckResponse:
+      type: object
+      additionalProperties: true
+      description: Health check response. Exact schema was not provided in the source collection.
     ErrorResponse:
       type: object
       properties:
@@ -516,10 +520,6 @@ components:
           type: array
           items:
             type: string
-    HealthCheckResponse:
-      type: object
-      additionalProperties: true
-      description: Health check response. Exact schema was not provided in the source collection.
     ErrorResponse_2:
       type: object
       properties:
@@ -588,35 +588,18 @@ components:
           type: string
           description: API version
   responses:
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     InternalServerError:
       description: Internal server error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    HealthcheckHealthyResponse:
-      description: OK
-      headers:
-        x-optum-tenant-id:
-          $ref: '#/components/headers/tenantid'
-        x-optum-correlation-id:
-          $ref: '#/components/headers/correlationid'
-        x-optum-trace-id:
-          $ref: '#/components/headers/traceid'
+    Unauthorized:
+      description: Unauthorized
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              status:
-                type: string
-                example: ok
+            $ref: '#/components/schemas/ErrorResponse'
     PermissionDeniedError:
       description: Unauthorized.
       headers:
@@ -653,6 +636,23 @@ components:
               status:
                 type: string
                 example: unhealthy
+    HealthcheckHealthyResponse:
+      description: OK
+      headers:
+        x-optum-tenant-id:
+          $ref: '#/components/headers/tenantid'
+        x-optum-correlation-id:
+          $ref: '#/components/headers/correlationid'
+        x-optum-trace-id:
+          $ref: '#/components/headers/traceid'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: ok
   securitySchemes:
     bearerToken:
       type: apiKey
@@ -689,6 +689,11 @@ components:
           tokenUrl: https://idx-stage.linkhealth.com/auth/realms/developer-platform/protocol/openid-connect/token
       type: oauth2
   headers:
+    correlationid:
+      schema:
+        type: string
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      description: A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
     traceid:
       schema:
         type: string
@@ -704,11 +709,6 @@ components:
         type: string
         example: 5e2f9f4f-6f1d-4b37-92b5-6c5a9d1f8a21
       description: (Optional) Identifies an Optum-assigned sub-tenant configuration for your organization. Include this header only when Optum has provided a value for a specific enabled customer configuration. Clients must not generate or infer this value.
-    correlationid:
-      schema:
-        type: string
-        example: 9fb77454-8c58-4345-aa50-43f133e06d20
-      description: A unique identifier value that is attached to the response that allow reference to the original request. Differs from `x-optum-trace-id` as the correlation-id is stored within the datastore for future queryability.
 x-refined-from:
 - optum-medical-network-attachment-retrieval-v1-openapi.yml
 - optum-medical-network-attachment-status-v1-openapi.yml

@@ -397,6 +397,16 @@ paths:
       - bearerAuth: []
 components:
   schemas:
+    PDFDocument:
+      type: object
+      properties:
+        fileType:
+          type: string
+        fileName:
+          type: string
+        documentBuffer:
+          type: string
+          format: byte
     Notification:
       type: object
       properties:
@@ -412,16 +422,6 @@ components:
           type: array
           items:
             type: string
-    PDFDocument:
-      type: object
-      properties:
-        fileType:
-          type: string
-        fileName:
-          type: string
-        documentBuffer:
-          type: string
-          format: byte
   securitySchemes:
     bearerAuth:
       type: http

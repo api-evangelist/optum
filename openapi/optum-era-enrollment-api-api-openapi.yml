@@ -264,9 +264,49 @@ paths:
       - ERA Enrollment API
 components:
   schemas:
-    SubmissionResponse:
+    ProviderIdentifiers:
       properties:
-        payloadId:
+        npi:
+          format: int64
+          type: integer
+        tinOrEin:
+          format: int64
+          type: integer
+      type: object
+    ProviderEnrollmentStatus:
+      properties:
+        associationStatuses:
+          items:
+            $ref: '#/components/schemas/AssociationStatus'
+          type: array
+        enrollmentStatus:
+          type: string
+      type: object
+    PreferenceForAggregation:
+      properties:
+        npi:
+          format: int64
+          type: integer
+        tin:
+          format: int64
+          type: integer
+      type: object
+    ProviderAddress:
+      properties:
+        city:
+          type: string
+        stateProvince:
+          type: string
+        street:
+          type: string
+        zipCode:
+          type: string
+      type: object
+    OtherIdentifiers:
+      properties:
+        assigningAuthority:
+          type: string
+        tradingPartnerId:
           type: string
       type: object
     ProviderContact:
@@ -280,6 +320,21 @@ components:
         telephoneNumber:
           type: string
         telephoneNumberExtension:
+          type: string
+      type: object
+    AssociationStatus:
+      properties:
+        payerId:
+          type: string
+        providerId:
+          type: string
+        providerIdType:
+          type: string
+        rejectionReason:
+          type: string
+        status:
+          type: string
+        statusDate:
           type: string
       type: object
     ResultSummary:
@@ -304,53 +359,9 @@ components:
         status:
           type: string
       type: object
-    ProviderIdentifiers:
+    SubmissionResponse:
       properties:
-        npi:
-          format: int64
-          type: integer
-        tinOrEin:
-          format: int64
-          type: integer
-      type: object
-    PreferenceForAggregation:
-      properties:
-        npi:
-          format: int64
-          type: integer
-        tin:
-          format: int64
-          type: integer
-      type: object
-    OtherIdentifiers:
-      properties:
-        assigningAuthority:
-          type: string
-        tradingPartnerId:
-          type: string
-      type: object
-    AssociationStatus:
-      properties:
-        payerId:
-          type: string
-        providerId:
-          type: string
-        providerIdType:
-          type: string
-        rejectionReason:
-          type: string
-        status:
-          type: string
-        statusDate:
-          type: string
-      type: object
-    ProviderEnrollmentStatus:
-      properties:
-        associationStatuses:
-          items:
-            $ref: '#/components/schemas/AssociationStatus'
-          type: array
-        enrollmentStatus:
+        payloadId:
           type: string
       type: object
     EnrollmentRoot:
@@ -404,17 +415,6 @@ components:
         version:
           format: int32
           type: integer
-      type: object
-    ProviderAddress:
-      properties:
-        city:
-          type: string
-        stateProvince:
-          type: string
-        street:
-          type: string
-        zipCode:
-          type: string
       type: object
   securitySchemes:
     bearerAuth:

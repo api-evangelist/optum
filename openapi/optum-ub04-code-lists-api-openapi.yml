@@ -61,13 +61,6 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    Code:
-      type: object
-      properties:
-        codeValue:
-          type: string
-        description:
-          type: string
     OptumPageImplCode:
       type: object
       properties:
@@ -78,6 +71,13 @@ components:
         totalCount:
           type: integer
           format: int64
+    Code:
+      type: object
+      properties:
+        codeValue:
+          type: string
+        description:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

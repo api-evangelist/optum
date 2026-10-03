@@ -364,6 +364,45 @@ paths:
           description: Service Unavailable
 components:
   schemas:
+    Icd10pcsColorCodes:
+      type: object
+      properties:
+        newCode:
+          type: string
+          xml:
+            name: new-code
+        revisedCode:
+          type: string
+          xml:
+            name: revised-code
+        maleDiagnosis:
+          type: string
+          xml:
+            name: male-diagnosis
+        femaleDiagnosis:
+          type: string
+          xml:
+            name: female-diagnosis
+        mappingToIcd9Code:
+          type: string
+          xml:
+            name: mapping-to-icd9-code
+        procedureInconsistentLOS:
+          type: string
+          xml:
+            name: procedure-inconsistent-los
+        nonCoveredByMedicare:
+          type: string
+          xml:
+            name: noncovered-medicare
+        nonORProcedure:
+          type: string
+          xml:
+            name: non-OR-procedure
+        limitedCoverageProcedure:
+          type: string
+      xml:
+        name: icd-10-pcs-color-codes
     Icd10CmColorCodes:
       type: object
       properties:
@@ -704,45 +743,6 @@ components:
           type: string
       xml:
         name: color-codes
-    Icd10pcsColorCodes:
-      type: object
-      properties:
-        newCode:
-          type: string
-          xml:
-            name: new-code
-        revisedCode:
-          type: string
-          xml:
-            name: revised-code
-        maleDiagnosis:
-          type: string
-          xml:
-            name: male-diagnosis
-        femaleDiagnosis:
-          type: string
-          xml:
-            name: female-diagnosis
-        mappingToIcd9Code:
-          type: string
-          xml:
-            name: mapping-to-icd9-code
-        procedureInconsistentLOS:
-          type: string
-          xml:
-            name: procedure-inconsistent-los
-        nonCoveredByMedicare:
-          type: string
-          xml:
-            name: noncovered-medicare
-        nonORProcedure:
-          type: string
-          xml:
-            name: non-OR-procedure
-        limitedCoverageProcedure:
-          type: string
-      xml:
-        name: icd-10-pcs-color-codes
   securitySchemes:
     bearerAuth:
       type: http

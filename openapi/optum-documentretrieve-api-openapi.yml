@@ -135,33 +135,6 @@ paths:
       - documentRetrieve
 components:
   schemas:
-    MultiValueMap:
-      type: object
-      properties:
-        all:
-          type: object
-          additionalProperties:
-            type: object
-          writeOnly: true
-        empty:
-          type: boolean
-      additionalProperties:
-        type: array
-        items:
-          type: object
-    DocumentLookup:
-      type: object
-      required:
-      - homeCommunityId
-      - repositoryUniqueId
-      - documentUniqueId
-      properties:
-        homeCommunityId:
-          type: string
-        documentUniqueId:
-          type: string
-        repositoryUniqueId:
-          type: string
     Authorization:
       type: object
       required:
@@ -184,15 +157,6 @@ components:
           type: string
         clientUUId:
           type: string
-    DocumentRetrievalRequest:
-      type: object
-      properties:
-        additionalRetrievalParameters:
-          $ref: '#/components/schemas/AdditionalRetrievalParameters'
-        authorization:
-          $ref: '#/components/schemas/Authorization'
-        documentLookup:
-          $ref: '#/components/schemas/DocumentLookup'
     HttpClientServerError:
       type: object
       properties:
@@ -205,12 +169,48 @@ components:
           type: string
         path:
           type: string
+    DocumentRetrievalRequest:
+      type: object
+      properties:
+        additionalRetrievalParameters:
+          $ref: '#/components/schemas/AdditionalRetrievalParameters'
+        authorization:
+          $ref: '#/components/schemas/Authorization'
+        documentLookup:
+          $ref: '#/components/schemas/DocumentLookup'
+    MultiValueMap:
+      type: object
+      properties:
+        all:
+          type: object
+          additionalProperties:
+            type: object
+          writeOnly: true
+        empty:
+          type: boolean
+      additionalProperties:
+        type: array
+        items:
+          type: object
     AdditionalRetrievalParameters:
       type: object
       properties:
         maxPayloadSizeMB:
           type: string
         includeStylesheet:
+          type: string
+    DocumentLookup:
+      type: object
+      required:
+      - homeCommunityId
+      - repositoryUniqueId
+      - documentUniqueId
+      properties:
+        homeCommunityId:
+          type: string
+        documentUniqueId:
+          type: string
+        repositoryUniqueId:
           type: string
   securitySchemes:
     bearerAuth:

@@ -398,59 +398,20 @@ paths:
           description: Service Unavailable
 components:
   schemas:
-    SourceRationale:
+    Optum360:
       type: object
       properties:
-        value:
+        code:
           type: string
-        type:
+        description:
           type: string
-          xml:
-            attribute: true
-    Modifiers:
+    Ama:
       type: object
       properties:
-        physician:
-          $ref: '#/components/schemas/Links'
-        facility:
-          $ref: '#/components/schemas/Links'
-        opps:
-          $ref: '#/components/schemas/Links'
-        mpfs:
-          $ref: '#/components/schemas/Links'
-        asc:
-          $ref: '#/components/schemas/Links'
-        ambulance:
-          $ref: '#/components/schemas/Links'
-        dme:
-          $ref: '#/components/schemas/Links'
-      xml:
-        name: modifiers
-    Source:
-      type: object
-      properties:
-        value:
+        code:
           type: string
-        type:
+        description:
           type: string
-          xml:
-            attribute: true
-    Sources:
-      required:
-      - source
-      - sourceRationale
-      type: object
-      properties:
-        source:
-          type: array
-          items:
-            $ref: '#/components/schemas/Source'
-        sourceRationale:
-          type: array
-          xml:
-            name: source_rationale
-          items:
-            $ref: '#/components/schemas/SourceRationale'
     ModifierProperty:
       required:
       - sources
@@ -480,6 +441,56 @@ components:
           $ref: '#/components/schemas/Links'
       xml:
         name: modifier-property
+    SourceRationale:
+      type: object
+      properties:
+        value:
+          type: string
+        type:
+          type: string
+          xml:
+            attribute: true
+    Modifiers:
+      type: object
+      properties:
+        physician:
+          $ref: '#/components/schemas/Links'
+        facility:
+          $ref: '#/components/schemas/Links'
+        opps:
+          $ref: '#/components/schemas/Links'
+        mpfs:
+          $ref: '#/components/schemas/Links'
+        asc:
+          $ref: '#/components/schemas/Links'
+        ambulance:
+          $ref: '#/components/schemas/Links'
+        dme:
+          $ref: '#/components/schemas/Links'
+      xml:
+        name: modifiers
+    Links:
+      type: object
+      properties:
+        link:
+          type: array
+          xml:
+            name: Link
+          items:
+            $ref: '#/components/schemas/Link'
+    ModifierDesc:
+      type: object
+      properties:
+        descFull:
+          type: string
+          xml:
+            name: desc-full
+        usage:
+          type: string
+        definition:
+          type: string
+      xml:
+        name: code-properties
     Modifier51Exempt:
       required:
       - ama
@@ -496,33 +507,15 @@ components:
             $ref: '#/components/schemas/Ama'
       xml:
         name: modifier-51-exempt
-    Ama:
+    Source:
       type: object
       properties:
-        code:
+        value:
           type: string
-        description:
-          type: string
-    Optum360:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
-          type: string
-    ModifierDesc:
-      type: object
-      properties:
-        descFull:
+        type:
           type: string
           xml:
-            name: desc-full
-        usage:
-          type: string
-        definition:
-          type: string
-      xml:
-        name: code-properties
+            attribute: true
     Link:
       type: object
       properties:
@@ -532,15 +525,22 @@ components:
             attribute: true
         value:
           type: string
-    Links:
+    Sources:
+      required:
+      - source
+      - sourceRationale
       type: object
       properties:
-        link:
+        source:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+        sourceRationale:
           type: array
           xml:
-            name: Link
+            name: source_rationale
           items:
-            $ref: '#/components/schemas/Link'
+            $ref: '#/components/schemas/SourceRationale'
   securitySchemes:
     bearerAuth:
       type: http

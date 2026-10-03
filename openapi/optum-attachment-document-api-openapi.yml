@@ -121,6 +121,18 @@ paths:
       x-operation-id-source: derived
 components:
   responses:
+    InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Resource Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFound'
     BadRequest:
       description: Bad Request
       content:
@@ -141,18 +153,6 @@ components:
           example:
             error: invalid_request
             error_description: The access token is missing
-    NotFound:
-      description: Resource Not Found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/NotFound'
-    InternalError:
-      description: Internal Server Error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     BadRequest:
       allOf:
@@ -163,6 +163,15 @@ components:
         typeInfo:
           type: ErrorResponse
           value: ClientErrors.BAD_REQUEST
+    NotFound:
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponse'
+      example:
+        code: '404'
+        description: Item not found
+        typeInfo:
+          type: ErrorResponse
+          value: ClientErrors.NOT_FOUND
     DocumentInfo:
       type: object
       properties:
@@ -203,15 +212,6 @@ components:
         attachmentUploadDate:
           type: string
           description: attachmentUploadDate
-    NotFound:
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponse'
-      example:
-        code: '404'
-        description: Item not found
-        typeInfo:
-          type: ErrorResponse
-          value: ClientErrors.NOT_FOUND
     ErrorResponse:
       type: object
       properties:

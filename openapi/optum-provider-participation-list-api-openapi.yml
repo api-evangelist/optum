@@ -128,13 +128,6 @@ paths:
       - Provider Participation List
 components:
   schemas:
-    Error:
-      type: object
-      properties:
-        status:
-          type: string
-        detail:
-          $ref: '#/components/schemas/ErrorDetail'
     ApiResponseProviderParticipationResponse:
       type: object
       properties:
@@ -169,13 +162,6 @@ components:
           - NO VENDOR MATCHED
         error:
           $ref: '#/components/schemas/ApiErrorResponse'
-    ErrorDetail:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
     ApiErrorResponse:
       type: object
       properties:
@@ -186,6 +172,34 @@ components:
           type: string
         error:
           $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        detail:
+          $ref: '#/components/schemas/ErrorDetail'
+    ProviderParticipation:
+      type: object
+      properties:
+        vendor_orgId:
+          type: string
+        vendorName:
+          type: string
+          description: Vendor name. Possible values are Athena, Veradigm, Moxe, EPP etc.
+        emrInternalOrgs:
+          type: array
+          items:
+            type: object
+            properties:
+              emr_id:
+                type: string
+              emr:
+                type: string
+              providerInfo:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProviderInfo'
     ProviderInfo:
       type: object
       properties:
@@ -236,27 +250,13 @@ components:
         optInEndDate:
           type: string
           format: date
-    ProviderParticipation:
+    ErrorDetail:
       type: object
       properties:
-        vendor_orgId:
+        code:
           type: string
-        vendorName:
+        message:
           type: string
-          description: Vendor name. Possible values are Athena, Veradigm, Moxe, EPP etc.
-        emrInternalOrgs:
-          type: array
-          items:
-            type: object
-            properties:
-              emr_id:
-                type: string
-              emr:
-                type: string
-              providerInfo:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProviderInfo'
   securitySchemes:
     bearerAuth:
       type: http

@@ -134,111 +134,25 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      title: HTTPValidationError
+    Provider:
+      title: Provider
       type: object
       properties:
-        detail:
-          title: Detail
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
-    ContactMethods:
-      title: ContactMethods
-      type: object
-      properties:
-        electronicDataInterChangeAccessNumber:
+        organizationName:
           type: string
-          description: PER04-06-08 where PER03-05-7=ED
-        email:
+          description: NM103 where NM102=2
+        lastName:
           type: string
-          description: PER04-06-08 where PER03-05-7=EM
-        fax:
+          description: NM103 where NM102=1
+        firstName:
           type: string
-          description: PER04-06-08 where PER03-05-7=FX
-        phone:
+          description: NM104
+        middleName:
           type: string
-          description: PER04-06-08 where PER03-05-7=TE
-        phoneExtension:
+          description: NM105
+        etin:
           type: string
-          description: PER04-06-08 where PER03-05-7=EX
-    PaymentAndRemitReassociationDetails:
-      title: PaymentAndRemitReassociationDetails
-      type: object
-      properties:
-        traceTypeCode:
-          type: string
-          description: TRN01
-        checkOrEFTTraceNumber:
-          type: string
-          description: TRN02
-        originatingCompanyIdentifier:
-          type: string
-          description: TRN03
-        originatingCompanySupplementalCode:
-          type: string
-          description: TRN04
-      description: Model for Payment And Remit Reassociation Details in claim payment advice transactions TRN
-    Meta:
-      title: Meta
-      type: object
-      properties:
-        applicationMode:
-          type: string
-        senderId:
-          type: string
-        traceId:
-          type: string
-    ProviderClaimStatus:
-      title: ProviderClaimStatus
-      type: object
-      properties:
-        statusInformationEffectiveDate:
-          type: string
-          description: Loop 2200C STC02
-        providerStatuses:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProviderStatus'
-          description: Loop 2200C STC01 ,STC10, STC11
-          default: []
-    ServiceClaimStatus:
-      title: ServiceClaimStatus
-      type: object
-      properties:
-        effectiveDate:
-          type: string
-          description: Loop 2220[D|E] STC02
-        serviceStatuses:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExtendedProviderStatus'
-          description: Loop 2220[D|E] STC01 ,STC10, STC11
-          default: []
-    ClaimStatusDetails:
-      title: ClaimStatusDetails
-      type: object
-      properties:
-        serviceProvider:
-          allOf:
-          - $ref: '#/components/schemas/ServiceProvider'
-          description: Loop 2100C NM1
-          default: {}
-        providerOFServiceInformationTraceIdentifier:
-          type: string
-          description: Loop 2200C TRN02
-        serviceProviderClaimStatuses:
-          type: array
-          items:
-            $ref: '#/components/schemas/ServiceProviderClaimStatus'
-          description: Loop 2200C STC
-          default: []
-        patientClaimStatusDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/PatientClaimStatusDetails'
-          description: Loop 2000D HL103=22
-          default: []
+          description: NM109
     ProviderSummaryInformation:
       title: ProviderSummaryInformation
       type: object
@@ -286,71 +200,326 @@ components:
           type: string
           description: LOOP 2000; TS324
       description: PROVIDER SUMMARY INFORMATION for LOOP 2000 TS3
-    TechnicalContactInformation:
-      title: TechnicalContactInformation
+    ReportContent:
+      title: ReportContent
+      required:
+      - report_content
+      - meta
+      type: object
+      properties:
+        report_content:
+          title: Report Content
+          type: string
+        meta:
+          $ref: '#/components/schemas/Meta'
+    ClaimStatusDetails:
+      title: ClaimStatusDetails
+      type: object
+      properties:
+        serviceProvider:
+          allOf:
+          - $ref: '#/components/schemas/ServiceProvider'
+          description: Loop 2100C NM1
+          default: {}
+        providerOFServiceInformationTraceIdentifier:
+          type: string
+          description: Loop 2200C TRN02
+        serviceProviderClaimStatuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceProviderClaimStatus'
+          description: Loop 2200C STC
+          default: []
+        patientClaimStatusDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/PatientClaimStatusDetails'
+          description: Loop 2000D HL103=22
+          default: []
+    cdpedi__x12__v5010__newmodels__claim_payment_advice__Payer:
+      title: Payer
+      type: object
+      properties:
+        name:
+          type: string
+          description: N102
+        centersForMedicareAndMedicaidServicesPlanId:
+          type: string
+          description: LOOP 1000A N104 and LOOP 1000A N103=XV
+        payerIdentificationNumber:
+          type: string
+          description: REF02 where REF01=2U
+        submitterIdentificationNumber:
+          type: string
+          description: REF02 where REF01=EO
+        healthIndustryNumber:
+          type: string
+          description: REF02 where REF01=HI
+        nationalAssociationOfInsuranceCommissioners:
+          type: string
+          description: REF02 where REF01=NF
+        payerWebSiteUrl:
+          type: string
+          description: PER04 where PER01=IC and PER03=UR
+        address:
+          allOf:
+          - $ref: '#/components/schemas/Address'
+          description: LOOP 1000A PAYER Address N3 and N4
+          default: {}
+        businessContactInformation:
+          allOf:
+          - $ref: '#/components/schemas/ContactInformation'
+          description: LOOP 1000A; PER where PER01=CX
+        technicalContactInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/TechnicalContactInformation'
+          description: LOOP 1000A; PER where PER01=BL
+          default: []
+      description: Model for the Payer Identification for LOOP 1000A
+    ClaimPaymentAdviceResponse:
+      title: ClaimPaymentAdviceResponse
+      type: object
+      properties:
+        controlNumber:
+          type: string
+          description: ST02
+        paymentAndRemitReassociationDetails:
+          allOf:
+          - $ref: '#/components/schemas/PaymentAndRemitReassociationDetails'
+          description: TRN
+        foreignCurrency:
+          type: string
+          description: CUR02 where CUR01=PR
+        productionDate:
+          type: string
+          description: DTM02 where DTM01=405
+        receiverIdentifier:
+          type: string
+          description: REF02 where REF01=EV
+        versionIdentification:
+          type: string
+          description: REF02 where REF01=F2
+        financialInformation:
+          allOf:
+          - $ref: '#/components/schemas/FinancialInformation'
+          description: BPR
+        payer:
+          $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_payment_advice__Payer'
+        payee:
+          $ref: '#/components/schemas/Payee'
+        detailInfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/DetailInfo'
+          default: []
+        providerAdjustments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderAdjustments'
+          description: PLB; segment REPEAT >1
+          default: []
+    ContactInformation:
+      title: ContactInformation
       type: object
       properties:
         contactName:
           type: string
-          description: LOOP 1000A; PER02
+          description: PER02
         contactMethods:
           type: array
           items:
-            $ref: '#/components/schemas/TechnicalContactMethod'
+            $ref: '#/components/schemas/ContactMethod'
           description: each contact will have a single property set, except for phone with extention
-      description: PER - PAYER TECHNICAL CONTACT INFORMATION when PER01=BL
-    IdentificationEntity:
-      title: IdentificationEntity
+      description: PER - PAYER BUSINESS CONTACT INFORMATION when PER01=CX
+    ProviderStatus:
+      title: ProviderStatus
+      type: object
+      properties:
+        healthCareClaimStatusCategoryCode:
+          type: string
+          description: STC01-1, STC010-1, STC11-1
+        healthCareClaimStatusCategoryCodeValue:
+          type: string
+          description: STC01-1, STC010-1, STC11-1 in English
+        statusCode:
+          type: string
+          description: STC01-2, STC010-2, STC11-2
+        statusCodeValue:
+          type: string
+          description: STC01-2, STC010-2, STC11-2 in English
+        entityIdentifierCode:
+          type: string
+          description: STC01-3, STC010-3, STC11-3
+        entityIdentifierCodeValue:
+          type: string
+          description: STC01-3, STC010-3, STC11-3 in English
+    ClaimSupplementalInformationQuantities:
+      title: ClaimSupplementalInformationQuantities
+      type: object
+      properties:
+        coveredActual:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = CA
+        coInsuredActual:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = CD
+        lifeTimeReserveActual:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = LA
+        lifeTimeReserveEstimated:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = LE
+        nonCoveredEstimated:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = NE
+        notReplacedBloodUnits:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = NR
+        outlierDays:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = OU
+        prescription:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = PS
+        visits:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = VS
+        federalMedicareOrMedicaidPaymentMandateCategory1:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = ZK
+        federalMedicareOrMedicaidPaymentMandateCategory2:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = ZL
+        federalMedicareOrMedicaidPaymentMandateCategory3:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = ZM
+        federalMedicareOrMedicaidPaymentMandateCategory4:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = ZN
+        federalMedicareOrMedicaidPaymentMandateCategory5:
+          type: string
+          description: LOOP 2100; QTY02 where QTY01 = ZO
+      description: QTY
+    ClaimSupplementalInformation:
+      title: ClaimSupplementalInformation
+      type: object
+      properties:
+        coverageAmount:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = AU
+        discountAmount:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = DB
+        perDayLimit:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = DY
+        patientAmountPaid:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = F5
+        interest:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = I
+        negativeLedgerBalance:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = NL
+        tax:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = T
+        totalClaimBeforeTaxes:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = T2
+        federalMedicareOrMedicaidPaymentMandateCategory1:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = ZK
+        federalMedicareOrMedicaidPaymentMandateCategory2:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = ZL
+        federalMedicareOrMedicaidPaymentMandateCategory3:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = ZM
+        federalMedicareOrMedicaidPaymentMandateCategory4:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = ZN
+        federalMedicareOrMedicaidPaymentMandateCategory5:
+          type: string
+          description: LOOP 2100; AMT02 where AMT01 = ZO
+      description: AMT
+    ClaimPaymentAdviceTransactionResponse:
+      title: ClaimPaymentAdviceTransactionResponse
+      required:
+      - meta
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClaimPaymentAdviceResponse'
+          description: transactions
+          default: []
+        meta:
+          $ref: '#/components/schemas/Meta'
+    cdpedi__x12__v5010__newmodels__claim_status_cdpedi__Subscriber:
+      title: Subscriber
       type: object
       properties:
         organizationName:
           type: string
-          description: LOOP 2100; NM103 where NM102=2
-        blueCrossBlueShieldAssociationPlanCode:
+          description: NM103 where NM102=2
+        lastName:
           type: string
-          description: LOOP 2100; NM109 WHERE NM108=AD
-        taxId:
+          description: NM103 where NM102=1
+        firstName:
           type: string
-          description: LOOP 2100; NM109 WHERE NM108=FI
-        nationalAssociationOfInsuranceCommissionersIdentification:
+          description: NM104
+        middleName:
           type: string
-          description: LOOP 2100; NM109 WHERE NM108=NI
-        payorId:
+          description: NM105
+        suffix:
           type: string
-          description: LOOP 2100; NM109 WHERE NM108=PI
-        pharmacyProcessorNumber:
+          description: NM107
+        memberId:
           type: string
-          description: LOOP 2100; NM109 WHERE NM108=PP
-        centersForMedicareAndMedicaidServicesPlanId:
+          description: NM109 where NM108=MI
+        employerIdentificationNumber:
           type: string
-          description: LOOP 2100; NM109 WHERE NM108=XV
-    cdpedi__x12__v5010__newmodels__claim_status_cdpedi__ServiceLines:
-      title: ServiceLines
+          description: NM109 where NM108=24
+        standardUniqueHealthIdentifierForEachIndividualInTheUnitedStates:
+          type: string
+          description: NM109 where NM108=II
+    ReceiverAccountDetails:
+      title: ReceiverAccountDetails
       type: object
       properties:
-        service:
-          allOf:
-          - $ref: '#/components/schemas/Service'
-          description: service for Loop 2220[D|E]
-          default: {}
-        serviceClaimStatuses:
-          type: array
-          items:
-            $ref: '#/components/schemas/ServiceClaimStatus'
-          description: Loop 2220[D|E]
-          default: []
-        lineItemControlNumber:
+        receiverDfiIdNumberQualifier:
           type: string
-          description: Loop 2220[D|E] REF02
-        serviceLineDate:
+          description: BPR12
+        receiverDfiIdentificationNumber:
           type: string
-          description: Loop 2220[D|E] DTP03 where DTP02=D8
-        beginServiceLineDate:
+          description: BPR13
+        receiverAccountNumberQualifier:
           type: string
-          description: Loop 2220[D|E] DTP03 where DTP02=RD8
-        endServiceLineDate:
+          description: BPR14
+        receiverAccountNumber:
           type: string
-          description: Loop 2220[D|E] DTP03 where DTP02=RD8
+          description: BPR15
+      description: receiver account details related to a Financial Information
+    Adjustments:
+      title: Adjustments
+      type: object
+      properties:
+        adjustmentReasonCode:
+          type: string
+          description: PLB03-1; PLB05-1; PLB07-1; PLB09-1; PLB11-1; PLB13-1
+        adjustmentReasonCodeValue:
+          type: string
+          description: PLB03-1; PLB05-1; PLB07-1; PLB09-1; PLB11-1; PLB13-1 in English
+        providerAdjustmentIdentifier:
+          type: string
+          description: PLB03-2; PLB05-2; PLB07-2; PLB09-2; PLB11-2; PLB13-2
+        providerAdjustmentAmount:
+          type: string
+          description: PLB04; PLB06; PLB08; PLB10; PLB12; PLB14
     ClaimStatusTransactions:
       title: ClaimStatusTransactions
       type: object
@@ -375,6 +544,177 @@ components:
             $ref: '#/components/schemas/ClaimStatusDetails'
           description: Loop 2000C HL103=19
           default: []
+    HTTPValidationError:
+      title: HTTPValidationError
+      type: object
+      properties:
+        detail:
+          title: Detail
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    ClaimAdjustments:
+      title: ClaimAdjustments
+      type: object
+      properties:
+        claimAdjustmentGroupCode:
+          type: string
+          description: CAS01
+        claimAdjustmentGroupCodeValue:
+          type: string
+          description: CAS01 Code Value
+        adjustmentReasonCode1:
+          type: string
+          description: CAS02
+        adjustmentAmount1:
+          type: string
+          description: CAS03
+        adjustmentQuantity1:
+          type: string
+          description: CAS04
+        adjustmentReasonCode2:
+          type: string
+          description: CAS05
+        adjustmentAmount2:
+          type: string
+          description: CAS06
+        adjustmentQuantity2:
+          type: string
+          description: CAS07
+        adjustmentReasonCode3:
+          type: string
+          description: CAS08
+        adjustmentAmount3:
+          type: string
+          description: CAS09
+        adjustmentQuantity3:
+          type: string
+          description: CAS10
+        adjustmentReasonCode4:
+          type: string
+          description: CAS11
+        adjustmentAmount4:
+          type: string
+          description: CAS12
+        adjustmentQuantity4:
+          type: string
+          description: CAS13
+        adjustmentReasonCode5:
+          type: string
+          description: CAS14
+        adjustmentAmount5:
+          type: string
+          description: CAS15
+        adjustmentQuantity5:
+          type: string
+          description: CAS16
+        adjustmentReasonCode6:
+          type: string
+          description: CAS17
+        adjustmentAmount6:
+          type: string
+          description: CAS18
+        adjustmentQuantity6:
+          type: string
+          description: CAS19
+    ServiceProvider:
+      title: ServiceProvider
+      type: object
+      properties:
+        organizationName:
+          type: string
+          description: NM103 where NM102=2
+        lastName:
+          type: string
+          description: NM103 where NM102=1
+        firstName:
+          type: string
+          description: NM104
+        middleName:
+          type: string
+          description: NM105
+        suffix:
+          type: string
+          description: NM107
+        tin:
+          type: string
+          description: NM109 where NM108=FI
+        spn:
+          type: string
+          description: NM109 where NM108=SV
+        npi:
+          type: string
+          description: NM109 where NM108=XX
+    Claims:
+      title: Claims
+      type: object
+      properties:
+        claimStatus:
+          allOf:
+          - $ref: '#/components/schemas/ClaimStatus'
+          description: claimStatus for Loop 2200[D|E]
+          default: {}
+        serviceLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_status_cdpedi__ServiceLines'
+          description: serviceDetails for Loop loop 2220[D|E]
+          default: []
+    RenderingProviderInformation:
+      title: RenderingProviderInformation
+      type: object
+      properties:
+        stateLicenseNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = 0B
+        blueCrossProviderNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = 1A
+        blueShieldProviderNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = 1B
+        medicareProviderNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = 1C
+        medicaidProviderNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = 1D
+        providerUPINNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = 1G
+        champusIdentificationNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = 1H
+        facilityIdNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = 1J
+        nationalCouncilForPrescriptionDrugProgramPharmacyNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = D3
+        providerCommercialNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = G2
+        npi:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = HPI
+        ssn:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = SY
+        federalTaxpayerIdentificationNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01 = TJ
+    ReportDeleted:
+      title: ReportDeleted
+      required:
+      - status
+      - meta
+      type: object
+      properties:
+        status:
+          title: Status
+          type: string
+        meta:
+          $ref: '#/components/schemas/Meta'
     ServicePaymentInformation:
       title: ServicePaymentInformation
       type: object
@@ -427,97 +767,16 @@ components:
         originalUnitsOfServiceCount:
           type: string
           description: LOOP 2110; SVC07
-    ClaimPaymentInfo:
-      title: ClaimPaymentInfo
-      type: object
-      properties:
-        patientControlNumber:
-          type: string
-          description: LOOP 2100; CLP01
-        claimStatusCode:
-          type: string
-          description: LOOP 2100; CLP02
-        totalClaimChargeAmount:
-          type: string
-          description: LOOP 2100; CLP03
-        claimPaymentAmount:
-          type: string
-          description: LOOP 2100; CLP04
-        patientResponsibilityAmount:
-          type: string
-          description: LOOP 2100; CLP05
-        claimFilingIndicatorCode:
-          type: string
-          description: LOOP 2100; CLP06
-        payerClaimControlNumber:
-          type: string
-          description: LOOP 2100; CLP07
-        facilityTypeCode:
-          type: string
-          description: LOOP 2100; CLP08
-        claimFrequencyCode:
-          type: string
-          description: LOOP 2100; CLP09
-        diagnosisRelatedGroupDRGCode:
-          type: string
-          description: LOOP 2100; CLP11
-        diagnosisRelatedGroupDRGWeight:
-          type: string
-          description: LOOP 2100; CLP12
-        dischargeFraction:
-          type: string
-          description: LOOP 2100; CLP13
-    cdpedi__x12__v5010__newmodels__claim_payment_advice__Payer:
-      title: Payer
-      type: object
-      properties:
-        name:
-          type: string
-          description: N102
-        centersForMedicareAndMedicaidServicesPlanId:
-          type: string
-          description: LOOP 1000A N104 and LOOP 1000A N103=XV
-        payerIdentificationNumber:
-          type: string
-          description: REF02 where REF01=2U
-        submitterIdentificationNumber:
-          type: string
-          description: REF02 where REF01=EO
-        healthIndustryNumber:
-          type: string
-          description: REF02 where REF01=HI
-        nationalAssociationOfInsuranceCommissioners:
-          type: string
-          description: REF02 where REF01=NF
-        payerWebSiteUrl:
-          type: string
-          description: PER04 where PER01=IC and PER03=UR
-        address:
-          allOf:
-          - $ref: '#/components/schemas/Address'
-          description: LOOP 1000A PAYER Address N3 and N4
-          default: {}
-        businessContactInformation:
-          allOf:
-          - $ref: '#/components/schemas/ContactInformation'
-          description: LOOP 1000A; PER where PER01=CX
-        technicalContactInformation:
-          type: array
-          items:
-            $ref: '#/components/schemas/TechnicalContactInformation'
-          description: LOOP 1000A; PER where PER01=BL
-          default: []
-      description: Model for the Payer Identification for LOOP 1000A
-    RenderingProvider:
-      title: RenderingProvider
+    CorrectedPatientOrInsuredName:
+      title: CorrectedPatientOrInsuredName
       type: object
       properties:
         organizationName:
           type: string
-          description: LOOP 2100; NM103 NM102=2
+          description: LOOP 2100; NM103 where NM102=2
         lastName:
           type: string
-          description: LOOP 2100; NM103 NM102=1
+          description: LOOP 2100; NM103 where NM102=1
         firstName:
           type: string
           description: LOOP 2100; NM104
@@ -527,80 +786,212 @@ components:
         suffix:
           type: string
           description: LOOP 2100; NM107
-        blueCrossProviderNumber:
+        insuredsChangedUniqueIdentificationNumber:
           type: string
-          description: LOOP 2100; NM109 where NM108=BD
-        blueShieldProviderNumber:
+          description: LOOP 2100; NM109 where NM108=C
+    TechnicalContactInformation:
+      title: TechnicalContactInformation
+      type: object
+      properties:
+        contactName:
           type: string
-          description: LOOP 2100; NM109 where NM108=BS
+          description: LOOP 1000A; PER02
+        contactMethods:
+          type: array
+          items:
+            $ref: '#/components/schemas/TechnicalContactMethod'
+          description: each contact will have a single property set, except for phone with extention
+      description: PER - PAYER TECHNICAL CONTACT INFORMATION when PER01=BL
+    ClaimStatus:
+      title: ClaimStatus
+      type: object
+      properties:
+        referencedTransactionTraceNumber:
+          type: string
+          description: Loop 2200[D|E] TRN02
+        informationClaimStatuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/InformationClaimStatus'
+          description: Loop 2200[D|E]
+          default: []
+        tradingPartnerClaimNumber:
+          type: string
+          description: Loop 2200[D|E] REF02 where REF01=1K
+        billTypeIdentifier:
+          type: string
+          description: Loop 2200[D|E] REF02 where REF01=BLT
+        patientAccountNumber:
+          type: string
+          description: Loop 2200[D|E] REF02 where REF01=EJ
+        pharmacyPrescriptionNumber:
+          type: string
+          description: Loop 2200[D|E] REF02 where REF01=XZ
+        voucherIdentifier:
+          type: string
+          description: Loop 2200[D|E] REF02 where REF01=VV
+        clearinghouseTraceNumber:
+          type: string
+          description: Loop 2200[D|E] REF02 where REF01=D9
+        claimServiceBeginDate:
+          type: string
+          description: Loop 2200[D|E] DTP03 where DTP02=RD8
+        claimServiceEndDate:
+          type: string
+          description: Loop 2200[D|E] DTP03 where DTP02=RD8
+        claimServiceDate:
+          type: string
+          description: Loop 2200[D|E] DTP03 where DTP02=D8
+    IdentificationEntity:
+      title: IdentificationEntity
+      type: object
+      properties:
+        organizationName:
+          type: string
+          description: LOOP 2100; NM103 where NM102=2
+        blueCrossBlueShieldAssociationPlanCode:
+          type: string
+          description: LOOP 2100; NM109 WHERE NM108=AD
         taxId:
           type: string
-          description: LOOP 2100; NM109 where NM108=FI
-        medicaidProviderNumber:
+          description: LOOP 2100; NM109 WHERE NM108=FI
+        nationalAssociationOfInsuranceCommissionersIdentification:
           type: string
-          description: LOOP 2100; NM109 where NM108=MC
-        providerCommercialNumber:
+          description: LOOP 2100; NM109 WHERE NM108=NI
+        payorId:
           type: string
-          description: LOOP 2100; NM109 where NM108=PC
-        stateLicenseNumber:
+          description: LOOP 2100; NM109 WHERE NM108=PI
+        pharmacyProcessorNumber:
           type: string
-          description: LOOP 2100; NM109 where NM108=SL
-        uniquePhysicianIdentificationNumber:
+          description: LOOP 2100; NM109 WHERE NM108=PP
+        centersForMedicareAndMedicaidServicesPlanId:
           type: string
-          description: LOOP 2100; NM109 where NM108=UP
-        npi:
-          type: string
-          description: LOOP 2100; NM109 where NM108=XX
-    ServiceSupplementalQuantities:
-      title: ServiceSupplementalQuantities
+          description: LOOP 2100; NM109 WHERE NM108=XV
+    TechnicalContactMethod:
+      title: TechnicalContactMethod
       type: object
       properties:
-        federalMedicareOrMedicaidPaymentMandateCategory1:
+        url:
           type: string
-          description: LOOP 2110; QTY02 where QTY01 = ZK
-        federalMedicareOrMedicaidPaymentMandateCategory2:
+          description: PER04-06-08 where PER03-05-07 = UR
+        email:
           type: string
-          description: LOOP 2110; QTY02 where QTY01 = ZL
-        federalMedicareOrMedicaidPaymentMandateCategory3:
+          description: PER04-06-08 where PER03-05 = EM
+        fax:
           type: string
-          description: LOOP 2110; QTY02 where QTY01 = ZM
-        federalMedicareOrMedicaidPaymentMandateCategory4:
+          description: PER06-08 where PER05-07 = FX
+        phone:
           type: string
-          description: LOOP 2110; QTY02 where QTY01 = ZN
-        federalMedicareOrMedicaidPaymentMandateCategory5:
+          description: PER04-06 where PER03-05 = TE
+        phoneExtension:
           type: string
-          description: LOOP 2110; QTY02 where QTY01 = ZO
-      description: QTY SERVICE
-    ReportDeleted:
-      title: ReportDeleted
-      required:
-      - status
-      - meta
+          description: PER06-08 where PER05-07 = EX
+    DetailInfo:
+      title: DetailInfo
       type: object
       properties:
-        status:
-          title: Status
+        assignedNumber:
           type: string
-        meta:
-          $ref: '#/components/schemas/Meta'
-    Adjustments:
-      title: Adjustments
+          description: 'LOOP 2000: LX01'
+        providerSummaryInformation:
+          $ref: '#/components/schemas/ProviderSummaryInformation'
+        providerSupplementalSummaryInformation:
+          $ref: '#/components/schemas/ProviderSupplementalSummaryInformation'
+        paymentInfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentInfo'
+          default: []
+      description: Detailed info for LOOP 2000 HEADER NUMBER
+    OutpatientAdjudication:
+      title: OutpatientAdjudication
       type: object
       properties:
-        adjustmentReasonCode:
+        reimbursementRate:
           type: string
-          description: PLB03-1; PLB05-1; PLB07-1; PLB09-1; PLB11-1; PLB13-1
-        adjustmentReasonCodeValue:
+          description: LOOP 2100; MOA01
+        claimHCPCSPayableAmount:
           type: string
-          description: PLB03-1; PLB05-1; PLB07-1; PLB09-1; PLB11-1; PLB13-1 in English
-        providerAdjustmentIdentifier:
+          description: LOOP 2100; MOA02
+        claimPaymentRemarkCode1:
           type: string
-          description: PLB03-2; PLB05-2; PLB07-2; PLB09-2; PLB11-2; PLB13-2
-        providerAdjustmentAmount:
+          description: LOOP 2100; MOA03
+        claimPaymentRemarkCode2:
           type: string
-          description: PLB04; PLB06; PLB08; PLB10; PLB12; PLB14
-    ContactInformation:
-      title: ContactInformation
+          description: LOOP 2100; MOA04
+        claimPaymentRemarkCode3:
+          type: string
+          description: LOOP 2100; MOA05
+        claimPaymentRemarkCode4:
+          type: string
+          description: LOOP 2100; MOA06
+        claimPaymentRemarkCode5:
+          type: string
+          description: LOOP 2100; MOA07
+        claimESRDPaymentAmount:
+          type: string
+          description: LOOP 2100; MOA08
+        nonPayableProfessionalComponentAmount:
+          type: string
+          description: LOOP 2100; MOA09
+    OtherClaimRelatedIdentification:
+      title: OtherClaimRelatedIdentification
+      type: object
+      properties:
+        groupOrPolicyNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = 1L
+        memberIdentificationNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = 1W
+        employeeIdentificationNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = 28
+        groupNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = 6P
+        rePricedClaimReferenceNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = 9A
+        adjustedRePricedClaimReferenceNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = 9C
+        authorizationNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = BB
+        classOfContractCode:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = CE
+        medicalRecordIdentificationNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = EA
+        originalReferenceNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = F8
+        priorAuthorizationNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = G1
+        predeterminationOfBenefitsIdentificationNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = G3
+        insurancePolicyNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = IG
+        ssn:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = SY
+    Meta:
+      title: Meta
+      type: object
+      properties:
+        applicationMode:
+          type: string
+        senderId:
+          type: string
+        traceId:
+          type: string
+    Contact:
+      title: Contact
       type: object
       properties:
         contactName:
@@ -609,39 +1000,200 @@ components:
         contactMethods:
           type: array
           items:
-            $ref: '#/components/schemas/ContactMethod'
-          description: each contact will have a single property set, except for phone with extention
-      description: PER - PAYER BUSINESS CONTACT INFORMATION when PER01=CX
-    ClaimPaymentAdviceTransactionResponse:
-      title: ClaimPaymentAdviceTransactionResponse
+            $ref: '#/components/schemas/ContactMethods'
+          description: each contact will have a single property set, except for phone with extension
+          default: []
+      description: Model for Contact Information PER
+    ProviderClaimStatus:
+      title: ProviderClaimStatus
+      type: object
+      properties:
+        statusInformationEffectiveDate:
+          type: string
+          description: Loop 2200C STC02
+        providerStatuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderStatus'
+          description: Loop 2200C STC01 ,STC10, STC11
+          default: []
+    ContactMethods:
+      title: ContactMethods
+      type: object
+      properties:
+        electronicDataInterChangeAccessNumber:
+          type: string
+          description: PER04-06-08 where PER03-05-7=ED
+        email:
+          type: string
+          description: PER04-06-08 where PER03-05-7=EM
+        fax:
+          type: string
+          description: PER04-06-08 where PER03-05-7=FX
+        phone:
+          type: string
+          description: PER04-06-08 where PER03-05-7=TE
+        phoneExtension:
+          type: string
+          description: PER04-06-08 where PER03-05-7=EX
+    SenderAccountDetails:
+      title: SenderAccountDetails
+      type: object
+      properties:
+        senderDfiIdNumberQualifier:
+          type: string
+          description: BPR06
+        senderDFIIdentifier:
+          type: string
+          description: BPR07
+        senderAccountNumberQualifier:
+          type: string
+          description: BPR08
+        senderAccountNumber:
+          type: string
+          description: BPR09
+      description: sender account details related to a Financial Information
+    ServiceSupplementalAmounts:
+      title: ServiceSupplementalAmounts
+      type: object
+      properties:
+        allowedActual:
+          type: string
+          description: LOOP 2110; AMT02 where AMT01 = B6
+        deductionAmount:
+          type: string
+          description: LOOP 2110; AMT02 where AMT01 = KH
+        tax:
+          type: string
+          description: LOOP 2110; AMT02 where AMT01 = T
+        totalClaimBeforeTaxes:
+          type: string
+          description: LOOP 2110; AMT02 where AMT01 = T2
+        federalMedicareOrMedicaidPaymentMandateCategory1:
+          type: string
+          description: LOOP 2110; AMT02 where AMT01 = ZK
+        federalMedicareOrMedicaidPaymentMandateCategory2:
+          type: string
+          description: LOOP 2110; AMT02 where AMT01 = ZL
+        federalMedicareOrMedicaidPaymentMandateCategory3:
+          type: string
+          description: LOOP 2110; AMT02 where AMT01 = ZM
+        federalMedicareOrMedicaidPaymentMandateCategory4:
+          type: string
+          description: LOOP 2110; AMT02 where AMT01 = ZN
+        federalMedicareOrMedicaidPaymentMandateCategory5:
+          type: string
+          description: LOOP 2110; AMT02 where AMT01 = ZO
+    cdpedi__x12__v5010__newmodels__claim_payment_advice__ServiceLines:
+      title: ServiceLines
+      type: object
+      properties:
+        serviceDate:
+          type: string
+          description: LOOP 2110; DTM02 where DTM01=472
+        serviceStartDate:
+          type: string
+          description: LOOP 2110; DTM02 where DTM01=150
+        serviceEndDate:
+          type: string
+          description: LOOP 2110; DTM02 where DTM01=151
+        lineItemControlNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01=6R
+        servicePaymentInformation:
+          allOf:
+          - $ref: '#/components/schemas/ServicePaymentInformation'
+          description: LOOP 2110; SVC - SERVICE PAYMENT INFORMATION
+        serviceAdjustments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClaimAdjustments'
+          description: LOOP 2110; CAS - SERVICE ADJUSTMENT, Segment repeat = 99
+          default: []
+        serviceIdentification:
+          allOf:
+          - $ref: '#/components/schemas/ServiceIdentification'
+          description: LOOP 2110; REF - SERVICE IDENTIFICATION
+        renderingProviderInformation:
+          allOf:
+          - $ref: '#/components/schemas/RenderingProviderInformation'
+          description: LOOP 2110; REF - RENDERING PROVIDER INFORMATION
+        serviceSupplementalAmounts:
+          allOf:
+          - $ref: '#/components/schemas/ServiceSupplementalAmounts'
+          description: LOOP 2110; AMT - SERVICE SUPPLEMENTAL AMOUNT
+        serviceSupplementalQuantities:
+          allOf:
+          - $ref: '#/components/schemas/ServiceSupplementalQuantities'
+          description: LOOP 2110; QTY - SERVICE SUPPLEMENTAL QUANTITY
+        healthCareCheckRemarkCodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/HealthCareCheckRemarkCodes'
+          description: LOOP 2110; LQ - HEALTH CARE REMARK CODES, Segment repeat = 99
+          default: []
+        healthCarePolicyIdentification:
+          type: array
+          items:
+            $ref: '#/components/schemas/HealthCarePolicyIdentification'
+          description: LOOP 2120; REF where REF01 = 0K; segment repeat 5
+          default: []
+      description: LOOP ID = 2110 ; Loop Repeat = 999
+    PatientClaimStatusDetails:
+      title: PatientClaimStatusDetails
+      type: object
+      properties:
+        subscriber:
+          allOf:
+          - $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_status_cdpedi__Subscriber'
+          description: Loop 2100D NM1
+          default: {}
+        dependent:
+          allOf:
+          - $ref: '#/components/schemas/Dependent'
+          description: Loop 2100E NM1
+          default: {}
+        claims:
+          type: array
+          items:
+            $ref: '#/components/schemas/Claims'
+          description: Loop 2200[D|E]
+          default: []
+    ValidationError:
+      title: ValidationError
       required:
-      - meta
+      - loc
+      - msg
+      - type
       type: object
       properties:
-        transactions:
+        loc:
+          title: Location
           type: array
           items:
-            $ref: '#/components/schemas/ClaimPaymentAdviceResponse'
-          description: transactions
-          default: []
-        meta:
-          $ref: '#/components/schemas/Meta'
-    ProviderAdjustments:
-      title: ProviderAdjustments
+            type: string
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+    ContactMethod:
+      title: ContactMethod
       type: object
       properties:
-        providerIdentifier:
+        email:
           type: string
-          description: PLB01
-        fiscalPeriodDate:
+          description: PER04-06 where PER03-05 = EM
+        fax:
           type: string
-          description: PLB02
-        adjustments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Adjustments'
-          description: PLB03-PLB14; array of size = 6
-          default: []
+          description: PER04-06 where PER03-05 = FX
+        phone:
+          type: string
+          description: PER04-06 where PER03-05 = TE
+        phoneExtension:
+          type: string
+          description: PER06-08 where PER05-07 = EX
     Service:
       title: Service
       type: object
@@ -673,117 +1225,6 @@ components:
         submittedUnits:
           type: string
           description: Loop 2220[D|E] SVC07
-    ServiceProviderClaimStatus:
-      title: ServiceProviderClaimStatus
-      type: object
-      properties:
-        statusInformationEffectiveDate:
-          type: string
-          description: Loop 2200C STC02
-        serviceProviderStatuses:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProviderStatus'
-          description: Loop 2200C STC01 ,STC10, STC11
-          default: []
-    ExtendedProviderStatus:
-      title: ExtendedProviderStatus
-      type: object
-      properties:
-        healthCareClaimStatusCategoryCode:
-          type: string
-          description: STC01-1, STC010-1, STC11-1
-        healthCareClaimStatusCategoryCodeValue:
-          type: string
-          description: STC01-1, STC010-1, STC11-1 in English
-        statusCode:
-          type: string
-          description: STC01-2, STC010-2, STC11-2
-        statusCodeValue:
-          type: string
-          description: STC01-2, STC010-2, STC11-2 in English
-        entityIdentifierCode:
-          type: string
-          description: STC01-3, STC010-3, STC11-3
-        entityIdentifierCodeValue:
-          type: string
-          description: STC01-3, STC010-3, STC11-3 in English
-        nationalCouncilForPrescriptionDrugProgramsRejectPaymentCodes:
-          type: string
-          description: STC01-4, STC010-4, STC11-4 in English
-    ClaimSupplementalInformationQuantities:
-      title: ClaimSupplementalInformationQuantities
-      type: object
-      properties:
-        coveredActual:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = CA
-        coInsuredActual:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = CD
-        lifeTimeReserveActual:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = LA
-        lifeTimeReserveEstimated:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = LE
-        nonCoveredEstimated:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = NE
-        notReplacedBloodUnits:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = NR
-        outlierDays:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = OU
-        prescription:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = PS
-        visits:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = VS
-        federalMedicareOrMedicaidPaymentMandateCategory1:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = ZK
-        federalMedicareOrMedicaidPaymentMandateCategory2:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = ZL
-        federalMedicareOrMedicaidPaymentMandateCategory3:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = ZM
-        federalMedicareOrMedicaidPaymentMandateCategory4:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = ZN
-        federalMedicareOrMedicaidPaymentMandateCategory5:
-          type: string
-          description: LOOP 2100; QTY02 where QTY01 = ZO
-      description: QTY
-    ClaimStatusTransactionResponse:
-      title: ClaimStatusTransactionResponse
-      required:
-      - meta
-      type: object
-      properties:
-        transactions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClaimStatusResponse'
-          description: transactions
-          default: []
-        meta:
-          $ref: '#/components/schemas/Meta'
-    ReportContent:
-      title: ReportContent
-      required:
-      - report_content
-      - meta
-      type: object
-      properties:
-        report_content:
-          title: Report Content
-          type: string
-        meta:
-          $ref: '#/components/schemas/Meta'
     ServiceIdentification:
       title: ServiceIdentification
       type: object
@@ -874,25 +1315,6 @@ components:
           type: string
           description: LOOP 2000; TS219
       description: TS2 - PROVIDER SUPPLEMENTAL SUMMARY INFORMATION
-    TechnicalContactMethod:
-      title: TechnicalContactMethod
-      type: object
-      properties:
-        url:
-          type: string
-          description: PER04-06-08 where PER03-05-07 = UR
-        email:
-          type: string
-          description: PER04-06-08 where PER03-05 = EM
-        fax:
-          type: string
-          description: PER06-08 where PER05-07 = FX
-        phone:
-          type: string
-          description: PER04-06 where PER03-05 = TE
-        phoneExtension:
-          type: string
-          description: PER06-08 where PER05-07 = EX
     Payee:
       title: Payee
       type: object
@@ -931,374 +1353,6 @@ components:
           - $ref: '#/components/schemas/RemittanceDeliveryMethod'
           description: RDM - REMITTANCE DELIVERY METHOD
       description: Model for the Payee Identification for LOOP 1000B
-    HealthCarePolicyIdentification:
-      title: HealthCarePolicyIdentification
-      type: object
-      properties:
-        policyFormIdentifyingNumber:
-          type: string
-          description: LOOP 2110; REF02 where REF01=0k
-    Dependent:
-      title: Dependent
-      type: object
-      properties:
-        lastName:
-          type: string
-          description: NM103 where NM102=1
-        firstName:
-          type: string
-          description: NM104
-        middleName:
-          type: string
-          description: NM105
-        suffix:
-          type: string
-          description: NM107
-    Provider:
-      title: Provider
-      type: object
-      properties:
-        organizationName:
-          type: string
-          description: NM103 where NM102=2
-        lastName:
-          type: string
-          description: NM103 where NM102=1
-        firstName:
-          type: string
-          description: NM104
-        middleName:
-          type: string
-          description: NM105
-        etin:
-          type: string
-          description: NM109
-    ReceiverAccountDetails:
-      title: ReceiverAccountDetails
-      type: object
-      properties:
-        receiverDfiIdNumberQualifier:
-          type: string
-          description: BPR12
-        receiverDfiIdentificationNumber:
-          type: string
-          description: BPR13
-        receiverAccountNumberQualifier:
-          type: string
-          description: BPR14
-        receiverAccountNumber:
-          type: string
-          description: BPR15
-      description: receiver account details related to a Financial Information
-    RemittanceDeliveryMethod:
-      title: RemittanceDeliveryMethod
-      type: object
-      properties:
-        name:
-          type: string
-          description: RDM02
-        email:
-          type: string
-          description: RDM03 where RDM01=EM
-        ftp:
-          type: string
-          description: RDM03 where RDM01=FT
-        onLine:
-          type: string
-          description: RDM03 where RDM01=OL
-    ClaimSupplementalInformation:
-      title: ClaimSupplementalInformation
-      type: object
-      properties:
-        coverageAmount:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = AU
-        discountAmount:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = DB
-        perDayLimit:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = DY
-        patientAmountPaid:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = F5
-        interest:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = I
-        negativeLedgerBalance:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = NL
-        tax:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = T
-        totalClaimBeforeTaxes:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = T2
-        federalMedicareOrMedicaidPaymentMandateCategory1:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = ZK
-        federalMedicareOrMedicaidPaymentMandateCategory2:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = ZL
-        federalMedicareOrMedicaidPaymentMandateCategory3:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = ZM
-        federalMedicareOrMedicaidPaymentMandateCategory4:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = ZN
-        federalMedicareOrMedicaidPaymentMandateCategory5:
-          type: string
-          description: LOOP 2100; AMT02 where AMT01 = ZO
-      description: AMT
-    ContactMethod:
-      title: ContactMethod
-      type: object
-      properties:
-        email:
-          type: string
-          description: PER04-06 where PER03-05 = EM
-        fax:
-          type: string
-          description: PER04-06 where PER03-05 = FX
-        phone:
-          type: string
-          description: PER04-06 where PER03-05 = TE
-        phoneExtension:
-          type: string
-          description: PER06-08 where PER05-07 = EX
-    RenderingProviderIdentification:
-      title: RenderingProviderIdentification
-      type: object
-      properties:
-        stateLicenseNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 0B
-        blueCrossProviderNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 1A
-        blueShieldProviderNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 1B
-        medicareProviderNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 1C
-        medicaidProviderNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 1D
-        providerUPINNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 1G
-        champusIdentificationNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 1H
-        facilityIdNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 1J
-        nationalCouncilForPrescriptionDrugProgramPharmacyNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = D3
-        providerCommercialNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = G2
-        locationNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = LU
-    HealthCareCheckRemarkCodes:
-      title: HealthCareCheckRemarkCodes
-      type: object
-      properties:
-        codeListQualifierCode:
-          type: string
-          description: LOOP 2110; LQ01
-        codeListQualifierCodeValue:
-          type: string
-          description: LOOP 2110; LQ01
-        remarkCode:
-          type: string
-          description: LOOP 2110; LQ02
-      description: LQ - HEALTH CARE REMARK CODES
-    ClaimAdjustments:
-      title: ClaimAdjustments
-      type: object
-      properties:
-        claimAdjustmentGroupCode:
-          type: string
-          description: CAS01
-        claimAdjustmentGroupCodeValue:
-          type: string
-          description: CAS01 Code Value
-        adjustmentReasonCode1:
-          type: string
-          description: CAS02
-        adjustmentAmount1:
-          type: string
-          description: CAS03
-        adjustmentQuantity1:
-          type: string
-          description: CAS04
-        adjustmentReasonCode2:
-          type: string
-          description: CAS05
-        adjustmentAmount2:
-          type: string
-          description: CAS06
-        adjustmentQuantity2:
-          type: string
-          description: CAS07
-        adjustmentReasonCode3:
-          type: string
-          description: CAS08
-        adjustmentAmount3:
-          type: string
-          description: CAS09
-        adjustmentQuantity3:
-          type: string
-          description: CAS10
-        adjustmentReasonCode4:
-          type: string
-          description: CAS11
-        adjustmentAmount4:
-          type: string
-          description: CAS12
-        adjustmentQuantity4:
-          type: string
-          description: CAS13
-        adjustmentReasonCode5:
-          type: string
-          description: CAS14
-        adjustmentAmount5:
-          type: string
-          description: CAS15
-        adjustmentQuantity5:
-          type: string
-          description: CAS16
-        adjustmentReasonCode6:
-          type: string
-          description: CAS17
-        adjustmentAmount6:
-          type: string
-          description: CAS18
-        adjustmentQuantity6:
-          type: string
-          description: CAS19
-    ProviderStatus:
-      title: ProviderStatus
-      type: object
-      properties:
-        healthCareClaimStatusCategoryCode:
-          type: string
-          description: STC01-1, STC010-1, STC11-1
-        healthCareClaimStatusCategoryCodeValue:
-          type: string
-          description: STC01-1, STC010-1, STC11-1 in English
-        statusCode:
-          type: string
-          description: STC01-2, STC010-2, STC11-2
-        statusCodeValue:
-          type: string
-          description: STC01-2, STC010-2, STC11-2 in English
-        entityIdentifierCode:
-          type: string
-          description: STC01-3, STC010-3, STC11-3
-        entityIdentifierCodeValue:
-          type: string
-          description: STC01-3, STC010-3, STC11-3 in English
-    ServiceProvider:
-      title: ServiceProvider
-      type: object
-      properties:
-        organizationName:
-          type: string
-          description: NM103 where NM102=2
-        lastName:
-          type: string
-          description: NM103 where NM102=1
-        firstName:
-          type: string
-          description: NM104
-        middleName:
-          type: string
-          description: NM105
-        suffix:
-          type: string
-          description: NM107
-        tin:
-          type: string
-          description: NM109 where NM108=FI
-        spn:
-          type: string
-          description: NM109 where NM108=SV
-        npi:
-          type: string
-          description: NM109 where NM108=XX
-    PatientClaimStatusDetails:
-      title: PatientClaimStatusDetails
-      type: object
-      properties:
-        subscriber:
-          allOf:
-          - $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_status_cdpedi__Subscriber'
-          description: Loop 2100D NM1
-          default: {}
-        dependent:
-          allOf:
-          - $ref: '#/components/schemas/Dependent'
-          description: Loop 2100E NM1
-          default: {}
-        claims:
-          type: array
-          items:
-            $ref: '#/components/schemas/Claims'
-          description: Loop 2200[D|E]
-          default: []
-    OutpatientAdjudication:
-      title: OutpatientAdjudication
-      type: object
-      properties:
-        reimbursementRate:
-          type: string
-          description: LOOP 2100; MOA01
-        claimHCPCSPayableAmount:
-          type: string
-          description: LOOP 2100; MOA02
-        claimPaymentRemarkCode1:
-          type: string
-          description: LOOP 2100; MOA03
-        claimPaymentRemarkCode2:
-          type: string
-          description: LOOP 2100; MOA04
-        claimPaymentRemarkCode3:
-          type: string
-          description: LOOP 2100; MOA05
-        claimPaymentRemarkCode4:
-          type: string
-          description: LOOP 2100; MOA06
-        claimPaymentRemarkCode5:
-          type: string
-          description: LOOP 2100; MOA07
-        claimESRDPaymentAmount:
-          type: string
-          description: LOOP 2100; MOA08
-        nonPayableProfessionalComponentAmount:
-          type: string
-          description: LOOP 2100; MOA09
-    SenderAccountDetails:
-      title: SenderAccountDetails
-      type: object
-      properties:
-        senderDfiIdNumberQualifier:
-          type: string
-          description: BPR06
-        senderDFIIdentifier:
-          type: string
-          description: BPR07
-        senderAccountNumberQualifier:
-          type: string
-          description: BPR08
-        senderAccountNumber:
-          type: string
-          description: BPR09
-      description: sender account details related to a Financial Information
     PatientName:
       title: PatientName
       type: object
@@ -1330,212 +1384,31 @@ components:
         medicaidRecipientIdentificationNumber:
           type: string
           description: LOOP 2100 NM109 where NM108=MR
-    Address:
-      title: Address
+    ExtendedProviderStatus:
+      title: ExtendedProviderStatus
       type: object
       properties:
-        address1:
+        healthCareClaimStatusCategoryCode:
           type: string
-          description: N301
-        address2:
+          description: STC01-1, STC010-1, STC11-1
+        healthCareClaimStatusCategoryCodeValue:
           type: string
-          description: N302
-        city:
+          description: STC01-1, STC010-1, STC11-1 in English
+        statusCode:
           type: string
-          description: N401
-        state:
+          description: STC01-2, STC010-2, STC11-2
+        statusCodeValue:
           type: string
-          description: N402
-        postalCode:
+          description: STC01-2, STC010-2, STC11-2 in English
+        entityIdentifierCode:
           type: string
-          description: N403
-        countryCode:
+          description: STC01-3, STC010-3, STC11-3
+        entityIdentifierCodeValue:
           type: string
-          description: N404
-        countrySubCode:
+          description: STC01-3, STC010-3, STC11-3 in English
+        nationalCouncilForPrescriptionDrugProgramsRejectPaymentCodes:
           type: string
-          description: N407
-      description: Model for Address segment N3 and N4
-    CorrectedPatientOrInsuredName:
-      title: CorrectedPatientOrInsuredName
-      type: object
-      properties:
-        organizationName:
-          type: string
-          description: LOOP 2100; NM103 where NM102=2
-        lastName:
-          type: string
-          description: LOOP 2100; NM103 where NM102=1
-        firstName:
-          type: string
-          description: LOOP 2100; NM104
-        middleName:
-          type: string
-          description: LOOP 2100; NM105
-        suffix:
-          type: string
-          description: LOOP 2100; NM107
-        insuredsChangedUniqueIdentificationNumber:
-          type: string
-          description: LOOP 2100; NM109 where NM108=C
-    PaymentInfo:
-      title: PaymentInfo
-      type: object
-      properties:
-        claimStatementPeriodStart:
-          type: string
-          description: LOOP 2100; DTM02 where DTM01=232
-        claimStatementPeriodEnd:
-          type: string
-          description: LOOP 2100; DTM02 where DTM01=233
-        coverageExpirationDate:
-          type: string
-          description: LOOP 2100; DTM02 where DTM01=036
-        claimReceivedDate:
-          type: string
-          description: LOOP 2100; DTM02 where DTM01=050
-        claimPaymentInfo:
-          allOf:
-          - $ref: '#/components/schemas/ClaimPaymentInfo'
-          description: LOOP 2100; CLP - CLAIM PAYMENT INFORMATION
-        claimAdjustments:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClaimAdjustments'
-          description: LOOP 2100; CAS - CLAIM ADJUSTMENT, Segment repeat = 99
-          default: []
-        patientName:
-          allOf:
-          - $ref: '#/components/schemas/PatientName'
-          description: LOOP 2100; NM1 - PATIENT NAME
-        subscriber:
-          allOf:
-          - $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_payment_advice__Subscriber'
-          description: LOOP 2100; NM1 - INSURED NAME
-        correctedPatientOrInsuredName:
-          allOf:
-          - $ref: '#/components/schemas/CorrectedPatientOrInsuredName'
-          description: LOOP 2100; NM1 - CORRECTED PATIENT/INSURED NAME
-        renderingProvider:
-          allOf:
-          - $ref: '#/components/schemas/RenderingProvider'
-          description: LOOP 2100; NM1 - SERVICE PROVIDER NAME NM101 = 82
-        crossoverCarrier:
-          allOf:
-          - $ref: '#/components/schemas/IdentificationEntity'
-          description: LOOP 2100; NM1 - CROSSOVER CARRIER NAME NM101=TT
-        correctedPriorityPayer:
-          allOf:
-          - $ref: '#/components/schemas/IdentificationEntity'
-          description: LOOP 2100; NM1 - CORRECTED PRIORITY PAYER NAME NM101=PR
-        otherSubscriber:
-          allOf:
-          - $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_payment_advice__Subscriber'
-          description: LOOP 2100; NM1 - OTHER SUBSCRIBER NAME NM101=GB
-        inpatientAdjudication:
-          allOf:
-          - $ref: '#/components/schemas/InpatientAdjudication'
-          description: LOOP 2100; MIA - INPATIENT ADJUDICATION INFORMATION
-        outpatientAdjudication:
-          allOf:
-          - $ref: '#/components/schemas/OutpatientAdjudication'
-          description: LOOP 2100; MOA - OUTPATIENT ADJUDICATION INFORMATION
-        claimContactInformation:
-          type: array
-          items:
-            $ref: '#/components/schemas/ContactInformation'
-          description: LOOP 2100; PER - CLAIM CONTACT INFORMATION
-          default: []
-        otherClaimRelatedIdentification:
-          allOf:
-          - $ref: '#/components/schemas/OtherClaimRelatedIdentification'
-          description: LOOP 2100; REF - OTHER CLAIM RELATED IDENTIFICATION
-        renderingProviderIdentification:
-          allOf:
-          - $ref: '#/components/schemas/RenderingProviderIdentification'
-          description: LOOP 2100; REF - RENDERING PROVIDER IDENTIFICATION
-        claimSupplementalInformation:
-          allOf:
-          - $ref: '#/components/schemas/ClaimSupplementalInformation'
-          description: LOOP 2100; AMT - CLAIM SUPPLEMENTAL INFORMATION
-        claimSupplementalInformationQuantities:
-          allOf:
-          - $ref: '#/components/schemas/ClaimSupplementalInformationQuantities'
-          description: LOOP 2100; QTY - CLAIM SUPPLEMENTAL INFORMATION QUANTITY
-        serviceLines:
-          type: array
-          items:
-            $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_payment_advice__ServiceLines'
-          default: []
-    Contact:
-      title: Contact
-      type: object
-      properties:
-        contactName:
-          type: string
-          description: PER02
-        contactMethods:
-          type: array
-          items:
-            $ref: '#/components/schemas/ContactMethods'
-          description: each contact will have a single property set, except for phone with extension
-          default: []
-      description: Model for Contact Information PER
-    cdpedi__x12__v5010__newmodels__claim_payment_advice__ServiceLines:
-      title: ServiceLines
-      type: object
-      properties:
-        serviceDate:
-          type: string
-          description: LOOP 2110; DTM02 where DTM01=472
-        serviceStartDate:
-          type: string
-          description: LOOP 2110; DTM02 where DTM01=150
-        serviceEndDate:
-          type: string
-          description: LOOP 2110; DTM02 where DTM01=151
-        lineItemControlNumber:
-          type: string
-          description: LOOP 2110; REF02 where REF01=6R
-        servicePaymentInformation:
-          allOf:
-          - $ref: '#/components/schemas/ServicePaymentInformation'
-          description: LOOP 2110; SVC - SERVICE PAYMENT INFORMATION
-        serviceAdjustments:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClaimAdjustments'
-          description: LOOP 2110; CAS - SERVICE ADJUSTMENT, Segment repeat = 99
-          default: []
-        serviceIdentification:
-          allOf:
-          - $ref: '#/components/schemas/ServiceIdentification'
-          description: LOOP 2110; REF - SERVICE IDENTIFICATION
-        renderingProviderInformation:
-          allOf:
-          - $ref: '#/components/schemas/RenderingProviderInformation'
-          description: LOOP 2110; REF - RENDERING PROVIDER INFORMATION
-        serviceSupplementalAmounts:
-          allOf:
-          - $ref: '#/components/schemas/ServiceSupplementalAmounts'
-          description: LOOP 2110; AMT - SERVICE SUPPLEMENTAL AMOUNT
-        serviceSupplementalQuantities:
-          allOf:
-          - $ref: '#/components/schemas/ServiceSupplementalQuantities'
-          description: LOOP 2110; QTY - SERVICE SUPPLEMENTAL QUANTITY
-        healthCareCheckRemarkCodes:
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthCareCheckRemarkCodes'
-          description: LOOP 2110; LQ - HEALTH CARE REMARK CODES, Segment repeat = 99
-          default: []
-        healthCarePolicyIdentification:
-          type: array
-          items:
-            $ref: '#/components/schemas/HealthCarePolicyIdentification'
-          description: LOOP 2120; REF where REF01 = 0K; segment repeat 5
-          default: []
-      description: LOOP ID = 2110 ; Loop Repeat = 999
+          description: STC01-4, STC010-4, STC11-4 in English
     cdpedi__x12__v5010__newmodels__claim_status_cdpedi__Payer:
       title: Payer
       type: object
@@ -1561,28 +1434,6 @@ components:
           description: Loop 2000C
           default: []
       description: Model for the Payer Identification for LOOP 2100A
-    ClaimStatusResponse:
-      title: ClaimStatusResponse
-      type: object
-      properties:
-        controlNumber:
-          type: string
-          description: ST02
-        referenceIdentification:
-          type: string
-          description: BHT03
-        transactionSetCreationDate:
-          type: string
-          description: BHT04
-        transactionSetCreationTime:
-          type: string
-          description: BHT05
-        payers:
-          type: array
-          items:
-            $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_status_cdpedi__Payer'
-          description: Loop 2100A
-          default: []
     FinancialInformation:
       title: FinancialInformation
       type: object
@@ -1616,139 +1467,47 @@ components:
         receiverAccountDetails:
           $ref: '#/components/schemas/ReceiverAccountDetails'
       description: Model for financial information in claim payment advice transactions BPR
-    DetailInfo:
-      title: DetailInfo
+    ClaimStatusTransactionResponse:
+      title: ClaimStatusTransactionResponse
+      required:
+      - meta
       type: object
       properties:
-        assignedNumber:
-          type: string
-          description: 'LOOP 2000: LX01'
-        providerSummaryInformation:
-          $ref: '#/components/schemas/ProviderSummaryInformation'
-        providerSupplementalSummaryInformation:
-          $ref: '#/components/schemas/ProviderSupplementalSummaryInformation'
-        paymentInfo:
+        transactions:
           type: array
           items:
-            $ref: '#/components/schemas/PaymentInfo'
+            $ref: '#/components/schemas/ClaimStatusResponse'
+          description: transactions
           default: []
-      description: Detailed info for LOOP 2000 HEADER NUMBER
-    ClaimPaymentAdviceResponse:
-      title: ClaimPaymentAdviceResponse
+        meta:
+          $ref: '#/components/schemas/Meta'
+    cdpedi__x12__v5010__newmodels__claim_status_cdpedi__ServiceLines:
+      title: ServiceLines
       type: object
       properties:
-        controlNumber:
-          type: string
-          description: ST02
-        paymentAndRemitReassociationDetails:
+        service:
           allOf:
-          - $ref: '#/components/schemas/PaymentAndRemitReassociationDetails'
-          description: TRN
-        foreignCurrency:
-          type: string
-          description: CUR02 where CUR01=PR
-        productionDate:
-          type: string
-          description: DTM02 where DTM01=405
-        receiverIdentifier:
-          type: string
-          description: REF02 where REF01=EV
-        versionIdentification:
-          type: string
-          description: REF02 where REF01=F2
-        financialInformation:
-          allOf:
-          - $ref: '#/components/schemas/FinancialInformation'
-          description: BPR
-        payer:
-          $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_payment_advice__Payer'
-        payee:
-          $ref: '#/components/schemas/Payee'
-        detailInfo:
+          - $ref: '#/components/schemas/Service'
+          description: service for Loop 2220[D|E]
+          default: {}
+        serviceClaimStatuses:
           type: array
           items:
-            $ref: '#/components/schemas/DetailInfo'
+            $ref: '#/components/schemas/ServiceClaimStatus'
+          description: Loop 2220[D|E]
           default: []
-        providerAdjustments:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProviderAdjustments'
-          description: PLB; segment REPEAT >1
-          default: []
-    cdpedi__x12__v5010__newmodels__claim_status_cdpedi__Subscriber:
-      title: Subscriber
-      type: object
-      properties:
-        organizationName:
+        lineItemControlNumber:
           type: string
-          description: NM103 where NM102=2
-        lastName:
+          description: Loop 2220[D|E] REF02
+        serviceLineDate:
           type: string
-          description: NM103 where NM102=1
-        firstName:
+          description: Loop 2220[D|E] DTP03 where DTP02=D8
+        beginServiceLineDate:
           type: string
-          description: NM104
-        middleName:
+          description: Loop 2220[D|E] DTP03 where DTP02=RD8
+        endServiceLineDate:
           type: string
-          description: NM105
-        suffix:
-          type: string
-          description: NM107
-        memberId:
-          type: string
-          description: NM109 where NM108=MI
-        employerIdentificationNumber:
-          type: string
-          description: NM109 where NM108=24
-        standardUniqueHealthIdentifierForEachIndividualInTheUnitedStates:
-          type: string
-          description: NM109 where NM108=II
-    OtherClaimRelatedIdentification:
-      title: OtherClaimRelatedIdentification
-      type: object
-      properties:
-        groupOrPolicyNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 1L
-        memberIdentificationNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 1W
-        employeeIdentificationNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 28
-        groupNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 6P
-        rePricedClaimReferenceNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 9A
-        adjustedRePricedClaimReferenceNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = 9C
-        authorizationNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = BB
-        classOfContractCode:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = CE
-        medicalRecordIdentificationNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = EA
-        originalReferenceNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = F8
-        priorAuthorizationNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = G1
-        predeterminationOfBenefitsIdentificationNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = G3
-        insurancePolicyNumber:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = IG
-        ssn:
-          type: string
-          description: LOOP 2100; REF02 where REF01 = SY
+          description: Loop 2220[D|E] DTP03 where DTP02=RD8
     InpatientAdjudication:
       title: InpatientAdjudication
       type: object
@@ -1853,52 +1612,294 @@ components:
             $ref: '#/components/schemas/ExtendedProviderStatus'
           description: Loop 2200[D|E] STC01 ,STC10, STC11
           default: []
-    Claims:
-      title: Claims
+    ServiceClaimStatus:
+      title: ServiceClaimStatus
       type: object
       properties:
-        claimStatus:
+        effectiveDate:
+          type: string
+          description: Loop 2220[D|E] STC02
+        serviceStatuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtendedProviderStatus'
+          description: Loop 2220[D|E] STC01 ,STC10, STC11
+          default: []
+    PaymentInfo:
+      title: PaymentInfo
+      type: object
+      properties:
+        claimStatementPeriodStart:
+          type: string
+          description: LOOP 2100; DTM02 where DTM01=232
+        claimStatementPeriodEnd:
+          type: string
+          description: LOOP 2100; DTM02 where DTM01=233
+        coverageExpirationDate:
+          type: string
+          description: LOOP 2100; DTM02 where DTM01=036
+        claimReceivedDate:
+          type: string
+          description: LOOP 2100; DTM02 where DTM01=050
+        claimPaymentInfo:
           allOf:
-          - $ref: '#/components/schemas/ClaimStatus'
-          description: claimStatus for Loop 2200[D|E]
-          default: {}
+          - $ref: '#/components/schemas/ClaimPaymentInfo'
+          description: LOOP 2100; CLP - CLAIM PAYMENT INFORMATION
+        claimAdjustments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClaimAdjustments'
+          description: LOOP 2100; CAS - CLAIM ADJUSTMENT, Segment repeat = 99
+          default: []
+        patientName:
+          allOf:
+          - $ref: '#/components/schemas/PatientName'
+          description: LOOP 2100; NM1 - PATIENT NAME
+        subscriber:
+          allOf:
+          - $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_payment_advice__Subscriber'
+          description: LOOP 2100; NM1 - INSURED NAME
+        correctedPatientOrInsuredName:
+          allOf:
+          - $ref: '#/components/schemas/CorrectedPatientOrInsuredName'
+          description: LOOP 2100; NM1 - CORRECTED PATIENT/INSURED NAME
+        renderingProvider:
+          allOf:
+          - $ref: '#/components/schemas/RenderingProvider'
+          description: LOOP 2100; NM1 - SERVICE PROVIDER NAME NM101 = 82
+        crossoverCarrier:
+          allOf:
+          - $ref: '#/components/schemas/IdentificationEntity'
+          description: LOOP 2100; NM1 - CROSSOVER CARRIER NAME NM101=TT
+        correctedPriorityPayer:
+          allOf:
+          - $ref: '#/components/schemas/IdentificationEntity'
+          description: LOOP 2100; NM1 - CORRECTED PRIORITY PAYER NAME NM101=PR
+        otherSubscriber:
+          allOf:
+          - $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_payment_advice__Subscriber'
+          description: LOOP 2100; NM1 - OTHER SUBSCRIBER NAME NM101=GB
+        inpatientAdjudication:
+          allOf:
+          - $ref: '#/components/schemas/InpatientAdjudication'
+          description: LOOP 2100; MIA - INPATIENT ADJUDICATION INFORMATION
+        outpatientAdjudication:
+          allOf:
+          - $ref: '#/components/schemas/OutpatientAdjudication'
+          description: LOOP 2100; MOA - OUTPATIENT ADJUDICATION INFORMATION
+        claimContactInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContactInformation'
+          description: LOOP 2100; PER - CLAIM CONTACT INFORMATION
+          default: []
+        otherClaimRelatedIdentification:
+          allOf:
+          - $ref: '#/components/schemas/OtherClaimRelatedIdentification'
+          description: LOOP 2100; REF - OTHER CLAIM RELATED IDENTIFICATION
+        renderingProviderIdentification:
+          allOf:
+          - $ref: '#/components/schemas/RenderingProviderIdentification'
+          description: LOOP 2100; REF - RENDERING PROVIDER IDENTIFICATION
+        claimSupplementalInformation:
+          allOf:
+          - $ref: '#/components/schemas/ClaimSupplementalInformation'
+          description: LOOP 2100; AMT - CLAIM SUPPLEMENTAL INFORMATION
+        claimSupplementalInformationQuantities:
+          allOf:
+          - $ref: '#/components/schemas/ClaimSupplementalInformationQuantities'
+          description: LOOP 2100; QTY - CLAIM SUPPLEMENTAL INFORMATION QUANTITY
         serviceLines:
           type: array
           items:
-            $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_status_cdpedi__ServiceLines'
-          description: serviceDetails for Loop loop 2220[D|E]
+            $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_payment_advice__ServiceLines'
           default: []
-    ServiceSupplementalAmounts:
-      title: ServiceSupplementalAmounts
+    RenderingProviderIdentification:
+      title: RenderingProviderIdentification
       type: object
       properties:
-        allowedActual:
+        stateLicenseNumber:
           type: string
-          description: LOOP 2110; AMT02 where AMT01 = B6
-        deductionAmount:
+          description: LOOP 2100; REF02 where REF01 = 0B
+        blueCrossProviderNumber:
           type: string
-          description: LOOP 2110; AMT02 where AMT01 = KH
-        tax:
+          description: LOOP 2100; REF02 where REF01 = 1A
+        blueShieldProviderNumber:
           type: string
-          description: LOOP 2110; AMT02 where AMT01 = T
-        totalClaimBeforeTaxes:
+          description: LOOP 2100; REF02 where REF01 = 1B
+        medicareProviderNumber:
           type: string
-          description: LOOP 2110; AMT02 where AMT01 = T2
+          description: LOOP 2100; REF02 where REF01 = 1C
+        medicaidProviderNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = 1D
+        providerUPINNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = 1G
+        champusIdentificationNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = 1H
+        facilityIdNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = 1J
+        nationalCouncilForPrescriptionDrugProgramPharmacyNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = D3
+        providerCommercialNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = G2
+        locationNumber:
+          type: string
+          description: LOOP 2100; REF02 where REF01 = LU
+    PaymentAndRemitReassociationDetails:
+      title: PaymentAndRemitReassociationDetails
+      type: object
+      properties:
+        traceTypeCode:
+          type: string
+          description: TRN01
+        checkOrEFTTraceNumber:
+          type: string
+          description: TRN02
+        originatingCompanyIdentifier:
+          type: string
+          description: TRN03
+        originatingCompanySupplementalCode:
+          type: string
+          description: TRN04
+      description: Model for Payment And Remit Reassociation Details in claim payment advice transactions TRN
+    ClaimStatusResponse:
+      title: ClaimStatusResponse
+      type: object
+      properties:
+        controlNumber:
+          type: string
+          description: ST02
+        referenceIdentification:
+          type: string
+          description: BHT03
+        transactionSetCreationDate:
+          type: string
+          description: BHT04
+        transactionSetCreationTime:
+          type: string
+          description: BHT05
+        payers:
+          type: array
+          items:
+            $ref: '#/components/schemas/cdpedi__x12__v5010__newmodels__claim_status_cdpedi__Payer'
+          description: Loop 2100A
+          default: []
+    ServiceProviderClaimStatus:
+      title: ServiceProviderClaimStatus
+      type: object
+      properties:
+        statusInformationEffectiveDate:
+          type: string
+          description: Loop 2200C STC02
+        serviceProviderStatuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProviderStatus'
+          description: Loop 2200C STC01 ,STC10, STC11
+          default: []
+    ProviderAdjustments:
+      title: ProviderAdjustments
+      type: object
+      properties:
+        providerIdentifier:
+          type: string
+          description: PLB01
+        fiscalPeriodDate:
+          type: string
+          description: PLB02
+        adjustments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Adjustments'
+          description: PLB03-PLB14; array of size = 6
+          default: []
+    HealthCareCheckRemarkCodes:
+      title: HealthCareCheckRemarkCodes
+      type: object
+      properties:
+        codeListQualifierCode:
+          type: string
+          description: LOOP 2110; LQ01
+        codeListQualifierCodeValue:
+          type: string
+          description: LOOP 2110; LQ01
+        remarkCode:
+          type: string
+          description: LOOP 2110; LQ02
+      description: LQ - HEALTH CARE REMARK CODES
+    ServiceSupplementalQuantities:
+      title: ServiceSupplementalQuantities
+      type: object
+      properties:
         federalMedicareOrMedicaidPaymentMandateCategory1:
           type: string
-          description: LOOP 2110; AMT02 where AMT01 = ZK
+          description: LOOP 2110; QTY02 where QTY01 = ZK
         federalMedicareOrMedicaidPaymentMandateCategory2:
           type: string
-          description: LOOP 2110; AMT02 where AMT01 = ZL
+          description: LOOP 2110; QTY02 where QTY01 = ZL
         federalMedicareOrMedicaidPaymentMandateCategory3:
           type: string
-          description: LOOP 2110; AMT02 where AMT01 = ZM
+          description: LOOP 2110; QTY02 where QTY01 = ZM
         federalMedicareOrMedicaidPaymentMandateCategory4:
           type: string
-          description: LOOP 2110; AMT02 where AMT01 = ZN
+          description: LOOP 2110; QTY02 where QTY01 = ZN
         federalMedicareOrMedicaidPaymentMandateCategory5:
           type: string
-          description: LOOP 2110; AMT02 where AMT01 = ZO
+          description: LOOP 2110; QTY02 where QTY01 = ZO
+      description: QTY SERVICE
+    HealthCarePolicyIdentification:
+      title: HealthCarePolicyIdentification
+      type: object
+      properties:
+        policyFormIdentifyingNumber:
+          type: string
+          description: LOOP 2110; REF02 where REF01=0k
+    ClaimPaymentInfo:
+      title: ClaimPaymentInfo
+      type: object
+      properties:
+        patientControlNumber:
+          type: string
+          description: LOOP 2100; CLP01
+        claimStatusCode:
+          type: string
+          description: LOOP 2100; CLP02
+        totalClaimChargeAmount:
+          type: string
+          description: LOOP 2100; CLP03
+        claimPaymentAmount:
+          type: string
+          description: LOOP 2100; CLP04
+        patientResponsibilityAmount:
+          type: string
+          description: LOOP 2100; CLP05
+        claimFilingIndicatorCode:
+          type: string
+          description: LOOP 2100; CLP06
+        payerClaimControlNumber:
+          type: string
+          description: LOOP 2100; CLP07
+        facilityTypeCode:
+          type: string
+          description: LOOP 2100; CLP08
+        claimFrequencyCode:
+          type: string
+          description: LOOP 2100; CLP09
+        diagnosisRelatedGroupDRGCode:
+          type: string
+          description: LOOP 2100; CLP11
+        diagnosisRelatedGroupDRGWeight:
+          type: string
+          description: LOOP 2100; CLP12
+        dischargeFraction:
+          type: string
+          description: LOOP 2100; CLP13
     cdpedi__x12__v5010__newmodels__claim_payment_advice__Subscriber:
       title: Subscriber
       type: object
@@ -1927,105 +1928,104 @@ components:
         memberId:
           type: string
           description: LOOP 2100 NM109 where NM108=MI
-    RenderingProviderInformation:
-      title: RenderingProviderInformation
+    RemittanceDeliveryMethod:
+      title: RemittanceDeliveryMethod
       type: object
       properties:
-        stateLicenseNumber:
+        name:
           type: string
-          description: LOOP 2110; REF02 where REF01 = 0B
+          description: RDM02
+        email:
+          type: string
+          description: RDM03 where RDM01=EM
+        ftp:
+          type: string
+          description: RDM03 where RDM01=FT
+        onLine:
+          type: string
+          description: RDM03 where RDM01=OL
+    Dependent:
+      title: Dependent
+      type: object
+      properties:
+        lastName:
+          type: string
+          description: NM103 where NM102=1
+        firstName:
+          type: string
+          description: NM104
+        middleName:
+          type: string
+          description: NM105
+        suffix:
+          type: string
+          description: NM107
+    Address:
+      title: Address
+      type: object
+      properties:
+        address1:
+          type: string
+          description: N301
+        address2:
+          type: string
+          description: N302
+        city:
+          type: string
+          description: N401
+        state:
+          type: string
+          description: N402
+        postalCode:
+          type: string
+          description: N403
+        countryCode:
+          type: string
+          description: N404
+        countrySubCode:
+          type: string
+          description: N407
+      description: Model for Address segment N3 and N4
+    RenderingProvider:
+      title: RenderingProvider
+      type: object
+      properties:
+        organizationName:
+          type: string
+          description: LOOP 2100; NM103 NM102=2
+        lastName:
+          type: string
+          description: LOOP 2100; NM103 NM102=1
+        firstName:
+          type: string
+          description: LOOP 2100; NM104
+        middleName:
+          type: string
+          description: LOOP 2100; NM105
+        suffix:
+          type: string
+          description: LOOP 2100; NM107
         blueCrossProviderNumber:
           type: string
-          description: LOOP 2110; REF02 where REF01 = 1A
+          description: LOOP 2100; NM109 where NM108=BD
         blueShieldProviderNumber:
           type: string
-          description: LOOP 2110; REF02 where REF01 = 1B
-        medicareProviderNumber:
+          description: LOOP 2100; NM109 where NM108=BS
+        taxId:
           type: string
-          description: LOOP 2110; REF02 where REF01 = 1C
+          description: LOOP 2100; NM109 where NM108=FI
         medicaidProviderNumber:
           type: string
-          description: LOOP 2110; REF02 where REF01 = 1D
-        providerUPINNumber:
-          type: string
-          description: LOOP 2110; REF02 where REF01 = 1G
-        champusIdentificationNumber:
-          type: string
-          description: LOOP 2110; REF02 where REF01 = 1H
-        facilityIdNumber:
-          type: string
-          description: LOOP 2110; REF02 where REF01 = 1J
-        nationalCouncilForPrescriptionDrugProgramPharmacyNumber:
-          type: string
-          description: LOOP 2110; REF02 where REF01 = D3
+          description: LOOP 2100; NM109 where NM108=MC
         providerCommercialNumber:
           type: string
-          description: LOOP 2110; REF02 where REF01 = G2
+          description: LOOP 2100; NM109 where NM108=PC
+        stateLicenseNumber:
+          type: string
+          description: LOOP 2100; NM109 where NM108=SL
+        uniquePhysicianIdentificationNumber:
+          type: string
+          description: LOOP 2100; NM109 where NM108=UP
         npi:
           type: string
-          description: LOOP 2110; REF02 where REF01 = HPI
-        ssn:
-          type: string
-          description: LOOP 2110; REF02 where REF01 = SY
-        federalTaxpayerIdentificationNumber:
-          type: string
-          description: LOOP 2110; REF02 where REF01 = TJ
-    ClaimStatus:
-      title: ClaimStatus
-      type: object
-      properties:
-        referencedTransactionTraceNumber:
-          type: string
-          description: Loop 2200[D|E] TRN02
-        informationClaimStatuses:
-          type: array
-          items:
-            $ref: '#/components/schemas/InformationClaimStatus'
-          description: Loop 2200[D|E]
-          default: []
-        tradingPartnerClaimNumber:
-          type: string
-          description: Loop 2200[D|E] REF02 where REF01=1K
-        billTypeIdentifier:
-          type: string
-          description: Loop 2200[D|E] REF02 where REF01=BLT
-        patientAccountNumber:
-          type: string
-          description: Loop 2200[D|E] REF02 where REF01=EJ
-        pharmacyPrescriptionNumber:
-          type: string
-          description: Loop 2200[D|E] REF02 where REF01=XZ
-        voucherIdentifier:
-          type: string
-          description: Loop 2200[D|E] REF02 where REF01=VV
-        clearinghouseTraceNumber:
-          type: string
-          description: Loop 2200[D|E] REF02 where REF01=D9
-        claimServiceBeginDate:
-          type: string
-          description: Loop 2200[D|E] DTP03 where DTP02=RD8
-        claimServiceEndDate:
-          type: string
-          description: Loop 2200[D|E] DTP03 where DTP02=RD8
-        claimServiceDate:
-          type: string
-          description: Loop 2200[D|E] DTP03 where DTP02=D8
-    ValidationError:
-      title: ValidationError
-      required:
-      - loc
-      - msg
-      - type
-      type: object
-      properties:
-        loc:
-          title: Location
-          type: array
-          items:
-            type: string
-        msg:
-          title: Message
-          type: string
-        type:
-          title: Error Type
-          type: string
+          description: LOOP 2100; NM109 where NM108=XX

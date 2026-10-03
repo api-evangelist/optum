@@ -160,51 +160,48 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ExtensionGeneric:
+    Questionnaire:
       type: object
-      description: Generic extension supporting multiple value types
+      description: FHIR Questionnaire resource
       properties:
-        url:
+        resourceType:
           type: string
-          example: http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink
-        valueBoolean:
-          type: boolean
-          example: true
-        valueUri:
+          example: Questionnaire
+        id:
           type: string
-          example: https://apimarketplace.uhcprovider.com/DTR_DOC_REF_API
-    AnswerOption:
-      type: object
-      description: Answer choice option
-      properties:
-        valueCoding:
-          $ref: '#/components/schemas/Coding'
-    Extension:
-      type: object
-      description: FHIR extension with Reference
-      properties:
-        url:
-          type: string
-          example: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
-        valueReference:
-          $ref: '#/components/schemas/Reference'
-    Reference:
-      type: object
-      description: FHIR Reference
-      properties:
-        reference:
-          type: string
-          example: Patient/anonymous
-    Meta:
-      type: object
-      description: FHIR metadata
-      properties:
-        profile:
+          example: '12345'
+        meta:
+          $ref: '#/components/schemas/Meta'
+        extension:
           type: array
-          description: FHIR profile URLs
+          description: Questionnaire extensions
           items:
-            type: string
-            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+            $ref: '#/components/schemas/ExtensionGeneric'
+        name:
+          type: string
+          description: Questionnaire name
+          example: Questionnaire name
+        title:
+          type: string
+          description: Questionnaire title
+          example: Questionnaire title
+        status:
+          type: string
+          description: Questionnaire status
+          example: active
+        date:
+          type: string
+          description: Date of creation
+          example: '2025-07-03T00:00:00-05:00'
+        description:
+          type: string
+          description: Questionnaire description
+          example: Questionnaire description
+        item:
+          type: array
+          description: List of questions
+          items:
+            $ref: '#/components/schemas/Item'
     NextQuestionRequest:
       type: object
       description: FHIR QuestionnaireResponse request containing current answers and context to fetch next adaptive question
@@ -243,6 +240,42 @@ components:
           type: string
           description: Date/time when response was authored
           example: '2025-11-04T12:12:59.7131+00:00'
+    Coding:
+      type: object
+      description: Coding structure for answers
+      properties:
+        code:
+          type: string
+          example: '1'
+        display:
+          type: string
+          example: Age ≥ 50
+    Extension:
+      type: object
+      description: FHIR extension with Reference
+      properties:
+        url:
+          type: string
+          example: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
+        valueReference:
+          $ref: '#/components/schemas/Reference'
+    Reference:
+      type: object
+      description: FHIR Reference
+      properties:
+        reference:
+          type: string
+          example: Patient/anonymous
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
     NextQuestionResponse:
       type: object
       description: FHIR QuestionnaireResponse response containing next adaptive question
@@ -307,58 +340,25 @@ components:
           description: Nested child questions
           items:
             $ref: '#/components/schemas/Item'
-    Coding:
+    AnswerOption:
       type: object
-      description: Coding structure for answers
+      description: Answer choice option
       properties:
-        code:
-          type: string
-          example: '1'
-        display:
-          type: string
-          example: Age ≥ 50
-    Questionnaire:
+        valueCoding:
+          $ref: '#/components/schemas/Coding'
+    ExtensionGeneric:
       type: object
-      description: FHIR Questionnaire resource
+      description: Generic extension supporting multiple value types
       properties:
-        resourceType:
+        url:
           type: string
-          example: Questionnaire
-        id:
+          example: http://hl7.org/fhir/StructureDefinition/questionnaire-supportLink
+        valueBoolean:
+          type: boolean
+          example: true
+        valueUri:
           type: string
-          example: '12345'
-        meta:
-          $ref: '#/components/schemas/Meta'
-        extension:
-          type: array
-          description: Questionnaire extensions
-          items:
-            $ref: '#/components/schemas/ExtensionGeneric'
-        name:
-          type: string
-          description: Questionnaire name
-          example: Questionnaire name
-        title:
-          type: string
-          description: Questionnaire title
-          example: Questionnaire title
-        status:
-          type: string
-          description: Questionnaire status
-          example: active
-        date:
-          type: string
-          description: Date of creation
-          example: '2025-07-03T00:00:00-05:00'
-        description:
-          type: string
-          description: Questionnaire description
-          example: Questionnaire description
-        item:
-          type: array
-          description: List of questions
-          items:
-            $ref: '#/components/schemas/Item'
+          example: https://apimarketplace.uhcprovider.com/DTR_DOC_REF_API
   securitySchemes:
     oAuth:
       type: oauth2

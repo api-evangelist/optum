@@ -1649,27 +1649,6 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    Link:
-      type: object
-      properties:
-        value:
-          type: string
-        href:
-          type: string
-        iconName:
-          type: string
-        routerLink:
-          type: string
-        type:
-          type: string
-        tag:
-          type: string
-        label:
-          type: string
-        addonName:
-          type: string
-        addonId:
-          type: string
     ColorCodes:
       type: object
       properties:
@@ -1705,6 +1684,27 @@ components:
         totalCount:
           type: integer
           format: int64
+    Link:
+      type: object
+      properties:
+        value:
+          type: string
+        href:
+          type: string
+        iconName:
+          type: string
+        routerLink:
+          type: string
+        type:
+          type: string
+        tag:
+          type: string
+        label:
+          type: string
+        addonName:
+          type: string
+        addonId:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http
