@@ -80,23 +80,6 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    ClaimLine:
-      type: object
-      properties:
-        cptHcpcs:
-          type: string
-        unit:
-          type: string
-        revCode:
-          type: string
-        modifiers:
-          type: string
-        dateStr:
-          type: string
-        charge:
-          type: string
-        cptHcpcsDesc:
-          type: string
     Notification:
       type: object
       properties:
@@ -155,6 +138,23 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ClaimLine'
+    ClaimLine:
+      type: object
+      properties:
+        cptHcpcs:
+          type: string
+        unit:
+          type: string
+        revCode:
+          type: string
+        modifiers:
+          type: string
+        dateStr:
+          type: string
+        charge:
+          type: string
+        cptHcpcsDesc:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

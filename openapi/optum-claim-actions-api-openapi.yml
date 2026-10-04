@@ -126,26 +126,6 @@ paths:
                   example: "{\n  \"query\": \"mutation submitClaimAttachment($file: Upload!, $attachmentInput: AttachmentInput!) { submitClaimAttachment(file: $file,attachmentInput: $attachmentInput) { attachmentId } }\",\n  \"variables\":\n    {\n      \"file\": null,\n      \"attachmentInput\":\n        {\n          \"documentTypeCode\": \"M1\",\n          \"documentName\": \"ACN-AttachmentControlNumber\",\n          \"claimReceiptLocatorNumber\": \"9162500198765\",\n          \"claimNumber\": \"FE12345678\",\n          \"editCode\": \"EDIT123\",\n          \"expiryDate\": \"2025-12-31\",\n          \"claimActionIdentifier\": \"XXXX-AAAA-BBBB-CCCCC\",\n          \"ticketNumber\": \"PIQ-123456\",\n          \"payerId\": \"87726\"\n        }\n    }\n}\n"
 components:
   schemas:
-    ClaimTicketResponse:
-      type: object
-      description: Claim Ticket Response
-      properties:
-        ticketNumber:
-          type: string
-          description: payer generated unique identifier for the rework ticket
-          example: PIQ-12345678
-        ticketStatus:
-          type: string
-          description: status of the rework ticket
-          example: Under Review
-        referenceId:
-          type: string
-          description: reference ID for the ticket submission (internal use)
-          example: REF-987654321
-        preSignedUrl:
-          type: string
-          description: pre-signed URL link to upload bulk documents (as zip file) related to the rework ticket
-          example: https://AWS-pre-signed-url
     ClaimSubmissionResponse:
       type: object
       description: Response model for Claim Submission operations
@@ -174,6 +154,26 @@ components:
           type: string
           description: status code for the submission process
           example: '000'
+    ClaimTicketResponse:
+      type: object
+      description: Claim Ticket Response
+      properties:
+        ticketNumber:
+          type: string
+          description: payer generated unique identifier for the rework ticket
+          example: PIQ-12345678
+        ticketStatus:
+          type: string
+          description: status of the rework ticket
+          example: Under Review
+        referenceId:
+          type: string
+          description: reference ID for the ticket submission (internal use)
+          example: REF-987654321
+        preSignedUrl:
+          type: string
+          description: pre-signed URL link to upload bulk documents (as zip file) related to the rework ticket
+          example: https://AWS-pre-signed-url
   securitySchemes:
     oAuth:
       type: oauth2

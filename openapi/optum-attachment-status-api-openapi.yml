@@ -179,32 +179,19 @@ components:
           type: string
         rejectionInformation:
           type: string
-    MetadataResponse:
+    StatusDetails:
       type: object
       properties:
-        traceId:
+        statusMessage:
           type: string
-        transactionDetails:
-          type: object
-          allOf:
-          - $ref: '#/components/schemas/TransactionDetails'
-        status:
+        statusCode:
+          type: string
+        statusTimeStamp:
+          type: string
+        documents:
           type: array
           items:
-            $ref: '#/components/schemas/StatusDetails'
-    UnAuthorized:
-      type: object
-      properties:
-        error:
-          type: string
-        error_description:
-          type: string
-      example:
-        error: invalid_request
-        error_description: The access token is missing
-    BadRequest:
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponse'
+            $ref: '#/components/schemas/DocumentDetails'
     DocumentDetails:
       type: object
       properties:
@@ -228,22 +215,14 @@ components:
           type:
           - string
           - 'null'
-    StatusDetails:
+    BadRequest:
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponse'
+    MetadataResponse:
       type: object
       properties:
-        statusMessage:
+        traceId:
           type: string
-        statusCode:
-          type: string
-        statusTimeStamp:
-          type: string
-        documents:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentDetails'
-    DetailedResponse:
-      type: object
-      properties:
         transactionDetails:
           type: object
           allOf:
@@ -262,9 +241,30 @@ components:
       example:
         statusCode: ErrorResponseCode
         statusMessage: SystemErrors.INTERNAL_ERROR
+    DetailedResponse:
+      type: object
+      properties:
+        transactionDetails:
+          type: object
+          allOf:
+          - $ref: '#/components/schemas/TransactionDetails'
+        status:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusDetails'
     NotAuthorized:
       allOf:
       - $ref: '#/components/schemas/UnAuthorized'
+    UnAuthorized:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string
+      example:
+        error: invalid_request
+        error_description: The access token is missing
     MetadataResponses:
       type: array
       items:

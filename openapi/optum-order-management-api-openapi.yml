@@ -1037,24 +1037,7 @@ paths:
       - Order Management
 components:
   schemas:
-    VendorOrder:
-      type: object
-      properties:
-        vendorOrgId:
-          type: integer
-          format: int32
-        vendorOrgName:
-          type: string
-        vendorOrderId:
-          type: integer
-          format: int64
-        vendorOrderStatus:
-          type: string
-        vendorOrderStatusDetail:
-          type: string
-        orderResult:
-          $ref: '#/components/schemas/OrderResult'
-    ApiResponseVendorOrderDetailsResponse:
+    ApiResponseVendorOrderStatusResponse:
       type: object
       properties:
         status:
@@ -1065,7 +1048,14 @@ components:
         error:
           $ref: '#/components/schemas/ApiErrorResponse'
         result:
-          $ref: '#/components/schemas/VendorOrderDetailsResponse'
+          $ref: '#/components/schemas/VendorOrderStatusResponse'
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        detail:
+          $ref: '#/components/schemas/ErrorDetail'
     PlaceOrderResult:
       type: object
       properties:
@@ -1082,7 +1072,7 @@ components:
           - ORDER_ACCEPTED
           - VALIDATION_ERRORS
           - AUTHORIZATION_FAILURE
-    ApiResponseClientOrderStatusResponse:
+    ApiErrorResponse:
       type: object
       properties:
         status:
@@ -1091,36 +1081,14 @@ components:
         statusMessage:
           type: string
         error:
-          $ref: '#/components/schemas/ApiErrorResponse'
-        result:
-          $ref: '#/components/schemas/ClientOrderStatusResponse'
-    VendorOrderDetailsResponse:
+          $ref: '#/components/schemas/Error'
+    ErrorDetail:
       type: object
       properties:
-        clientOrderId:
-          type: integer
-          format: int64
-        vendorOrderId:
-          type: integer
-          format: int64
-        vendorOrgId:
-          type: integer
-          format: int64
-        vendorOrgName:
+        code:
           type: string
-        vendorOrderStatus:
+        message:
           type: string
-        vendorOrderStatusDetail:
-          type: string
-        submissionDate:
-          type: string
-          format: date-time
-        vendorOrderExpDate:
-          type: string
-          format: date-time
-        newExpirationDate:
-          type: string
-          format: date-time
     PlaceOrderRequest:
       type: object
       required:
@@ -1168,7 +1136,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Vendor'
-    ApiResponseClientOrderResponse:
+    ApiResponseClientOrderStatusResponse:
       type: object
       properties:
         status:
@@ -1176,17 +1144,27 @@ components:
           format: int32
         statusMessage:
           type: string
+        error:
+          $ref: '#/components/schemas/ApiErrorResponse'
         result:
-          $ref: '#/components/schemas/clientOrderResult'
-    OrderResult:
+          $ref: '#/components/schemas/ClientOrderStatusResponse'
+    VendorOrder:
       type: object
       properties:
-        cleanMetric:
-          $ref: '#/components/schemas/OrderMetric'
-        errorMetric:
-          $ref: '#/components/schemas/OrderMetric'
-        duplicateMetric:
-          $ref: '#/components/schemas/OrderMetric'
+        vendorOrgId:
+          type: integer
+          format: int32
+        vendorOrgName:
+          type: string
+        vendorOrderId:
+          type: integer
+          format: int64
+        vendorOrderStatus:
+          type: string
+        vendorOrderStatusDetail:
+          type: string
+        orderResult:
+          $ref: '#/components/schemas/OrderResult'
     ClientOrderStatusResponse:
       type: object
       properties:
@@ -1207,23 +1185,49 @@ components:
           type: string
         result:
           $ref: '#/components/schemas/PlaceOrderResult'
-    ClientOrderDetailsResponse:
+    ApiResponseVendorOrderDetailsResponse:
       type: object
       properties:
-        clientOrderId:
+        status:
           type: integer
-          format: int64
-        clientOrderSubmittedDate:
+          format: int32
+        statusMessage:
           type: string
-          format: date-time
-        clientOrderStatus:
+        error:
+          $ref: '#/components/schemas/ApiErrorResponse'
+        result:
+          $ref: '#/components/schemas/VendorOrderDetailsResponse'
+    ApiResponseClientOrderDetailsResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        statusMessage:
           type: string
-        clientOrderStatusDetail:
+        error:
+          $ref: '#/components/schemas/ApiErrorResponse'
+        result:
+          $ref: '#/components/schemas/ClientOrderDetailsResponse'
+    ApiResponseClientOrderResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        statusMessage:
           type: string
-        vendorOrders:
-          type: array
-          items:
-            $ref: '#/components/schemas/VendorOrder'
+        result:
+          $ref: '#/components/schemas/clientOrderResult'
+    OrderResult:
+      type: object
+      properties:
+        cleanMetric:
+          $ref: '#/components/schemas/OrderMetric'
+        errorMetric:
+          $ref: '#/components/schemas/OrderMetric'
+        duplicateMetric:
+          $ref: '#/components/schemas/OrderMetric'
     Vendor:
       type: object
       required:
@@ -1247,41 +1251,14 @@ components:
           description: List of internal vendor emr names for placing an order for internal vendor. There should not be any sub vendor names specified for external vendor.
           items:
             type: string
-    ApiResponseVendorOrderStatusResponse:
+    OrderMetric:
       type: object
       properties:
-        status:
+        count:
           type: integer
           format: int32
-        statusMessage:
+        downloadUrl:
           type: string
-        error:
-          $ref: '#/components/schemas/ApiErrorResponse'
-        result:
-          $ref: '#/components/schemas/VendorOrderStatusResponse'
-    ErrorDetail:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-    clientOrderResult:
-      type: object
-      properties:
-        clientOrderId:
-          type: integer
-          format: int64
-          description: Client order identifier for reference
-        statusMessage:
-          type: string
-          description: status message for client order.
-        clientOrderStatus:
-          type: string
-          enum:
-          - ORDER_ACCEPTED
-          - VALIDATION_ERRORS
-          - AUTHORIZATION_FAILURE
     clientOrderRequest:
       type: object
       required:
@@ -1339,43 +1316,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Vendor'
-    OrderMetric:
-      type: object
-      properties:
-        count:
-          type: integer
-          format: int32
-        downloadUrl:
-          type: string
-    ApiResponseClientOrderDetailsResponse:
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-        statusMessage:
-          type: string
-        error:
-          $ref: '#/components/schemas/ApiErrorResponse'
-        result:
-          $ref: '#/components/schemas/ClientOrderDetailsResponse'
-    ApiErrorResponse:
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-        statusMessage:
-          type: string
-        error:
-          $ref: '#/components/schemas/Error'
-    Error:
-      type: object
-      properties:
-        status:
-          type: string
-        detail:
-          $ref: '#/components/schemas/ErrorDetail'
     VendorOrderStatusResponse:
       type: object
       properties:
@@ -1389,6 +1329,66 @@ components:
           type: string
         vendorOrderStatusDetail:
           type: string
+    VendorOrderDetailsResponse:
+      type: object
+      properties:
+        clientOrderId:
+          type: integer
+          format: int64
+        vendorOrderId:
+          type: integer
+          format: int64
+        vendorOrgId:
+          type: integer
+          format: int64
+        vendorOrgName:
+          type: string
+        vendorOrderStatus:
+          type: string
+        vendorOrderStatusDetail:
+          type: string
+        submissionDate:
+          type: string
+          format: date-time
+        vendorOrderExpDate:
+          type: string
+          format: date-time
+        newExpirationDate:
+          type: string
+          format: date-time
+    ClientOrderDetailsResponse:
+      type: object
+      properties:
+        clientOrderId:
+          type: integer
+          format: int64
+        clientOrderSubmittedDate:
+          type: string
+          format: date-time
+        clientOrderStatus:
+          type: string
+        clientOrderStatusDetail:
+          type: string
+        vendorOrders:
+          type: array
+          items:
+            $ref: '#/components/schemas/VendorOrder'
+    clientOrderResult:
+      type: object
+      properties:
+        clientOrderId:
+          type: integer
+          format: int64
+          description: Client order identifier for reference
+        statusMessage:
+          type: string
+          description: status message for client order.
+        clientOrderStatus:
+          type: string
+          enum:
+          - ORDER_ACCEPTED
+          - VALIDATION_ERRORS
+          - AUTHORIZATION_FAILURE
   securitySchemes:
     bearerAuth:
       type: http

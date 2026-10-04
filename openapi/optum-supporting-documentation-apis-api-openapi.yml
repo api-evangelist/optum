@@ -159,6 +159,21 @@ paths:
       - bearerAuth: []
 components:
   schemas:
+    Notification:
+      type: object
+      properties:
+        error:
+          type: array
+          items:
+            type: string
+        warning:
+          type: array
+          items:
+            type: string
+        info:
+          type: array
+          items:
+            type: string
     SupportingDocument:
       type: object
       properties:
@@ -175,21 +190,6 @@ components:
           type: string
         effectiveDate:
           type: string
-    Notification:
-      type: object
-      properties:
-        error:
-          type: array
-          items:
-            type: string
-        warning:
-          type: array
-          items:
-            type: string
-        info:
-          type: array
-          items:
-            type: string
   securitySchemes:
     bearerAuth:
       type: http

@@ -398,13 +398,38 @@ paths:
           description: Service Unavailable
 components:
   schemas:
-    Optum360:
+    Modifiers:
       type: object
       properties:
-        code:
+        physician:
+          $ref: '#/components/schemas/Links'
+        facility:
+          $ref: '#/components/schemas/Links'
+        opps:
+          $ref: '#/components/schemas/Links'
+        mpfs:
+          $ref: '#/components/schemas/Links'
+        asc:
+          $ref: '#/components/schemas/Links'
+        ambulance:
+          $ref: '#/components/schemas/Links'
+        dme:
+          $ref: '#/components/schemas/Links'
+      xml:
+        name: modifiers
+    ModifierDesc:
+      type: object
+      properties:
+        descFull:
           type: string
-        description:
+          xml:
+            name: desc-full
+        usage:
           type: string
+        definition:
+          type: string
+      xml:
+        name: code-properties
     Ama:
       type: object
       properties:
@@ -441,6 +466,22 @@ components:
           $ref: '#/components/schemas/Links'
       xml:
         name: modifier-property
+    Sources:
+      required:
+      - source
+      - sourceRationale
+      type: object
+      properties:
+        source:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+        sourceRationale:
+          type: array
+          xml:
+            name: source_rationale
+          items:
+            $ref: '#/components/schemas/SourceRationale'
     SourceRationale:
       type: object
       properties:
@@ -450,25 +491,6 @@ components:
           type: string
           xml:
             attribute: true
-    Modifiers:
-      type: object
-      properties:
-        physician:
-          $ref: '#/components/schemas/Links'
-        facility:
-          $ref: '#/components/schemas/Links'
-        opps:
-          $ref: '#/components/schemas/Links'
-        mpfs:
-          $ref: '#/components/schemas/Links'
-        asc:
-          $ref: '#/components/schemas/Links'
-        ambulance:
-          $ref: '#/components/schemas/Links'
-        dme:
-          $ref: '#/components/schemas/Links'
-      xml:
-        name: modifiers
     Links:
       type: object
       properties:
@@ -478,19 +500,6 @@ components:
             name: Link
           items:
             $ref: '#/components/schemas/Link'
-    ModifierDesc:
-      type: object
-      properties:
-        descFull:
-          type: string
-          xml:
-            name: desc-full
-        usage:
-          type: string
-        definition:
-          type: string
-      xml:
-        name: code-properties
     Modifier51Exempt:
       required:
       - ama
@@ -507,6 +516,13 @@ components:
             $ref: '#/components/schemas/Ama'
       xml:
         name: modifier-51-exempt
+    Optum360:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
     Source:
       type: object
       properties:
@@ -525,22 +541,6 @@ components:
             attribute: true
         value:
           type: string
-    Sources:
-      required:
-      - source
-      - sourceRationale
-      type: object
-      properties:
-        source:
-          type: array
-          items:
-            $ref: '#/components/schemas/Source'
-        sourceRationale:
-          type: array
-          xml:
-            name: source_rationale
-          items:
-            $ref: '#/components/schemas/SourceRationale'
   securitySchemes:
     bearerAuth:
       type: http

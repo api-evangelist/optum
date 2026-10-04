@@ -421,6 +421,37 @@ paths:
     - url: /v1/optumcommonms
 components:
   schemas:
+    FacilityClaimResponse:
+      type: object
+      properties:
+        claimId:
+          type: integer
+          format: int64
+        patientUserId:
+          type: integer
+          format: int64
+        claimType:
+          type: string
+          enum:
+          - PHYSICIAN
+          - FACILITY
+        edits:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityClaimLineEdits'
+    FacilityClaimUpdate:
+      type: object
+      properties:
+        claimId:
+          type: integer
+          format: int64
+        claimLineId:
+          type: integer
+          format: int64
+        fieldName:
+          type: string
+        fieldValue:
+          type: string
     FacilityClaimLineEdits:
       type: object
       properties:
@@ -436,18 +467,77 @@ components:
         claimLineNum:
           type: integer
           format: int32
-    FacilityClaimUpdate:
+    FacilityClaimLine:
+      type: object
+      properties:
+        claimLineId:
+          type: integer
+          format: int32
+        claimId:
+          type: integer
+          format: int64
+        revenueCode:
+          type: string
+        procedureCode:
+          type: string
+        modifier:
+          type: string
+        lineNumber:
+          type: integer
+          format: int32
+        units:
+          type: integer
+          format: int32
+        dateOfService:
+          type: string
+          format: date-time
+        ndc:
+          type: string
+    FacilityClaimDiag:
       type: object
       properties:
         claimId:
           type: integer
           format: int64
-        claimLineId:
-          type: integer
-          format: int64
-        fieldName:
+        principalDx:
           type: string
-        fieldValue:
+        admitting:
+          type: string
+        others:
+          type: string
+        primary1Px:
+          type: string
+        primary1PxDate:
+          type: string
+          format: date-time
+        primary2Px:
+          type: string
+        primary2PxDate:
+          type: string
+          format: date-time
+        other1Px:
+          type: string
+        other1PxDate:
+          type: string
+          format: date-time
+        other2Px:
+          type: string
+        other2PxDate:
+          type: string
+          format: date-time
+        other3Px:
+          type: string
+        other3PxDate:
+          type: string
+          format: date-time
+        other4Px:
+          type: string
+        other4PxDate:
+          type: string
+          format: date-time
+        reasonForVisit:
+          type: string
+        ipAdmitting:
           type: string
     FacilityClaim:
       type: object
@@ -522,102 +612,12 @@ components:
             $ref: '#/components/schemas/FacilityClaimLineEdits'
         payer:
           type: string
-    FacilityClaimDiag:
-      type: object
-      properties:
-        claimId:
-          type: integer
-          format: int64
-        principalDx:
-          type: string
-        admitting:
-          type: string
-        others:
-          type: string
-        primary1Px:
-          type: string
-        primary1PxDate:
-          type: string
-          format: date-time
-        primary2Px:
-          type: string
-        primary2PxDate:
-          type: string
-          format: date-time
-        other1Px:
-          type: string
-        other1PxDate:
-          type: string
-          format: date-time
-        other2Px:
-          type: string
-        other2PxDate:
-          type: string
-          format: date-time
-        other3Px:
-          type: string
-        other3PxDate:
-          type: string
-          format: date-time
-        other4Px:
-          type: string
-        other4PxDate:
-          type: string
-          format: date-time
-        reasonForVisit:
-          type: string
-        ipAdmitting:
-          type: string
     Code:
       type: object
       properties:
         codeValue:
           type: string
         description:
-          type: string
-    FacilityClaimResponse:
-      type: object
-      properties:
-        claimId:
-          type: integer
-          format: int64
-        patientUserId:
-          type: integer
-          format: int64
-        claimType:
-          type: string
-          enum:
-          - PHYSICIAN
-          - FACILITY
-        edits:
-          type: array
-          items:
-            $ref: '#/components/schemas/FacilityClaimLineEdits'
-    FacilityClaimLine:
-      type: object
-      properties:
-        claimLineId:
-          type: integer
-          format: int32
-        claimId:
-          type: integer
-          format: int64
-        revenueCode:
-          type: string
-        procedureCode:
-          type: string
-        modifier:
-          type: string
-        lineNumber:
-          type: integer
-          format: int32
-        units:
-          type: integer
-          format: int32
-        dateOfService:
-          type: string
-          format: date-time
-        ndc:
           type: string
   securitySchemes:
     bearerAuth:

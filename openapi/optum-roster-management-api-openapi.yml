@@ -126,23 +126,6 @@ paths:
                       message: Something failed during the search of your package. Please try again.
 components:
   schemas:
-    ErrorDetail:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-    ApiErrorResponse:
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-        statusMessage:
-          type: string
-        error:
-          $ref: '#/components/schemas/Error'
     PackageInfo:
       type: object
       properties:
@@ -197,6 +180,23 @@ components:
               type: string
               format: date-time
               example: '2023-08-24T10:17:19'
+    ApiErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        statusMessage:
+          type: string
+        error:
+          $ref: '#/components/schemas/Error'
+    ErrorDetail:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
     Error:
       type: object
       properties:

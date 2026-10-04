@@ -88,6 +88,15 @@ paths:
           description: Service Unavailable
 components:
   schemas:
+    OptumSpecialtyArticles:
+      type: object
+      properties:
+        optumSpecialtyArticle:
+          type: array
+          items:
+            $ref: '#/components/schemas/OptumSpecialtyArticle'
+      xml:
+        name: optumSpecialtyArticles
     OptumSpecialtyArticle:
       required:
       - articleText
@@ -119,15 +128,6 @@ components:
             name: article-text
         abstract:
           type: string
-    OptumSpecialtyArticles:
-      type: object
-      properties:
-        optumSpecialtyArticle:
-          type: array
-          items:
-            $ref: '#/components/schemas/OptumSpecialtyArticle'
-      xml:
-        name: optumSpecialtyArticles
   securitySchemes:
     bearerAuth:
       type: http

@@ -95,36 +95,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Prefetch:
-      type: object
-      properties:
-        claimResponse:
-          type: string
-          example: ClaimResponse?patient={{%context.patientId}}
-        condition:
-          type: string
-          example: Condition?patient={{%context.patientId}}
-        coverage:
-          type: string
-          example: Coverage?patient={{%context.patientId}}&status=active
-        device:
-          type: string
-          example: Device?patient={{%context.patientId}}
-        encounter:
-          type: string
-          example: Encounter/{{%context.encounterId}}
-        location:
-          type: string
-          example: Location?_id={{%context.locationId}}
-        patient:
-          type: string
-          example: Patient/{{%context.patientId}}
-        practitioner:
-          type: string
-          example: Practitioner/{{%context.userId}}
-        practitionerRole:
-          type: string
-          example: PractitionerRole?practitioner={{%context.userId}}
     DiscoveryResponse:
       type: object
       properties:
@@ -156,6 +126,36 @@ components:
       - id
       - hook
       - title
+    Prefetch:
+      type: object
+      properties:
+        claimResponse:
+          type: string
+          example: ClaimResponse?patient={{%context.patientId}}
+        condition:
+          type: string
+          example: Condition?patient={{%context.patientId}}
+        coverage:
+          type: string
+          example: Coverage?patient={{%context.patientId}}&status=active
+        device:
+          type: string
+          example: Device?patient={{%context.patientId}}
+        encounter:
+          type: string
+          example: Encounter/{{%context.encounterId}}
+        location:
+          type: string
+          example: Location?_id={{%context.locationId}}
+        patient:
+          type: string
+          example: Patient/{{%context.patientId}}
+        practitioner:
+          type: string
+          example: Practitioner/{{%context.userId}}
+        practitionerRole:
+          type: string
+          example: PractitionerRole?practitioner={{%context.userId}}
   securitySchemes:
     oAuth:
       type: oauth2

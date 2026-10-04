@@ -857,135 +857,95 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Provider:
+    Decision:
       type: object
       properties:
-        name:
-          description: provider full name
-          example: John J Doe
+        decisionType:
+          description: '[ Event, Service ]'
+          example: EVENT
           type: string
-        firstName:
-          description: provider first name
-          example: John
+        certificationAction:
+          description: referral decision certification action
+          example: A1
           type: string
-        middleName:
-          description: provider middle name
-          example: J
+        reviewDecisionReason:
+          description: referral decision review reason
+          example: MEETS_CRITERIA
           type: string
-        lastName:
-          description: provider last name
-          example: Doe
+        startDate:
+          description: referral decision start date
+          example: '2024-11-30'
           type: string
-        providerOrganizationName:
-          description: provider org name
-          example: Dr. John Doe Clinic
+        endDate:
+          description: referral decision end date
+          example: '2024-11-30'
           type: string
-        npi:
-          description: provider NPI
-          example: '1234567890'
-          type: string
-        taxId:
-          description: provider TIN
-          example: '987654321'
-          type: string
-        contactName:
-          description: provider contact name
-          example: Alison Johnson
-          type: string
-        phoneNumber:
-          description: provider phone number
-          example: 555-123-4567
-          type: string
-        fax:
-          description: provider fax number
-          example: 555-222-4444
-          type: string
-        networkStatus:
-          description: provider network status
-          example: IN_NETWORK
-          type: string
-        address:
-          $ref: '#/components/schemas/AddressExt'
-    FacilityDetails:
+        referralQuantity:
+          $ref: '#/components/schemas/ReferralQuantity'
+    CoverageStatusItem:
       type: object
       properties:
-        name:
-          description: provider full name
-          example: John J Doe
-          type: string
-        firstName:
-          description: provider first name
-          example: John
-          type: string
-        middleName:
-          description: provider middle name
-          example: J
-          type: string
-        lastName:
-          description: provider last name
-          example: Doe
-          type: string
-        providerOrganizationName:
-          description: provider org name
-          example: Dr. John Doe Clinic
-          type: string
-        npi:
-          description: provider NPI
-          example: '1234567890'
-          type: string
-        taxId:
-          description: provider TIN
-          example: 12345678
-          type: string
-        contactName:
-          description: provider contact name
-          example: Alison Johnson
-          type: string
-        phoneNumber:
-          description: provider phone number
-          example: 555-123-4567
-          type: string
-        fax:
-          description: provider fax number
-          example: 555-123-4568
-          type: string
-        networkStatus:
-          description: provider network status
-          example: In Network
-          type: string
-        address:
-          $ref: '#/components/schemas/AddressExt'
-        coverage:
-          description: coverage status
+        overallCoverageStatus:
+          description: overall coverage status for the member and services
           example: Covered/Approved
           type: string
-    AddressExt:
+        procedureCode:
+          description: procedure code for the service
+          example: '99213'
+          type: string
+        description:
+          description: procedure code description
+          example: Established patient office or other outpatient visit
+          type: string
+        coverageStatus:
+          description: coverage status for the service
+          example: Covered
+          type: string
+        decisionDate:
+          description: date on which case decision is amde
+          example: '2025-09-15'
+          type: string
+        geneticMolecularTestCode:
+          description: geneticMolecularTestCode
+          example: 'null'
+          type: string
+        geneticMolecularTestReviewType:
+          description: geneticMolecularTestReviewType
+          example: 'null'
+          type: string
+    ReferralQuantityInput:
       type: object
       properties:
-        addressLine1:
-          description: Address line 1
-          example: 123 Medical Drive
+        quantity:
+          example: 10
+          type: integer
+        qualifier:
+          description: quantity qualifier (FL:Units; DY:Days; HS:Hours; MN:Month; VS:Visits)
+          example: VS
           type: string
-        addressLine2:
-          description: Address line 2
-          example: Building A
+      required:
+      - quantity
+      - qualifier
+    PriorAuthSearchProviderInput:
+      type: object
+      properties:
+        firstName:
+          description: Provider first name
+          example: Dr. Carlos
           type: string
-        city:
-          description: City
-          example: Healthcare City
+        lastOrOrgName:
+          description: Provider last name or organization
+          example: Rodriguez
           type: string
-        state:
-          description: State code (e.g., AZ, CA, NY etc).
-          example: CA
-          type: string
-        zip:
-          description: Standard ZIP code.
-          example: '90210'
-          type: string
-        zip4:
-          description: ZIP+4 suffix
-          example: '0001'
-          type: string
+        address:
+          $ref: '#/components/schemas/ProviderAddressInput'
+      required:
+      - address.addressLine1
+      - address.state
+      - address.zip
+      - lastOrOrgName
+      - address
+      description: Search parameters related to the provider
     ReferralSearchResult:
       type: object
       properties:
@@ -1009,307 +969,12 @@ components:
           $ref: '#/components/schemas/ServiceResponse'
         rejectionResponse:
           $ref: '#/components/schemas/RejectionReason'
-    ServiceInput:
+    PaginationInput:
       type: object
       properties:
-        diagnosisCodes:
-          description: diagnosis codes
-          example: M79.3
-          type: array
-          items:
-            type: string
-        referralQuantity:
-          $ref: '#/components/schemas/ReferralQuantityInput'
-        startDate:
-          description: referral start date
-          example: '2025-01-01'
-          type: string
-        endDate:
-          description: referral end date
-          example: '2025-01-01'
-          type: string
-        comment:
-          description: referral comments
-          example: Patient requires physical therapy for knee pain
-          type: string
-      required:
-      - referralQuantity.quantity
-      - referralQuantity.qualifier
-      - diagnosisCodes
-      - referralQuantity
-      - startDate
-    CaseDescription:
-      type: object
-      properties:
-        caseSearchMessages:
-          description: payer message(s) related to the case.
-          example: A decision has already been rendered on this case, though some updates are permitted as indicated in the enabled fields below. To request an additional service for this member, please submit a new notification/prior authorization request for the member.
-          type: array
-          items:
-            type: string
-        caseDetail:
-          $ref: '#/components/schemas/CaseDetail'
-        coverageStatus:
-          type: array
-          items:
-            $ref: '#/components/schemas/CoverageStatusItem'
-        clinicalNotes:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClinicalNote'
-        patientDetails:
-          $ref: '#/components/schemas/PatientDetails'
-        submittingProvider:
-          $ref: '#/components/schemas/Provider'
-        admittingAttendingProvider:
-          $ref: '#/components/schemas/Provider'
-        orderingProvider:
-          $ref: '#/components/schemas/Provider'
-        facilityDetails:
-          $ref: '#/components/schemas/FacilityDetails'
-        serviceDetails:
-          $ref: '#/components/schemas/ServiceDetails'
-        facilityServiceDetails:
-          $ref: '#/components/schemas/FacilityServiceDetails'
-        diagnosisDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/DiagnosisDetail'
-        procedureCodeDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProcedureCodeDetail'
-        expeditedRequestReview:
-          description: expedited review requirement on the case:- true or false
-          example: true
-          type: boolean
-        initialContact:
-          $ref: '#/components/schemas/ContactBase'
-        followUpContact:
-          description: Follow-up contact information
-          $ref: '#/components/schemas/FollowUpContact'
-      description: Detailed information about a specific prior authorization case.
-    ServiceDetails:
-      type: object
-      properties:
-        placeOfService:
-          description: Place of service
-          example: Acute Hospital
-          type: string
-        serviceDescription:
-          description: service description:- Scheduled, Urgent, Emergent
-          example: Scheduled
-          type: string
-        serviceDetails:
-          description: service detail:- Surgical, Medical etc
-          example: Surgical
-          type: string
-    DiagnosisDetail:
-      type: object
-      properties:
-        codePointer:
-          description: diagnosis code type
-          example: Primary
-          type: string
-        code:
-          description: diagnosis code
-          example: J01.90
-          type: string
-        description:
-          description: diagnosis code description
-          example: acute sinusitis
-          type: string
-    PatientInput:
-      type: object
-      properties:
-        firstName:
-          description: patient first name
-          example: Alice
-          type: string
-        lastName:
-          description: patient last name
-          example: Johnson
-          type: string
-        id:
-          description: patient identifier number
-          example: '1234567890'
-          type: string
-        dateOfBirth:
-          description: patient date of birth
-          example: '1990-12-31'
-          type: string
-        groupNumber:
-          description: patient policy number
-          example: GRP321
-          type: string
-        stateCode:
-          description: patient state code
-          example: AZ
-          type: string
-        zipCode:
-          description: patient zip code
-          example: '90210'
-          type: string
-      required:
-      - firstName
-      - lastName
-      - id
-      - dateOfBirth
-      - groupNumber
-    ProviderAddressInput:
-      type: object
-      properties:
-        addressLine1:
-          description: Address line 1
-          example: 1234 Street
-          type: string
-        addressLine2:
-          description: Address line 2 (optional).
-          example: Building A
-          type: string
-        city:
-          description: City
-          example: Healthcare City
-          type: string
-        state:
-          description: State code (e.g., AZ, CA, NY etc).
-          example: AZ
-          type: string
-        zip:
-          description: Standard ZIP code.
-          example: '90210'
-          type: string
-        zip4:
-          description: ZIP+4 suffix
-          example: '0001'
-          type: string
-      required:
-      - addressLine1
-      - state
-      - zip
-    FacilityServiceDetails:
-      type: object
-      properties:
-        startDate:
-          description: service start date
-          example: '2025-10-02'
-          type: string
-        endDate:
-          description: service end date
-          example: '2025-10-02'
-          type: string
-        serviceDescription:
-          description: service description:- Scheduled, Urgent, Emergent
-          example: Scheduled
-          type: string
-        isPatientAdmitted:
-          description: patient admission flag
-          example: 'Yes'
-          type: string
-        expectedAdmissionDate:
-          description: expected admission date
-          example: '2025-10-02'
-          type: string
-        expectedDischargeDate:
-          description: expected discharge date
-          example: '2025-10-02'
-          type: string
-        actualAdmissionDateTime:
-          description: actual admission date
-          example: '2025-10-02'
-          type: string
-        isPatientDischarged:
-          description: patient discharge flag
-          example: 'Yes'
-          type: string
-        dischargeDate:
-          description: actual discharge date
-          example: '2025-10-02'
-          type: string
-        dischargeLocation:
-          description: discharge location
-          example: Home
-          type: string
-    CaseDetail:
-      type: object
-      properties:
-        serviceReferenceNumber:
-          description: unique prior auth case identification number
-          example: AXXXXXXXXX
-          type: string
-        caseStatus:
-          description: current status of the prior auth case
-          example: Open
-          type: string
-        caseStatusReason:
-          description: current status reason for the prior auth case
-          example: Open
-          type: string
-        primaryCarePhysician:
-          description: PCP for the member
-          example: John
-          type: string
-        advanceNotifyDateTime:
-          description: advance notification date-time
-          example: 2025-01-01:00:00:01
-          type: string
-        admissionNotifyDateTime:
-          description: admission notification date-time
-          example: 2025-01-01:00:00:01
-          type: string
-        expectedServiceStartDate:
-          description: expected service start date
-          example: '2025-10-02'
-          type: string
-        expectedServiceEndDate:
-          description: expected service end date
-          example: '2025-10-03'
-          type: string
-        actualServiceStartDate:
-          description: actual service start date
-          example: '2025-10-02'
-          type: string
-        actualServiceEndDate:
-          description: actual service end date
-          example: '2025-10-03'
-          type: string
-    ServiceResponse:
-      type: object
-      properties:
-        diagnosisCodes:
-          description: Diagnosis code
-          example: M79.3
-          type: array
-          items:
-            type: string
-        referralQuantity:
-          $ref: '#/components/schemas/ReferralQuantity'
-        startDate:
-          description: diagnosis start date
-          example: '2024-11-01'
-          type: string
-        endDate:
-          description: diagnosis end date
-          example: '2024-11-30'
-          type: string
-        comment:
-          description: diagnosis comments
-          example: Physical therapy for knee pain
-          type: string
-    ClinicalNote:
-      type: object
-      properties:
-        createdTime:
-          description: date time for clinical note entry
-          example: 2025-01-01:00:00:01
-          type: string
-        createdBy:
-          description: clinical entry note created by
-          example: doctor
-          type: string
-        noteText:
-          description: clinical note text
-          example: note text detail
+        nextPageToken:
+          description: page identifier for pagination
+          example: '2'
           type: string
     ReferralSubmitProviderInput:
       type: object
@@ -1397,110 +1062,6 @@ components:
           description: ZIP+4 suffix
           example: '0001'
           type: string
-    ReferralQuantityInput:
-      type: object
-      properties:
-        quantity:
-          example: 10
-          type: integer
-        qualifier:
-          description: quantity qualifier (FL:Units; DY:Days; HS:Hours; MN:Month; VS:Visits)
-          example: VS
-          type: string
-      required:
-      - quantity
-      - qualifier
-    FollowUpContact:
-      type: object
-      properties:
-        contactName:
-          description: full name of the contact for the case
-          example: Bruce Wayne
-          type: string
-        phoneNumber:
-          description: contact phone number
-          example: 555-123-4567
-          type: string
-        fax:
-          description: contact fax number
-          example: 555-123-4568
-          type: string
-        departmentType:
-          description: follow-up contact department
-          example: 'null'
-          type: string
-        contactRoleType:
-          description: follow-up contact role
-          example: Other
-          type: string
-        emailAddress:
-          description: follow-up contact email
-          example: tonystark@avengers.com
-          type: string
-        medicalRecordNumber:
-          description: medical record number
-          example: EPIC 123456 987654
-          type: string
-        memberPhone:
-          description: member phone number
-          example: 555-111-1234
-          type: string
-    ReferralSubmitResponse:
-      type: object
-      properties:
-        referralId:
-          example: REF123456789
-          type: string
-        referralStatus:
-          example: APPROVED
-          type: string
-        payer:
-          $ref: '#/components/schemas/Payer'
-        requestingProvider:
-          $ref: '#/components/schemas/Provider'
-        servicingProvider:
-          $ref: '#/components/schemas/Provider'
-        patient:
-          $ref: '#/components/schemas/Patient'
-        decisions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Decision'
-        x12Response:
-          example: ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241010*1234*^*00501*000000001*0*P*:~
-          type: string
-        rejectionReasons:
-          type: array
-          items:
-            $ref: '#/components/schemas/RejectionReason'
-    PaginationInput:
-      type: object
-      properties:
-        nextPageToken:
-          description: page identifier for pagination
-          example: '2'
-          type: string
-    PriorAuthSearchResponse:
-      type: object
-      properties:
-        caseSummary:
-          description: A list of summarized cases matching the search criteria
-          type: array
-          items:
-            $ref: '#/components/schemas/CaseSummary'
-        caseDescription:
-          $ref: '#/components/schemas/CaseDescription'
-    Pagination:
-      type: object
-      properties:
-        totalRecords:
-          description: total records for the response
-          example: '147'
-          type: string
-        nextPageToken:
-          description: page offset for pagination
-          example: '3'
-          type: string
     ProviderInput:
       type: object
       properties:
@@ -1540,108 +1101,250 @@ components:
           description: provider gender
           example: M
           type: string
-    ContactBase:
+    FacilityDetails:
       type: object
       properties:
+        name:
+          description: provider full name
+          example: John J Doe
+          type: string
+        firstName:
+          description: provider first name
+          example: John
+          type: string
+        middleName:
+          description: provider middle name
+          example: J
+          type: string
+        lastName:
+          description: provider last name
+          example: Doe
+          type: string
+        providerOrganizationName:
+          description: provider org name
+          example: Dr. John Doe Clinic
+          type: string
+        npi:
+          description: provider NPI
+          example: '1234567890'
+          type: string
+        taxId:
+          description: provider TIN
+          example: 12345678
+          type: string
         contactName:
-          description: full name of the contact for the case
-          example: Bruce Wayne
+          description: provider contact name
+          example: Alison Johnson
           type: string
         phoneNumber:
-          description: contact phone number
+          description: provider phone number
           example: 555-123-4567
           type: string
         fax:
-          description: contact fax number
+          description: provider fax number
           example: 555-123-4568
           type: string
-    Decision:
+        networkStatus:
+          description: provider network status
+          example: In Network
+          type: string
+        address:
+          $ref: '#/components/schemas/AddressExt'
+        coverage:
+          description: coverage status
+          example: Covered/Approved
+          type: string
+    CaseSummary:
       type: object
       properties:
-        decisionType:
-          description: '[ Event, Service ]'
-          example: EVENT
+        serviceReferenceNumber:
+          description: unique prior auth case identification number
+          example: AXXXXXXXXX
           type: string
-        certificationAction:
-          description: referral decision certification action
-          example: A1
+        memberID:
+          description: unique member identifier
+          example: '953333333'
           type: string
-        reviewDecisionReason:
-          description: referral decision review reason
-          example: MEETS_CRITERIA
+        memberFirstName:
+          description: member first name
+          example: Alison
           type: string
-        startDate:
-          description: referral decision start date
-          example: '2024-11-30'
-          type: string
-        endDate:
-          description: referral decision end date
-          example: '2024-11-30'
-          type: string
-        referralQuantity:
-          $ref: '#/components/schemas/ReferralQuantity'
-    PatientDetails:
-      type: object
-      properties:
-        id:
-          description: patient/member id
-          example: '123456789'
-          type: string
-        firstName:
-          description: patient first name
-          example: Alice
-          type: string
-        middleName:
-          description: patient middle name
-          example: A
-          type: string
-        lastName:
-          description: patient last name
+        memberLastName:
+          description: Member last name
           example: Johnson
           type: string
-        dateOfBirth:
-          description: patient date of birth
-          example: '1990-12-31'
+        serviceSetting:
+          description: case service setting:- Inpatient, Outpatient or Outpatient Facility
+          example: Inpatient
           type: string
-        groupNumber:
-          description: patient policy number
-          example: GRP321
+        placeOfService:
+          description: Place of service
+          example: Acute Hospital
           type: string
-        relationshipCode:
-          description: patient relationship code
-          example: '18'
+        serviceDates:
+          description: Service date range (e.g., MM/DD/YYYY-MM/DD/YYYY)
+          example: 10/02/2025-10/03/2025
           type: string
-        relationshipDesc:
-          description: patient relationship description
-          example: SELF
+        caseStatus:
+          description: current status of the prior auth case
+          example: Open
           type: string
-        product:
-          description: member insurance product type
-          example: PPO  - Options PPO
+        overallCoverageStatus:
+          description: overall coverage status for the member and services on the case
+          example: Covered/Approved
           type: string
-        effectiveDate:
-          description: policy effective date
-          example: '2025-03-01'
+      description: A brief summary of a single prior authorization case found in the search.
+    PriorAuthSearchResponse:
+      type: object
+      properties:
+        caseSummary:
+          description: A list of summarized cases matching the search criteria
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseSummary'
+        caseDescription:
+          $ref: '#/components/schemas/CaseDescription'
+    Provider:
+      type: object
+      properties:
+        name:
+          description: provider full name
+          example: John J Doe
           type: string
-        terminationDate:
-          description: policy termination date
-          example: '2025-12-31'
+        firstName:
+          description: provider first name
+          example: John
           type: string
-        insuranceType:
-          description: insurance type
-          example: Medicare
+        middleName:
+          description: provider middle name
+          example: J
           type: string
-        verbalLanguagePreference:
-          description: patient preferred verbal language
-          example: English
+        lastName:
+          description: provider last name
+          example: Doe
           type: string
-        writtenLanguagePreference:
-          description: patient preferred written language
-          example: English
+        providerOrganizationName:
+          description: provider org name
+          example: Dr. John Doe Clinic
           type: string
-        informationalMessage:
-          description: informational message
-          example: A future timeline may be available for this member. For future coverage please call the telephone number located on the back of the member's Medical ID card.
+        npi:
+          description: provider NPI
+          example: '1234567890'
+          type: string
+        taxId:
+          description: provider TIN
+          example: '987654321'
+          type: string
+        contactName:
+          description: provider contact name
+          example: Alison Johnson
+          type: string
+        phoneNumber:
+          description: provider phone number
+          example: 555-123-4567
+          type: string
+        fax:
+          description: provider fax number
+          example: 555-222-4444
+          type: string
+        networkStatus:
+          description: provider network status
+          example: IN_NETWORK
+          type: string
+        address:
+          $ref: '#/components/schemas/AddressExt'
+    ServiceDetails:
+      type: object
+      properties:
+        placeOfService:
+          description: Place of service
+          example: Acute Hospital
+          type: string
+        serviceDescription:
+          description: service description:- Scheduled, Urgent, Emergent
+          example: Scheduled
+          type: string
+        serviceDetails:
+          description: service detail:- Surgical, Medical etc
+          example: Surgical
+          type: string
+    SearchProvider:
+      type: object
+      properties:
+        name:
+          description: Provider full name
+          example: John J Doe
+          type: string
+        firstName:
+          description: provider first name
+          example: John
+          type: string
+        middleName:
+          description: provider middle name
+          example: J
+          type: string
+        lastName:
+          description: provider last name
+          example: Doe
+          type: string
+        providerOrganizationName:
+          description: provider org name
+          example: Dr. John Doe Clinic
+          type: string
+        npi:
+          description: provider NPI
+          example: '1234567890'
+          type: string
+        taxId:
+          description: provider TIN
+          example: '987654321'
+          type: string
+        contactName:
+          description: provider contact name
+          example: Alison Johnson
+          type: string
+        phoneNumber:
+          description: provider phone number
+          example: 555-222-3333
+          type: string
+        fax:
+          description: provider fax number
+          example: 555-222-4444
+          type: string
+        networkStatus:
+          description: provider network status
+          example: IN_NETWORK
+          type: string
+        address:
+          $ref: '#/components/schemas/AddressBase'
+        providerSpeciality:
+          $ref: '#/components/schemas/ProviderSpeciality'
+    RejectionReason:
+      type: object
+      properties:
+        rejectionLevel:
+          description: rejection level
+          example: REFERRAL
+          type: string
+        reasonDescription:
+          description: rejection reason description
+          example: Insufficient medical documentation provided
+          type: string
+        rejectionCode:
+          description: rejection code
+          example: R001
+          type: string
+        followUpAction:
+          description: rejection follow up action
+          example: RESUBMIT_WITH_DOCUMENTATION
+          type: string
+        rejectionReason:
+          description: rejection reason
+          example: MISSING_DOCUMENTATION
+          type: string
+        validRequestIndicator:
+          description: rejection value request indicator
+          example: N
           type: string
     ExtendedProvider:
       type: object
@@ -1716,45 +1419,6 @@ components:
           description: handicap accessibility of provider facility
           example: true
           type: boolean
-    PriorAuthSearchProviderInput:
-      type: object
-      properties:
-        firstName:
-          description: Provider first name
-          example: Dr. Carlos
-          type: string
-        lastOrOrgName:
-          description: Provider last name or organization
-          example: Rodriguez
-          type: string
-        address:
-          $ref: '#/components/schemas/ProviderAddressInput'
-      required:
-      - address.addressLine1
-      - address.state
-      - address.zip
-      - lastOrOrgName
-      - address
-      description: Search parameters related to the provider
-    ReferralQuantity:
-      type: object
-      properties:
-        quantity:
-          description: quantity limit
-          example: 12
-          type: integer
-        qualifier:
-          description: referral qualifier/unit
-          example: VS
-          type: string
-        qualifierDesc:
-          description: referral qualifier description
-          example: visits
-          type: string
-        remaining:
-          description: referral quantity remaining
-          example: 8
-          type: integer
     Payer:
       type: object
       properties:
@@ -1772,46 +1436,42 @@ components:
           type: array
           items:
             type: string
-    CaseSummary:
+    DiagnosisDetail:
       type: object
       properties:
-        serviceReferenceNumber:
-          description: unique prior auth case identification number
-          example: AXXXXXXXXX
+        codePointer:
+          description: diagnosis code type
+          example: Primary
           type: string
-        memberID:
-          description: unique member identifier
-          example: '953333333'
+        code:
+          description: diagnosis code
+          example: J01.90
           type: string
-        memberFirstName:
-          description: member first name
-          example: Alison
+        description:
+          description: diagnosis code description
+          example: acute sinusitis
           type: string
-        memberLastName:
-          description: Member last name
-          example: Johnson
+    ProviderSearchResponse:
+      type: object
+      properties:
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExtendedProvider'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      description: Response for provider search operation
+    Pagination:
+      type: object
+      properties:
+        totalRecords:
+          description: total records for the response
+          example: '147'
           type: string
-        serviceSetting:
-          description: case service setting:- Inpatient, Outpatient or Outpatient Facility
-          example: Inpatient
+        nextPageToken:
+          description: page offset for pagination
+          example: '3'
           type: string
-        placeOfService:
-          description: Place of service
-          example: Acute Hospital
-          type: string
-        serviceDates:
-          description: Service date range (e.g., MM/DD/YYYY-MM/DD/YYYY)
-          example: 10/02/2025-10/03/2025
-          type: string
-        caseStatus:
-          description: current status of the prior auth case
-          example: Open
-          type: string
-        overallCoverageStatus:
-          description: overall coverage status for the member and services on the case
-          example: Covered/Approved
-          type: string
-      description: A brief summary of a single prior authorization case found in the search.
     ProcedureCodeDetail:
       type: object
       properties:
@@ -1883,6 +1543,261 @@ components:
         dmeMedicalConditionText:
           example: durable medical equipment condition text
           type: string
+    ProviderSpeciality:
+      type: object
+      properties:
+        code:
+          description: provider taxonomy/speciality code
+          example: 207Q00000X
+          type: string
+        description:
+          description: provider taxonomy description
+          example: Family Medicine
+          type: string
+    ServiceResponse:
+      type: object
+      properties:
+        diagnosisCodes:
+          description: Diagnosis code
+          example: M79.3
+          type: array
+          items:
+            type: string
+        referralQuantity:
+          $ref: '#/components/schemas/ReferralQuantity'
+        startDate:
+          description: diagnosis start date
+          example: '2024-11-01'
+          type: string
+        endDate:
+          description: diagnosis end date
+          example: '2024-11-30'
+          type: string
+        comment:
+          description: diagnosis comments
+          example: Physical therapy for knee pain
+          type: string
+    FollowUpContact:
+      type: object
+      properties:
+        contactName:
+          description: full name of the contact for the case
+          example: Bruce Wayne
+          type: string
+        phoneNumber:
+          description: contact phone number
+          example: 555-123-4567
+          type: string
+        fax:
+          description: contact fax number
+          example: 555-123-4568
+          type: string
+        departmentType:
+          description: follow-up contact department
+          example: 'null'
+          type: string
+        contactRoleType:
+          description: follow-up contact role
+          example: Other
+          type: string
+        emailAddress:
+          description: follow-up contact email
+          example: tonystark@avengers.com
+          type: string
+        medicalRecordNumber:
+          description: medical record number
+          example: EPIC 123456 987654
+          type: string
+        memberPhone:
+          description: member phone number
+          example: 555-111-1234
+          type: string
+    ReferralQuantity:
+      type: object
+      properties:
+        quantity:
+          description: quantity limit
+          example: 12
+          type: integer
+        qualifier:
+          description: referral qualifier/unit
+          example: VS
+          type: string
+        qualifierDesc:
+          description: referral qualifier description
+          example: visits
+          type: string
+        remaining:
+          description: referral quantity remaining
+          example: 8
+          type: integer
+    ClinicalNote:
+      type: object
+      properties:
+        createdTime:
+          description: date time for clinical note entry
+          example: 2025-01-01:00:00:01
+          type: string
+        createdBy:
+          description: clinical entry note created by
+          example: doctor
+          type: string
+        noteText:
+          description: clinical note text
+          example: note text detail
+          type: string
+    PatientDetails:
+      type: object
+      properties:
+        id:
+          description: patient/member id
+          example: '123456789'
+          type: string
+        firstName:
+          description: patient first name
+          example: Alice
+          type: string
+        middleName:
+          description: patient middle name
+          example: A
+          type: string
+        lastName:
+          description: patient last name
+          example: Johnson
+          type: string
+        dateOfBirth:
+          description: patient date of birth
+          example: '1990-12-31'
+          type: string
+        groupNumber:
+          description: patient policy number
+          example: GRP321
+          type: string
+        relationshipCode:
+          description: patient relationship code
+          example: '18'
+          type: string
+        relationshipDesc:
+          description: patient relationship description
+          example: SELF
+          type: string
+        product:
+          description: member insurance product type
+          example: PPO  - Options PPO
+          type: string
+        effectiveDate:
+          description: policy effective date
+          example: '2025-03-01'
+          type: string
+        terminationDate:
+          description: policy termination date
+          example: '2025-12-31'
+          type: string
+        insuranceType:
+          description: insurance type
+          example: Medicare
+          type: string
+        verbalLanguagePreference:
+          description: patient preferred verbal language
+          example: English
+          type: string
+        writtenLanguagePreference:
+          description: patient preferred written language
+          example: English
+          type: string
+        informationalMessage:
+          description: informational message
+          example: A future timeline may be available for this member. For future coverage please call the telephone number located on the back of the member's Medical ID card.
+          type: string
+    ContactBase:
+      type: object
+      properties:
+        contactName:
+          description: full name of the contact for the case
+          example: Bruce Wayne
+          type: string
+        phoneNumber:
+          description: contact phone number
+          example: 555-123-4567
+          type: string
+        fax:
+          description: contact fax number
+          example: 555-123-4568
+          type: string
+    ProviderAddressInput:
+      type: object
+      properties:
+        addressLine1:
+          description: Address line 1
+          example: 1234 Street
+          type: string
+        addressLine2:
+          description: Address line 2 (optional).
+          example: Building A
+          type: string
+        city:
+          description: City
+          example: Healthcare City
+          type: string
+        state:
+          description: State code (e.g., AZ, CA, NY etc).
+          example: AZ
+          type: string
+        zip:
+          description: Standard ZIP code.
+          example: '90210'
+          type: string
+        zip4:
+          description: ZIP+4 suffix
+          example: '0001'
+          type: string
+      required:
+      - addressLine1
+      - state
+      - zip
+    FacilityServiceDetails:
+      type: object
+      properties:
+        startDate:
+          description: service start date
+          example: '2025-10-02'
+          type: string
+        endDate:
+          description: service end date
+          example: '2025-10-02'
+          type: string
+        serviceDescription:
+          description: service description:- Scheduled, Urgent, Emergent
+          example: Scheduled
+          type: string
+        isPatientAdmitted:
+          description: patient admission flag
+          example: 'Yes'
+          type: string
+        expectedAdmissionDate:
+          description: expected admission date
+          example: '2025-10-02'
+          type: string
+        expectedDischargeDate:
+          description: expected discharge date
+          example: '2025-10-02'
+          type: string
+        actualAdmissionDateTime:
+          description: actual admission date
+          example: '2025-10-02'
+          type: string
+        isPatientDischarged:
+          description: patient discharge flag
+          example: 'Yes'
+          type: string
+        dischargeDate:
+          description: actual discharge date
+          example: '2025-10-02'
+          type: string
+        dischargeLocation:
+          description: discharge location
+          example: Home
+          type: string
     Patient:
       type: object
       properties:
@@ -1918,104 +1833,60 @@ components:
           description: patient relationship description
           example: SELF
           type: string
-    SearchProvider:
+    ReferralSubmitResponse:
       type: object
       properties:
-        name:
-          description: Provider full name
-          example: John J Doe
+        referralId:
+          example: REF123456789
           type: string
-        firstName:
-          description: provider first name
-          example: John
+        referralStatus:
+          example: APPROVED
           type: string
-        middleName:
-          description: provider middle name
-          example: J
-          type: string
-        lastName:
-          description: provider last name
-          example: Doe
-          type: string
-        providerOrganizationName:
-          description: provider org name
-          example: Dr. John Doe Clinic
-          type: string
-        npi:
-          description: provider NPI
-          example: '1234567890'
-          type: string
-        taxId:
-          description: provider TIN
-          example: '987654321'
-          type: string
-        contactName:
-          description: provider contact name
-          example: Alison Johnson
-          type: string
-        phoneNumber:
-          description: provider phone number
-          example: 555-222-3333
-          type: string
-        fax:
-          description: provider fax number
-          example: 555-222-4444
-          type: string
-        networkStatus:
-          description: provider network status
-          example: IN_NETWORK
-          type: string
-        address:
-          $ref: '#/components/schemas/AddressBase'
-        providerSpeciality:
-          $ref: '#/components/schemas/ProviderSpeciality'
-    ProviderSpeciality:
-      type: object
-      properties:
-        code:
-          description: provider taxonomy/speciality code
-          example: 207Q00000X
-          type: string
-        description:
-          description: provider taxonomy description
-          example: Family Medicine
-          type: string
-    ProviderSearchResponse:
-      type: object
-      properties:
-        providers:
+        payer:
+          $ref: '#/components/schemas/Payer'
+        requestingProvider:
+          $ref: '#/components/schemas/Provider'
+        servicingProvider:
+          $ref: '#/components/schemas/Provider'
+        patient:
+          $ref: '#/components/schemas/Patient'
+        decisions:
           type: array
           items:
-            $ref: '#/components/schemas/ExtendedProvider'
-        pagination:
-          $ref: '#/components/schemas/Pagination'
-      description: Response for provider search operation
-    RejectionReason:
+            $ref: '#/components/schemas/Decision'
+        x12Response:
+          example: ISA*00*          *00*          *ZZ*SENDER         *ZZ*RECEIVER       *241010*1234*^*00501*000000001*0*P*:~
+          type: string
+        rejectionReasons:
+          type: array
+          items:
+            $ref: '#/components/schemas/RejectionReason'
+    AddressExt:
       type: object
       properties:
-        rejectionLevel:
-          description: rejection level
-          example: REFERRAL
+        addressLine1:
+          description: Address line 1
+          example: 123 Medical Drive
           type: string
-        reasonDescription:
-          description: rejection reason description
-          example: Insufficient medical documentation provided
+        addressLine2:
+          description: Address line 2
+          example: Building A
           type: string
-        rejectionCode:
-          description: rejection code
-          example: R001
+        city:
+          description: City
+          example: Healthcare City
           type: string
-        followUpAction:
-          description: rejection follow up action
-          example: RESUBMIT_WITH_DOCUMENTATION
+        state:
+          description: State code (e.g., AZ, CA, NY etc).
+          example: CA
           type: string
-        rejectionReason:
-          description: rejection reason
-          example: MISSING_DOCUMENTATION
+        zip:
+          description: Standard ZIP code.
+          example: '90210'
           type: string
-        validRequestIndicator:
-          description: rejection value request indicator
-          example: N
+        zip4:
+          description: ZIP+4 suffix
+          example: '0001'
           type: string
     ReferralSearchResponse:
       type: object
@@ -2026,36 +1897,165 @@ components:
             $ref: '#/components/schemas/ReferralSearchResult'
         pagination:
           $ref: '#/components/schemas/Pagination'
-    CoverageStatusItem:
+    CaseDescription:
       type: object
       properties:
-        overallCoverageStatus:
-          description: overall coverage status for the member and services
-          example: Covered/Approved
-          type: string
-        procedureCode:
-          description: procedure code for the service
-          example: '99213'
-          type: string
-        description:
-          description: procedure code description
-          example: Established patient office or other outpatient visit
-          type: string
+        caseSearchMessages:
+          description: payer message(s) related to the case.
+          example: A decision has already been rendered on this case, though some updates are permitted as indicated in the enabled fields below. To request an additional service for this member, please submit a new notification/prior authorization request for the member.
+          type: array
+          items:
+            type: string
+        caseDetail:
+          $ref: '#/components/schemas/CaseDetail'
         coverageStatus:
-          description: coverage status for the service
-          example: Covered
+          type: array
+          items:
+            $ref: '#/components/schemas/CoverageStatusItem'
+        clinicalNotes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClinicalNote'
+        patientDetails:
+          $ref: '#/components/schemas/PatientDetails'
+        submittingProvider:
+          $ref: '#/components/schemas/Provider'
+        admittingAttendingProvider:
+          $ref: '#/components/schemas/Provider'
+        orderingProvider:
+          $ref: '#/components/schemas/Provider'
+        facilityDetails:
+          $ref: '#/components/schemas/FacilityDetails'
+        serviceDetails:
+          $ref: '#/components/schemas/ServiceDetails'
+        facilityServiceDetails:
+          $ref: '#/components/schemas/FacilityServiceDetails'
+        diagnosisDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiagnosisDetail'
+        procedureCodeDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProcedureCodeDetail'
+        expeditedRequestReview:
+          description: expedited review requirement on the case:- true or false
+          example: true
+          type: boolean
+        initialContact:
+          $ref: '#/components/schemas/ContactBase'
+        followUpContact:
+          description: Follow-up contact information
+          $ref: '#/components/schemas/FollowUpContact'
+      description: Detailed information about a specific prior authorization case.
+    ServiceInput:
+      type: object
+      properties:
+        diagnosisCodes:
+          description: diagnosis codes
+          example: M79.3
+          type: array
+          items:
+            type: string
+        referralQuantity:
+          $ref: '#/components/schemas/ReferralQuantityInput'
+        startDate:
+          description: referral start date
+          example: '2025-01-01'
           type: string
-        decisionDate:
-          description: date on which case decision is amde
-          example: '2025-09-15'
+        endDate:
+          description: referral end date
+          example: '2025-01-01'
           type: string
-        geneticMolecularTestCode:
-          description: geneticMolecularTestCode
-          example: 'null'
+        comment:
+          description: referral comments
+          example: Patient requires physical therapy for knee pain
           type: string
-        geneticMolecularTestReviewType:
-          description: geneticMolecularTestReviewType
-          example: 'null'
+      required:
+      - referralQuantity.quantity
+      - referralQuantity.qualifier
+      - diagnosisCodes
+      - referralQuantity
+      - startDate
+    PatientInput:
+      type: object
+      properties:
+        firstName:
+          description: patient first name
+          example: Alice
+          type: string
+        lastName:
+          description: patient last name
+          example: Johnson
+          type: string
+        id:
+          description: patient identifier number
+          example: '1234567890'
+          type: string
+        dateOfBirth:
+          description: patient date of birth
+          example: '1990-12-31'
+          type: string
+        groupNumber:
+          description: patient policy number
+          example: GRP321
+          type: string
+        stateCode:
+          description: patient state code
+          example: AZ
+          type: string
+        zipCode:
+          description: patient zip code
+          example: '90210'
+          type: string
+      required:
+      - firstName
+      - lastName
+      - id
+      - dateOfBirth
+      - groupNumber
+    CaseDetail:
+      type: object
+      properties:
+        serviceReferenceNumber:
+          description: unique prior auth case identification number
+          example: AXXXXXXXXX
+          type: string
+        caseStatus:
+          description: current status of the prior auth case
+          example: Open
+          type: string
+        caseStatusReason:
+          description: current status reason for the prior auth case
+          example: Open
+          type: string
+        primaryCarePhysician:
+          description: PCP for the member
+          example: John
+          type: string
+        advanceNotifyDateTime:
+          description: advance notification date-time
+          example: 2025-01-01:00:00:01
+          type: string
+        admissionNotifyDateTime:
+          description: admission notification date-time
+          example: 2025-01-01:00:00:01
+          type: string
+        expectedServiceStartDate:
+          description: expected service start date
+          example: '2025-10-02'
+          type: string
+        expectedServiceEndDate:
+          description: expected service end date
+          example: '2025-10-03'
+          type: string
+        actualServiceStartDate:
+          description: actual service start date
+          example: '2025-10-02'
+          type: string
+        actualServiceEndDate:
+          description: actual service end date
+          example: '2025-10-03'
           type: string
   securitySchemes:
     oAuth:

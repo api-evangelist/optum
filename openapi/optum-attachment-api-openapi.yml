@@ -795,6 +795,68 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    AttachmentFile:
+      type: object
+      properties:
+        attachmentFileId:
+          type: integer
+          format: int32
+        attachmentId:
+          type: integer
+          format: int32
+        vendorId:
+          type: integer
+          format: int32
+        dateProcessed:
+          type: string
+          format: date-time
+        documentTypeCode:
+          type: integer
+          format: int32
+        imageDate:
+          type: string
+          format: date-time
+        orientationCode:
+          type: integer
+          format: int32
+        narrative:
+          type:
+          - string
+          - 'null'
+        pageCount:
+          type: integer
+          format: int32
+        fileChecksum:
+          type:
+          - string
+          - 'null'
+        fileSize:
+          type: integer
+          format: int32
+        fileExtension:
+          type:
+          - string
+          - 'null'
+        fileName:
+          type:
+          - string
+          - 'null'
+        attachmentFileData:
+          type:
+          - string
+          - 'null'
+          format: byte
+        attachmentFileContent:
+          type:
+          - string
+          - 'null'
+        links:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Link'
+      additionalProperties: false
     Attachment:
       type: object
       properties:
@@ -1036,68 +1098,6 @@ components:
           description: An object that gives specifics on what error or errors occurred. An error code is given as the property key followed by an error description in plain English.
           additionalProperties:
             type: string
-    AttachmentFile:
-      type: object
-      properties:
-        attachmentFileId:
-          type: integer
-          format: int32
-        attachmentId:
-          type: integer
-          format: int32
-        vendorId:
-          type: integer
-          format: int32
-        dateProcessed:
-          type: string
-          format: date-time
-        documentTypeCode:
-          type: integer
-          format: int32
-        imageDate:
-          type: string
-          format: date-time
-        orientationCode:
-          type: integer
-          format: int32
-        narrative:
-          type:
-          - string
-          - 'null'
-        pageCount:
-          type: integer
-          format: int32
-        fileChecksum:
-          type:
-          - string
-          - 'null'
-        fileSize:
-          type: integer
-          format: int32
-        fileExtension:
-          type:
-          - string
-          - 'null'
-        fileName:
-          type:
-          - string
-          - 'null'
-        attachmentFileData:
-          type:
-          - string
-          - 'null'
-          format: byte
-        attachmentFileContent:
-          type:
-          - string
-          - 'null'
-        links:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Link'
-      additionalProperties: false
   securitySchemes:
     Bearer:
       type: oauth2

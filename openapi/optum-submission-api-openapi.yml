@@ -103,136 +103,7 @@ paths:
       operationId: postSubmission
       x-operation-id-source: derived
 components:
-  parameters:
-    x-optum-tenant-id:
-      description: The unique ID of the tenant that the invoking user belongs to.
-      in: header
-      name: x-optum-tenant-id
-      schema:
-        type: string
-        format: uuid
-        example: 9fb77454-8c58-4345-aa50-43f133e06d20
-      required: true
-    x-optum-correlation-id:
-      description: A unique identifier assigned to each request.
-      in: header
-      name: x-optum-correlation-id
-      schema:
-        type: string
-        format: uuid
-        example: c9476bc2-b563-4555-9527-4afe9dccaf9a
-  responses:
-    '401':
-      description: Unauthorized. No or invalid authentication details are provided
-      headers:
-        x-amzn-trace-id:
-          $ref: '#/components/headers/x-amzn-trace-id'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    '403':
-      headers:
-        x-amzn-trace-id:
-          $ref: '#/components/headers/x-amzn-trace-id'
-      description: Forbidden. Authentication succeeded but authenticated user doesn't have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    '400':
-      headers:
-        x-amzn-trace-id:
-          $ref: '#/components/headers/x-amzn-trace-id'
-      description: Bad Request. The request body is malformed or missing required information.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    '500':
-      headers:
-        x-amzn-trace-id:
-          $ref: '#/components/headers/x-amzn-trace-id'
-      description: Internal Server Error. An unexpected error has occurred.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
   examples:
-    UserSubmissionRequestDependent:
-      summary: Submission Request Dependent
-      value:
-        senderId: 201985AAS
-        submitterTransactionIdentifier: '165932'
-        payerId: UHC
-        payerName: ABC PAYER
-        umClearingHouseId: '278_217_01'
-        requester:
-          requesterType: 1P
-          organizationName: XYZ AMBULANCE SVC
-          lastName: XYZ AMBULANCE SVC
-          npi: '1234567890'
-        subscriber:
-          lastName: SMITH
-          firstName: JOE
-          memberId: '12345689001'
-          dateOfBirth: '19700101'
-          genderCode: M
-          supplementalIdentification:
-            patientAccountNumber: '1234567890'
-        dependent:
-          lastName: SMITH
-          firstName: JUNE
-          dateOfBirth: '19700101'
-          genderCode: F
-          supplementalIdentification:
-            ssn: '123121234'
-        patientEventDetail:
-          requestCategoryCode: HS
-          certificationTypeCode: I
-          serviceTypeCode: '56'
-          facilityTypeCode: '41'
-          facilityCodeQualifier: B
-          eventDateBegin: '20250101'
-          ambulanceCertificationConditionIndicator: Y
-          ambulanceCertificationConditionCode1: 09
-          ambulanceTransport:
-            transportCode: X
-            transportReasonCode: D
-            transportDistance: '27'
-            roundTripPurposeDescription: TRIP FROM HOME TO OFFICE VISIT TO DIALYSIS TREATMENT AND BACK HOME
-          patientEventTransportInformation:
-          - entityIdentifierCode: PW
-            transportLocationName: HOME
-            address1: 123 SOME ROAD
-            city: SACRAMENTO
-            state: CA
-            postalCode: '95826'
-          - entityIdentifierCode: ND
-            transportLocationName: DOCTOR OFFICE
-            address1: 123 SOME AVENUE
-            city: SACRAMENTO
-            state: CA
-            postalCode: '95624'
-          - entityIdentifierCode: R3
-            transportLocationName: SOME DIALYSIS CENTER
-            address1: 123 SOME ROAD
-            city: SACRAMENTO
-            state: CA
-            postalCode: '95826'
-          - entityIdentifierCode: FS
-            transportLocationName: HOME
-            address1: 123 SOME ROAD
-            city: SACRAMENTO
-            state: CA
-            postalCode: '95826'
-          serviceLevel:
-          - professionalService:
-              productOrServiceIDQualifier: HC
-              procedureCode: A0428
-              procedureModifier1: DR
-              unitOrBasisForMeasurementCode: UN
-              serviceUnitCount: '14'
     UserSubmissionResponseDependent:
       summary: Submission Response with Dependent
       value:
@@ -436,6 +307,80 @@ components:
                 dentalService: {}
                 serviceDetailAdditionalServiceInformationContactName:
                 - {}
+    UserSubmissionRequestDependent:
+      summary: Submission Request Dependent
+      value:
+        senderId: 201985AAS
+        submitterTransactionIdentifier: '165932'
+        payerId: UHC
+        payerName: ABC PAYER
+        umClearingHouseId: '278_217_01'
+        requester:
+          requesterType: 1P
+          organizationName: XYZ AMBULANCE SVC
+          lastName: XYZ AMBULANCE SVC
+          npi: '1234567890'
+        subscriber:
+          lastName: SMITH
+          firstName: JOE
+          memberId: '12345689001'
+          dateOfBirth: '19700101'
+          genderCode: M
+          supplementalIdentification:
+            patientAccountNumber: '1234567890'
+        dependent:
+          lastName: SMITH
+          firstName: JUNE
+          dateOfBirth: '19700101'
+          genderCode: F
+          supplementalIdentification:
+            ssn: '123121234'
+        patientEventDetail:
+          requestCategoryCode: HS
+          certificationTypeCode: I
+          serviceTypeCode: '56'
+          facilityTypeCode: '41'
+          facilityCodeQualifier: B
+          eventDateBegin: '20250101'
+          ambulanceCertificationConditionIndicator: Y
+          ambulanceCertificationConditionCode1: 09
+          ambulanceTransport:
+            transportCode: X
+            transportReasonCode: D
+            transportDistance: '27'
+            roundTripPurposeDescription: TRIP FROM HOME TO OFFICE VISIT TO DIALYSIS TREATMENT AND BACK HOME
+          patientEventTransportInformation:
+          - entityIdentifierCode: PW
+            transportLocationName: HOME
+            address1: 123 SOME ROAD
+            city: SACRAMENTO
+            state: CA
+            postalCode: '95826'
+          - entityIdentifierCode: ND
+            transportLocationName: DOCTOR OFFICE
+            address1: 123 SOME AVENUE
+            city: SACRAMENTO
+            state: CA
+            postalCode: '95624'
+          - entityIdentifierCode: R3
+            transportLocationName: SOME DIALYSIS CENTER
+            address1: 123 SOME ROAD
+            city: SACRAMENTO
+            state: CA
+            postalCode: '95826'
+          - entityIdentifierCode: FS
+            transportLocationName: HOME
+            address1: 123 SOME ROAD
+            city: SACRAMENTO
+            state: CA
+            postalCode: '95826'
+          serviceLevel:
+          - professionalService:
+              productOrServiceIDQualifier: HC
+              procedureCode: A0428
+              procedureModifier1: DR
+              unitOrBasisForMeasurementCode: UN
+              serviceUnitCount: '14'
     UserSubmissionRequestSubscriber:
       summary: Submission Request Subscriber Only
       value:
@@ -504,11 +449,13 @@ components:
               unitOrBasisForMeasurementCode: UN
               serviceUnitCount: '14'
   schemas:
-    Errors:
-      type: array
-      items:
-        type: string
-        example: This is an example error string
+    SubmissionX12Request:
+      type: object
+      properties:
+        x12:
+          type: string
+          description: EDI X12 278x217 Request
+          example: ISA*00*4444      *00*5555      *ZZ*6546564        *ZZ*278_217_01     *0623  *1301*^*00501*000000001*0*T*:~GS*HI*FL0738*PERSEPVS*20090601*040612*1*X*005010X217~ST*278*0001*005010X217~BHT*0007*13*165932*20050502*1525~HL*1**20*1~NM1*X3*2*ABC PAYER*****PI*1234560010~HL*2*1*21*1~NM1*1P*1*XYZ AMBULANCE SVC*****24*7759621873~HL*3*2*22*1~NM1*IL*1*SMITH*JOE****MI*12345689001~REF*EJ*1234567890~DMG*D8*19700101*M~HL*4*3*EV*1~UM*HS*I*56*41:B~DTP*AAH*D8*20250101~CRC*07*Y*09~CR1***X*D*DH*27***TRIP FROM HOME TO OFFICE VISIT TO DIALYSIS TREATMENT AND BACK HOME~NM1*PW*2*HOME~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~NM1*ND*2*DOCTOR OFFICE~N3*SOME AVENUE~N4*SACRAMENTO*CA*95624~NM1*R3*2*SOME DIALYSIS CENTER~N3*7622 SOME ROAD~N4*SACRAMENTO*CA*95826~NM1*FS*2*HOME~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~HL*5*4*SS*0~SV1*HC:A0428:RX**UN*5~HL*6*5*SS*0~SV1*HC:A0428:PD**UN*8~HL*7*6*SS*0~SV1*HC:A0428:DR**UN*14~SE*34*0001~GE*1*1~IEA*1*000000001~
     SubmissionJSONResponse:
       type: object
       properties:
@@ -1331,6 +1278,23 @@ components:
                           type: string
                         contactTelephone:
                           type: string
+    Errors:
+      type: array
+      items:
+        type: string
+        example: This is an example error string
+    SubmissionResponse:
+      type: object
+      properties:
+        authorizationId:
+          type: string
+        submission:
+          type: object
+          properties:
+            x12:
+              type: string
+            json:
+              $ref: '#/components/schemas/SubmissionJSONResponse'
     AuthorizationSubmissionJSON:
       type: object
       properties:
@@ -2230,25 +2194,61 @@ components:
                           type: string
                         providerTaxonomyCode:
                           type: string
-    SubmissionX12Request:
-      type: object
-      properties:
-        x12:
-          type: string
-          description: EDI X12 278x217 Request
-          example: ISA*00*4444      *00*5555      *ZZ*6546564        *ZZ*278_217_01     *0623  *1301*^*00501*000000001*0*T*:~GS*HI*FL0738*PERSEPVS*20090601*040612*1*X*005010X217~ST*278*0001*005010X217~BHT*0007*13*165932*20050502*1525~HL*1**20*1~NM1*X3*2*ABC PAYER*****PI*1234560010~HL*2*1*21*1~NM1*1P*1*XYZ AMBULANCE SVC*****24*7759621873~HL*3*2*22*1~NM1*IL*1*SMITH*JOE****MI*12345689001~REF*EJ*1234567890~DMG*D8*19700101*M~HL*4*3*EV*1~UM*HS*I*56*41:B~DTP*AAH*D8*20250101~CRC*07*Y*09~CR1***X*D*DH*27***TRIP FROM HOME TO OFFICE VISIT TO DIALYSIS TREATMENT AND BACK HOME~NM1*PW*2*HOME~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~NM1*ND*2*DOCTOR OFFICE~N3*SOME AVENUE~N4*SACRAMENTO*CA*95624~NM1*R3*2*SOME DIALYSIS CENTER~N3*7622 SOME ROAD~N4*SACRAMENTO*CA*95826~NM1*FS*2*HOME~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~HL*5*4*SS*0~SV1*HC:A0428:RX**UN*5~HL*6*5*SS*0~SV1*HC:A0428:PD**UN*8~HL*7*6*SS*0~SV1*HC:A0428:DR**UN*14~SE*34*0001~GE*1*1~IEA*1*000000001~
-    SubmissionResponse:
-      type: object
-      properties:
-        authorizationId:
-          type: string
-        submission:
-          type: object
-          properties:
-            x12:
-              type: string
-            json:
-              $ref: '#/components/schemas/SubmissionJSONResponse'
+  parameters:
+    x-optum-correlation-id:
+      description: A unique identifier assigned to each request.
+      in: header
+      name: x-optum-correlation-id
+      schema:
+        type: string
+        format: uuid
+        example: c9476bc2-b563-4555-9527-4afe9dccaf9a
+    x-optum-tenant-id:
+      description: The unique ID of the tenant that the invoking user belongs to.
+      in: header
+      name: x-optum-tenant-id
+      schema:
+        type: string
+        format: uuid
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      required: true
+  responses:
+    '403':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Forbidden. Authentication succeeded but authenticated user doesn't have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '500':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Internal Server Error. An unexpected error has occurred.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '401':
+      description: Unauthorized. No or invalid authentication details are provided
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '400':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Bad Request. The request body is malformed or missing required information.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
   headers:
     x-amzn-trace-id:
       description: Generated traceId of the request

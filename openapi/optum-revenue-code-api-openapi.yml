@@ -317,17 +317,6 @@ paths:
           description: Service Unavailable
 components:
   schemas:
-    PhysicianDocs:
-      type: object
-      properties:
-        physicianDoc:
-          type: array
-          xml:
-            name: physician-doc
-          items:
-            $ref: '#/components/schemas/PhysicianDoc'
-      xml:
-        name: physician-docs
     Item:
       type: object
       properties:
@@ -349,6 +338,26 @@ components:
           type: string
           xml:
             attribute: true
+    PhysicianDoc:
+      required:
+      - text
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+    PhysicianDocs:
+      type: object
+      properties:
+        physicianDoc:
+          type: array
+          xml:
+            name: physician-doc
+          items:
+            $ref: '#/components/schemas/PhysicianDoc'
+      xml:
+        name: physician-docs
     RevenueCodeToProcedure:
       type: object
       properties:
@@ -362,15 +371,6 @@ components:
             $ref: '#/components/schemas/Link'
       xml:
         name: revenue-code-to-procedure
-    PhysicianDoc:
-      required:
-      - text
-      type: object
-      properties:
-        title:
-          type: string
-        text:
-          type: string
     RevCodeDesc:
       type: object
       properties:

@@ -163,6 +163,12 @@ components:
       required:
       - payerId
       - x12RequestData
+    Variables:
+      type: object
+      properties:
+        input:
+          description: Input data for the Claims Pre-Check operation
+          $ref: '#/components/schemas/Input'
     ClaimPreCheckRequest:
       type: object
       properties:
@@ -175,12 +181,6 @@ components:
         variables:
           description: Variables for the Claims Pre-Check operation
           $ref: '#/components/schemas/Variables'
-    Variables:
-      type: object
-      properties:
-        input:
-          description: Input data for the Claims Pre-Check operation
-          $ref: '#/components/schemas/Input'
     ClaimPreCheckResponseWrapper:
       type: object
       properties:

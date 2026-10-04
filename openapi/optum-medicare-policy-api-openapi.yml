@@ -336,28 +336,6 @@ components:
           $ref: '#/components/schemas/Links'
       xml:
         name: Contractors
-    Policies:
-      type: object
-      properties:
-        code:
-          type: array
-          items:
-            $ref: '#/components/schemas/Code'
-        link:
-          type: array
-          items:
-            $ref: '#/components/schemas/Link'
-      xml:
-        name: policies
-    Links:
-      type: object
-      properties:
-        link:
-          type: array
-          xml:
-            name: Link
-          items:
-            $ref: '#/components/schemas/Link'
     Policy:
       type: object
       properties:
@@ -381,6 +359,28 @@ components:
           type: string
           xml:
             attribute: true
+    Links:
+      type: object
+      properties:
+        link:
+          type: array
+          xml:
+            name: Link
+          items:
+            $ref: '#/components/schemas/Link'
+    Policies:
+      type: object
+      properties:
+        code:
+          type: array
+          items:
+            $ref: '#/components/schemas/Code'
+        link:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+      xml:
+        name: policies
     Code:
       type: object
       properties:

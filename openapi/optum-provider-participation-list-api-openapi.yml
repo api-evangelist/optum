@@ -162,23 +162,6 @@ components:
           - NO VENDOR MATCHED
         error:
           $ref: '#/components/schemas/ApiErrorResponse'
-    ApiErrorResponse:
-      type: object
-      properties:
-        status:
-          type: integer
-          format: int32
-        statusMessage:
-          type: string
-        error:
-          $ref: '#/components/schemas/Error'
-    Error:
-      type: object
-      properties:
-        status:
-          type: string
-        detail:
-          $ref: '#/components/schemas/ErrorDetail'
     ProviderParticipation:
       type: object
       properties:
@@ -200,6 +183,16 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProviderInfo'
+    ApiErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+        statusMessage:
+          type: string
+        error:
+          $ref: '#/components/schemas/Error'
     ProviderInfo:
       type: object
       properties:
@@ -257,6 +250,13 @@ components:
           type: string
         message:
           type: string
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+        detail:
+          $ref: '#/components/schemas/ErrorDetail'
   securitySchemes:
     bearerAuth:
       type: http

@@ -121,6 +121,20 @@ paths:
       x-operation-id-source: derived
 components:
   responses:
+    Unauthorized:
+      description: Not Authorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              error_description:
+                type: string
+          example:
+            error: invalid_request
+            error_description: The access token is missing
     InternalError:
       description: Internal Server Error
       content:
@@ -139,21 +153,27 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/BadRequest'
-    Unauthorized:
-      description: Not Authorized
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-              error_description:
-                type: string
-          example:
-            error: invalid_request
-            error_description: The access token is missing
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+        typeInfo:
+          type: object
+          properties:
+            type:
+              type: string
+            value:
+              type: string
+      example:
+        code: '500'
+        description: Internal Server Error
+        typeInfo:
+          type: ErrorResponse
+          value: SystemErrors.INTERNAL_ERROR
     BadRequest:
       allOf:
       - $ref: '#/components/schemas/ErrorResponse'
@@ -163,15 +183,6 @@ components:
         typeInfo:
           type: ErrorResponse
           value: ClientErrors.BAD_REQUEST
-    NotFound:
-      allOf:
-      - $ref: '#/components/schemas/ErrorResponse'
-      example:
-        code: '404'
-        description: Item not found
-        typeInfo:
-          type: ErrorResponse
-          value: ClientErrors.NOT_FOUND
     DocumentInfo:
       type: object
       properties:
@@ -212,26 +223,15 @@ components:
         attachmentUploadDate:
           type: string
           description: attachmentUploadDate
-    ErrorResponse:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
-          type: string
-        typeInfo:
-          type: object
-          properties:
-            type:
-              type: string
-            value:
-              type: string
+    NotFound:
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponse'
       example:
-        code: '500'
-        description: Internal Server Error
+        code: '404'
+        description: Item not found
         typeInfo:
           type: ErrorResponse
-          value: SystemErrors.INTERNAL_ERROR
+          value: ClientErrors.NOT_FOUND
   securitySchemes:
     bearerToken:
       type: apiKey

@@ -762,13 +762,6 @@ components:
         totalCount:
           type: integer
           format: int64
-    ModifiersPopUpValue:
-      type: object
-      properties:
-        modifier:
-          type: string
-        description:
-          type: string
     Notification:
       type: object
       properties:
@@ -784,6 +777,13 @@ components:
           type: array
           items:
             type: string
+    ModifiersPopUpValue:
+      type: object
+      properties:
+        modifier:
+          type: string
+        description:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

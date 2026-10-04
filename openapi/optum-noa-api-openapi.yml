@@ -97,62 +97,19 @@ paths:
       operationId: postNoa
       x-operation-id-source: derived
 components:
-  parameters:
-    x-optum-tenant-id:
-      description: The unique ID of the tenant that the invoking user belongs to.
-      in: header
-      name: x-optum-tenant-id
-      schema:
-        type: string
-        format: uuid
-        example: 9fb77454-8c58-4345-aa50-43f133e06d20
-      required: true
-    x-optum-correlation-id:
-      description: A unique identifier assigned to each request.
-      in: header
-      name: x-optum-correlation-id
-      schema:
-        type: string
-        format: uuid
-        example: c9476bc2-b563-4555-9527-4afe9dccaf9a
-  responses:
-    '401':
-      description: Unauthorized. No or invalid authentication details are provided
-      headers:
-        x-amzn-trace-id:
-          $ref: '#/components/headers/x-amzn-trace-id'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    '400':
-      headers:
-        x-amzn-trace-id:
-          $ref: '#/components/headers/x-amzn-trace-id'
-      description: Bad Request. The request body is malformed or missing required information.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    '500':
-      headers:
-        x-amzn-trace-id:
-          $ref: '#/components/headers/x-amzn-trace-id'
-      description: Internal Server Error. An unexpected error has occurred.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    '403':
-      headers:
-        x-amzn-trace-id:
-          $ref: '#/components/headers/x-amzn-trace-id'
-      description: Forbidden. Authentication succeeded but authenticated user doesn't have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
   schemas:
+    NoaX12Request:
+      type: object
+      properties:
+        x12:
+          type: string
+          description: EDI X12 278x216 Request
+          example: ISA*00*          *00*          *ZZ*83825418A      *ZZ*IMNDIRECT      *260203*0815*^*00501*375720525*0*P*:~GS*HI*LRX1210001*MTEXE*20260203*0815*1234*X*005010X216~ST*278*0001*005010X216~BHT*0007*CN*222438911WEB*20260203*0815*NO~HL*1**20*1~NM1*FA*2*Benefis Health System*****XX*1881650737~PER*IC**TE*4064552959~HL*2*1*21*1~NM1*X3*2*AETNA*****PI*60054~HL*3*2*22*1~NM1*IL*1*LNAME*FNAME****MI*NOA-01-SUCCESS~REF*6P*0123456789012~DMG*D8*19700101~HL*4*3*EV*1~UM*AR*I*1*11:A~DTP*435*D8*20260101~HI*ABJ:N1330~MSG*AT=061500;ICD=N1330~NM1*71*1*SLATER*RICHARD****XX*1285928754~NM1*FA*2*Benefis Health System*****XX*1881650737~NM1*AAJ*1*SLATER*RICHARD****XX*1285928754~SE*20*0001~GE*1*1234~IEA*1*375720525~
+    Errors:
+      type: array
+      items:
+        type: string
+        example: This is an example error string
     NoaJSONResponse:
       type: object
       properties:
@@ -975,11 +932,18 @@ components:
                           type: string
                         contactTelephone:
                           type: string
-    Errors:
-      type: array
-      items:
-        type: string
-        example: This is an example error string
+    NoaResponse:
+      type: object
+      properties:
+        authorizationId:
+          type: string
+        submission:
+          type: object
+          properties:
+            x12:
+              type: string
+            json:
+              $ref: '#/components/schemas/NoaJSONResponse'
     AuthorizationNoaJSON:
       type: object
       properties:
@@ -1879,25 +1843,6 @@ components:
                           type: string
                         providerTaxonomyCode:
                           type: string
-    NoaX12Request:
-      type: object
-      properties:
-        x12:
-          type: string
-          description: EDI X12 278x216 Request
-          example: ISA*00*          *00*          *ZZ*83825418A      *ZZ*IMNDIRECT      *260203*0815*^*00501*375720525*0*P*:~GS*HI*LRX1210001*MTEXE*20260203*0815*1234*X*005010X216~ST*278*0001*005010X216~BHT*0007*CN*222438911WEB*20260203*0815*NO~HL*1**20*1~NM1*FA*2*Benefis Health System*****XX*1881650737~PER*IC**TE*4064552959~HL*2*1*21*1~NM1*X3*2*AETNA*****PI*60054~HL*3*2*22*1~NM1*IL*1*LNAME*FNAME****MI*NOA-01-SUCCESS~REF*6P*0123456789012~DMG*D8*19700101~HL*4*3*EV*1~UM*AR*I*1*11:A~DTP*435*D8*20260101~HI*ABJ:N1330~MSG*AT=061500;ICD=N1330~NM1*71*1*SLATER*RICHARD****XX*1285928754~NM1*FA*2*Benefis Health System*****XX*1881650737~NM1*AAJ*1*SLATER*RICHARD****XX*1285928754~SE*20*0001~GE*1*1234~IEA*1*375720525~
-    NoaResponse:
-      type: object
-      properties:
-        authorizationId:
-          type: string
-        submission:
-          type: object
-          properties:
-            x12:
-              type: string
-            json:
-              $ref: '#/components/schemas/NoaJSONResponse'
   examples:
     UserNoaResponse:
       summary: Noa Response Subscriber Only
@@ -2044,6 +1989,61 @@ components:
             firstName: RICHARD
             identificationCodeQualifier: XX
             identifier: '1285928754'
+  parameters:
+    x-optum-correlation-id:
+      description: A unique identifier assigned to each request.
+      in: header
+      name: x-optum-correlation-id
+      schema:
+        type: string
+        format: uuid
+        example: c9476bc2-b563-4555-9527-4afe9dccaf9a
+    x-optum-tenant-id:
+      description: The unique ID of the tenant that the invoking user belongs to.
+      in: header
+      name: x-optum-tenant-id
+      schema:
+        type: string
+        format: uuid
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      required: true
+  responses:
+    '403':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Forbidden. Authentication succeeded but authenticated user doesn't have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '500':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Internal Server Error. An unexpected error has occurred.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '401':
+      description: Unauthorized. No or invalid authentication details are provided
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '400':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Bad Request. The request body is malformed or missing required information.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
   headers:
     x-amzn-trace-id:
       description: Generated traceId of the request

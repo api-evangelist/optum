@@ -5634,8 +5634,6 @@ apis:
   humanURL: https://developer.optum.com/optumreal-medical
   baseURL: https://apigw.optum.com/oihub/
   tags:
-  - DocumentReference
-  tags_raw:
   - Document Reference
   properties:
   - type: OpenAPI
@@ -5670,8 +5668,6 @@ apis:
   humanURL: https://developer.optum.com/optumreal-medical
   baseURL: https://apigw.optum.com/oihub/
   tags:
-  - QueryService
-  tags_raw:
   - Query Service
   properties:
   - type: OpenAPI

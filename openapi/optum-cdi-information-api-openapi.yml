@@ -149,6 +149,17 @@ paths:
           description: Service Unavailable
 components:
   schemas:
+    CdiDoc:
+      type: object
+      properties:
+        url:
+          type: string
+        pdftitle:
+          type: string
+        sourcetitle:
+          type: string
+        associatedcodes:
+          type: string
     Cdi:
       required:
       - cdiDoc
@@ -162,17 +173,6 @@ components:
             $ref: '#/components/schemas/CdiDoc'
       xml:
         name: cdi
-    CdiDoc:
-      type: object
-      properties:
-        url:
-          type: string
-        pdftitle:
-          type: string
-        sourcetitle:
-          type: string
-        associatedcodes:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http

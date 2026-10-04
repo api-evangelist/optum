@@ -124,6 +124,37 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    DocumentEntry:
+      type: object
+      description: Bundle entry containing DocumentReference
+      properties:
+        resource:
+          $ref: '#/components/schemas/DocumentReference'
+    Content:
+      type: object
+      properties:
+        attachment:
+          $ref: '#/components/schemas/Attachment'
+    DocumentReference:
+      type: object
+      description: FHIR DocumentReference used inside attachment
+      properties:
+        resourceType:
+          type: string
+          example: DocumentReference
+        id:
+          type: string
+          example: docref-hp-002
+        status:
+          type: string
+          example: current
+        date:
+          type: string
+          example: '2025-11-05T10:30:00-05:00'
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Content'
     Attachment:
       type: object
       description: Attachment content details
@@ -143,17 +174,6 @@ components:
         title:
           type: string
           example: History and Physical data
-    DocumentEntry:
-      type: object
-      description: Bundle entry containing DocumentReference
-      properties:
-        resource:
-          $ref: '#/components/schemas/DocumentReference'
-    Content:
-      type: object
-      properties:
-        attachment:
-          $ref: '#/components/schemas/Attachment'
     Meta:
       type: object
       description: FHIR metadata
@@ -186,26 +206,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DocumentEntry'
-    DocumentReference:
-      type: object
-      description: FHIR DocumentReference used inside attachment
-      properties:
-        resourceType:
-          type: string
-          example: DocumentReference
-        id:
-          type: string
-          example: docref-hp-002
-        status:
-          type: string
-          example: current
-        date:
-          type: string
-          example: '2025-11-05T10:30:00-05:00'
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/Content'
   securitySchemes:
     oAuth:
       type: oauth2

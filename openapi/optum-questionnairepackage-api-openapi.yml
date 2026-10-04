@@ -148,14 +148,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    CareTeam:
-      type: object
-      properties:
-        provider:
-          $ref: '#/components/schemas/Reference'
-        responsible:
-          type: boolean
-          example: true
     QuestionnairePackageResponse:
       type: object
       description: FHIR Parameters response containing Questionnaire package bundle
@@ -167,53 +159,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResponseParameter'
-    Coding:
-      type: object
-      description: Coding structure for answers
-      properties:
-        code:
-          type: string
-          example: '1'
-        display:
-          type: string
-          example: Age ≥ 50
-    Identifier:
-      type: object
-      properties:
-        system:
-          type: string
-          example: http://example.org/cdex/acn
-        value:
-          type: string
-          example: '123456'
-    QuestionnairePackageRequest:
-      type: object
-      description: FHIR Parameters request for Questionnaire Package
-      properties:
-        resourceType:
-          type: string
-          description: FHIR resource type
-          example: Parameters
-        parameter:
-          type: array
-          description: List of parameters
-          items:
-            $ref: '#/components/schemas/RequestParameter'
-    CodeableConcept:
-      type: object
-      description: FHIR CodeableConcept
-      properties:
-        coding:
-          type: array
-          items:
-            $ref: '#/components/schemas/Coding'
-    Reference:
-      type: object
-      description: FHIR Reference
-      properties:
-        reference:
-          type: string
-          example: Patient/anonymous
     RequestParameter:
       type: object
       description: Request parameter entry
@@ -228,16 +173,50 @@ components:
           type: string
           description: Context correlation ID
           example: 251110121553-uuid
-    ResponseParameter:
+    Entry:
       type: object
-      description: Response parameter entry
       properties:
-        name:
-          type: string
-          description: Parameter name containing bundle
-          example: PackageBundle
         resource:
-          $ref: '#/components/schemas/Bundle'
+          $ref: '#/components/schemas/Claim'
+    CodeableConcept:
+      type: object
+      description: FHIR CodeableConcept
+      properties:
+        coding:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coding'
+    QuestionnairePackageRequest:
+      type: object
+      description: FHIR Parameters request for Questionnaire Package
+      properties:
+        resourceType:
+          type: string
+          description: FHIR resource type
+          example: Parameters
+        parameter:
+          type: array
+          description: List of parameters
+          items:
+            $ref: '#/components/schemas/RequestParameter'
+    CareTeam:
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/Reference'
+        responsible:
+          type: boolean
+          example: true
+    Coding:
+      type: object
+      description: Coding structure for answers
+      properties:
+        code:
+          type: string
+          example: '1'
+        display:
+          type: string
+          example: Age ≥ 50
     Claim:
       type: object
       description: FHIR Claim Inquiry Request
@@ -272,16 +251,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CareTeam'
-    Meta:
+    Reference:
       type: object
-      description: FHIR metadata
+      description: FHIR Reference
       properties:
-        profile:
-          type: array
-          description: FHIR profile URLs
-          items:
-            type: string
-            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+        reference:
+          type: string
+          example: Patient/anonymous
     Bundle:
       type: object
       description: FHIR Bundle resource
@@ -297,6 +273,35 @@ components:
           description: Bundle entries
           items:
             $ref: '#/components/schemas/Entry'
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
+    ResponseParameter:
+      type: object
+      description: Response parameter entry
+      properties:
+        name:
+          type: string
+          description: Parameter name containing bundle
+          example: PackageBundle
+        resource:
+          $ref: '#/components/schemas/Bundle'
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
     Coverage:
       type: object
       description: FHIR Coverage resource
@@ -311,11 +316,6 @@ components:
           type: string
           description: Coverage status
           example: active
-    Entry:
-      type: object
-      properties:
-        resource:
-          $ref: '#/components/schemas/Claim'
   securitySchemes:
     oAuth:
       type: oauth2

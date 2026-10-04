@@ -326,7 +326,119 @@ paths:
           description: Service Unavailable
 components:
   schemas:
+    CmsHccV12:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    CmsHccEsrdPace:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    CmsHccVx:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    CmsHccV22:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    Hcc:
+      required:
+      - cmsHccEsrdPace
+      - cmsHccV12
+      - cmsHccV22
+      - rxHcc
+      - rxHccV04
+      type: object
+      properties:
+        cmsHccV22:
+          type: array
+          xml:
+            name: cms-hcc-v22
+          items:
+            $ref: '#/components/schemas/CmsHccV22'
+        cmsHccVx:
+          type: array
+          xml:
+            name: cms-hcc-vx
+          items:
+            $ref: '#/components/schemas/CmsHccVx'
+        cmsHccV12:
+          type: array
+          xml:
+            name: cms-hcc-v12
+          items:
+            $ref: '#/components/schemas/CmsHccV12'
+        cmsHccEsrdPace:
+          type: array
+          xml:
+            name: cms-hcc-esrd-pace
+          items:
+            $ref: '#/components/schemas/CmsHccEsrdPace'
+        rxHccV04:
+          type: array
+          xml:
+            name: rx-hcc-v04
+          items:
+            $ref: '#/components/schemas/RxHccV04'
+        rxHcc:
+          type: array
+          xml:
+            name: rx-hcc
+          items:
+            $ref: '#/components/schemas/RxHcc'
+      xml:
+        name: hcc
     RxHcc:
+      type: object
+      properties:
+        hccCode:
+          type: string
+          xml:
+            name: hcc-code
+        desc:
+          type: string
+        href:
+          type: string
+          xml:
+            attribute: true
+    RxHccV04:
       type: object
       properties:
         hccCode:
@@ -387,32 +499,6 @@ components:
             $ref: '#/components/schemas/RxHcc'
       xml:
         name: diagnosis-code-list
-    CmsHccVx:
-      type: object
-      properties:
-        hccCode:
-          type: string
-          xml:
-            name: hcc-code
-        desc:
-          type: string
-        href:
-          type: string
-          xml:
-            attribute: true
-    RxHccV04:
-      type: object
-      properties:
-        hccCode:
-          type: string
-          xml:
-            name: hcc-code
-        desc:
-          type: string
-        href:
-          type: string
-          xml:
-            attribute: true
     Link:
       type: object
       properties:
@@ -422,92 +508,6 @@ components:
             attribute: true
         value:
           type: string
-    Hcc:
-      required:
-      - cmsHccEsrdPace
-      - cmsHccV12
-      - cmsHccV22
-      - rxHcc
-      - rxHccV04
-      type: object
-      properties:
-        cmsHccV22:
-          type: array
-          xml:
-            name: cms-hcc-v22
-          items:
-            $ref: '#/components/schemas/CmsHccV22'
-        cmsHccVx:
-          type: array
-          xml:
-            name: cms-hcc-vx
-          items:
-            $ref: '#/components/schemas/CmsHccVx'
-        cmsHccV12:
-          type: array
-          xml:
-            name: cms-hcc-v12
-          items:
-            $ref: '#/components/schemas/CmsHccV12'
-        cmsHccEsrdPace:
-          type: array
-          xml:
-            name: cms-hcc-esrd-pace
-          items:
-            $ref: '#/components/schemas/CmsHccEsrdPace'
-        rxHccV04:
-          type: array
-          xml:
-            name: rx-hcc-v04
-          items:
-            $ref: '#/components/schemas/RxHccV04'
-        rxHcc:
-          type: array
-          xml:
-            name: rx-hcc
-          items:
-            $ref: '#/components/schemas/RxHcc'
-      xml:
-        name: hcc
-    CmsHccV12:
-      type: object
-      properties:
-        hccCode:
-          type: string
-          xml:
-            name: hcc-code
-        desc:
-          type: string
-        href:
-          type: string
-          xml:
-            attribute: true
-    CmsHccEsrdPace:
-      type: object
-      properties:
-        hccCode:
-          type: string
-          xml:
-            name: hcc-code
-        desc:
-          type: string
-        href:
-          type: string
-          xml:
-            attribute: true
-    CmsHccV22:
-      type: object
-      properties:
-        hccCode:
-          type: string
-          xml:
-            name: hcc-code
-        desc:
-          type: string
-        href:
-          type: string
-          xml:
-            attribute: true
   securitySchemes:
     bearerAuth:
       type: http

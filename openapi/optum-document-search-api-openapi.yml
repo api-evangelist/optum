@@ -370,6 +370,55 @@ paths:
       - Document Search
 components:
   schemas:
+    DocumentMetadataInput:
+      type: object
+      properties:
+        fromDate:
+          description: Filter data starting from a specific date in MM/dd/yyyy format.
+          example: 09/17/2021
+          type: string
+        toDate:
+          description: Filter data up to a specific date in MM/dd/yyyy format. Keep last date less than 31 days from the First Date.
+          example: 09/17/2021
+          type: string
+        categories:
+          description: This helps in narrowing down the data set to only include files that belong to the specified categories.
+          example: Claim
+          type: string
+        patientAccountNumber:
+          description: This helps in narrowing down the data set to only include files that belong to the specified patient account number (PAN).
+          example: '1234567890'
+          type: string
+        claimNumber:
+          description: Claim Number - UnitedHealthcare claim number.
+          example: '1234567890'
+          type: string
+        filePath:
+          description: File path of a document, optional parameter.
+          example: File Path
+          type: string
+        checkId:
+          description: The checkId parameter is used to uniquely identify a record.
+          example: '12345678'
+          type: string
+        notificationId:
+          description: Narrow down results based on notificationId.
+          example: '12345678'
+          type: string
+        payerId:
+          description: Required. Unique identifier assigned to a health insurance payer.
+          example: '87726'
+          type: string
+      required:
+      - fromDate
+      - toDate
+      - payerId
+    DocumentList:
+      type: object
+      properties:
+        documentInfo:
+          description: Document details.
+          $ref: '#/components/schemas/DocumentInfo'
     DocumentInput:
       type: object
       properties:
@@ -384,13 +433,6 @@ components:
       required:
       - documentId
       - payerId
-    DocumentDownloadResponse:
-      type: object
-      properties:
-        base64Document:
-          description: Base64 encoded document content.
-          example: TUlNRS1WZXJzaW9uOiAxL....NWRlQwWU5DZz09
-          type: string
     Pagination:
       type: object
       properties:
@@ -474,55 +516,13 @@ components:
           example: '1234567890'
           type: string
       description: Document information.
-    DocumentList:
+    DocumentDownloadResponse:
       type: object
       properties:
-        documentInfo:
-          description: Document details.
-          $ref: '#/components/schemas/DocumentInfo'
-    DocumentMetadataInput:
-      type: object
-      properties:
-        fromDate:
-          description: Filter data starting from a specific date in MM/dd/yyyy format.
-          example: 09/17/2021
+        base64Document:
+          description: Base64 encoded document content.
+          example: TUlNRS1WZXJzaW9uOiAxL....NWRlQwWU5DZz09
           type: string
-        toDate:
-          description: Filter data up to a specific date in MM/dd/yyyy format. Keep last date less than 31 days from the First Date.
-          example: 09/17/2021
-          type: string
-        categories:
-          description: This helps in narrowing down the data set to only include files that belong to the specified categories.
-          example: Claim
-          type: string
-        patientAccountNumber:
-          description: This helps in narrowing down the data set to only include files that belong to the specified patient account number (PAN).
-          example: '1234567890'
-          type: string
-        claimNumber:
-          description: Claim Number - UnitedHealthcare claim number.
-          example: '1234567890'
-          type: string
-        filePath:
-          description: File path of a document, optional parameter.
-          example: File Path
-          type: string
-        checkId:
-          description: The checkId parameter is used to uniquely identify a record.
-          example: '12345678'
-          type: string
-        notificationId:
-          description: Narrow down results based on notificationId.
-          example: '12345678'
-          type: string
-        payerId:
-          description: Required. Unique identifier assigned to a health insurance payer.
-          example: '87726'
-          type: string
-      required:
-      - fromDate
-      - toDate
-      - payerId
     DocumentMetadataResponse:
       type: object
       properties:
@@ -535,38 +535,23 @@ components:
           description: Pagination details.
           $ref: '#/components/schemas/Pagination'
       description: DocumentMetadata response containing the document list and pagination.
-    Document:
+    Name:
       type: object
       properties:
-        payLoad:
-          type: string
-    LivingSubjectName:
-      type: object
-      properties:
+        use:
+          type: array
+          items:
+            type: string
         given:
           type: array
           items:
-            $ref: '#/components/schemas/Given'
+            type: string
         family:
           type: string
         prefix:
           type: string
-        use:
+        sufix:
           type: string
-          description: Supported values L, Null Flavor=NAV for, ASGN, A, I, C, ASGN, R, ASGN, Null Flavor=NAV, Null Flavor=UNK
-        suffix:
-          type: string
-    SearchResults:
-      type: object
-      properties:
-        result:
-          type: array
-          items:
-            $ref: '#/components/schemas/Result'
-    LivingSubjectAddress:
-      type: array
-      items:
-        $ref: '#/components/schemas/Address'
     Addr:
       type: object
       properties:
@@ -584,26 +569,139 @@ components:
           type: string
         country:
           type: string
-    DeceasedTime:
+    Document:
       type: object
       properties:
-        value:
+        payLoad:
           type: string
-    PatientInformation:
+    Documents:
       type: object
       properties:
-        id:
+        document:
           type: array
           items:
-            $ref: '#/components/schemas/Id'
-        patientPerson:
-          $ref: '#/components/schemas/PatientPerson'
-        classCode:
-          type: string
-    BirthTime:
+            $ref: '#/components/schemas/Document'
+    DocumentSearchResponse:
+      properties:
+        searchResults:
+          $ref: '#/components/schemas/SearchResults'
+        responseStatus:
+          $ref: '#/components/schemas/ResponseStatus'
+    DocumentMetadataList:
       type: object
       properties:
-        value:
+        documentMetadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentMetadata'
+    LivingSubjectId:
+      type: object
+      properties:
+        extension:
+          type: string
+        root:
+          type: string
+    PrincipalCareProviderId:
+      type: object
+      properties:
+        extension:
+          type: string
+        root:
+          type: string
+        assigningAuthorityName:
+          type: string
+    Place:
+      type: object
+      properties:
+        placeName:
+          type: string
+        addr:
+          $ref: '#/components/schemas/Addr'
+    Address:
+      type: object
+      properties:
+        postalCode:
+          type: string
+        streetAddressLine:
+          type: string
+        state:
+          type: string
+        use:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+    HttpClientServerError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date
+        status:
+          type: integer
+        error:
+          type: string
+        path:
+          type: string
+    AdditionalSearchParameters:
+      type: object
+      properties:
+        daysToSearchBack:
+          type: string
+        includeODD:
+          type: string
+    Id:
+      type: object
+      properties:
+        root:
+          type: string
+        extension:
+          type: string
+        assigningAuthorityName:
+          type: string
+    PatientPerson:
+      type: object
+      properties:
+        birthplace:
+          $ref: '#/components/schemas/Birthplace'
+        name:
+          type: array
+          items:
+            $ref: '#/components/schemas/Name'
+        telecom:
+          type: array
+          items:
+            $ref: '#/components/schemas/Telecom'
+        administrativeGenderCode:
+          $ref: '#/components/schemas/AdministrativeGenderCode'
+        addr:
+          type: array
+          items:
+            $ref: '#/components/schemas/Addr'
+        birthTime:
+          $ref: '#/components/schemas/BirthTime'
+        deceasedTime:
+          $ref: '#/components/schemas/DeceasedTime'
+    LivingSubjectAddress:
+      type: array
+      items:
+        $ref: '#/components/schemas/Address'
+    LivingSubjectName:
+      type: object
+      properties:
+        given:
+          type: array
+          items:
+            $ref: '#/components/schemas/Given'
+        family:
+          type: string
+        prefix:
+          type: string
+        use:
+          type: string
+          description: Supported values L, Null Flavor=NAV for, ASGN, A, I, C, ASGN, R, ASGN, Null Flavor=NAV, Null Flavor=UNK
+        suffix:
           type: string
     Result:
       type: object
@@ -628,108 +726,24 @@ components:
               $ref: '#/components/schemas/DocumentMetadataList'
         documentList:
           $ref: '#/components/schemas/Documents'
-    Documents:
+    SearchResults:
       type: object
       properties:
-        document:
+        result:
           type: array
           items:
-            $ref: '#/components/schemas/Document'
-    ResponseStatus:
+            $ref: '#/components/schemas/Result'
+    PatientInformation:
       type: object
       properties:
-        responseState:
-          type: string
-        responseCode:
-          type: string
-        responseCodeDescription:
-          type: string
-        message:
-          type: string
-    Phone:
-      type: object
-      properties:
-        value:
-          type: string
-        use:
-          type: string
-          description: 'Supported values for LivingSubjectAddress are: HP, H, WP, HV, AS, EC'
-    Name:
-      type: object
-      properties:
-        use:
+        id:
           type: array
           items:
-            type: string
-        given:
-          type: array
-          items:
-            type: string
-        family:
-          type: string
-        prefix:
-          type: string
-        sufix:
-          type: string
-    PrincipalCareProviderId:
-      type: object
-      properties:
-        extension:
-          type: string
-        root:
-          type: string
-        assigningAuthorityName:
-          type: string
-    DocumentSearchRequest:
-      type: object
-      description: Request object model for document search.
-      properties:
-        authorization:
-          $ref: '#/components/schemas/Authorization'
-        patientDemographics:
-          $ref: '#/components/schemas/PatientDemographics'
-        additionalSearchParameters:
-          $ref: '#/components/schemas/AdditionalSearchParameters'
-    Given:
-      type: object
-      properties:
-        name:
-          type: string
-    DocumentMetadata:
-      type: object
-      properties:
-        authorInstitution:
-          type: string
-        authorPerson:
-          type: string
+            $ref: '#/components/schemas/Id'
+        patientPerson:
+          $ref: '#/components/schemas/PatientPerson'
         classCode:
           type: string
-        classCodeDescription:
-          type: string
-        classCodeScheme:
-          type: string
-        creationTime:
-          type: string
-          format: date
-        documentUniqueId:
-          type: string
-        homeCommunityId:
-          type: string
-        homeCommunityName:
-          type: string
-          format: string
-        repositoryUniqueId:
-          type: string
-        typeCode:
-          type: string
-        typeCodeDescription:
-          type: string
-        typeCodeScheme:
-          type: string
-    LivingSubjectTelecommunication:
-      type: array
-      items:
-        $ref: '#/components/schemas/Phone'
     Authorization:
       type: object
       required:
@@ -752,6 +766,15 @@ components:
           type: string
         clientUUId:
           type: string
+    Telecom:
+      type: object
+      properties:
+        value:
+          type: string
+        use:
+          type: array
+          items:
+            type: string
     AdministrativeGenderCode:
       type: object
       properties:
@@ -765,18 +788,6 @@ components:
           type: string
         displayName:
           type: string
-    DocumentMetadataList:
-      type: object
-      properties:
-        documentMetadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentMetadata'
-    Birthplace:
-      type: object
-      properties:
-        place:
-          $ref: '#/components/schemas/Place'
     PatientDemographics:
       type: object
       required:
@@ -809,100 +820,89 @@ components:
             $ref: '#/components/schemas/LivingSubjectId'
         principalCareProviderId:
           $ref: '#/components/schemas/PrincipalCareProviderId'
-    AdditionalSearchParameters:
+    LivingSubjectTelecommunication:
+      type: array
+      items:
+        $ref: '#/components/schemas/Phone'
+    DocumentMetadata:
       type: object
       properties:
-        daysToSearchBack:
+        authorInstitution:
           type: string
-        includeODD:
+        authorPerson:
           type: string
-    Telecom:
+        classCode:
+          type: string
+        classCodeDescription:
+          type: string
+        classCodeScheme:
+          type: string
+        creationTime:
+          type: string
+          format: date
+        documentUniqueId:
+          type: string
+        homeCommunityId:
+          type: string
+        homeCommunityName:
+          type: string
+          format: string
+        repositoryUniqueId:
+          type: string
+        typeCode:
+          type: string
+        typeCodeDescription:
+          type: string
+        typeCodeScheme:
+          type: string
+    Given:
+      type: object
+      properties:
+        name:
+          type: string
+    DeceasedTime:
+      type: object
+      properties:
+        value:
+          type: string
+    DocumentSearchRequest:
+      type: object
+      description: Request object model for document search.
+      properties:
+        authorization:
+          $ref: '#/components/schemas/Authorization'
+        patientDemographics:
+          $ref: '#/components/schemas/PatientDemographics'
+        additionalSearchParameters:
+          $ref: '#/components/schemas/AdditionalSearchParameters'
+    Phone:
       type: object
       properties:
         value:
           type: string
         use:
-          type: array
-          items:
-            type: string
-    PatientPerson:
+          type: string
+          description: 'Supported values for LivingSubjectAddress are: HP, H, WP, HV, AS, EC'
+    ResponseStatus:
       type: object
       properties:
-        birthplace:
-          $ref: '#/components/schemas/Birthplace'
-        name:
-          type: array
-          items:
-            $ref: '#/components/schemas/Name'
-        telecom:
-          type: array
-          items:
-            $ref: '#/components/schemas/Telecom'
-        administrativeGenderCode:
-          $ref: '#/components/schemas/AdministrativeGenderCode'
-        addr:
-          type: array
-          items:
-            $ref: '#/components/schemas/Addr'
-        birthTime:
-          $ref: '#/components/schemas/BirthTime'
-        deceasedTime:
-          $ref: '#/components/schemas/DeceasedTime'
-    DocumentSearchResponse:
-      properties:
-        searchResults:
-          $ref: '#/components/schemas/SearchResults'
-        responseStatus:
-          $ref: '#/components/schemas/ResponseStatus'
-    Place:
+        responseState:
+          type: string
+        responseCode:
+          type: string
+        responseCodeDescription:
+          type: string
+        message:
+          type: string
+    Birthplace:
       type: object
       properties:
-        placeName:
-          type: string
-        addr:
-          $ref: '#/components/schemas/Addr'
-    Id:
+        place:
+          $ref: '#/components/schemas/Place'
+    BirthTime:
       type: object
       properties:
-        root:
-          type: string
-        extension:
-          type: string
-        assigningAuthorityName:
-          type: string
-    HttpClientServerError:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date
-        status:
-          type: integer
-        error:
-          type: string
-        path:
-          type: string
-    Address:
-      type: object
-      properties:
-        postalCode:
-          type: string
-        streetAddressLine:
-          type: string
-        state:
-          type: string
-        use:
-          type: string
-        city:
-          type: string
-        country:
-          type: string
-    LivingSubjectId:
-      type: object
-      properties:
-        extension:
-          type: string
-        root:
+        value:
           type: string
   securitySchemes:
     oAuth:

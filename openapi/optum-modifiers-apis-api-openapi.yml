@@ -513,27 +513,6 @@ components:
         totalCount:
           type: integer
           format: int64
-    Link:
-      type: object
-      properties:
-        value:
-          type: string
-        href:
-          type: string
-        iconName:
-          type: string
-        routerLink:
-          type: string
-        type:
-          type: string
-        tag:
-          type: string
-        label:
-          type: string
-        addonName:
-          type: string
-        addonId:
-          type: string
     Notification:
       type: object
       properties:
@@ -627,6 +606,27 @@ components:
         nextCode:
           type: boolean
         code:
+          type: string
+    Link:
+      type: object
+      properties:
+        value:
+          type: string
+        href:
+          type: string
+        iconName:
+          type: string
+        routerLink:
+          type: string
+        type:
+          type: string
+        tag:
+          type: string
+        label:
+          type: string
+        addonName:
+          type: string
+        addonId:
           type: string
   securitySchemes:
     bearerAuth:
