@@ -2,7 +2,7 @@
 name: Run a FHIR Da Vinci prior authorization
 description: Discover coverage requirements with CDS Hooks, gather the DTR questionnaire, then submit and inquire on a prior authorization through Optum Real's FHIR R4 Da Vinci PAS implementation.
 api: openapi/optum-real-prior-authorization-api-openapi.yml
-operations: [getDiscovery, orderSign, getPasCapabilityStatement, getDtrCapabilityStatement, getOperationDefinition, getQuestionnairePackage, getNextQuestion, submitClaim, inquireClaim, submitAttachment, getDocumentReference, healthCheck]
+operations: [getDiscovery, orderSign, getPasCapabilityStatement, getDtrCapabilityStatement, getOperationDefinition, getQuestionnairePackage, getNextQuestion, submitClaim, inquireClaim, submitAttachment, getDocumentReference, getOihubFhirprovideraccessV1HealthCheck]
 generated: '2026-08-14'
 method: generated
 ---

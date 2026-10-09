@@ -2,7 +2,7 @@
 name: Validate and submit a professional or institutional claim
 description: Run an X12 837P/837I claim through Optum's validation endpoint before submitting it, submit it, then reconcile the 277CA acknowledgement and 835 remittance from the reports API.
 api: openapi/optum-medical-network-professional-claims-v3-openapi.yml
-operations: [validateClaim, processClaim, rawX12Validation, rawX12Submission, healthCheck, validateRawX12, processClaim_1, claimstatus, list_reports_v2_reports_get, get_single_report_v2_reports__filename__get, convert_report_277_v2_reports__filename__277_get, convert_report_835_v2_reports__filename__835_get, delete_single_report_v2_reports__filename__delete]
+operations: [validateClaim, processClaim, rawX12Validation, rawX12Submission, getOihubFhirprovideraccessV1HealthCheck, validateRawX12, processClaim_1, claimstatus, list_reports_v2_reports_get, get_single_report_v2_reports__filename__get, convert_report_277_v2_reports__filename__277_get, convert_report_835_v2_reports__filename__835_get, delete_single_report_v2_reports__filename__delete]
 generated: '2026-08-14'
 method: generated
 ---

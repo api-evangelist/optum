@@ -2,7 +2,7 @@
 name: Run a dental pre-care estimate and submit a dental claim
 description: Check dental eligibility before treatment, produce a pre-care cost estimate, attach imaging with image intelligence, then submit and track the dental claim through Optum Real for Dental.
 api: openapi/optum-real-dental-pre-care-eligibility-api-openapi.yml
-operations: [checkEligibility, get_oihub_dental_eligibility_preservice_v1_healthcheck, checkEnhancedEligibility, healthCheckEnhancedDentalEligibility, dentalClaimPrecheck, dentalClaimPrecheckHealth, dntClaimActions, claimStatus, createAttachments, searchAttachments, createAttachmentsImageIntel]
+operations: [postOihubDentalEligibilityPreserviceV1, get_oihub_dental_eligibility_preservice_v1_healthcheck, checkEnhancedEligibility, healthCheckEnhancedDentalEligibility, dentalClaimPrecheck, dentalClaimPrecheckHealth, dntClaimActions, claimStatus, createAttachments, searchAttachments, createAttachmentsImageIntel]
 generated: '2026-08-14'
 method: generated
 ---

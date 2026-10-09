@@ -2,7 +2,7 @@
 name: Verify patient eligibility and benefits
 description: Check a patient's medical coverage and benefits at a payer through Optum's X12 270/271 eligibility API, in JSON or native X12, and fall back to coverage discovery when the payer or member ID is unknown.
 api: openapi/optum-medical-network-eligibility-v3-openapi.yml
-operations: [medicalEligibility, rawX12, healthCheck, getPayers, getOutages, postEligibility, postDiscovery, getDiscoveryById]
+operations: [medicalEligibility, rawX12, getOihubFhirprovideraccessV1HealthCheck, getPayers, getOutages, postEligibility, postDiscovery, getDiscoveryById]
 generated: '2026-08-14'
 method: generated
 ---
