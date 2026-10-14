@@ -48,10 +48,52 @@ edges:
   seller_name: Optum
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
+- partner_name: eClinicalWorks (own)
+  partner: eclinicalworks
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.eclinicalworks.com/about-us/partners/clearinghouses/
+  mirror_of: eclinicalworks/integrations/eclinicalworks-integration-edges.yml
+  apps:
+  - Optum
+  listing_count: 1
+  detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
+  category: clearinghouses
+- partner_name: Guidewire (own)
+  partner: guidewire
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.guidewire.com/product/01t3n00000TGXawAAH/01t3n00000TGXawAAH
+  mirror_of: guidewire/integrations/guidewire-integration-edges.yml
+  apps:
+  - Optum Financial Accelerator for Total Claim Payments for ClaimCenter 10
+  listing_count: 1
+  detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
+  category: Accelerator; Claim Disbursements; ClaimCenter
+  badges:
+  - Ready for Guidewire
+  - 'Partner tier: Growth'
 generated: '2026-10-12'
 method: searched
 checked:
+- eclinicalworks/integrations/eclinicalworks-integration-edges.yml
+- guidewire/integrations/guidewire-integration-edges.yml
 - https://azuremarketplace.microsoft.com/
 - https://www.commonwellalliance.org/wp-json/wp/v2/pages?slug=commonwell-connected-products&_fields=id,link,content
 - https://www.commonwellalliance.org/wp-json/wp/v2/pages?slug=commonwell-members&_fields=id,link,content
 marketplace_apps: []
+source:
+- eclinicalworks/integrations/eclinicalworks-integration-edges.yml
+- guidewire/integrations/guidewire-integration-edges.yml

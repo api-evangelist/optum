@@ -35,3 +35,29 @@
   relationship: distribution-channel
   status: not-a-workflow
   arazzo: null
+- slug: optum-eclinicalworks-own
+  label: eClinicalWorks (own)
+  partner: eclinicalworks
+  partner_name: eClinicalWorks (own)
+  category: clearinghouses
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://www.eclinicalworks.com/about-us/partners/clearinghouses/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: optum-guidewire-own
+  label: Guidewire (own)
+  partner: guidewire
+  partner_name: Guidewire (own)
+  category: Accelerator; Claim Disbursements; ClaimCenter
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://marketplace.guidewire.com/product/01t3n00000TGXawAAH/01t3n00000TGXawAAH
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
