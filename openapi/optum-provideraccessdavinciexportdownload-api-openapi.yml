@@ -109,6 +109,15 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    Coding:
+      type: object
+      properties:
+        system:
+          type: string
+        code:
+          type: string
+        display:
+          type: string
     HumanName:
       type: object
       properties:
@@ -120,29 +129,6 @@ components:
           type: array
           items:
             type: string
-    Narrative:
-      type: object
-      properties:
-        status:
-          type: string
-        div:
-          type: string
-    CodeableConcept:
-      type: object
-      properties:
-        coding:
-          type: array
-          items:
-            $ref: '#/components/schemas/Coding'
-    Coding:
-      type: object
-      properties:
-        system:
-          type: string
-        code:
-          type: string
-        display:
-          type: string
     Patient:
       type: object
       properties:
@@ -179,6 +165,20 @@ components:
           properties:
             display:
               type: string
+    CodeableConcept:
+      type: object
+      properties:
+        coding:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coding'
+    Narrative:
+      type: object
+      properties:
+        status:
+          type: string
+        div:
+          type: string
   securitySchemes:
     oAuth:
       type: oauth2

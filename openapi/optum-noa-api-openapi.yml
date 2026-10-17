@@ -97,7 +97,227 @@ paths:
       operationId: postNoa
       x-operation-id-source: derived
 components:
+  responses:
+    '401':
+      description: Unauthorized. No or invalid authentication details are provided
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '400':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Bad Request. The request body is malformed or missing required information.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '500':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Internal Server Error. An unexpected error has occurred.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '403':
+      headers:
+        x-amzn-trace-id:
+          $ref: '#/components/headers/x-amzn-trace-id'
+      description: Forbidden. Authentication succeeded but authenticated user doesn't have access to the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+  parameters:
+    x-optum-tenant-id:
+      description: The unique ID of the tenant that the invoking user belongs to.
+      in: header
+      name: x-optum-tenant-id
+      schema:
+        type: string
+        format: uuid
+        example: 9fb77454-8c58-4345-aa50-43f133e06d20
+      required: true
+    x-optum-correlation-id:
+      description: A unique identifier assigned to each request.
+      in: header
+      name: x-optum-correlation-id
+      schema:
+        type: string
+        format: uuid
+        example: c9476bc2-b563-4555-9527-4afe9dccaf9a
+  examples:
+    UserNoaRequest:
+      summary: Notice of admission Request (JSON)
+      value:
+        senderId: 201985AAS
+        submitterTransactionIdentifier: 222438911WEB
+        payerId: '60054'
+        payerName: AETNA
+        umClearingHouseId: IMNDIRECT
+        source:
+          sourceType: FA
+          organizationName: B'enefits Health System'
+          lastName: Benefits Health System
+          npi: '1881650737'
+          contactTelephone: '4064552959'
+        subscriber:
+          lastName: LNAME
+          firstName: FNAME
+          memberId: NOA-01-SUCCESS
+          supplementalIdentification:
+            groupNumber: 0123456789012
+          dateOfBirth: '19700101'
+        patientEventDetail:
+          requestCategoryCode: AR
+          certificationTypeCode: I
+          serviceTypeCode: '1'
+          facilityTypeCode: '11'
+          facilityCodeQualifier: A
+          accidentDate: '20260101'
+          lastMenstrualPeriodDate: '20260101'
+          estimatedDateOfBirth: '20260101'
+          onsetDate: '20260101'
+          eventDateBegin: '20260101'
+          admissionDateBegin: '20260101'
+          admissionDateEnd: '20260101'
+          dischargeDate: '20260101'
+          certificationIssueDateBegin: '20260101'
+          certificationExpirationDateBegin: '20260101'
+          certificationEffectiveDateBegin: '20260101'
+          diagnosisTypeCode1: ABJ
+          diagnosisCode1: N1330
+          freeFormMessageText: AT=061500;ICD=N1330
+          patientEventProviderName:
+          - entityIdentifierCode: '71'
+            organizationName: Benefits Health System
+            lastName: SLATER
+            firstName: RICHARD
+            identificationCodeQualifier: XX
+            identifier: '1285928754'
+    UserNoaResponse:
+      summary: Noa Response Subscriber Only
+      value:
+        authorizationId: 16665bb7-3040-4d4d-a889-123a27b29789
+        noa:
+          x12: ISA*00*6666      *00*5555      *ZZ*6546564        *ZZ*6546564        *0623  *1301*^*00501*000000001*0*T*:~GS*HI*FL0738*PERSEPVS*20090601*040612*1*X*005010X216~ST*278*0001*005010X216~BHT*0007*11*165932*20055002*0815*18~HL*1**20*1~NM1*X3*2*ABC PAYER*****PI*1234560010~HL*2*1*21*1~NM1*1P*1*XYZ AMBULANCE SVC*****24*7759621873~HL*3*2*22*1~NM1*IL*1*SMITH*JOE****MI*12345689001~REF*EJ*1234567890~DMG*D8*19700101*M~HL*4*3*EV*1~UM*HS*I*56*41:B~HCR*A1*1234567890123~DTP*AAH*D8*20250101~CR1***X**DH*27~NM1*PW*2*HOME~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~NM1*ND*2*DOCTOR OFFICE~N3*123 SOME AVENUE~N4*SACRAMENTO*CA*95624~NM1*R3*2*SOME DIALYSIS CENTER~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~NM1*FS*2*HOME~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~HL*5*4*SS*0~SV1*HC:A0428:RX**UN*5~HL*6*4*SS*0~SV1*HC:A0428:PD**UN*8~HL*7*4*SS*0~SV1*HC:A0428:DR**UN*14~SE*34*0001~GE*1*1~IEA*1*000000001~
+          json:
+            submitterTransactionIdentifier: '165932'
+            payerId: '1234560010'
+            payerName: ABC PAYER
+            umClearingHouseId: PERSEPVS
+            umRequestValidation: null
+            requester:
+              requesterType: 1P
+              lastName: XYZ AMBULANCE SVC
+              requesterIdentification: {}
+              employersId: '7759621873'
+            subscriber:
+              lastName: SMITH
+              firstName: JOE
+              memberId: '12345689001'
+              dateOfBirth: '19700101'
+              genderCode: M
+              supplementalIdentification:
+                patientAccountNumber: '1234567890'
+            dependent:
+              supplementalIdentification: {}
+            patientEventDetail:
+              requestCategoryCode: HS
+              certificationTypeCode: I
+              serviceTypeCode: '56'
+              facilityTypeCode: '41'
+              facilityCodeQualifier: B
+              certificationActionCode: A1
+              reviewIdentificationNumber: '1234567890123'
+              eventDateBegin: '20250101'
+              ambulanceTransportCode: X
+              ambulanceUnitOrBasisForMeasurementCode: DH
+              ambulanceTransportDistance: '27'
+              patientEventAdditionalPatientInformationContactName:
+              - {}
+              patientEventTransportInformation:
+              - entityIdentifierCode: PW
+                transportLocationName: HOME
+                address1: 123 SOME ROAD
+                city: SACRAMENTO
+                state: CA
+                postalCode: '95826'
+              - entityIdentifierCode: ND
+                transportLocationName: DOCTOR OFFICE
+                address1: 123 SOME AVENUE
+                city: SACRAMENTO
+                state: CA
+                postalCode: '95624'
+              - entityIdentifierCode: R3
+                transportLocationName: SOME DIALYSIS CENTER
+                address1: 123 SOME ROAD
+                city: SACRAMENTO
+                state: CA
+                postalCode: '95826'
+              - entityIdentifierCode: FS
+                transportLocationName: HOME
+                address1: 123 SOME ROAD
+                city: SACRAMENTO
+                state: CA
+                postalCode: '95826'
+              serviceLevel:
+              - professionalService:
+                  productOrServiceIDQualifier: HC
+                  procedureCode: A0428
+                  procedureModifier: RX
+                  unitOrBasisForMeasurementCode: UN
+                  serviceUnitCount: '5'
+                institutionalService: {}
+                dentalService: {}
+                serviceDetailAdditionalServiceInformationContactName:
+                - {}
+              - professionalService:
+                  productOrServiceIDQualifier: HC
+                  procedureCode: A0428
+                  procedureModifier: PD
+                  unitOrBasisForMeasurementCode: UN
+                  serviceUnitCount: '8'
+                institutionalService: {}
+                dentalService: {}
+                serviceDetailAdditionalServiceInformationContactName:
+                - {}
+              - professionalService:
+                  productOrServiceIDQualifier: HC
+                  procedureCode: A0428
+                  procedureModifier: DR
+                  unitOrBasisForMeasurementCode: UN
+                  serviceUnitCount: '14'
+                institutionalService: {}
+                dentalService: {}
+                serviceDetailAdditionalServiceInformationContactName:
+                - {}
+  headers:
+    x-amzn-trace-id:
+      description: Generated traceId of the request
+      required: true
+      example: Root=1-61d7441a-56e4c77350687b5230e5707
+      schema:
+        type: string
+    transaction-id:
+      description: Transaction Id of the request
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: c9476bc2-b563-4555-9527-4afe9dccaf9a
   schemas:
+    Errors:
+      type: array
+      items:
+        type: string
+        example: This is an example error string
     NoaX12Request:
       type: object
       properties:
@@ -105,11 +325,6 @@ components:
           type: string
           description: EDI X12 278x216 Request
           example: ISA*00*          *00*          *ZZ*83825418A      *ZZ*IMNDIRECT      *260203*0815*^*00501*375720525*0*P*:~GS*HI*LRX1210001*MTEXE*20260203*0815*1234*X*005010X216~ST*278*0001*005010X216~BHT*0007*CN*222438911WEB*20260203*0815*NO~HL*1**20*1~NM1*FA*2*Benefis Health System*****XX*1881650737~PER*IC**TE*4064552959~HL*2*1*21*1~NM1*X3*2*AETNA*****PI*60054~HL*3*2*22*1~NM1*IL*1*LNAME*FNAME****MI*NOA-01-SUCCESS~REF*6P*0123456789012~DMG*D8*19700101~HL*4*3*EV*1~UM*AR*I*1*11:A~DTP*435*D8*20260101~HI*ABJ:N1330~MSG*AT=061500;ICD=N1330~NM1*71*1*SLATER*RICHARD****XX*1285928754~NM1*FA*2*Benefis Health System*****XX*1881650737~NM1*AAJ*1*SLATER*RICHARD****XX*1285928754~SE*20*0001~GE*1*1234~IEA*1*375720525~
-    Errors:
-      type: array
-      items:
-        type: string
-        example: This is an example error string
     NoaJSONResponse:
       type: object
       properties:
@@ -932,18 +1147,6 @@ components:
                           type: string
                         contactTelephone:
                           type: string
-    NoaResponse:
-      type: object
-      properties:
-        authorizationId:
-          type: string
-        submission:
-          type: object
-          properties:
-            x12:
-              type: string
-            json:
-              $ref: '#/components/schemas/NoaJSONResponse'
     AuthorizationNoaJSON:
       type: object
       properties:
@@ -1843,221 +2046,18 @@ components:
                           type: string
                         providerTaxonomyCode:
                           type: string
-  examples:
-    UserNoaResponse:
-      summary: Noa Response Subscriber Only
-      value:
-        authorizationId: 16665bb7-3040-4d4d-a889-123a27b29789
-        noa:
-          x12: ISA*00*6666      *00*5555      *ZZ*6546564        *ZZ*6546564        *0623  *1301*^*00501*000000001*0*T*:~GS*HI*FL0738*PERSEPVS*20090601*040612*1*X*005010X216~ST*278*0001*005010X216~BHT*0007*11*165932*20055002*0815*18~HL*1**20*1~NM1*X3*2*ABC PAYER*****PI*1234560010~HL*2*1*21*1~NM1*1P*1*XYZ AMBULANCE SVC*****24*7759621873~HL*3*2*22*1~NM1*IL*1*SMITH*JOE****MI*12345689001~REF*EJ*1234567890~DMG*D8*19700101*M~HL*4*3*EV*1~UM*HS*I*56*41:B~HCR*A1*1234567890123~DTP*AAH*D8*20250101~CR1***X**DH*27~NM1*PW*2*HOME~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~NM1*ND*2*DOCTOR OFFICE~N3*123 SOME AVENUE~N4*SACRAMENTO*CA*95624~NM1*R3*2*SOME DIALYSIS CENTER~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~NM1*FS*2*HOME~N3*123 SOME ROAD~N4*SACRAMENTO*CA*95826~HL*5*4*SS*0~SV1*HC:A0428:RX**UN*5~HL*6*4*SS*0~SV1*HC:A0428:PD**UN*8~HL*7*4*SS*0~SV1*HC:A0428:DR**UN*14~SE*34*0001~GE*1*1~IEA*1*000000001~
-          json:
-            submitterTransactionIdentifier: '165932'
-            payerId: '1234560010'
-            payerName: ABC PAYER
-            umClearingHouseId: PERSEPVS
-            umRequestValidation: null
-            requester:
-              requesterType: 1P
-              lastName: XYZ AMBULANCE SVC
-              requesterIdentification: {}
-              employersId: '7759621873'
-            subscriber:
-              lastName: SMITH
-              firstName: JOE
-              memberId: '12345689001'
-              dateOfBirth: '19700101'
-              genderCode: M
-              supplementalIdentification:
-                patientAccountNumber: '1234567890'
-            dependent:
-              supplementalIdentification: {}
-            patientEventDetail:
-              requestCategoryCode: HS
-              certificationTypeCode: I
-              serviceTypeCode: '56'
-              facilityTypeCode: '41'
-              facilityCodeQualifier: B
-              certificationActionCode: A1
-              reviewIdentificationNumber: '1234567890123'
-              eventDateBegin: '20250101'
-              ambulanceTransportCode: X
-              ambulanceUnitOrBasisForMeasurementCode: DH
-              ambulanceTransportDistance: '27'
-              patientEventAdditionalPatientInformationContactName:
-              - {}
-              patientEventTransportInformation:
-              - entityIdentifierCode: PW
-                transportLocationName: HOME
-                address1: 123 SOME ROAD
-                city: SACRAMENTO
-                state: CA
-                postalCode: '95826'
-              - entityIdentifierCode: ND
-                transportLocationName: DOCTOR OFFICE
-                address1: 123 SOME AVENUE
-                city: SACRAMENTO
-                state: CA
-                postalCode: '95624'
-              - entityIdentifierCode: R3
-                transportLocationName: SOME DIALYSIS CENTER
-                address1: 123 SOME ROAD
-                city: SACRAMENTO
-                state: CA
-                postalCode: '95826'
-              - entityIdentifierCode: FS
-                transportLocationName: HOME
-                address1: 123 SOME ROAD
-                city: SACRAMENTO
-                state: CA
-                postalCode: '95826'
-              serviceLevel:
-              - professionalService:
-                  productOrServiceIDQualifier: HC
-                  procedureCode: A0428
-                  procedureModifier: RX
-                  unitOrBasisForMeasurementCode: UN
-                  serviceUnitCount: '5'
-                institutionalService: {}
-                dentalService: {}
-                serviceDetailAdditionalServiceInformationContactName:
-                - {}
-              - professionalService:
-                  productOrServiceIDQualifier: HC
-                  procedureCode: A0428
-                  procedureModifier: PD
-                  unitOrBasisForMeasurementCode: UN
-                  serviceUnitCount: '8'
-                institutionalService: {}
-                dentalService: {}
-                serviceDetailAdditionalServiceInformationContactName:
-                - {}
-              - professionalService:
-                  productOrServiceIDQualifier: HC
-                  procedureCode: A0428
-                  procedureModifier: DR
-                  unitOrBasisForMeasurementCode: UN
-                  serviceUnitCount: '14'
-                institutionalService: {}
-                dentalService: {}
-                serviceDetailAdditionalServiceInformationContactName:
-                - {}
-    UserNoaRequest:
-      summary: Notice of admission Request (JSON)
-      value:
-        senderId: 201985AAS
-        submitterTransactionIdentifier: 222438911WEB
-        payerId: '60054'
-        payerName: AETNA
-        umClearingHouseId: IMNDIRECT
-        source:
-          sourceType: FA
-          organizationName: B'enefits Health System'
-          lastName: Benefits Health System
-          npi: '1881650737'
-          contactTelephone: '4064552959'
-        subscriber:
-          lastName: LNAME
-          firstName: FNAME
-          memberId: NOA-01-SUCCESS
-          supplementalIdentification:
-            groupNumber: 0123456789012
-          dateOfBirth: '19700101'
-        patientEventDetail:
-          requestCategoryCode: AR
-          certificationTypeCode: I
-          serviceTypeCode: '1'
-          facilityTypeCode: '11'
-          facilityCodeQualifier: A
-          accidentDate: '20260101'
-          lastMenstrualPeriodDate: '20260101'
-          estimatedDateOfBirth: '20260101'
-          onsetDate: '20260101'
-          eventDateBegin: '20260101'
-          admissionDateBegin: '20260101'
-          admissionDateEnd: '20260101'
-          dischargeDate: '20260101'
-          certificationIssueDateBegin: '20260101'
-          certificationExpirationDateBegin: '20260101'
-          certificationEffectiveDateBegin: '20260101'
-          diagnosisTypeCode1: ABJ
-          diagnosisCode1: N1330
-          freeFormMessageText: AT=061500;ICD=N1330
-          patientEventProviderName:
-          - entityIdentifierCode: '71'
-            organizationName: Benefits Health System
-            lastName: SLATER
-            firstName: RICHARD
-            identificationCodeQualifier: XX
-            identifier: '1285928754'
-  parameters:
-    x-optum-correlation-id:
-      description: A unique identifier assigned to each request.
-      in: header
-      name: x-optum-correlation-id
-      schema:
-        type: string
-        format: uuid
-        example: c9476bc2-b563-4555-9527-4afe9dccaf9a
-    x-optum-tenant-id:
-      description: The unique ID of the tenant that the invoking user belongs to.
-      in: header
-      name: x-optum-tenant-id
-      schema:
-        type: string
-        format: uuid
-        example: 9fb77454-8c58-4345-aa50-43f133e06d20
-      required: true
-  responses:
-    '403':
-      headers:
-        x-amzn-trace-id:
-          $ref: '#/components/headers/x-amzn-trace-id'
-      description: Forbidden. Authentication succeeded but authenticated user doesn't have access to the resource
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    '500':
-      headers:
-        x-amzn-trace-id:
-          $ref: '#/components/headers/x-amzn-trace-id'
-      description: Internal Server Error. An unexpected error has occurred.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    '401':
-      description: Unauthorized. No or invalid authentication details are provided
-      headers:
-        x-amzn-trace-id:
-          $ref: '#/components/headers/x-amzn-trace-id'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    '400':
-      headers:
-        x-amzn-trace-id:
-          $ref: '#/components/headers/x-amzn-trace-id'
-      description: Bad Request. The request body is malformed or missing required information.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-  headers:
-    x-amzn-trace-id:
-      description: Generated traceId of the request
-      required: true
-      example: Root=1-61d7441a-56e4c77350687b5230e5707
-      schema:
-        type: string
-    transaction-id:
-      description: Transaction Id of the request
-      required: true
-      schema:
-        type: string
-        format: uuid
-        example: c9476bc2-b563-4555-9527-4afe9dccaf9a
+    NoaResponse:
+      type: object
+      properties:
+        authorizationId:
+          type: string
+        submission:
+          type: object
+          properties:
+            x12:
+              type: string
+            json:
+              $ref: '#/components/schemas/NoaJSONResponse'
   securitySchemes:
     bearerAuth:
       type: http

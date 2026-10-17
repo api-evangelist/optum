@@ -125,6 +125,21 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    CapabilityStatementOperation:
+      type: object
+      properties:
+        name:
+          type: string
+          example: submit
+        definition:
+          type: string
+          format: uri
+    CapabilityStatementInteraction:
+      type: object
+      properties:
+        code:
+          type: string
+          example: read
     CapabilityStatementResource:
       type: object
       properties:
@@ -146,15 +161,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CapabilityStatementOperation'
-    Narrative:
+    CapabilityStatementImplementation:
       type: object
       properties:
-        status:
+        description:
           type: string
-          example: generated
-        div:
+          example: uhcpp-paan-pas-server implementation
+        url:
           type: string
-          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
+          format: uri
+          example: https://apimarketplace-stg.uhc.com/PriorAuth/v1
     PasCapabilityStatementResponse:
       type: object
       properties:
@@ -199,12 +215,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CapabilityStatementRest'
-    CapabilityStatementInteraction:
-      type: object
-      properties:
-        code:
-          type: string
-          example: read
     CapabilityStatementSoftware:
       type: object
       properties:
@@ -214,25 +224,6 @@ components:
         version:
           type: string
           example: 8.8.0
-    CapabilityStatementOperation:
-      type: object
-      properties:
-        name:
-          type: string
-          example: submit
-        definition:
-          type: string
-          format: uri
-    CapabilityStatementImplementation:
-      type: object
-      properties:
-        description:
-          type: string
-          example: uhcpp-paan-pas-server implementation
-        url:
-          type: string
-          format: uri
-          example: https://apimarketplace-stg.uhc.com/PriorAuth/v1
     CapabilityStatementRest:
       type: object
       properties:
@@ -247,6 +238,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CapabilityStatementOperation'
+    Narrative:
+      type: object
+      properties:
+        status:
+          type: string
+          example: generated
+        div:
+          type: string
+          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
   securitySchemes:
     oAuth:
       type: oauth2

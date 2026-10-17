@@ -321,6 +321,15 @@ paths:
           description: Service Unavailable
 components:
   schemas:
+    Links:
+      type: object
+      properties:
+        link:
+          type: array
+          xml:
+            name: Link
+          items:
+            $ref: '#/components/schemas/Link'
     Contractors:
       type: object
       properties:
@@ -336,6 +345,39 @@ components:
           $ref: '#/components/schemas/Links'
       xml:
         name: Contractors
+    Code:
+      type: object
+      properties:
+        policy:
+          type: array
+          items:
+            $ref: '#/components/schemas/Policy'
+        value:
+          type: string
+          xml:
+            attribute: true
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    Policies:
+      type: object
+      properties:
+        code:
+          type: array
+          items:
+            $ref: '#/components/schemas/Code'
+        link:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+      xml:
+        name: policies
     Policy:
       type: object
       properties:
@@ -359,48 +401,6 @@ components:
           type: string
           xml:
             attribute: true
-    Links:
-      type: object
-      properties:
-        link:
-          type: array
-          xml:
-            name: Link
-          items:
-            $ref: '#/components/schemas/Link'
-    Policies:
-      type: object
-      properties:
-        code:
-          type: array
-          items:
-            $ref: '#/components/schemas/Code'
-        link:
-          type: array
-          items:
-            $ref: '#/components/schemas/Link'
-      xml:
-        name: policies
-    Code:
-      type: object
-      properties:
-        policy:
-          type: array
-          items:
-            $ref: '#/components/schemas/Policy'
-        value:
-          type: string
-          xml:
-            attribute: true
-    Link:
-      type: object
-      properties:
-        href:
-          type: string
-          xml:
-            attribute: true
-        value:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http

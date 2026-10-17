@@ -130,11 +130,6 @@ components:
       properties:
         resource:
           $ref: '#/components/schemas/DocumentReference'
-    Content:
-      type: object
-      properties:
-        attachment:
-          $ref: '#/components/schemas/Attachment'
     DocumentReference:
       type: object
       description: FHIR DocumentReference used inside attachment
@@ -155,6 +150,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Content'
+    Content:
+      type: object
+      properties:
+        attachment:
+          $ref: '#/components/schemas/Attachment'
     Attachment:
       type: object
       description: Attachment content details
@@ -174,16 +174,6 @@ components:
         title:
           type: string
           example: History and Physical data
-    Meta:
-      type: object
-      description: FHIR metadata
-      properties:
-        profile:
-          type: array
-          description: FHIR profile URLs
-          items:
-            type: string
-            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
     DocumentReferenceResponse:
       type: object
       description: FHIR Bundle containing DocumentReference search results
@@ -206,6 +196,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DocumentEntry'
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
   securitySchemes:
     oAuth:
       type: oauth2

@@ -148,44 +148,16 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    QuestionnairePackageResponse:
+    Coding:
       type: object
-      description: FHIR Parameters response containing Questionnaire package bundle
+      description: Coding structure for answers
       properties:
-        resourceType:
+        code:
           type: string
-          example: Parameters
-        parameter:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseParameter'
-    RequestParameter:
-      type: object
-      description: Request parameter entry
-      properties:
-        name:
+          example: '1'
+        display:
           type: string
-          description: Parameter name
-          example: coverage
-        resource:
-          $ref: '#/components/schemas/Coverage'
-        valueString:
-          type: string
-          description: Context correlation ID
-          example: 251110121553-uuid
-    Entry:
-      type: object
-      properties:
-        resource:
-          $ref: '#/components/schemas/Claim'
-    CodeableConcept:
-      type: object
-      description: FHIR CodeableConcept
-      properties:
-        coding:
-          type: array
-          items:
-            $ref: '#/components/schemas/Coding'
+          example: Age ≥ 50
     QuestionnairePackageRequest:
       type: object
       description: FHIR Parameters request for Questionnaire Package
@@ -199,24 +171,6 @@ components:
           description: List of parameters
           items:
             $ref: '#/components/schemas/RequestParameter'
-    CareTeam:
-      type: object
-      properties:
-        provider:
-          $ref: '#/components/schemas/Reference'
-        responsible:
-          type: boolean
-          example: true
-    Coding:
-      type: object
-      description: Coding structure for answers
-      properties:
-        code:
-          type: string
-          example: '1'
-        display:
-          type: string
-          example: Age ≥ 50
     Claim:
       type: object
       description: FHIR Claim Inquiry Request
@@ -251,6 +205,30 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CareTeam'
+    ResponseParameter:
+      type: object
+      description: Response parameter entry
+      properties:
+        name:
+          type: string
+          description: Parameter name containing bundle
+          example: PackageBundle
+        resource:
+          $ref: '#/components/schemas/Bundle'
+    Coverage:
+      type: object
+      description: FHIR Coverage resource
+      properties:
+        resourceType:
+          type: string
+          example: Coverage
+        id:
+          type: string
+          example: CoverageExample
+        status:
+          type: string
+          description: Coverage status
+          example: active
     Reference:
       type: object
       description: FHIR Reference
@@ -258,6 +236,52 @@ components:
         reference:
           type: string
           example: Patient/anonymous
+    Identifier:
+      type: object
+      properties:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
+    Meta:
+      type: object
+      description: FHIR metadata
+      properties:
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+    QuestionnairePackageResponse:
+      type: object
+      description: FHIR Parameters response containing Questionnaire package bundle
+      properties:
+        resourceType:
+          type: string
+          example: Parameters
+        parameter:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseParameter'
+    CareTeam:
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/Reference'
+        responsible:
+          type: boolean
+          example: true
+    CodeableConcept:
+      type: object
+      description: FHIR CodeableConcept
+      properties:
+        coding:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coding'
     Bundle:
       type: object
       description: FHIR Bundle resource
@@ -273,49 +297,25 @@ components:
           description: Bundle entries
           items:
             $ref: '#/components/schemas/Entry'
-    Identifier:
+    Entry:
       type: object
       properties:
-        system:
-          type: string
-          example: http://example.org/cdex/acn
-        value:
-          type: string
-          example: '123456'
-    ResponseParameter:
+        resource:
+          $ref: '#/components/schemas/Claim'
+    RequestParameter:
       type: object
-      description: Response parameter entry
+      description: Request parameter entry
       properties:
         name:
           type: string
-          description: Parameter name containing bundle
-          example: PackageBundle
+          description: Parameter name
+          example: coverage
         resource:
-          $ref: '#/components/schemas/Bundle'
-    Meta:
-      type: object
-      description: FHIR metadata
-      properties:
-        profile:
-          type: array
-          description: FHIR profile URLs
-          items:
-            type: string
-            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
-    Coverage:
-      type: object
-      description: FHIR Coverage resource
-      properties:
-        resourceType:
+          $ref: '#/components/schemas/Coverage'
+        valueString:
           type: string
-          example: Coverage
-        id:
-          type: string
-          example: CoverageExample
-        status:
-          type: string
-          description: Coverage status
-          example: active
+          description: Context correlation ID
+          example: 251110121553-uuid
   securitySchemes:
     oAuth:
       type: oauth2

@@ -86,135 +86,36 @@ paths:
       - Payersheet
 components:
   schemas:
-    JsonClaimFormat:
+    GetClaimFormatResponse:
       properties:
-        billingSequence:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 2
-          example: S1
-        bin:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 6
-          example: A99
-        chainID:
-          type: string
-          pattern: ^[0-9]*$
-          maxLength: 38
-        code:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 3
-          example: DG6
-        customer:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 128
-          example: customerName
-        description:
-          type: string
-          maxLength: 250
-          format: ncpdp-alphanumeric
-          example: NCPDP D.0 Claim
-        effectiveDate:
-          type: string
-          format: rxn-date
-          example: '2025-01-01'
-        expirationDate:
-          type: string
-          format: rxn-date
-          example: '2030-01-01'
-        externalMessageId:
-          type: string
-          pattern: ^[0-9]*$
-        groupCode:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 15
-          example: D0
-        pcn:
-          type: string
-          maxLength: 10
-          format: ncpdp-alphanumeric
-          example: A987
-        rems:
-          type: string
-          maxLength: 1
-          example: N
-          enum:
-          - y
-          - n
-          - Y
-          - N
-          - null
-        siteCode:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 80
-          example: epsxx92qax1e2cz
-        sourceSystemId:
-          type: string
-          pattern: ^[0-9]*$
-        transmissions:
-          items:
-            $ref: '#/components/schemas/JsonTransmission'
-          type: array
-      type: object
-    JsonFieldGroup:
-      properties:
-        fieldGroupId:
-          format: int64
-          type: integer
-        fieldIdentifier:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 3
-          example: '123'
-        fieldNumber:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 4
-          example: A1
-        groupCode:
-          type: string
-        maximumCount:
-          type: string
-          example: '10'
+        claimFormat:
+          $ref: '#/components/schemas/JsonClaimFormat'
       type: object
     UpdateClaimFormatRequest:
       properties:
         claimFormat:
           $ref: '#/components/schemas/JsonClaimFormat'
       type: object
-    JsonTransmission:
+    JsonSegment:
       properties:
-        code:
-          type: string
-          pattern: ^[a-zA-Z0-9]*$
-          maxLength: 10
-          example: B1
-        segments:
+        segmentFields:
           items:
-            $ref: '#/components/schemas/JsonSegment'
+            $ref: '#/components/schemas/JsonSegmentField'
           type: array
-        standard:
-          type: string
-          maxLength: 2
-          example: D0
-          enum:
-          - D0
-          - ''
-        type:
+        segmentIdentifier:
           type: string
           pattern: ^[a-zA-Z0-9]*$
-          maxLength: 50
-          example: request
-      type: object
-    SaveClaimFormatRequest:
-      properties:
-        claimFormat:
-          $ref: '#/components/schemas/JsonClaimFormat'
+          maxLength: 32
+          example: HEADER
+        sequence:
+          format: int32
+          type: integer
+          example: '2'
+        usageCode:
+          type: string
+          maxLength: 10
+          format: ncpdp-alphanumeric
+          example: M
       type: object
     JsonSegmentField:
       properties:
@@ -293,11 +194,6 @@ components:
           format: ncpdp-alphanumeric
           example: '   '
       type: object
-    GetClaimFormatResponse:
-      properties:
-        claimFormat:
-          $ref: '#/components/schemas/JsonClaimFormat'
-      type: object
     JsonSegmentFieldQualifier:
       properties:
         qualifierCode:
@@ -311,26 +207,26 @@ components:
           format: int32
           type: integer
       type: object
-    JsonSegment:
+    JsonFieldGroup:
       properties:
-        segmentFields:
-          items:
-            $ref: '#/components/schemas/JsonSegmentField'
-          type: array
-        segmentIdentifier:
+        fieldGroupId:
+          format: int64
+          type: integer
+        fieldIdentifier:
           type: string
           pattern: ^[a-zA-Z0-9]*$
-          maxLength: 32
-          example: HEADER
-        sequence:
-          format: int32
-          type: integer
-          example: '2'
-        usageCode:
+          maxLength: 3
+          example: '123'
+        fieldNumber:
           type: string
-          maxLength: 10
-          format: ncpdp-alphanumeric
-          example: M
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 4
+          example: A1
+        groupCode:
+          type: string
+        maximumCount:
+          type: string
+          example: '10'
       type: object
     GetClaimFormatRequest:
       properties:
@@ -391,6 +287,110 @@ components:
           pattern: ^[0-9]*$
         transactionCode:
           type: string
+      type: object
+    JsonClaimFormat:
+      properties:
+        billingSequence:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 2
+          example: S1
+        bin:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 6
+          example: A99
+        chainID:
+          type: string
+          pattern: ^[0-9]*$
+          maxLength: 38
+        code:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 3
+          example: DG6
+        customer:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 128
+          example: customerName
+        description:
+          type: string
+          maxLength: 250
+          format: ncpdp-alphanumeric
+          example: NCPDP D.0 Claim
+        effectiveDate:
+          type: string
+          format: rxn-date
+          example: '2025-01-01'
+        expirationDate:
+          type: string
+          format: rxn-date
+          example: '2030-01-01'
+        externalMessageId:
+          type: string
+          pattern: ^[0-9]*$
+        groupCode:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 15
+          example: D0
+        pcn:
+          type: string
+          maxLength: 10
+          format: ncpdp-alphanumeric
+          example: A987
+        rems:
+          type: string
+          maxLength: 1
+          example: N
+          enum:
+          - y
+          - n
+          - Y
+          - N
+          - null
+        siteCode:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 80
+          example: epsxx92qax1e2cz
+        sourceSystemId:
+          type: string
+          pattern: ^[0-9]*$
+        transmissions:
+          items:
+            $ref: '#/components/schemas/JsonTransmission'
+          type: array
+      type: object
+    SaveClaimFormatRequest:
+      properties:
+        claimFormat:
+          $ref: '#/components/schemas/JsonClaimFormat'
+      type: object
+    JsonTransmission:
+      properties:
+        code:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 10
+          example: B1
+        segments:
+          items:
+            $ref: '#/components/schemas/JsonSegment'
+          type: array
+        standard:
+          type: string
+          maxLength: 2
+          example: D0
+          enum:
+          - D0
+          - ''
+        type:
+          type: string
+          pattern: ^[a-zA-Z0-9]*$
+          maxLength: 50
+          example: request
       type: object
   securitySchemes:
     oauth2_security:

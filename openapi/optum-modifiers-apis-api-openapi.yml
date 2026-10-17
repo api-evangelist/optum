@@ -492,27 +492,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    CodeGroup:
-      type: object
-      properties:
-        codes:
-          type: array
-          items:
-            type: string
-        desc:
-          type: array
-          items:
-            type: string
-    OptumPageImplCode:
-      type: object
-      properties:
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/Code'
-        totalCount:
-          type: integer
-          format: int64
     Notification:
       type: object
       properties:
@@ -528,6 +507,16 @@ components:
           type: array
           items:
             type: string
+    OptumPageImplCode:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Code'
+        totalCount:
+          type: integer
+          format: int64
     Code:
       type: object
       properties:
@@ -628,6 +617,17 @@ components:
           type: string
         addonId:
           type: string
+    CodeGroup:
+      type: object
+      properties:
+        codes:
+          type: array
+          items:
+            type: string
+        desc:
+          type: array
+          items:
+            type: string
   securitySchemes:
     bearerAuth:
       type: http

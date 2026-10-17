@@ -45,17 +45,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    KeyValuePair:
-      type: object
-      properties:
-        name:
-          description: The name of the first pair must be submitterID. The name for the second pair, if applicable, must be hostSubmitterID.
-          example: submitterID
-          type: string
-        value:
-          description: Enter the submitter ID in the first pair. If applicable, enter the Host Submitter ID in the second pair.
-          example: BR_126
-          type: string
     SubmitterResponse:
       type: object
       properties:
@@ -76,6 +65,17 @@ components:
         code:
           type: string
         instance:
+          type: string
+    KeyValuePair:
+      type: object
+      properties:
+        name:
+          description: The name of the first pair must be submitterID. The name for the second pair, if applicable, must be hostSubmitterID.
+          example: submitterID
+          type: string
+        value:
+          description: Enter the submitter ID in the first pair. If applicable, enter the Host Submitter ID in the second pair.
+          example: BR_126
           type: string
     SubmitterRequest:
       type: object

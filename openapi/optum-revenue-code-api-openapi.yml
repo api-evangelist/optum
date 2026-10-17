@@ -338,39 +338,6 @@ components:
           type: string
           xml:
             attribute: true
-    PhysicianDoc:
-      required:
-      - text
-      type: object
-      properties:
-        title:
-          type: string
-        text:
-          type: string
-    PhysicianDocs:
-      type: object
-      properties:
-        physicianDoc:
-          type: array
-          xml:
-            name: physician-doc
-          items:
-            $ref: '#/components/schemas/PhysicianDoc'
-      xml:
-        name: physician-docs
-    RevenueCodeToProcedure:
-      type: object
-      properties:
-        item:
-          type: array
-          items:
-            $ref: '#/components/schemas/Item'
-        link:
-          type: array
-          items:
-            $ref: '#/components/schemas/Link'
-      xml:
-        name: revenue-code-to-procedure
     RevCodeDesc:
       type: object
       properties:
@@ -392,6 +359,28 @@ components:
             name: desc-full
       xml:
         name: code-properties
+    PhysicianDoc:
+      required:
+      - text
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+    RevenueCodeToProcedure:
+      type: object
+      properties:
+        item:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+        link:
+          type: array
+          items:
+            $ref: '#/components/schemas/Link'
+      xml:
+        name: revenue-code-to-procedure
     Link:
       type: object
       properties:
@@ -401,6 +390,17 @@ components:
             attribute: true
         value:
           type: string
+    PhysicianDocs:
+      type: object
+      properties:
+        physicianDoc:
+          type: array
+          xml:
+            name: physician-doc
+          items:
+            $ref: '#/components/schemas/PhysicianDoc'
+      xml:
+        name: physician-docs
   securitySchemes:
     bearerAuth:
       type: http

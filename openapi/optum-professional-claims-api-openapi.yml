@@ -186,78 +186,188 @@ paths:
                 $ref: '#/components/schemas/Response'
 components:
   schemas:
-    billing:
+    ConditionInformation:
       required:
-      - providerType
+      - conditionCodes
       type: object
       properties:
-        providerType:
+        conditionCodes:
+          maxItems: 12
+          minItems: 1
+          type: array
+          items:
+            type: string
+            description: 'Loop: 2300, Segment: HI, Element: HI01-02, HI02-02, HI03-02, HI04-02, HI05-02, HI06-02, HI07-02, HI08-02, HI09-02, HI10-02, HI11-02, HI11-02, HI12-02'
+      description: HI
+    HealthCareInformation:
+      required:
+      - diagnosisCode
+      - diagnosisTypeCode
+      type: object
+      properties:
+        diagnosisTypeCode:
           type: string
-          example: BillingProvider
-        npi:
+          description: 'Loop: 2440, Segment: HI, Element: HI01-01 or HI02-01 or HI03-01 or HI04-01 or HI05-01 or HI06-01 or HI07-01 or HI08-01 or HI09-01 or HI10-01 or HI11-01 or HI12-01, Note: Allowed Values are: ''BK'' International Classification of Diseases Clinical Modification (ICD-9-CM) Principal Diagnosis, ''ABK'' International Classification of Diseases Clinical Modification (ICD-10-CM) Principal Diagnosis, ''BF'' International Classification of Diseases Clinical Modification (ICD-9-CM) Diagnosis, ''ABF'' International Classification of Diseases Clinical Modification (ICD-10-CM) Diagnosis'
+          enum:
+          - BK
+          - ABK
+          - BF
+          - ABF
+        diagnosisCode:
           type: string
-          description: 'NM109, Notes: National Provider Identifier'
-          example: '1760854442'
-        ssn:
+          description: 'Loop: 2440, Segment: HI, Element: HI01-02 or HI02-02 or HI03-02 or HI04-02 or HI05-02 or HI06-02 or HI07-02 or HI08-02 or HI09-02 or HI10-02 or HI11-02 or HI12-02'
+      description: HI
+    ServiceLine:
+      required:
+      - professionalService
+      - serviceDate
+      type: object
+      properties:
+        assignedNumber:
           type: string
-          description: 'REF02 when REF01=SY, Notes: The Social Security Number must be a string of nine numbers with no separators'
-          example: '000000000'
-        employerId:
+          description: 'Loop: 2400, Segment: LX, Element: LX01'
+        serviceDate:
           type: string
-          description: 'REF02 when REF01=EI, Notes: The Employer Identification Number must be a string of exactly nine numbers with no separators'
-          example: '123456789'
-        commercialNumber:
+          description: 'Loop: 2400, Segment: DTP, Element: DTP03, Notes: When sent with serviceDateEnd it will be used as the start date for Date Time period, if sent without serviceDateEnd will use DTP02 = D8. Expressed in Format CCYYMMDD'
+          example: '20050514'
+        serviceDateEnd:
           type: string
-          description: REF02 when REF01=G2
-        locationNumber:
+          description: 'Loop: 2400, Segment: DTP, Element: DTP03, Notes: Range of Dates Expressed in Format CCYYMMDD'
+        providerControlNumber:
           type: string
-          description: REF02 when REF01=LU
-        payerIdentificationNumber:
+          description: 'Loop: 2400, Segment: REF, Element: REF04-02 when REF01=6R'
+        professionalService:
+          $ref: '#/components/schemas/ProfessionalService'
+        durableMedicalEquipmentService:
+          $ref: '#/components/schemas/DurableMedicalEquipmentService'
+        serviceLineSupplementalInformation:
+          maxItems: 10
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportInformation'
+        durableMedicalEquipmentCertificateOfMedicalNecessity:
+          $ref: '#/components/schemas/DurableMedicalEquipmentCertificateOfMedicalNecessity'
+        ambulanceTransportInformation:
+          $ref: '#/components/schemas/AmbulanceTransportInformation'
+        durableMedicalEquipmentCertification:
+          $ref: '#/components/schemas/DurableMedicalEquipmentCertification'
+        ambulanceCertification:
+          maxItems: 3
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/AmbulanceCertification'
+        hospiceEmployeeIndicator:
+          type: boolean
+          description: 'Loop: 2400, Segment: CRC, Element: CRC02 Notes: True or False'
+        conditionIndicatorDurableMedicalEquipment:
+          $ref: '#/components/schemas/ConditionIndicatorDurableMedicalEquipment'
+        serviceLineDateInformation:
+          $ref: '#/components/schemas/ServiceLineDateInformation'
+        ambulancePatientCount:
+          type: integer
+          description: 'Loop: 2400, Segment: QTY, Element: QTY02 when QTY01=PT'
+          format: int32
+        obstetricAnesthesiaAdditionalUnits:
+          type: integer
+          description: 'Loop: 2400, Segment: QTY, Element: QTY02 when QTY01=FL'
+          format: int32
+        testResults:
+          maxItems: 5
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/Measurements'
+        contractInformation:
+          $ref: '#/components/schemas/ContractInformation'
+        serviceLineReferenceInformation:
+          $ref: '#/components/schemas/ServiceLineReferenceInformation'
+        salesTaxAmount:
           type: string
-          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=2U'
-        employerIdentificationNumber:
+          description: 'Loop: 2400, Segment: AMT, Element: AMT02 when AMT01=T'
+        postageTaxAmount:
           type: string
-          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=EI'
-        claimOfficeNumber:
+          description: 'Loop: 2400, Segment: AMT, Element: AMT02 when AMT01=F4'
+        fileInformation:
+          maxItems: 10
+          minItems: 0
+          type: array
+          description: 'Loop: 2400, Segment: K3, Element: K301'
+          items:
+            type: string
+            description: 'Loop: 2400, Segment: K3, Element: K301'
+        additionalNotes:
           type: string
-          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=FY'
-        naic:
+          description: 'Loop: 2400, Segment: NTE, Element: NTE02 when NTE01=ADD'
+        goalRehabOrDischargePlans:
           type: string
-          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=NF, Notes: National Association of Insurance Commissioners (NAIC) Code'
-        stateLicenseNumber:
+          description: 'Loop: 2400, Segment: NTE, Element: NTE02 when NTE01=DCP'
+        thirdPartyOrganizationNotes:
           type: string
-          description: REF02 when REF01=0B
-        providerUpinNumber:
-          type: string
-          description: 'REF02 when REF01=1G, Notes: UPINs must be formatted as either X99999 or XXX999'
-        taxonomyCode:
-          type: string
-          description: PRV03
-        firstName:
-          type: string
-          description: NM104
-          example: johnone
-        lastName:
-          type: string
-          description: NM103
-          example: doeone
-        middleName:
-          type: string
-          description: NM105
-          example: middleone
-        suffix:
-          type: string
-          description: NM107
-          example: Jr
-        organizationName:
-          type: string
-          description: NM103
-          example: HAPPY DOCTORS GROUPPRACTICE
-        address:
+          description: 'Loop: 2400, Segment: NTE, Element: NTE02 when NTE01=TPO'
+        purchasedServiceInformation:
+          $ref: '#/components/schemas/PurchasedServiceInformation'
+        linePricingRepricingInformation:
+          $ref: '#/components/schemas/ClaimPricingRepricingInformation'
+        drugIdentification:
+          $ref: '#/components/schemas/DrugIdentification'
+        renderingProvider:
+          $ref: '#/components/schemas/ServiceLineProvider'
+        purchasedServiceProvider:
+          $ref: '#/components/schemas/ServiceLineProvider'
+        serviceFacilityLocation:
+          $ref: '#/components/schemas/ServiceFacilityLocation'
+        supervisingProvider:
+          $ref: '#/components/schemas/ServiceLineProvider'
+        orderingProvider:
+          $ref: '#/components/schemas/ServiceLineOrderingProvider'
+        referringProvider:
+          $ref: '#/components/schemas/ServiceLineProvider'
+        ambulancePickUpLocation:
           $ref: '#/components/schemas/Address'
-        contactInformation:
-          $ref: '#/components/schemas/ContactInformation'
-      description: 'Loop: 2000A'
+        ambulanceDropOffLocation:
+          $ref: '#/components/schemas/Address'
+        lineAdjudicationInformation:
+          maxItems: 15
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/LineAdjudicationInformation'
+        formIdentification:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormIdentification'
+      description: Loop 2400
+    CompositeDiagnosisCodePointers:
+      required:
+      - diagnosisCodePointers
+      type: object
+      properties:
+        diagnosisCodePointers:
+          maxItems: 2147483647
+          minItems: 1
+          type: array
+          description: 'Loop: 2400, Segment: SV1, Element: SV107-01, SV107-02, SV107-03, SV107-04'
+          example: 1
+          items:
+            type: string
+      description: SVC107
+    ReferenceIdentification:
+      required:
+      - identifier
+      - qualifier
+      type: object
+      properties:
+        qualifier:
+          type: string
+          description: 'Segment: REF, Element: REF01'
+        identifier:
+          type: string
+          description: 'Segment: REF, Element: REF02'
+        otherIdentifier:
+          type: string
+          description: 'Segment: REF, Element: REF03'
     SpinalManipulationServiceInformation:
       required:
       - patientConditionCode
@@ -281,102 +391,6 @@ components:
           type: string
           description: 'Loop: 2300, Segment: CR, Element: CR211'
       description: 'Loop 2300, Segment: CR2'
-    FormIdentification:
-      required:
-      - formIdentifier
-      - formTypeCode
-      type: object
-      properties:
-        formTypeCode:
-          type: string
-          description: 'Loop: 2440, Segment: LQ, Element: LQ01, Note: Allowed Values are:''AS'' Form Type Code, ''UT'' Centers for Medicare and Medicaid Services (CMS) Durable Medical Equipment Regional Carrier (DMERC) Certificate of Medical Necessity (CMN) Forms'
-          enum:
-          - AS
-          - UT
-        formIdentifier:
-          type: string
-          description: 'Loop: 2440, Segment: LQ, Element: LQ02'
-        supportingDocumentation:
-          maxItems: 99
-          minItems: 0
-          type: array
-          description: 'Loop: 2440, Segment: FRM'
-          items:
-            $ref: '#/components/schemas/SupportingDocumentation'
-      description: LQ and FRM
-    ordering:
-      required:
-      - providerType
-      type: object
-      properties:
-        providerType:
-          type: string
-          example: BillingProvider
-        npi:
-          type: string
-          description: 'NM109, Notes: National Provider Identifier'
-          example: '1760854442'
-        ssn:
-          type: string
-          description: 'REF02 when REF01=SY, Notes: The Social Security Number must be a string of nine numbers with no separators'
-          example: '000000000'
-        employerId:
-          type: string
-          description: 'REF02 when REF01=EI, Notes: The Employer Identification Number must be a string of exactly nine numbers with no separators'
-          example: '123456789'
-        commercialNumber:
-          type: string
-          description: REF02 when REF01=G2
-        locationNumber:
-          type: string
-          description: REF02 when REF01=LU
-        payerIdentificationNumber:
-          type: string
-          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=2U'
-        employerIdentificationNumber:
-          type: string
-          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=EI'
-        claimOfficeNumber:
-          type: string
-          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=FY'
-        naic:
-          type: string
-          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=NF, Notes: National Association of Insurance Commissioners (NAIC) Code'
-        stateLicenseNumber:
-          type: string
-          description: REF02 when REF01=0B
-        providerUpinNumber:
-          type: string
-          description: 'REF02 when REF01=1G, Notes: UPINs must be formatted as either X99999 or XXX999'
-        taxonomyCode:
-          type: string
-          description: PRV03
-        firstName:
-          type: string
-          description: NM104
-          example: johnone
-        lastName:
-          type: string
-          description: NM103
-          example: doeone
-        middleName:
-          type: string
-          description: NM105
-          example: middleone
-        suffix:
-          type: string
-          description: NM107
-          example: Jr
-        organizationName:
-          type: string
-          description: NM103
-          example: HAPPY DOCTORS GROUPPRACTICE
-        address:
-          $ref: '#/components/schemas/Address'
-        contactInformation:
-          $ref: '#/components/schemas/ContactInformation'
-      description: 'Loop: 2420E, Setting ProviderType equal to OrderingProvider is deprecated, please use ClaimInformation.serviceLines.orderingProvider'
-      deprecated: true
     ServiceLineOrderingProvider:
       required:
       - providerType
@@ -456,73 +470,674 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ReferenceIdentification'
-    LineAdjudicationInformation:
-      required:
-      - adjudicationOrPaymentDate
-      - otherPayerPrimaryIdentifier
-      - paidServiceUnitCount
-      - procedureCode
-      - serviceIdQualifier
-      - serviceLinePaidAmount
+    ClaimDateInformation:
       type: object
       properties:
-        otherPayerPrimaryIdentifier:
+        symptomDate:
           type: string
-          description: 'Loop: 2430, Segment: SVD, Element: SVD01'
-        serviceLinePaidAmount:
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        initialTreatmentDate:
           type: string
-          description: 'Loop: 2430, Segment: SVD, Element: SVD02'
-        serviceIdQualifier:
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        lastSeenDate:
           type: string
-          description: 'Loop: 2430, Segment: SVD, Element: SVD03-01, Note: Allowed Values are: ''ER'' Jurisdiction Specific Procedure and Supply Codes, ''HC'' Health Care Financing Administration Common Procedural Coding System (HCPCS) Codes, ''HP'' Health Insurance Prospective Payment System (HIPPS) Skilled Nursing Facility Rate Code, ''IV'' Home Infusion EDI Coalition (HIEC) Product/Service Code, ''WK'' Advanced Billing Concepts (ABC) Codes'
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        acuteManifestationDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        accidentDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        lastMenstrualPeriodDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        lastXRayDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        hearingAndVisionPrescriptionDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        disabilityBeginDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        disabilityEndDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        lastWorkedDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        authorizedReturnToWorkDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        admissionDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        dischargeDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        assumedAndRelinquishedCareBeginDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        assumedAndRelinquishedCareEndDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        repricerReceivedDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+        firstContactDate:
+          type: string
+          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
+      description: DTP
+    ConditionIndicatorDurableMedicalEquipment:
+      required:
+      - certificationConditionIndicator
+      - conditionIndicator
+      type: object
+      properties:
+        certificationConditionIndicator:
+          type: string
+          description: 'Loop 2400, Segment: CRC, Element: CRC02 and CRC01=09, Note: Allowed Values are: ''N'' No, ''Y'' Yes'
+          example: Y
+          enum:
+          - Y
+          - N
+        conditionIndicator:
+          type: string
+          description: 'Loop 2400, Segment: CRC, Element: CRC03, Note: Allowed Values are: ''38'' Certification signed by the physician is on file at the supplier''s office, ''ZV'' Replacement Item'
+          example: '38'
+          enum:
+          - '38'
+          - ZV
+        conditionIndicatorCode:
+          type: string
+          description: 'Loop 2400, Segment: CRC, Element: CRC04, Note: Allowed Values are: ''38'' Certification signed by the physician is on file at the supplier''s office, ''ZV'' Replacement Item'
+          example: '38'
+          enum:
+          - '38'
+          - ZV
+      description: CRC
+    DurableMedicalEquipmentCertification:
+      required:
+      - certificationTypeCode
+      - durableMedicalEquipmentDurationInMonths
+      type: object
+      properties:
+        certificationTypeCode:
+          type: string
+          description: 'Loop: 2400, Segment: CR3, Element: CR301, Note: Allowed Values are: ''I'' Initial, ''R'' Renewal, ''S'' Revised'
+          enum:
+          - I
+          - R
+          - S
+        durableMedicalEquipmentDurationInMonths:
+          type: string
+          description: 'Loop: 2400, Segment: CR3, Element: CR303 when CR302=MO'
+      description: CR3
+    OtherPayerBillingProvider:
+      required:
+      - entityTypeQualifier
+      - otherPayerBillingProviderIdentifier
+      type: object
+      properties:
+        entityTypeQualifier:
+          type: string
+          description: 'Loop 2330G, Segment: NM1; Element: NM101, Notes: Code identifying an organizational entity, a physical location, property or an individual. Allowablevalues: ''1'' Person, ''2'' Non-Person Entity '
+          enum:
+          - '1'
+          - '2'
+        otherPayerBillingProviderIdentifier:
+          maxItems: 2
+          minItems: 1
+          type: array
+          description: 'Loop 2330G, Segment: NM1 and REF'
+          items:
+            $ref: '#/components/schemas/ReferenceIdentification'
+      description: Loop 2330G
+    Payer:
+      type: object
+      properties:
+        payerName:
+          type: string
+        payerID:
+          type: string
+    ProfessionalService:
+      required:
+      - compositeDiagnosisCodePointers
+      - lineItemChargeAmount
+      - measurementUnit
+      - procedureCode
+      - procedureIdentifier
+      - serviceUnitCount
+      type: object
+      properties:
+        procedureIdentifier:
+          type: string
+          description: 'Loop: 2400, Segment: SV1, Element: SV101-01, Notes: Allowed Values are: ''ER'' Jurisdiction Specific Procedure and Supply Codes, ''HC'' Health Care Financing Administration Common Procedural Coding System (HCPCS) Codes, ''IV'' Home Infusion EDI Coalition (HIEC) Product/Service Code,''WK'' Advanced Billing Concepts (ABC) Codes'
+          example: HC
           enum:
           - ER
           - HC
-          - HP
           - IV
           - WK
         procedureCode:
           type: string
-          description: 'Loop: 2430, Segment: SVD, Element: SVD03-02'
-        procedureModifier:
+          description: 'Loop 2400, Segment: SV1, Element: SV101-02'
+          example: E0570
+        procedureModifiers:
           maxItems: 4
           minItems: 0
           type: array
+          description: 'Loop 2400, Segment: SV1, Elements: SV101-03 to SV101-06, Notes: Required when modifier clarifies or improves the reporting accuracy of the associated procedure code. If not required then do not send'
           items:
             type: string
-            description: 'Loop: 2430, Segment: SVD, Element: SVD03-03, SVD03-04, SVD03-05, SVD03-06'
-        procedureCodeDescription:
+        description:
           type: string
-          description: 'Loop: 2430, Segment: SVD, Element: SVD03-07'
-        paidServiceUnitCount:
+          description: 'Loop 2400, Segment: SV1, Element: SV101-07, Notes: A free form description to clarify teh related data elements and their content'
+        lineItemChargeAmount:
           type: string
-          description: 'Loop: 2430, Segment: SVD, Element: SVD05'
-        bundledOrUnbundledLineNumber:
+          description: 'Loop 2400, Segment: SV1, Element: SV102, Notes: Required value for total charge amount, ''0'' (Zero) is acceptable for this value'
+          example: '25'
+        measurementUnit:
           type: string
-          description: 'Loop: 2430, Segment: SVD, Element: SVD06'
-        claimAdjustmentInformation:
+          description: 'Loop 2400, Segment: SV1, Element: SV103, Notes: Allowed values are ''MJ'' Minutes, ''UN'' Unit'
+          example: UN
+          enum:
+          - MJ
+          - UN
+        serviceUnitCount:
+          type: string
+          description: 'Loop 2400, Segment: SV1, Element: SV104, Notes: When a decimal is needed to report units, include it in this element'
+          example: '1'
+        placeOfServiceCode:
+          type: string
+          description: 'Loop 2400, Segment: SV1, Element: SV105'
+        compositeDiagnosisCodePointers:
+          $ref: '#/components/schemas/CompositeDiagnosisCodePointers'
+        emergencyIndicator:
+          type: string
+          description: 'Loop 2400, Segment: SV1, Element: SV109'
+          enum:
+          - Y
+        epsdtIndicator:
+          type: string
+          description: 'Loop 2400, Segment: SV1, Element: SV111'
+          enum:
+          - Y
+        familyPlanningIndicator:
+          type: string
+          description: 'Loop 2400, Segment: SV1, Element: SV112'
+          enum:
+          - Y
+        copayStatusCode:
+          type: string
+          description: 'Loop 2400, Segment: SV1, Element: SV115'
+          enum:
+          - '0'
+    PurchasedServiceInformation:
+      required:
+      - purchasedServiceChargeAmount
+      - purchasedServiceProviderIdentifier
+      type: object
+      properties:
+        purchasedServiceProviderIdentifier:
+          type: string
+          description: 'Loop: 2400, Segment: PS1, Element: PS101'
+          example: '01'
+        purchasedServiceChargeAmount:
+          type: string
+          description: 'Loop: 2400, Segment: PS1, Element: PS102'
+          example: '10'
+    ordering:
+      required:
+      - providerType
+      type: object
+      properties:
+        providerType:
+          type: string
+          example: BillingProvider
+        npi:
+          type: string
+          description: 'NM109, Notes: National Provider Identifier'
+          example: '1760854442'
+        ssn:
+          type: string
+          description: 'REF02 when REF01=SY, Notes: The Social Security Number must be a string of nine numbers with no separators'
+          example: '000000000'
+        employerId:
+          type: string
+          description: 'REF02 when REF01=EI, Notes: The Employer Identification Number must be a string of exactly nine numbers with no separators'
+          example: '123456789'
+        commercialNumber:
+          type: string
+          description: REF02 when REF01=G2
+        locationNumber:
+          type: string
+          description: REF02 when REF01=LU
+        payerIdentificationNumber:
+          type: string
+          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=2U'
+        employerIdentificationNumber:
+          type: string
+          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=EI'
+        claimOfficeNumber:
+          type: string
+          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=FY'
+        naic:
+          type: string
+          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=NF, Notes: National Association of Insurance Commissioners (NAIC) Code'
+        stateLicenseNumber:
+          type: string
+          description: REF02 when REF01=0B
+        providerUpinNumber:
+          type: string
+          description: 'REF02 when REF01=1G, Notes: UPINs must be formatted as either X99999 or XXX999'
+        taxonomyCode:
+          type: string
+          description: PRV03
+        firstName:
+          type: string
+          description: NM104
+          example: johnone
+        lastName:
+          type: string
+          description: NM103
+          example: doeone
+        middleName:
+          type: string
+          description: NM105
+          example: middleone
+        suffix:
+          type: string
+          description: NM107
+          example: Jr
+        organizationName:
+          type: string
+          description: NM103
+          example: HAPPY DOCTORS GROUPPRACTICE
+        address:
+          $ref: '#/components/schemas/Address'
+        contactInformation:
+          $ref: '#/components/schemas/ContactInformation'
+      description: 'Loop: 2420E, Setting ProviderType equal to OrderingProvider is deprecated, please use ClaimInformation.serviceLines.orderingProvider'
+      deprecated: true
+    ReportInformation:
+      required:
+      - attachmentReportTypeCode
+      - attachmentTransmissionCode
+      type: object
+      properties:
+        attachmentReportTypeCode:
+          type: string
+          description: 'Loop: 2400, Segment: PWK, Element: PWK01, Notes: Allowed Values are: ''03'' Report Justifying Treatment Beyond Utilization Guidelines, ''04'' Drugs Administered, ''05'' Treatment Diagnosis, ''06'' Initial Assessment, ''07'' Functional Goals, ''08'' Plan of Treatment, ''09'' Progress Report, ''10'' Continued Treatment, ''11'' Chemical Analysis, ''13'' Certified Test Report, ''15'' Justification for Admission, ''21'' Recovery Plan, ''A3'' Allergies/Sensitivities Document, ''A4'' Autopsy Report, ''AM'' Ambulance Certification, ''AS'' Admission Summary, ''B2'' Prescription, ''B3'' Physician Order, ''B4'' Referral Form, ''BR'' Benchmark Testing Results, ''BS'' Baseline, ''BT'' Blanket Test Results, ''CB'' Chiropractic Justification, ''CK'' Consent Form(s), ''CT'' Certification, ''D2'' Drug Profile Document, ''DA'' Dental Models, ''DB'' Durable Medical Equipment Prescription, ''DG'' Diagnostic Report, ''DJ'' Discharge Monitoring Report, ''DS'' Discharge Summary, ''EB'' Explanation of Benefits (Coordination of Benefits or Medicare Secondary Payor), ''HC'' Health Certificate, ''HR'' Health Clinic Records, ''I5'' Immunization Record,''IR'' State School Immunization Records, ''LA'' Laboratory Results, ''M1'' Medical Record Attachment, ''MT'' Models, ''NM Nursing Notes'', ''OB'' Operative Note, ''OC'' Oxygen Content Averaging Report, ''OD'' Orders and Treatments Document, ''OE'' Objective Physical Examination (including vital signs) Document, ''OX'' Oxygen Therapy Certification, ''OZ'' Support Data for Claim, ''P4'' Pathology Report, ''P5'' Patient Medical History Document, ''PE'' Parenteral or Enteral Certification, ''PN'' Physical Therapy Notes, ''PO'' Prosthetics or Orthotic Certification, ''PQ'' Paramedical Results, ''PY'' Physician''s Report, ''PZ'' Physical Therapy Certification, ''RB'' Radiology Films, ''RR'' Radiology Reports, ''RT'' Report of Tests and Analysis Report, ''RX'' Renewable Oxygen Content Averaging Report, ''SG'' Symptoms Document, ''V5'' Death Notification, ''XP'' Photographs'
+          example: '93'
+          enum:
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 08
+          - 09
+          - '10'
+          - '11'
+          - '13'
+          - '15'
+          - '21'
+          - A3
+          - A4
+          - AM
+          - AS
+          - B2
+          - B3
+          - B4
+          - BR
+          - BS
+          - BT
+          - CB
+          - CK
+          - CT
+          - D2
+          - DA
+          - DB
+          - DG
+          - DJ
+          - DS
+          - EB
+          - HC
+          - HR
+          - I5
+          - IR
+          - LA
+          - M1
+          - MT
+          - NM
+          - OB
+          - OC
+          - OD
+          - OE
+          - OX
+          - OZ
+          - P4
+          - P5
+          - PE
+          - PN
+          - PO
+          - PQ
+          - PY
+          - PZ
+          - RB
+          - RR
+          - RT
+          - RX
+          - SG
+          - V5
+          - XP
+        attachmentTransmissionCode:
+          type: string
+          description: 'Loop: 2400, Segment: PWK, Element: PWK02 Allowed Values are: ''AA'' Available on Request at Provider Site, ''BM'' By Mail,''EL'' Electronically Only, ''EM'' E-Mail, ''FT'' File Transfer, ''FX'' By Fax'
+          example: AA
+          enum:
+          - AA
+          - BM
+          - EL
+          - EM
+          - FT
+          - FX
+        attachmentControlNumber:
+          type: string
+          description: 'Loop 2400, Segment: PWK, Element: PWK05'
+    AmbulanceCertification:
+      required:
+      - certificationConditionIndicator
+      - conditionCodes
+      type: object
+      properties:
+        certificationConditionIndicator:
+          type: string
+          description: 'Loop: 2300, Segment: CRC, Element: CRC02 when CRC01 = 07, Note: Allowed Values are: ''N'' No, ''Y'' Yes'
+          enum:
+          - N
+          - Y
+        conditionCodes:
+          maxItems: 5
+          minItems: 1
+          type: array
+          description: 'Loop: 2300, Segment: CRC, Element: CRC03, CRC04, CRC05, CRC06, CRC07, Note: Allowed Values are: ''01'' Patient was admitted to a hospital, ''04'' Patient was moved by stretcher, ''05'' Patient was unconscious or in shock, ''06'' Patient was transported in an emergency situation, ''07'' Patient had to be physically restrained, ''08'' Patient had visible hemorrhaging, ''09'' Ambulance service was medically necessary, ''12'' Patient is confined to a bed or chair'
+          items:
+            type: string
+            enum:
+            - '01'
+            - '04'
+            - '05'
+            - '06'
+            - '07'
+            - 08
+            - 09
+            - '12'
+      description: CRC
+    ServiceLineReferenceInformation:
+      type: object
+      properties:
+        repricedLineItemReferenceNumber:
+          type: string
+          description: 'Loop: 2400, Segment: REF, Element: REF02 Notes: When REF01=9B'
+        adjustedRepricedLineItemReferenceNumber:
+          type: string
+          description: 'Loop: 2400, Segment: REF, Element: REF02 Note: When REF01=9D'
+        priorAuthorization:
           maxItems: 5
           minItems: 0
           type: array
+          description: Loop 2400 REF
+          items:
+            $ref: '#/components/schemas/PriorAuthorization'
+        mammographyCertificationNumber:
+          type: string
+          description: 'Loop: 2400, Segment: REF, Element: REF02 Note: When REF01=EW'
+        clinicalLaboratoryImprovementAmendmentNumber:
+          type: string
+          description: 'Loop: 2400, Segment: REF, Element: REF02 Note: When REF01=X4'
+        referringCliaNumber:
+          type: string
+          description: 'Loop: 2400, Segment: REF, Element: REF02 Note: When REF01=F4'
+        immunizationBatchNumber:
+          type: string
+          description: 'Loop: 2400, Segment: REF, Element: REF02 Note: When REF01=BT'
+        referralNumber:
+          maxItems: 5
+          minItems: 0
+          type: array
+          description: 'Loop: 2400, Segment: REF, Element: REF Note: When REF01=9F'
+          items:
+            type: string
+            description: 'Loop: 2400, Segment: REF, Element: REF Note: When REF01=9F'
+    FormIdentification:
+      required:
+      - formIdentifier
+      - formTypeCode
+      type: object
+      properties:
+        formTypeCode:
+          type: string
+          description: 'Loop: 2440, Segment: LQ, Element: LQ01, Note: Allowed Values are:''AS'' Form Type Code, ''UT'' Centers for Medicare and Medicaid Services (CMS) Durable Medical Equipment Regional Carrier (DMERC) Certificate of Medical Necessity (CMN) Forms'
+          enum:
+          - AS
+          - UT
+        formIdentifier:
+          type: string
+          description: 'Loop: 2440, Segment: LQ, Element: LQ02'
+        supportingDocumentation:
+          maxItems: 99
+          minItems: 0
+          type: array
+          description: 'Loop: 2440, Segment: FRM'
+          items:
+            $ref: '#/components/schemas/SupportingDocumentation'
+      description: LQ and FRM
+    ClaimAdjustment:
+      required:
+      - adjustmentDetails
+      - adjustmentGroupCode
+      type: object
+      properties:
+        adjustmentGroupCode:
+          type: string
+          description: 'Loop: 2430, Segment: CAS, Element: CAS01, Notes: Code identifying the general category of payment adjustment'
+          enum:
+          - CO
+          - CR
+          - OA
+          - PI
+          - PR
+        adjustmentDetails:
+          maxItems: 6
+          minItems: 1
+          type: array
           description: 'Loop: 2430, Segment: CAS'
           items:
-            $ref: '#/components/schemas/ClaimAdjustment'
-        adjudicationOrPaymentDate:
+            $ref: '#/components/schemas/ClaimAdjustmentDetails'
+      description: CR1
+    ContactInformationOrderingProvider:
+      required:
+      - name
+      type: object
+      properties:
+        name:
           type: string
-          description: 'Loop: 2430, Segment: DTP, Element=DTP03 when DTP02=D8 and DTP01=573'
-        remainingPatientLiability:
+          description: 'Segment: PER, Element: PER02 and PER01=IC'
+          example: SUBMITTER CONTACT INFO
+        phoneNumber:
           type: string
-          description: 'Loop: 2430, Segment: AMT, Element=AMT02 when AMT01=EAF'
-      description: SVD, CAS, DTP and AMT
-    ContractInformation:
+          description: 'Segment: PER, Element: PER04 (Provider, Submitter, Subscriber, Dependent) or PER06 (Provider, Submitter) or PER08 (Provider, Submitter), Note: Used when PER03=TE (Provider, Submitter, Subscriber, Dependent) or PER05=TE (Provider, Submitter) or PER07=TE (Provider, Submitter)'
+          example: '5554567890'
+        faxNumber:
+          type: string
+          description: 'Segment: PER, Element: PER04 or PER06 or PER08, Note: This is used in (Provider, Submitter) when PER03=FX or PER05=FX or PER07=FX'
+          example: '5551234567'
+        email:
+          type: string
+          description: 'Segment: PER, Element: PER04 or PER06 or PER08, Note: This used in (Provider, Submitter) when PER03=EM or PER05=EM or PER07=EM'
+          example: email@email.com
+        phoneExtension:
+          type: string
+          description: 'Segment: PER, Element: PER06 or PER08, Note: PER05=EX or PER07=EX'
+          example: '1234'
+      description: PER
+    DurableMedicalEquipmentCertificateOfMedicalNecessity:
+      required:
+      - attachmentTransmissionCode
+      type: object
+      properties:
+        attachmentTransmissionCode:
+          type: string
+          description: 'Loop: 2400, Segment: PWK, Element: PWK02 when PWK01=CT, Note: Allowed Values are: ''AB'' Previously Submitted to Payer, ''AD'' Certification Included in this Claim, ''AF'' Narrative Segment Included in this Claim, ''AG'' No Documentation is Required, ''NS'' Not Specified'
+          enum:
+          - AB
+          - AD
+          - AF
+          - AG
+          - NS
+      description: PWK
+    ServiceLineProvider:
+      required:
+      - providerType
+      type: object
+      properties:
+        providerType:
+          type: string
+          example: BillingProvider
+        npi:
+          type: string
+          description: 'NM109, Notes: National Provider Identifier'
+          example: '1760854442'
+        ssn:
+          type: string
+          description: 'REF02 when REF01=SY, Notes: The Social Security Number must be a string of nine numbers with no separators'
+          example: '000000000'
+        employerId:
+          type: string
+          description: 'REF02 when REF01=EI, Notes: The Employer Identification Number must be a string of exactly nine numbers with no separators'
+          example: '123456789'
+        commercialNumber:
+          type: string
+          description: REF02 when REF01=G2
+        locationNumber:
+          type: string
+          description: REF02 when REF01=LU
+        payerIdentificationNumber:
+          type: string
+          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=2U'
+        employerIdentificationNumber:
+          type: string
+          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=EI'
+        claimOfficeNumber:
+          type: string
+          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=FY'
+        naic:
+          type: string
+          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=NF, Notes: National Association of Insurance Commissioners (NAIC) Code'
+        stateLicenseNumber:
+          type: string
+          description: REF02 when REF01=0B
+        providerUpinNumber:
+          type: string
+          description: 'REF02 when REF01=1G, Notes: UPINs must be formatted as either X99999 or XXX999'
+        taxonomyCode:
+          type: string
+          description: PRV03
+        firstName:
+          type: string
+          description: NM104
+          example: johnone
+        lastName:
+          type: string
+          description: NM103
+          example: doeone
+        middleName:
+          type: string
+          description: NM105
+          example: middleone
+        suffix:
+          type: string
+          description: NM107
+          example: Jr
+        organizationName:
+          type: string
+          description: NM103
+          example: HAPPY DOCTORS GROUPPRACTICE
+        address:
+          $ref: '#/components/schemas/Address'
+        contactInformation:
+          $ref: '#/components/schemas/ContactInformation'
+        otherIdentifier:
+          type: string
+        secondaryIdentifier:
+          maxItems: 20
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/ReferenceIdentification'
+    Error:
+      type: object
+      properties:
+        field:
+          type: string
+          description: The field related to the error
+          example: claimInformation.serviceLines[0].serviceDate
+        value:
+          type: string
+          description: Value for bad data error
+          example: '123'
+        code:
+          type: string
+          description: Error code
+          example: '123'
+        description:
+          type: string
+          description: Description of error message.
+          example: Must not be empty
+        followupAction:
+          type: string
+          description: Follow up action to correct
+          example: Add value
+        location:
+          type: string
+          description: Location of error
+          example: serviceDate
+    ContactInformation:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'Segment: PER, Element: PER02 and PER01=IC'
+          example: SUBMITTER CONTACT INFO
+        phoneNumber:
+          type: string
+          description: 'Segment: PER, Element: PER04 (Provider, Submitter, Subscriber, Dependent) or PER06 (Provider, Submitter) or PER08 (Provider, Submitter), Note: Used when PER03=TE (Provider, Submitter, Subscriber, Dependent) or PER05=TE (Provider, Submitter) or PER07=TE (Provider, Submitter)'
+          example: '5554567890'
+        faxNumber:
+          type: string
+          description: 'Segment: PER, Element: PER04 or PER06 or PER08, Note: This is used in (Provider, Submitter) when PER03=FX or PER05=FX or PER07=FX'
+          example: '5551234567'
+        email:
+          type: string
+          description: 'Segment: PER, Element: PER04 or PER06 or PER08, Note: This used in (Provider, Submitter) when PER03=EM or PER05=EM or PER07=EM'
+          example: email@email.com
+        phoneExtension:
+          type: string
+          description: 'Segment: PER, Element: PER06 (Provider, Submitter, Subscriber, Dependent) or PER08 (Provider, Submitter),Note: Used when PER05=EX (Provider, Submitter, Subscriber, Dependent) or PER07=EX (Provider, Submitter)'
+          example: '1234'
+      description: PER
+    ClaimContractInformation:
       required:
       - contractTypeCode
       type: object
       properties:
         contractTypeCode:
           type: string
-          description: 'Segment: CN1, Element: CN101, Allowed Values are: ''01'' Diagnosis Related Group (DRG), ''02'' Per Diem, ''03'' Variable Per Diem, ''04'' Flat, ''05'' Capitated, ''06'' Percent, ''09'' Other'
-          example: '01'
+          description: 'Loop: 2300,Segment: CN1, Element: CN101, Note: Allowed Values are: ''01'' Diagnosis Related Group (DRG), ''02'' Per Diem, ''03'' Variable Per Diem, ''04'' Flat, ''05'' Capitated, ''06'' Percent, ''09'' Other'
           enum:
           - '01'
           - '02'
@@ -533,20 +1148,111 @@ components:
           - 09
         contractAmount:
           type: string
-          description: 'Segment: CN1, Element: CN102'
+          description: 'Loop: 2300, Segment: CN1, Element: CN102'
         contractPercentage:
           type: string
-          description: 'Segment: CN1, Element: CN103'
+          description: 'Loop: 2300, Segment: CN1, Element: CN103'
         contractCode:
           type: string
-          description: 'Segment: CN1, Element: CN104'
+          description: 'Loop: 2300, Segment: CN1, Element: CN104'
         termsDiscountPercentage:
           type: string
-          description: 'Segment: CN1, Element: CN105'
+          description: 'Loop: 2300, Segment: CN1, Element: CN105'
         contractVersionIdentifier:
           type: string
-          description: 'Segment: CN1, Element: CN106'
-      description: CN1
+          description: 'Loop: 2300, Segment: CN1, Element: CN106'
+      description: 'Loop 2300, Segment: CN1'
+    Failure:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    OtherSubscriberName:
+      required:
+      - otherInsuredIdentifier
+      - otherInsuredIdentifierTypeCode
+      - otherInsuredLastName
+      - otherInsuredQualifier
+      type: object
+      properties:
+        otherInsuredQualifier:
+          type: string
+          description: 'Loop: 2330A, Segment: NM1, Element: NM102, Notes: Allowed Values are: ''1'' Person, ''2'' Non-Person Entity'
+          enum:
+          - '1'
+          - '2'
+        otherInsuredLastName:
+          type: string
+          description: 'Loop: 2330A, Segment: NM1, Element: NM103'
+        otherInsuredFirstName:
+          type: string
+          description: 'Loop: 2330A, Segment: NM1, Element: NM102, Notes: Required when NM102 = 1 (Person)'
+        otherInsuredMiddleName:
+          type: string
+          description: 'Loop: 2330A, Segment: NM1, Element: NM105, Notes: Required when NM102 = 1 (Person)'
+        otherInsuredNameSuffix:
+          type: string
+          description: 'Loop: 2330A, Segment: NM1, Element: NM107, Notes: Required when NM102 = 1 (Person)'
+        otherInsuredIdentifierTypeCode:
+          type: string
+          description: 'Loop: 2330A, Segment: NM1, Element: NM108, Notes: Allowable values are: ''II'' Standard Unique HealthIdentifier for each individual in the United States and ''MI'' member identification number'
+          enum:
+          - II
+          - MI
+        otherInsuredIdentifier:
+          type: string
+          description: 'Loop: 2330A, Segment: NM1, Element: NM109'
+        otherInsuredAddress:
+          $ref: '#/components/schemas/Address'
+        otherInsuredAdditionalIdentifier:
+          type: string
+          description: 'Loop: 2330A, Segment: REF, Element: REF02 when REF01=SY'
+      description: 'Loop: 2330A'
+    OtherPayerRenderingProvider:
+      required:
+      - entityTypeQualifier
+      type: object
+      properties:
+        entityTypeQualifier:
+          type: string
+          description: 'Loop: 2330D, Segment NM1, Element: NM102, Notes: Allowable values are ''1'' Person and ''2'' Non-Person Entity'
+          enum:
+          - '1'
+          - '2'
+        otherPayerRenderingProviderSecondaryIdentifier:
+          maxItems: 3
+          minItems: 1
+          type: array
+          description: 'Loop 2330D, Segment: NM1 and REF'
+          items:
+            $ref: '#/components/schemas/ReferenceIdentification'
+      description: Loop 2330D
+    Submitter:
+      required:
+      - contactInformation
+      type: object
+      properties:
+        organizationName:
+          type: string
+          description: 'Loop: 1000A,  Segment: NM1, Element: NM103'
+          example: REGIONAL PPO NETWORK
+        lastName:
+          type: string
+          description: 'Loop: 1000A,  Segment: NM1, Element: NM103'
+          example: doeOne
+        firstName:
+          type: string
+          description: 'Loop: 1000A,  Segment: NM1, Element: NM104'
+          example: janeone
+        middleName:
+          type: string
+          description: 'Loop: 1000A,  Segment: NM1, Element: NM105'
+          example: middleone
+        contactInformation:
+          $ref: '#/components/schemas/ContactInformation'
+      description: 'Loop: 1000A'
     ClaimSupplementalInformation:
       type: object
       properties:
@@ -605,6 +1311,157 @@ components:
           - '6'
           - '7'
       description: PWK and REF
+    RawX12Request:
+      type: object
+      properties:
+        x12:
+          type: string
+          description: For the x12 endpoint, the value should be a full 837 edi request.
+    ClaimAdjustmentDetails:
+      required:
+      - adjustmentAmount
+      - adjustmentReasonCode
+      type: object
+      properties:
+        adjustmentReasonCode:
+          type: string
+          description: 'Loop: 2430, Segment: CAS, Element: CAS02, CAS05, CAS08, CAS11, CAS14, CAS17'
+        adjustmentAmount:
+          type: string
+          description: 'Loop: 2430, Segment: CAS, Element: CAS03, CAS06, CAS09, CAS12, CAS15, CAS18'
+        adjustmentQuantity:
+          type: string
+          description: 'Loop: 2430, Segment: CAS, Element: CAS04, CAS07, CAS10, CAS13, CAS16, CAS19'
+      description: CAS
+    ClaimReference:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          description: Claim correlation ID
+          example: 200715R999898
+        submitterId:
+          type: string
+          description: Submitter ID for transaction
+          example: '999898'
+        customerClaimNumber:
+          type: string
+          description: Claim number
+          example: '000000001'
+        patientControlNumber:
+          type: string
+          description: Control number for claim
+          example: '12345'
+        timeOfResponse:
+          type: string
+          description: Time of response for claim
+          example: '2020-07-15T12:44:17.994-05:00'
+        claimType:
+          type: string
+          description: Claim Type
+          example: PRO
+        payerID:
+          type: string
+          description: Payer ID
+          example: '9496'
+        formatVersion:
+          type: string
+          description: Format version
+          example: '5010'
+        rhclaimNumber:
+          type: string
+      description: Collection of info specific to a given claim
+    Address:
+      required:
+      - address1
+      - city
+      type: object
+      properties:
+        address1:
+          type: string
+          description: 'Segment: N3, Element: N301'
+          example: 123 address1
+        address2:
+          type: string
+          description: 'Segment: N3, Element: N302'
+          example: apt 000
+        city:
+          type: string
+          description: 'Segment: N4, Element: N401'
+          example: city1
+        state:
+          type: string
+          description: 'Segment: N4, Element: N402'
+          example: wa
+        postalCode:
+          type: string
+          description: 'Segment: N4, Element: N403'
+          example: '981010000'
+        countryCode:
+          type: string
+          description: 'Segment: N4, Element: N404'
+        countrySubDivisionCode:
+          type: string
+          description: 'Segment: N4, Element: N407'
+      description: N3 and N4
+    LineAdjudicationInformation:
+      required:
+      - adjudicationOrPaymentDate
+      - otherPayerPrimaryIdentifier
+      - paidServiceUnitCount
+      - procedureCode
+      - serviceIdQualifier
+      - serviceLinePaidAmount
+      type: object
+      properties:
+        otherPayerPrimaryIdentifier:
+          type: string
+          description: 'Loop: 2430, Segment: SVD, Element: SVD01'
+        serviceLinePaidAmount:
+          type: string
+          description: 'Loop: 2430, Segment: SVD, Element: SVD02'
+        serviceIdQualifier:
+          type: string
+          description: 'Loop: 2430, Segment: SVD, Element: SVD03-01, Note: Allowed Values are: ''ER'' Jurisdiction Specific Procedure and Supply Codes, ''HC'' Health Care Financing Administration Common Procedural Coding System (HCPCS) Codes, ''HP'' Health Insurance Prospective Payment System (HIPPS) Skilled Nursing Facility Rate Code, ''IV'' Home Infusion EDI Coalition (HIEC) Product/Service Code, ''WK'' Advanced Billing Concepts (ABC) Codes'
+          enum:
+          - ER
+          - HC
+          - HP
+          - IV
+          - WK
+        procedureCode:
+          type: string
+          description: 'Loop: 2430, Segment: SVD, Element: SVD03-02'
+        procedureModifier:
+          maxItems: 4
+          minItems: 0
+          type: array
+          items:
+            type: string
+            description: 'Loop: 2430, Segment: SVD, Element: SVD03-03, SVD03-04, SVD03-05, SVD03-06'
+        procedureCodeDescription:
+          type: string
+          description: 'Loop: 2430, Segment: SVD, Element: SVD03-07'
+        paidServiceUnitCount:
+          type: string
+          description: 'Loop: 2430, Segment: SVD, Element: SVD05'
+        bundledOrUnbundledLineNumber:
+          type: string
+          description: 'Loop: 2430, Segment: SVD, Element: SVD06'
+        claimAdjustmentInformation:
+          maxItems: 5
+          minItems: 0
+          type: array
+          description: 'Loop: 2430, Segment: CAS'
+          items:
+            $ref: '#/components/schemas/ClaimAdjustment'
+        adjudicationOrPaymentDate:
+          type: string
+          description: 'Loop: 2430, Segment: DTP, Element=DTP03 when DTP02=D8 and DTP01=573'
+        remainingPatientLiability:
+          type: string
+          description: 'Loop: 2430, Segment: AMT, Element=AMT02 when AMT01=EAF'
+      description: SVD, CAS, DTP and AMT
     DrugIdentification:
       required:
       - measurementUnitCode
@@ -646,99 +1503,50 @@ components:
           type: string
           description: 'Loop: 2410, Segment: REF, Element: REF02 when REF01=XZ'
       description: LOOP 2410
-    ClaimContractInformation:
+    Receiver:
       required:
-      - contractTypeCode
+      - organizationName
       type: object
       properties:
-        contractTypeCode:
+        organizationName:
           type: string
-          description: 'Loop: 2300,Segment: CN1, Element: CN101, Note: Allowed Values are: ''01'' Diagnosis Related Group (DRG), ''02'' Per Diem, ''03'' Variable Per Diem, ''04'' Flat, ''05'' Capitated, ''06'' Percent, ''09'' Other'
+          description: 'Loop: 1000B, Segment: NM1, Element: NM103'
+          example: EXTRA HEALTHY INSURANCE
+      description: 'Loop: 1000B'
+    PatientConditionInformationVision:
+      required:
+      - certificationConditionIndicator
+      - codeCategory
+      - conditionCodes
+      type: object
+      properties:
+        codeCategory:
+          type: string
+          description: 'Loop: 2300, Segment: CRC, Element: CRC01, Notes: Allowed Values are: ''E1'' Spectacle Lenses, ''E2'' Contact Lenses, ''E3'' Spectacle Frames'
           enum:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - 09
-        contractAmount:
+          - E1
+          - E2
+          - E3
+        certificationConditionIndicator:
           type: string
-          description: 'Loop: 2300, Segment: CN1, Element: CN102'
-        contractPercentage:
-          type: string
-          description: 'Loop: 2300, Segment: CN1, Element: CN103'
-        contractCode:
-          type: string
-          description: 'Loop: 2300, Segment: CN1, Element: CN104'
-        termsDiscountPercentage:
-          type: string
-          description: 'Loop: 2300, Segment: CN1, Element: CN105'
-        contractVersionIdentifier:
-          type: string
-          description: 'Loop: 2300, Segment: CN1, Element: CN106'
-      description: 'Loop 2300, Segment: CN1'
-    ClaimReference:
-      type: object
-      properties:
-        correlationId:
-          type: string
-          description: Claim correlation ID
-          example: 200715R999898
-        submitterId:
-          type: string
-          description: Submitter ID for transaction
-          example: '999898'
-        customerClaimNumber:
-          type: string
-          description: Claim number
-          example: '000000001'
-        patientControlNumber:
-          type: string
-          description: Control number for claim
-          example: '12345'
-        timeOfResponse:
-          type: string
-          description: Time of response for claim
-          example: '2020-07-15T12:44:17.994-05:00'
-        claimType:
-          type: string
-          description: Claim Type
-          example: PRO
-        payerID:
-          type: string
-          description: Payer ID
-          example: '9496'
-        formatVersion:
-          type: string
-          description: Format version
-          example: '5010'
-        rhclaimNumber:
-          type: string
-      description: Collection of info specific to a given claim
-    MedicareOutpatientAdjudication:
-      type: object
-      properties:
-        reimbursementRate:
-          type: string
-          description: 'Loop 2320, Segment: MOA; Element: MOA01'
-        hcpcsPayableAmount:
-          type: string
-          description: 'Loop 2320, Segment: MOA; Element: MOA02'
-        claimPaymentRemarkCode:
+          description: 'Loop: 2300, Segment: CRC, Element: CRC02, Notes: Allowed Values are: ''N'' No, ''Y'' Yes'
+          enum:
+          - N
+          - Y
+        conditionCodes:
           maxItems: 5
-          minItems: 0
+          minItems: 1
           type: array
-          description: 'Loop: 2320: Segment: MOA, Element: MOA03 to MOA07'
+          description: 'Loop: 2300, Segment: CRC, Element: CRC03 to CRC07, Notes: CRC03 is required, others are situational. Allowed Values are: ''L1'' General Standard of 20 Degree or .5 Diopter Sphere or Cylinder Change Met, ''L2'' Replacement Due to Loss or Theft, ''L3'' Replacement Due to Breakage or Damage, L4'' Replacement Due to Patient Preference, ''L5'' Replacement Due to Medical Reason'
           items:
             type: string
-        endStageRenalDiseasePaymentAmount:
-          type: string
-          description: 'Loop 2320, Segment: MOA; Element: MOA08'
-        nonPayableProfessionalComponentBilledAmount:
-          type: string
-          description: 'Loop 2320, Segment: MOA; Element: MOA09'
-      description: 'Loop: 2320, Segment: MOA'
+            enum:
+            - L1
+            - L2
+            - L3
+            - L4
+            - L5
+      description: 'Loop 2300, Segment: CRC'
     PriorAuthorization:
       required:
       - priorAuthorizationOrReferralNumber
@@ -751,6 +1559,31 @@ components:
           type: string
           description: 'Loop: 2400, Segment: REF, Element: REF04-2 when REF04-1=2U'
       description: Loop 2400 REF
+    SupportingDocumentation:
+      required:
+      - questionNumber
+      type: object
+      properties:
+        questionNumber:
+          type: string
+          description: 'Loop: 2440,  Segment: FRM, Element: FRM01'
+        questionResponseCode:
+          type: string
+          description: 'Loop: 2440,  Segment: FRM, Element: FRM02, Notes: Allowed Values are: ''N'' No, ''W'' Not Applicable, ''Y'' Yes'
+          enum:
+          - N
+          - W
+          - Y
+        questionResponse:
+          type: string
+          description: 'Loop: 2440,  Segment: FRM, Element: FRM03'
+        questionResponseAsDate:
+          type: string
+          description: 'Loop: 2440,  Segment: FRM, Element: FRM04'
+        questionResponseAsPercent:
+          type: string
+          description: 'Loop: 2440,  Segment: FRM, Element: FRM05'
+      description: 'Loop: 2440, Segment: FRM'
     ClaimInformation:
       required:
       - benefitsAssignmentCertificationIndicator
@@ -994,6 +1827,244 @@ components:
           items:
             $ref: '#/components/schemas/ServiceLine'
       description: Loop2300
+    supervising:
+      required:
+      - providerType
+      type: object
+      properties:
+        providerType:
+          type: string
+          example: BillingProvider
+        npi:
+          type: string
+          description: 'NM109, Notes: National Provider Identifier'
+          example: '1760854442'
+        ssn:
+          type: string
+          description: 'REF02 when REF01=SY, Notes: The Social Security Number must be a string of nine numbers with no separators'
+          example: '000000000'
+        employerId:
+          type: string
+          description: 'REF02 when REF01=EI, Notes: The Employer Identification Number must be a string of exactly nine numbers with no separators'
+          example: '123456789'
+        commercialNumber:
+          type: string
+          description: REF02 when REF01=G2
+        locationNumber:
+          type: string
+          description: REF02 when REF01=LU
+        payerIdentificationNumber:
+          type: string
+          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=2U'
+        employerIdentificationNumber:
+          type: string
+          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=EI'
+        claimOfficeNumber:
+          type: string
+          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=FY'
+        naic:
+          type: string
+          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=NF, Notes: National Association of Insurance Commissioners (NAIC) Code'
+        stateLicenseNumber:
+          type: string
+          description: REF02 when REF01=0B
+        providerUpinNumber:
+          type: string
+          description: 'REF02 when REF01=1G, Notes: UPINs must be formatted as either X99999 or XXX999'
+        taxonomyCode:
+          type: string
+          description: PRV03
+        firstName:
+          type: string
+          description: NM104
+          example: johnone
+        lastName:
+          type: string
+          description: NM103
+          example: doeone
+        middleName:
+          type: string
+          description: NM105
+          example: middleone
+        suffix:
+          type: string
+          description: NM107
+          example: Jr
+        organizationName:
+          type: string
+          description: NM103
+          example: HAPPY DOCTORS GROUPPRACTICE
+        address:
+          $ref: '#/components/schemas/Address'
+        contactInformation:
+          $ref: '#/components/schemas/ContactInformation'
+      description: 'Loop: 2420D'
+    OtherPayerName:
+      required:
+      - otherPayerIdentifier
+      - otherPayerIdentifierTypeCode
+      - otherPayerOrganizationName
+      type: object
+      properties:
+        otherInsuredAdditionalIdentifier:
+          type: string
+          description: 'Loop: 2330B; Segment: NM1, Element: NM111'
+        otherPayerOrganizationName:
+          type: string
+          description: 'Loop: 2330B; Segment: NM1, Element: NM103'
+        otherPayerIdentifierTypeCode:
+          type: string
+          description: 'Loop: 2330B; Segment: NM1, Element: NM108, Notes: Allowable values: ''PI'' Payor Identification and ''XV'' Centers for Medicare/Medicaid Services PlanID'
+          enum:
+          - PI
+          - XV
+        otherPayerIdentifier:
+          type: string
+          description: 'Loop: 2330B; Segment: NM1, Element: NM109'
+        otherPayerAddress:
+          $ref: '#/components/schemas/Address'
+        otherPayerAdjudicationOrPaymentDate:
+          type: string
+          description: 'Loop: 2330B, Segment: DTP, Element: DTP03'
+        otherPayerSecondaryIdentifier:
+          maxItems: 2
+          minItems: 0
+          type: array
+          description: 'Loop: 2330B, Segment: REF'
+          items:
+            $ref: '#/components/schemas/ReferenceIdentification'
+        otherPayerPriorAuthorizationNumber:
+          type: string
+          description: 'Loop: 2330B, Segment: REF, Element: REF02 when REF01=G1'
+        otherPayerPriorAuthorizationOrReferralNumber:
+          type: string
+          description: 'Loop: 2330B; Segment: REF, Element: REF02 when REF01=9F'
+        otherPayerClaimAdjustmentIndicator:
+          type: boolean
+          description: 'Loop: 2330B, Segment: REF, Element: REF02 when REF01=T4'
+        otherPayerClaimControlNumber:
+          type: string
+          description: 'Loop: 2330B, Segment: REF, Element: REF02 when REF01=F8'
+      description: 'Loop: 2330B'
+    ContractInformation:
+      required:
+      - contractTypeCode
+      type: object
+      properties:
+        contractTypeCode:
+          type: string
+          description: 'Segment: CN1, Element: CN101, Allowed Values are: ''01'' Diagnosis Related Group (DRG), ''02'' Per Diem, ''03'' Variable Per Diem, ''04'' Flat, ''05'' Capitated, ''06'' Percent, ''09'' Other'
+          example: '01'
+          enum:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - 09
+        contractAmount:
+          type: string
+          description: 'Segment: CN1, Element: CN102'
+        contractPercentage:
+          type: string
+          description: 'Segment: CN1, Element: CN103'
+        contractCode:
+          type: string
+          description: 'Segment: CN1, Element: CN104'
+        termsDiscountPercentage:
+          type: string
+          description: 'Segment: CN1, Element: CN105'
+        contractVersionIdentifier:
+          type: string
+          description: 'Segment: CN1, Element: CN106'
+      description: CN1
+    Dependent:
+      required:
+      - dateOfBirth
+      - firstName
+      - gender
+      - lastName
+      - relationshipToSubscriberCode
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: 'Loop: 2010CA, Segment: NM1, Element: NM104'
+          example: janeone
+        lastName:
+          type: string
+          description: 'Loop: 2010CA, Segment: NM1, Element: NM103'
+          example: doeOne
+        middleName:
+          type: string
+          description: 'Loop: 2010CA, Segment: NM1, Element: NM105'
+        suffix:
+          type: string
+          description: 'Loop: 2010CA,  Segment: NM, Element: NM107'
+          example: Jr
+        gender:
+          type: string
+          description: 'Loop: 2010CA, Segment: DMG, Element: DMG03, Note: Allowed Values are: ''M'' Male, ''F'' Female, ''U'' Unknown'
+          example: F
+          enum:
+          - M
+          - F
+          - U
+        dateOfBirth:
+          type: string
+          description: 'Loop: 2010CA, Segment: DMG, Element: DMG02 when DMG01=D8'
+          example: '19800102'
+        ssn:
+          type: string
+          description: 'Loop: 2010CA, Segment: REF, Element: REF02 when REF01=SY'
+          example: '19800102'
+        memberId:
+          type: string
+          description: 'Loop: 2010CA, Segment: REF, Element: REF02 when REF01=1W'
+          example: '19800102'
+        relationshipToSubscriberCode:
+          type: string
+          description: 'Loop: 2000C, Segment: PAT, Element: PAT01, Note: Allowed Values are: ''01'' Spouse, ''19'' Child, ''20'' Employee, ''21''  Unknown, ''39''  Organ Donor, ''40''  Cadaver Donor, ''53''  Life Partner, ''G8'' Other Relationship'
+          example: '01'
+          enum:
+          - '01'
+          - '19'
+          - '20'
+          - '39'
+          - '40'
+          - '53'
+          - G8
+        contactInformation:
+          $ref: '#/components/schemas/ContactInformation'
+        address:
+          $ref: '#/components/schemas/Address'
+      description: LOOP 2000C
+    Measurements:
+      required:
+      - measurementQualifier
+      - measurementReferenceIdentificationCode
+      - testResults
+      type: object
+      properties:
+        measurementReferenceIdentificationCode:
+          type: string
+          description: 'Loop 2400, Segment: MEA; Element: MEA01, Notes: Allowable values are ''OG'' Original and ''TR'' Test Results'
+          enum:
+          - OG
+          - TR
+        measurementQualifier:
+          type: string
+          description: 'Loop 2400, Segment: MEA; Element: MEA02, Notes: Allowable values are ''HT'' Height, ''R1'' Hemoglobin, ''R2'' Hematocrit, ''R3'' Epoetin Starting Dosage, ''R4'' Creatinine'
+          enum:
+          - HT
+          - R1
+          - R2
+          - R3
+          - R4
+        testResults:
+          type: string
+          description: 'Loop 2400, Segment: MEA; Element: MEA03'
     Subscriber:
       required:
       - paymentResponsibilityLevelCode
@@ -1082,283 +2153,30 @@ components:
         address:
           $ref: '#/components/schemas/Address'
       description: 'Loop: 2000B'
-    OtherPayerName:
-      required:
-      - otherPayerIdentifier
-      - otherPayerIdentifierTypeCode
-      - otherPayerOrganizationName
+    MedicareOutpatientAdjudication:
       type: object
       properties:
-        otherInsuredAdditionalIdentifier:
+        reimbursementRate:
           type: string
-          description: 'Loop: 2330B; Segment: NM1, Element: NM111'
-        otherPayerOrganizationName:
+          description: 'Loop 2320, Segment: MOA; Element: MOA01'
+        hcpcsPayableAmount:
           type: string
-          description: 'Loop: 2330B; Segment: NM1, Element: NM103'
-        otherPayerIdentifierTypeCode:
-          type: string
-          description: 'Loop: 2330B; Segment: NM1, Element: NM108, Notes: Allowable values: ''PI'' Payor Identification and ''XV'' Centers for Medicare/Medicaid Services PlanID'
-          enum:
-          - PI
-          - XV
-        otherPayerIdentifier:
-          type: string
-          description: 'Loop: 2330B; Segment: NM1, Element: NM109'
-        otherPayerAddress:
-          $ref: '#/components/schemas/Address'
-        otherPayerAdjudicationOrPaymentDate:
-          type: string
-          description: 'Loop: 2330B, Segment: DTP, Element: DTP03'
-        otherPayerSecondaryIdentifier:
-          maxItems: 2
-          minItems: 0
-          type: array
-          description: 'Loop: 2330B, Segment: REF'
-          items:
-            $ref: '#/components/schemas/ReferenceIdentification'
-        otherPayerPriorAuthorizationNumber:
-          type: string
-          description: 'Loop: 2330B, Segment: REF, Element: REF02 when REF01=G1'
-        otherPayerPriorAuthorizationOrReferralNumber:
-          type: string
-          description: 'Loop: 2330B; Segment: REF, Element: REF02 when REF01=9F'
-        otherPayerClaimAdjustmentIndicator:
-          type: boolean
-          description: 'Loop: 2330B, Segment: REF, Element: REF02 when REF01=T4'
-        otherPayerClaimControlNumber:
-          type: string
-          description: 'Loop: 2330B, Segment: REF, Element: REF02 when REF01=F8'
-      description: 'Loop: 2330B'
-    Address:
-      required:
-      - address1
-      - city
-      type: object
-      properties:
-        address1:
-          type: string
-          description: 'Segment: N3, Element: N301'
-          example: 123 address1
-        address2:
-          type: string
-          description: 'Segment: N3, Element: N302'
-          example: apt 000
-        city:
-          type: string
-          description: 'Segment: N4, Element: N401'
-          example: city1
-        state:
-          type: string
-          description: 'Segment: N4, Element: N402'
-          example: wa
-        postalCode:
-          type: string
-          description: 'Segment: N4, Element: N403'
-          example: '981010000'
-        countryCode:
-          type: string
-          description: 'Segment: N4, Element: N404'
-        countrySubDivisionCode:
-          type: string
-          description: 'Segment: N4, Element: N407'
-      description: N3 and N4
-    CompositeDiagnosisCodePointers:
-      required:
-      - diagnosisCodePointers
-      type: object
-      properties:
-        diagnosisCodePointers:
-          maxItems: 2147483647
-          minItems: 1
-          type: array
-          description: 'Loop: 2400, Segment: SV1, Element: SV107-01, SV107-02, SV107-03, SV107-04'
-          example: 1
-          items:
-            type: string
-      description: SVC107
-    Error:
-      type: object
-      properties:
-        field:
-          type: string
-          description: The field related to the error
-          example: claimInformation.serviceLines[0].serviceDate
-        value:
-          type: string
-          description: Value for bad data error
-          example: '123'
-        code:
-          type: string
-          description: Error code
-          example: '123'
-        description:
-          type: string
-          description: Description of error message.
-          example: Must not be empty
-        followupAction:
-          type: string
-          description: Follow up action to correct
-          example: Add value
-        location:
-          type: string
-          description: Location of error
-          example: serviceDate
-    ServiceLineReferenceInformation:
-      type: object
-      properties:
-        repricedLineItemReferenceNumber:
-          type: string
-          description: 'Loop: 2400, Segment: REF, Element: REF02 Notes: When REF01=9B'
-        adjustedRepricedLineItemReferenceNumber:
-          type: string
-          description: 'Loop: 2400, Segment: REF, Element: REF02 Note: When REF01=9D'
-        priorAuthorization:
+          description: 'Loop 2320, Segment: MOA; Element: MOA02'
+        claimPaymentRemarkCode:
           maxItems: 5
           minItems: 0
           type: array
-          description: Loop 2400 REF
-          items:
-            $ref: '#/components/schemas/PriorAuthorization'
-        mammographyCertificationNumber:
-          type: string
-          description: 'Loop: 2400, Segment: REF, Element: REF02 Note: When REF01=EW'
-        clinicalLaboratoryImprovementAmendmentNumber:
-          type: string
-          description: 'Loop: 2400, Segment: REF, Element: REF02 Note: When REF01=X4'
-        referringCliaNumber:
-          type: string
-          description: 'Loop: 2400, Segment: REF, Element: REF02 Note: When REF01=F4'
-        immunizationBatchNumber:
-          type: string
-          description: 'Loop: 2400, Segment: REF, Element: REF02 Note: When REF01=BT'
-        referralNumber:
-          maxItems: 5
-          minItems: 0
-          type: array
-          description: 'Loop: 2400, Segment: REF, Element: REF Note: When REF01=9F'
+          description: 'Loop: 2320: Segment: MOA, Element: MOA03 to MOA07'
           items:
             type: string
-            description: 'Loop: 2400, Segment: REF, Element: REF Note: When REF01=9F'
-    ConditionInformation:
-      required:
-      - conditionCodes
-      type: object
-      properties:
-        conditionCodes:
-          maxItems: 12
-          minItems: 1
-          type: array
-          items:
-            type: string
-            description: 'Loop: 2300, Segment: HI, Element: HI01-02, HI02-02, HI03-02, HI04-02, HI05-02, HI06-02, HI07-02, HI08-02, HI09-02, HI10-02, HI11-02, HI11-02, HI12-02'
-      description: HI
-    ReportInformation:
-      required:
-      - attachmentReportTypeCode
-      - attachmentTransmissionCode
-      type: object
-      properties:
-        attachmentReportTypeCode:
+        endStageRenalDiseasePaymentAmount:
           type: string
-          description: 'Loop: 2400, Segment: PWK, Element: PWK01, Notes: Allowed Values are: ''03'' Report Justifying Treatment Beyond Utilization Guidelines, ''04'' Drugs Administered, ''05'' Treatment Diagnosis, ''06'' Initial Assessment, ''07'' Functional Goals, ''08'' Plan of Treatment, ''09'' Progress Report, ''10'' Continued Treatment, ''11'' Chemical Analysis, ''13'' Certified Test Report, ''15'' Justification for Admission, ''21'' Recovery Plan, ''A3'' Allergies/Sensitivities Document, ''A4'' Autopsy Report, ''AM'' Ambulance Certification, ''AS'' Admission Summary, ''B2'' Prescription, ''B3'' Physician Order, ''B4'' Referral Form, ''BR'' Benchmark Testing Results, ''BS'' Baseline, ''BT'' Blanket Test Results, ''CB'' Chiropractic Justification, ''CK'' Consent Form(s), ''CT'' Certification, ''D2'' Drug Profile Document, ''DA'' Dental Models, ''DB'' Durable Medical Equipment Prescription, ''DG'' Diagnostic Report, ''DJ'' Discharge Monitoring Report, ''DS'' Discharge Summary, ''EB'' Explanation of Benefits (Coordination of Benefits or Medicare Secondary Payor), ''HC'' Health Certificate, ''HR'' Health Clinic Records, ''I5'' Immunization Record,''IR'' State School Immunization Records, ''LA'' Laboratory Results, ''M1'' Medical Record Attachment, ''MT'' Models, ''NM Nursing Notes'', ''OB'' Operative Note, ''OC'' Oxygen Content Averaging Report, ''OD'' Orders and Treatments Document, ''OE'' Objective Physical Examination (including vital signs) Document, ''OX'' Oxygen Therapy Certification, ''OZ'' Support Data for Claim, ''P4'' Pathology Report, ''P5'' Patient Medical History Document, ''PE'' Parenteral or Enteral Certification, ''PN'' Physical Therapy Notes, ''PO'' Prosthetics or Orthotic Certification, ''PQ'' Paramedical Results, ''PY'' Physician''s Report, ''PZ'' Physical Therapy Certification, ''RB'' Radiology Films, ''RR'' Radiology Reports, ''RT'' Report of Tests and Analysis Report, ''RX'' Renewable Oxygen Content Averaging Report, ''SG'' Symptoms Document, ''V5'' Death Notification, ''XP'' Photographs'
-          example: '93'
-          enum:
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 08
-          - 09
-          - '10'
-          - '11'
-          - '13'
-          - '15'
-          - '21'
-          - A3
-          - A4
-          - AM
-          - AS
-          - B2
-          - B3
-          - B4
-          - BR
-          - BS
-          - BT
-          - CB
-          - CK
-          - CT
-          - D2
-          - DA
-          - DB
-          - DG
-          - DJ
-          - DS
-          - EB
-          - HC
-          - HR
-          - I5
-          - IR
-          - LA
-          - M1
-          - MT
-          - NM
-          - OB
-          - OC
-          - OD
-          - OE
-          - OX
-          - OZ
-          - P4
-          - P5
-          - PE
-          - PN
-          - PO
-          - PQ
-          - PY
-          - PZ
-          - RB
-          - RR
-          - RT
-          - RX
-          - SG
-          - V5
-          - XP
-        attachmentTransmissionCode:
+          description: 'Loop 2320, Segment: MOA; Element: MOA08'
+        nonPayableProfessionalComponentBilledAmount:
           type: string
-          description: 'Loop: 2400, Segment: PWK, Element: PWK02 Allowed Values are: ''AA'' Available on Request at Provider Site, ''BM'' By Mail,''EL'' Electronically Only, ''EM'' E-Mail, ''FT'' File Transfer, ''FX'' By Fax'
-          example: AA
-          enum:
-          - AA
-          - BM
-          - EL
-          - EM
-          - FT
-          - FX
-        attachmentControlNumber:
-          type: string
-          description: 'Loop 2400, Segment: PWK, Element: PWK05'
-    Failure:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
-          type: string
-    OtherPayerReferringProvider:
-      required:
-      - otherPayerReferringProviderIdentifier
-      type: object
-      properties:
-        otherPayerReferringProviderIdentifier:
-          maxItems: 3
-          minItems: 1
-          type: array
-          description: 'Loop 2330E, Segment: NM1 and REF'
-          items:
-            $ref: '#/components/schemas/ReferenceIdentification'
-      description: Loop 2330C
-    referring:
+          description: 'Loop 2320, Segment: MOA; Element: MOA09'
+      description: 'Loop: 2320, Segment: MOA'
+    rendering:
       required:
       - providerType
       type: object
@@ -1429,145 +2247,67 @@ components:
           $ref: '#/components/schemas/Address'
         contactInformation:
           $ref: '#/components/schemas/ContactInformation'
-      description: 'Loop: 2420F'
-    Submitter:
-      required:
-      - contactInformation
+      description: 'Loop: 2420A'
+    EditResponse:
       type: object
       properties:
-        organizationName:
+        errorDescription:
           type: string
-          description: 'Loop: 1000A,  Segment: NM1, Element: NM103'
-          example: REGIONAL PPO NETWORK
-        lastName:
+        badData:
           type: string
-          description: 'Loop: 1000A,  Segment: NM1, Element: NM103'
-          example: doeOne
-        firstName:
+        fieldIndex:
           type: string
-          description: 'Loop: 1000A,  Segment: NM1, Element: NM104'
-          example: janeone
-        middleName:
+        editName:
           type: string
-          description: 'Loop: 1000A,  Segment: NM1, Element: NM105'
-          example: middleone
-        contactInformation:
-          $ref: '#/components/schemas/ContactInformation'
-      description: 'Loop: 1000A'
-    EpsdtReferral:
-      required:
-      - certificationConditionCodeAppliesIndicator
-      - conditionCodes
-      type: object
-      properties:
-        certificationConditionCodeAppliesIndicator:
+        editActivity:
           type: string
-          description: 'Loop: 2300, Segment: CRC, Element: CRC02 When CRC01=ZZ, Note: ''N'' No, ''Y'' Yes'
-          enum:
-          - N
-          - Y
-        conditionCodes:
-          maxItems: 3
-          minItems: 1
-          type: array
-          description: 'Loop: 2300, Segment: CRC, Elements: CRC03, CRC04, CRC05 Note: Allowed Values are: ''AV'' Available- Not Used, ''NU'' Not Used, ''S2'' Under Treatment, ''ST'' New Services Requested'
-          items:
-            type: string
-            enum:
-            - AV
-            - NU
-            - S2
-            - ST
-      description: CRC
-    OtherPayerRenderingProvider:
-      required:
-      - entityTypeQualifier
-      type: object
-      properties:
-        entityTypeQualifier:
+        phaseID:
           type: string
-          description: 'Loop: 2330D, Segment NM1, Element: NM102, Notes: Allowable values are ''1'' Person and ''2'' Non-Person Entity'
-          enum:
-          - '1'
-          - '2'
-        otherPayerRenderingProviderSecondaryIdentifier:
-          maxItems: 3
-          minItems: 1
-          type: array
-          description: 'Loop 2330D, Segment: NM1 and REF'
-          items:
-            $ref: '#/components/schemas/ReferenceIdentification'
-      description: Loop 2330D
-    AmbulanceCertification:
-      required:
-      - certificationConditionIndicator
-      - conditionCodes
-      type: object
-      properties:
-        certificationConditionIndicator:
+        referenceID:
           type: string
-          description: 'Loop: 2300, Segment: CRC, Element: CRC02 when CRC01 = 07, Note: Allowed Values are: ''N'' No, ''Y'' Yes'
-          enum:
-          - N
-          - Y
-        conditionCodes:
-          maxItems: 5
-          minItems: 1
-          type: array
-          description: 'Loop: 2300, Segment: CRC, Element: CRC03, CRC04, CRC05, CRC06, CRC07, Note: Allowed Values are: ''01'' Patient was admitted to a hospital, ''04'' Patient was moved by stretcher, ''05'' Patient was unconscious or in shock, ''06'' Patient was transported in an emergency situation, ''07'' Patient had to be physically restrained, ''08'' Patient had visible hemorrhaging, ''09'' Ambulance service was medically necessary, ''12'' Patient is confined to a bed or chair'
-          items:
-            type: string
-            enum:
-            - '01'
-            - '04'
-            - '05'
-            - '06'
-            - '07'
-            - 08
-            - 09
-            - '12'
-      description: CRC
-    PayToPlan:
+        claimCorePath:
+          type: string
+        allowOverride:
+          type: string
+        qualifierCode:
+          type: string
+        element:
+          type: string
+        loop:
+          type: string
+        segment:
+          type: string
+    ServiceFacilityLocation:
       required:
       - address
       - organizationName
-      - primaryIdentifier
-      - primaryIdentifierTypeCode
-      - taxIdentificationNumber
       type: object
       properties:
         organizationName:
           type: string
-          description: 'Loop: 2010AC, Segment: NM1, Element: NM103'
-          example: Example Org
-        primaryIdentifierTypeCode:
-          type: string
-          description: 'Loop: 2010AC, Segment: NM1, Element: NM108, Notes: ''PI'' Payor Identification and ''XV'' Centers for Medicare/Medicaid Services PlanID'
-          example: PI
-          enum:
-          - PI
-          - XV
-        primaryIdentifier:
-          type: string
-          description: 'Loop: 2010AC, Segment: NM1, Element: NM109'
+          description: 'Loop: 2420C, Segment: NM1, Element: NM103'
+          example: HAPPY DOCTORS GROUP
         address:
           $ref: '#/components/schemas/Address'
-        secondaryIdentifierTypeCode:
+        npi:
           type: string
-          description: 'Loop: 2010AC, Segment: REF, Element: REF01, Notes: ''2U Payer Identification Number, ''FY'' Claim Office Number, ''NF National Association of Insurance Commissioners'''
-          example: 2U
-          enum:
-          - 2U
-          - FY
-          - NF
+          description: 'Loop: 2420C, Segment: NM1, Element: NM109, Note: National Provider Identifier'
         secondaryIdentifier:
+          maxItems: 3
+          minItems: 0
+          type: array
+          description: 'Loop: 2420C: Segment: REF, Notes: A list containing qualifier (REF01), identifier (REF02), and otherIdentifier(REF04)'
+          items:
+            $ref: '#/components/schemas/ReferenceIdentification'
+        phoneName:
           type: string
-          description: 'Loop: 2010AC, Segment: REF, Element: REF02'
-          example: '11'
-        taxIdentificationNumber:
+          description: 'Loop: 2310C, Segment: PER, Element: PER02'
+        phoneNumber:
           type: string
-          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=EI'
-      description: 2010AC
+          description: 'Loop: 2310C, Segment: PER, Element: PER04'
+        phoneExtension:
+          type: string
+          description: 'Loop: 2310C, Segment: PER, Element: PER06'
     OtherSubscriberInformation:
       required:
       - benefitsAssignmentCertificationIndicator
@@ -1713,492 +2453,25 @@ components:
           items:
             $ref: '#/components/schemas/OtherPayerBillingProvider'
       description: Loop 2320
-    OtherPayerSupervisingProvider:
-      required:
-      - otherPayerSupervisingProviderIdentifier
+    ClaimNote:
       type: object
       properties:
-        otherPayerSupervisingProviderIdentifier:
-          maxItems: 3
-          minItems: 1
-          type: array
-          description: 'Loop 2330F, Segments: NM1 and REF'
-          items:
-            $ref: '#/components/schemas/ReferenceIdentification'
-      description: Loop 2330F
-    Measurements:
-      required:
-      - measurementQualifier
-      - measurementReferenceIdentificationCode
-      - testResults
-      type: object
-      properties:
-        measurementReferenceIdentificationCode:
+        additionalInformation:
           type: string
-          description: 'Loop 2400, Segment: MEA; Element: MEA01, Notes: Allowable values are ''OG'' Original and ''TR'' Test Results'
-          enum:
-          - OG
-          - TR
-        measurementQualifier:
+          description: 'Loop 2300, Segment: NTE, Element: NTE02, Note: NTE01=ADD'
+        certificationNarrative:
           type: string
-          description: 'Loop 2400, Segment: MEA; Element: MEA02, Notes: Allowable values are ''HT'' Height, ''R1'' Hemoglobin, ''R2'' Hematocrit, ''R3'' Epoetin Starting Dosage, ''R4'' Creatinine'
-          enum:
-          - HT
-          - R1
-          - R2
-          - R3
-          - R4
-        testResults:
+          description: 'Loop 2300, Segment: NTE, Element: NTE02, Note: NTE01=CER'
+        goalRehabOrDischargePlans:
           type: string
-          description: 'Loop 2400, Segment: MEA; Element: MEA03'
-    Dependent:
-      required:
-      - dateOfBirth
-      - firstName
-      - gender
-      - lastName
-      - relationshipToSubscriberCode
-      type: object
-      properties:
-        firstName:
+          description: 'Loop 2300, Segment: NTE, Element: NTE02, Note: NTE01=DCP'
+        diagnosisDescription:
           type: string
-          description: 'Loop: 2010CA, Segment: NM1, Element: NM104'
-          example: janeone
-        lastName:
+          description: 'Loop 2300, Segment: NTE, Element: NTE02, Note: NTE01=DGN'
+        thirdPartOrgNotes:
           type: string
-          description: 'Loop: 2010CA, Segment: NM1, Element: NM103'
-          example: doeOne
-        middleName:
-          type: string
-          description: 'Loop: 2010CA, Segment: NM1, Element: NM105'
-        suffix:
-          type: string
-          description: 'Loop: 2010CA,  Segment: NM, Element: NM107'
-          example: Jr
-        gender:
-          type: string
-          description: 'Loop: 2010CA, Segment: DMG, Element: DMG03, Note: Allowed Values are: ''M'' Male, ''F'' Female, ''U'' Unknown'
-          example: F
-          enum:
-          - M
-          - F
-          - U
-        dateOfBirth:
-          type: string
-          description: 'Loop: 2010CA, Segment: DMG, Element: DMG02 when DMG01=D8'
-          example: '19800102'
-        ssn:
-          type: string
-          description: 'Loop: 2010CA, Segment: REF, Element: REF02 when REF01=SY'
-          example: '19800102'
-        memberId:
-          type: string
-          description: 'Loop: 2010CA, Segment: REF, Element: REF02 when REF01=1W'
-          example: '19800102'
-        relationshipToSubscriberCode:
-          type: string
-          description: 'Loop: 2000C, Segment: PAT, Element: PAT01, Note: Allowed Values are: ''01'' Spouse, ''19'' Child, ''20'' Employee, ''21''  Unknown, ''39''  Organ Donor, ''40''  Cadaver Donor, ''53''  Life Partner, ''G8'' Other Relationship'
-          example: '01'
-          enum:
-          - '01'
-          - '19'
-          - '20'
-          - '39'
-          - '40'
-          - '53'
-          - G8
-        contactInformation:
-          $ref: '#/components/schemas/ContactInformation'
-        address:
-          $ref: '#/components/schemas/Address'
-      description: LOOP 2000C
-    ContactInformation:
-      required:
-      - name
-      type: object
-      properties:
-        name:
-          type: string
-          description: 'Segment: PER, Element: PER02 and PER01=IC'
-          example: SUBMITTER CONTACT INFO
-        phoneNumber:
-          type: string
-          description: 'Segment: PER, Element: PER04 (Provider, Submitter, Subscriber, Dependent) or PER06 (Provider, Submitter) or PER08 (Provider, Submitter), Note: Used when PER03=TE (Provider, Submitter, Subscriber, Dependent) or PER05=TE (Provider, Submitter) or PER07=TE (Provider, Submitter)'
-          example: '5554567890'
-        faxNumber:
-          type: string
-          description: 'Segment: PER, Element: PER04 or PER06 or PER08, Note: This is used in (Provider, Submitter) when PER03=FX or PER05=FX or PER07=FX'
-          example: '5551234567'
-        email:
-          type: string
-          description: 'Segment: PER, Element: PER04 or PER06 or PER08, Note: This used in (Provider, Submitter) when PER03=EM or PER05=EM or PER07=EM'
-          example: email@email.com
-        phoneExtension:
-          type: string
-          description: 'Segment: PER, Element: PER06 (Provider, Submitter, Subscriber, Dependent) or PER08 (Provider, Submitter),Note: Used when PER05=EX (Provider, Submitter, Subscriber, Dependent) or PER07=EX (Provider, Submitter)'
-          example: '1234'
-      description: PER
-    ServiceFacilityLocation:
-      required:
-      - address
-      - organizationName
-      type: object
-      properties:
-        organizationName:
-          type: string
-          description: 'Loop: 2420C, Segment: NM1, Element: NM103'
-          example: HAPPY DOCTORS GROUP
-        address:
-          $ref: '#/components/schemas/Address'
-        npi:
-          type: string
-          description: 'Loop: 2420C, Segment: NM1, Element: NM109, Note: National Provider Identifier'
-        secondaryIdentifier:
-          maxItems: 3
-          minItems: 0
-          type: array
-          description: 'Loop: 2420C: Segment: REF, Notes: A list containing qualifier (REF01), identifier (REF02), and otherIdentifier(REF04)'
-          items:
-            $ref: '#/components/schemas/ReferenceIdentification'
-        phoneName:
-          type: string
-          description: 'Loop: 2310C, Segment: PER, Element: PER02'
-        phoneNumber:
-          type: string
-          description: 'Loop: 2310C, Segment: PER, Element: PER04'
-        phoneExtension:
-          type: string
-          description: 'Loop: 2310C, Segment: PER, Element: PER06'
-    ProfessionalService:
-      required:
-      - compositeDiagnosisCodePointers
-      - lineItemChargeAmount
-      - measurementUnit
-      - procedureCode
-      - procedureIdentifier
-      - serviceUnitCount
-      type: object
-      properties:
-        procedureIdentifier:
-          type: string
-          description: 'Loop: 2400, Segment: SV1, Element: SV101-01, Notes: Allowed Values are: ''ER'' Jurisdiction Specific Procedure and Supply Codes, ''HC'' Health Care Financing Administration Common Procedural Coding System (HCPCS) Codes, ''IV'' Home Infusion EDI Coalition (HIEC) Product/Service Code,''WK'' Advanced Billing Concepts (ABC) Codes'
-          example: HC
-          enum:
-          - ER
-          - HC
-          - IV
-          - WK
-        procedureCode:
-          type: string
-          description: 'Loop 2400, Segment: SV1, Element: SV101-02'
-          example: E0570
-        procedureModifiers:
-          maxItems: 4
-          minItems: 0
-          type: array
-          description: 'Loop 2400, Segment: SV1, Elements: SV101-03 to SV101-06, Notes: Required when modifier clarifies or improves the reporting accuracy of the associated procedure code. If not required then do not send'
-          items:
-            type: string
-        description:
-          type: string
-          description: 'Loop 2400, Segment: SV1, Element: SV101-07, Notes: A free form description to clarify teh related data elements and their content'
-        lineItemChargeAmount:
-          type: string
-          description: 'Loop 2400, Segment: SV1, Element: SV102, Notes: Required value for total charge amount, ''0'' (Zero) is acceptable for this value'
-          example: '25'
-        measurementUnit:
-          type: string
-          description: 'Loop 2400, Segment: SV1, Element: SV103, Notes: Allowed values are ''MJ'' Minutes, ''UN'' Unit'
-          example: UN
-          enum:
-          - MJ
-          - UN
-        serviceUnitCount:
-          type: string
-          description: 'Loop 2400, Segment: SV1, Element: SV104, Notes: When a decimal is needed to report units, include it in this element'
-          example: '1'
-        placeOfServiceCode:
-          type: string
-          description: 'Loop 2400, Segment: SV1, Element: SV105'
-        compositeDiagnosisCodePointers:
-          $ref: '#/components/schemas/CompositeDiagnosisCodePointers'
-        emergencyIndicator:
-          type: string
-          description: 'Loop 2400, Segment: SV1, Element: SV109'
-          enum:
-          - Y
-        epsdtIndicator:
-          type: string
-          description: 'Loop 2400, Segment: SV1, Element: SV111'
-          enum:
-          - Y
-        familyPlanningIndicator:
-          type: string
-          description: 'Loop 2400, Segment: SV1, Element: SV112'
-          enum:
-          - Y
-        copayStatusCode:
-          type: string
-          description: 'Loop 2400, Segment: SV1, Element: SV115'
-          enum:
-          - '0'
-    ClaimDateInformation:
-      type: object
-      properties:
-        symptomDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        initialTreatmentDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        lastSeenDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        acuteManifestationDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        accidentDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        lastMenstrualPeriodDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        lastXRayDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        hearingAndVisionPrescriptionDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        disabilityBeginDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        disabilityEndDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        lastWorkedDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        authorizedReturnToWorkDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        admissionDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        dischargeDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        assumedAndRelinquishedCareBeginDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        assumedAndRelinquishedCareEndDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        repricerReceivedDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-        firstContactDate:
-          type: string
-          description: 'Loop: 2300, Segment: DTP, Element: DTP03'
-      description: DTP
-    Payer:
-      type: object
-      properties:
-        payerName:
-          type: string
-        payerID:
-          type: string
-    SupportingDocumentation:
-      required:
-      - questionNumber
-      type: object
-      properties:
-        questionNumber:
-          type: string
-          description: 'Loop: 2440,  Segment: FRM, Element: FRM01'
-        questionResponseCode:
-          type: string
-          description: 'Loop: 2440,  Segment: FRM, Element: FRM02, Notes: Allowed Values are: ''N'' No, ''W'' Not Applicable, ''Y'' Yes'
-          enum:
-          - N
-          - W
-          - Y
-        questionResponse:
-          type: string
-          description: 'Loop: 2440,  Segment: FRM, Element: FRM03'
-        questionResponseAsDate:
-          type: string
-          description: 'Loop: 2440,  Segment: FRM, Element: FRM04'
-        questionResponseAsPercent:
-          type: string
-          description: 'Loop: 2440,  Segment: FRM, Element: FRM05'
-      description: 'Loop: 2440, Segment: FRM'
-    supervising:
-      required:
-      - providerType
-      type: object
-      properties:
-        providerType:
-          type: string
-          example: BillingProvider
-        npi:
-          type: string
-          description: 'NM109, Notes: National Provider Identifier'
-          example: '1760854442'
-        ssn:
-          type: string
-          description: 'REF02 when REF01=SY, Notes: The Social Security Number must be a string of nine numbers with no separators'
-          example: '000000000'
-        employerId:
-          type: string
-          description: 'REF02 when REF01=EI, Notes: The Employer Identification Number must be a string of exactly nine numbers with no separators'
-          example: '123456789'
-        commercialNumber:
-          type: string
-          description: REF02 when REF01=G2
-        locationNumber:
-          type: string
-          description: REF02 when REF01=LU
-        payerIdentificationNumber:
-          type: string
-          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=2U'
-        employerIdentificationNumber:
-          type: string
-          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=EI'
-        claimOfficeNumber:
-          type: string
-          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=FY'
-        naic:
-          type: string
-          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=NF, Notes: National Association of Insurance Commissioners (NAIC) Code'
-        stateLicenseNumber:
-          type: string
-          description: REF02 when REF01=0B
-        providerUpinNumber:
-          type: string
-          description: 'REF02 when REF01=1G, Notes: UPINs must be formatted as either X99999 or XXX999'
-        taxonomyCode:
-          type: string
-          description: PRV03
-        firstName:
-          type: string
-          description: NM104
-          example: johnone
-        lastName:
-          type: string
-          description: NM103
-          example: doeone
-        middleName:
-          type: string
-          description: NM105
-          example: middleone
-        suffix:
-          type: string
-          description: NM107
-          example: Jr
-        organizationName:
-          type: string
-          description: NM103
-          example: HAPPY DOCTORS GROUPPRACTICE
-        address:
-          $ref: '#/components/schemas/Address'
-        contactInformation:
-          $ref: '#/components/schemas/ContactInformation'
-      description: 'Loop: 2420D'
-    ClaimPricingRepricingInformation:
-      required:
-      - pricingMethodologyCode
-      - repricedAllowedAmount
-      type: object
-      properties:
-        pricingMethodologyCode:
-          type: string
-          description: 'Loop: 2300, Segment: HCP, Element: HCP01, Note: Allowed Values are: ''00'' Zero Pricing (Not Covered Under Contract), ''01'' Priced as Billed at 100%, ''02'' Priced at the Standard Fee Schedule, ''03'' Priced at a Contractual Percentage, ''04'' Bundled Pricing, ''05'' Peer Review Pricing, ''06'' Bundled Pricing, ''07'' Flat Rate Pricing, ''08'' Combination Pricing, ''09'' Maternity Pricing, ''10'' Other Pricing, ''11'' Lower of Cost, ''12'' Ratio of Cost, ''13'' Cost Reimbursed, ''14'' Adjustment Pricing'
-          example: '01'
-          enum:
-          - '00'
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 08
-          - 09
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-        repricedAllowedAmount:
-          type: string
-          description: 'Loop: 2300, Segment: HCP, Element: HCP02'
-          example: '1'
-        repricedSavingAmount:
-          type: string
-          description: 'Loop: 2300, Segment: HCP, Element: HCP03'
-        repricingOrganizationIdentifier:
-          type: string
-          description: 'Loop: 2300, Segment: HCP, Element: HCP04'
-        repricingPerDiemOrFlatRateAmount:
-          type: string
-          description: 'Loop: 2300, Segment: HCP, Element: HCP05'
-        repricedApprovedAmbulatoryPatientGroupCode:
-          type: string
-          description: 'Loop: 2300, Segment: HCP, Element: HCP06'
-        repricedApprovedAmbulatoryPatientGroupAmount:
-          type: string
-          description: 'Loop: 2300, Segment: HCP, Element: HCP07'
-        rejectReasonCode:
-          type: string
-          description: 'Loop: 2300, Segment: HCP, Element: HCP13, Note: Allowed Values are: ''T1'' Cannot Identify Provider as TPO (Third Party Organization) Participant, ''T2'' Cannot Identify Payer as TPO (Third Party Organization) Participant, ''T3'' Cannot Identify Insured as TPO (Third Party Organization) Participant, ''T4'' Payer Name or Identifier Missing, ''T5'' Certification Information Missing, ''16'' Claim does not contain enough information for repricing'
-          enum:
-          - T1
-          - T2
-          - T3
-          - T4
-          - T5
-          - T6
-        policyComplianceCode:
-          type: string
-          description: 'Loop: 2300, Segment: HCP, Element: HCP14, Note: Allowed Values are: ''1'' Procedure Followed (Compliance), ''2'' Not Followed - Call Not Made (Non-Compliance Call Not Made), ''3'' Not Medically Necessary (Non-Compliance Non-Medically Necessary), ''4'' Not Followed Other (Non-Compliance Other), ''5'' Emergency Admit to Non-Network Hospital'
-          enum:
-          - '1'
-          - '2'
-          - '3'
-          - '4'
-          - '5'
-        exceptionCode:
-          type: string
-          description: 'Loop: 2300, Segment: HCP, Element: HCP15, Note: Allowed Values are: ''1'' Non-Network Professional Provider in Network Hospital, ''2'' Emergency Care, ''3'' Services or Specialist not in Network, ''4'' Out-of-Service Area, ''5'' State Mandates, ''6'' Other'
-          enum:
-          - '1'
-          - '2'
-          - '3'
-          - '4'
-          - '5'
-          - '6'
-      description: HCP
-    OtherPayerBillingProvider:
-      required:
-      - entityTypeQualifier
-      - otherPayerBillingProviderIdentifier
-      type: object
-      properties:
-        entityTypeQualifier:
-          type: string
-          description: 'Loop 2330G, Segment: NM1; Element: NM101, Notes: Code identifying an organizational entity, a physical location, property or an individual. Allowablevalues: ''1'' Person, ''2'' Non-Person Entity '
-          enum:
-          - '1'
-          - '2'
-        otherPayerBillingProviderIdentifier:
-          maxItems: 2
-          minItems: 1
-          type: array
-          description: 'Loop 2330G, Segment: NM1 and REF'
-          items:
-            $ref: '#/components/schemas/ReferenceIdentification'
-      description: Loop 2330G
+          description: 'Loop 2300, Segment: NTE, Element: NTE02, Note: NTE01=TPO'
+      description: NTE
     Response:
       type: object
       properties:
@@ -2306,375 +2579,33 @@ components:
             $ref: '#/components/schemas/EditResponse'
         failure:
           $ref: '#/components/schemas/Failure'
-    ContactInformationOrderingProvider:
+    AmbulanceTransportInformation:
       required:
-      - name
+      - ambulanceTransportReasonCode
+      - transportDistanceInMiles
       type: object
       properties:
-        name:
+        patientWeightInPounds:
           type: string
-          description: 'Segment: PER, Element: PER02 and PER01=IC'
-          example: SUBMITTER CONTACT INFO
-        phoneNumber:
+          description: 'Segment: CR1, Element: CR102'
+        ambulanceTransportReasonCode:
           type: string
-          description: 'Segment: PER, Element: PER04 (Provider, Submitter, Subscriber, Dependent) or PER06 (Provider, Submitter) or PER08 (Provider, Submitter), Note: Used when PER03=TE (Provider, Submitter, Subscriber, Dependent) or PER05=TE (Provider, Submitter) or PER07=TE (Provider, Submitter)'
-          example: '5554567890'
-        faxNumber:
-          type: string
-          description: 'Segment: PER, Element: PER04 or PER06 or PER08, Note: This is used in (Provider, Submitter) when PER03=FX or PER05=FX or PER07=FX'
-          example: '5551234567'
-        email:
-          type: string
-          description: 'Segment: PER, Element: PER04 or PER06 or PER08, Note: This used in (Provider, Submitter) when PER03=EM or PER05=EM or PER07=EM'
-          example: email@email.com
-        phoneExtension:
-          type: string
-          description: 'Segment: PER, Element: PER06 or PER08, Note: PER05=EX or PER07=EX'
-          example: '1234'
-      description: PER
-    PurchasedServiceInformation:
-      required:
-      - purchasedServiceChargeAmount
-      - purchasedServiceProviderIdentifier
-      type: object
-      properties:
-        purchasedServiceProviderIdentifier:
-          type: string
-          description: 'Loop: 2400, Segment: PS1, Element: PS101'
-          example: '01'
-        purchasedServiceChargeAmount:
-          type: string
-          description: 'Loop: 2400, Segment: PS1, Element: PS102'
-          example: '10'
-    ServiceLine:
-      required:
-      - professionalService
-      - serviceDate
-      type: object
-      properties:
-        assignedNumber:
-          type: string
-          description: 'Loop: 2400, Segment: LX, Element: LX01'
-        serviceDate:
-          type: string
-          description: 'Loop: 2400, Segment: DTP, Element: DTP03, Notes: When sent with serviceDateEnd it will be used as the start date for Date Time period, if sent without serviceDateEnd will use DTP02 = D8. Expressed in Format CCYYMMDD'
-          example: '20050514'
-        serviceDateEnd:
-          type: string
-          description: 'Loop: 2400, Segment: DTP, Element: DTP03, Notes: Range of Dates Expressed in Format CCYYMMDD'
-        providerControlNumber:
-          type: string
-          description: 'Loop: 2400, Segment: REF, Element: REF04-02 when REF01=6R'
-        professionalService:
-          $ref: '#/components/schemas/ProfessionalService'
-        durableMedicalEquipmentService:
-          $ref: '#/components/schemas/DurableMedicalEquipmentService'
-        serviceLineSupplementalInformation:
-          maxItems: 10
-          minItems: 0
-          type: array
-          items:
-            $ref: '#/components/schemas/ReportInformation'
-        durableMedicalEquipmentCertificateOfMedicalNecessity:
-          $ref: '#/components/schemas/DurableMedicalEquipmentCertificateOfMedicalNecessity'
-        ambulanceTransportInformation:
-          $ref: '#/components/schemas/AmbulanceTransportInformation'
-        durableMedicalEquipmentCertification:
-          $ref: '#/components/schemas/DurableMedicalEquipmentCertification'
-        ambulanceCertification:
-          maxItems: 3
-          minItems: 0
-          type: array
-          items:
-            $ref: '#/components/schemas/AmbulanceCertification'
-        hospiceEmployeeIndicator:
-          type: boolean
-          description: 'Loop: 2400, Segment: CRC, Element: CRC02 Notes: True or False'
-        conditionIndicatorDurableMedicalEquipment:
-          $ref: '#/components/schemas/ConditionIndicatorDurableMedicalEquipment'
-        serviceLineDateInformation:
-          $ref: '#/components/schemas/ServiceLineDateInformation'
-        ambulancePatientCount:
-          type: integer
-          description: 'Loop: 2400, Segment: QTY, Element: QTY02 when QTY01=PT'
-          format: int32
-        obstetricAnesthesiaAdditionalUnits:
-          type: integer
-          description: 'Loop: 2400, Segment: QTY, Element: QTY02 when QTY01=FL'
-          format: int32
-        testResults:
-          maxItems: 5
-          minItems: 0
-          type: array
-          items:
-            $ref: '#/components/schemas/Measurements'
-        contractInformation:
-          $ref: '#/components/schemas/ContractInformation'
-        serviceLineReferenceInformation:
-          $ref: '#/components/schemas/ServiceLineReferenceInformation'
-        salesTaxAmount:
-          type: string
-          description: 'Loop: 2400, Segment: AMT, Element: AMT02 when AMT01=T'
-        postageTaxAmount:
-          type: string
-          description: 'Loop: 2400, Segment: AMT, Element: AMT02 when AMT01=F4'
-        fileInformation:
-          maxItems: 10
-          minItems: 0
-          type: array
-          description: 'Loop: 2400, Segment: K3, Element: K301'
-          items:
-            type: string
-            description: 'Loop: 2400, Segment: K3, Element: K301'
-        additionalNotes:
-          type: string
-          description: 'Loop: 2400, Segment: NTE, Element: NTE02 when NTE01=ADD'
-        goalRehabOrDischargePlans:
-          type: string
-          description: 'Loop: 2400, Segment: NTE, Element: NTE02 when NTE01=DCP'
-        thirdPartyOrganizationNotes:
-          type: string
-          description: 'Loop: 2400, Segment: NTE, Element: NTE02 when NTE01=TPO'
-        purchasedServiceInformation:
-          $ref: '#/components/schemas/PurchasedServiceInformation'
-        linePricingRepricingInformation:
-          $ref: '#/components/schemas/ClaimPricingRepricingInformation'
-        drugIdentification:
-          $ref: '#/components/schemas/DrugIdentification'
-        renderingProvider:
-          $ref: '#/components/schemas/ServiceLineProvider'
-        purchasedServiceProvider:
-          $ref: '#/components/schemas/ServiceLineProvider'
-        serviceFacilityLocation:
-          $ref: '#/components/schemas/ServiceFacilityLocation'
-        supervisingProvider:
-          $ref: '#/components/schemas/ServiceLineProvider'
-        orderingProvider:
-          $ref: '#/components/schemas/ServiceLineOrderingProvider'
-        referringProvider:
-          $ref: '#/components/schemas/ServiceLineProvider'
-        ambulancePickUpLocation:
-          $ref: '#/components/schemas/Address'
-        ambulanceDropOffLocation:
-          $ref: '#/components/schemas/Address'
-        lineAdjudicationInformation:
-          maxItems: 15
-          minItems: 0
-          type: array
-          items:
-            $ref: '#/components/schemas/LineAdjudicationInformation'
-        formIdentification:
-          type: array
-          items:
-            $ref: '#/components/schemas/FormIdentification'
-      description: Loop 2400
-    Receiver:
-      required:
-      - organizationName
-      type: object
-      properties:
-        organizationName:
-          type: string
-          description: 'Loop: 1000B, Segment: NM1, Element: NM103'
-          example: EXTRA HEALTHY INSURANCE
-      description: 'Loop: 1000B'
-    ReferenceIdentification:
-      required:
-      - identifier
-      - qualifier
-      type: object
-      properties:
-        qualifier:
-          type: string
-          description: 'Segment: REF, Element: REF01'
-        identifier:
-          type: string
-          description: 'Segment: REF, Element: REF02'
-        otherIdentifier:
-          type: string
-          description: 'Segment: REF, Element: REF03'
-    HealthCareInformation:
-      required:
-      - diagnosisCode
-      - diagnosisTypeCode
-      type: object
-      properties:
-        diagnosisTypeCode:
-          type: string
-          description: 'Loop: 2440, Segment: HI, Element: HI01-01 or HI02-01 or HI03-01 or HI04-01 or HI05-01 or HI06-01 or HI07-01 or HI08-01 or HI09-01 or HI10-01 or HI11-01 or HI12-01, Note: Allowed Values are: ''BK'' International Classification of Diseases Clinical Modification (ICD-9-CM) Principal Diagnosis, ''ABK'' International Classification of Diseases Clinical Modification (ICD-10-CM) Principal Diagnosis, ''BF'' International Classification of Diseases Clinical Modification (ICD-9-CM) Diagnosis, ''ABF'' International Classification of Diseases Clinical Modification (ICD-10-CM) Diagnosis'
+          description: 'CR104, Note: Allowed Values are: ''A'' Patient was transported to nearest facility for care of symptoms, complaints, or both, ''B'' Patient was transported for the benefit of a preferred physician, ''C'' Patient was transported for the nearness of family members, ''D'' Patient was transported for the care of a specialist or for availability of specialized equipment, ''E'' Patient Transferred to Rehabilitation Facility'
           enum:
-          - BK
-          - ABK
-          - BF
-          - ABF
-        diagnosisCode:
+          - A
+          - B
+          - C
+          - D
+          - E
+        transportDistanceInMiles:
           type: string
-          description: 'Loop: 2440, Segment: HI, Element: HI01-02 or HI02-02 or HI03-02 or HI04-02 or HI05-02 or HI06-02 or HI07-02 or HI08-02 or HI09-02 or HI10-02 or HI11-02 or HI12-02'
-      description: HI
-    ServiceLineProvider:
-      required:
-      - providerType
-      type: object
-      properties:
-        providerType:
+          description: 'Segment: CR1, Element: CR106'
+        roundTripPurposeDescription:
           type: string
-          example: BillingProvider
-        npi:
+          description: 'Segment: CR1, Element: CR109'
+        stretcherPurposeDescription:
           type: string
-          description: 'NM109, Notes: National Provider Identifier'
-          example: '1760854442'
-        ssn:
-          type: string
-          description: 'REF02 when REF01=SY, Notes: The Social Security Number must be a string of nine numbers with no separators'
-          example: '000000000'
-        employerId:
-          type: string
-          description: 'REF02 when REF01=EI, Notes: The Employer Identification Number must be a string of exactly nine numbers with no separators'
-          example: '123456789'
-        commercialNumber:
-          type: string
-          description: REF02 when REF01=G2
-        locationNumber:
-          type: string
-          description: REF02 when REF01=LU
-        payerIdentificationNumber:
-          type: string
-          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=2U'
-        employerIdentificationNumber:
-          type: string
-          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=EI'
-        claimOfficeNumber:
-          type: string
-          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=FY'
-        naic:
-          type: string
-          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=NF, Notes: National Association of Insurance Commissioners (NAIC) Code'
-        stateLicenseNumber:
-          type: string
-          description: REF02 when REF01=0B
-        providerUpinNumber:
-          type: string
-          description: 'REF02 when REF01=1G, Notes: UPINs must be formatted as either X99999 or XXX999'
-        taxonomyCode:
-          type: string
-          description: PRV03
-        firstName:
-          type: string
-          description: NM104
-          example: johnone
-        lastName:
-          type: string
-          description: NM103
-          example: doeone
-        middleName:
-          type: string
-          description: NM105
-          example: middleone
-        suffix:
-          type: string
-          description: NM107
-          example: Jr
-        organizationName:
-          type: string
-          description: NM103
-          example: HAPPY DOCTORS GROUPPRACTICE
-        address:
-          $ref: '#/components/schemas/Address'
-        contactInformation:
-          $ref: '#/components/schemas/ContactInformation'
-        otherIdentifier:
-          type: string
-        secondaryIdentifier:
-          maxItems: 20
-          minItems: 0
-          type: array
-          items:
-            $ref: '#/components/schemas/ReferenceIdentification'
-    PatientConditionInformationVision:
-      required:
-      - certificationConditionIndicator
-      - codeCategory
-      - conditionCodes
-      type: object
-      properties:
-        codeCategory:
-          type: string
-          description: 'Loop: 2300, Segment: CRC, Element: CRC01, Notes: Allowed Values are: ''E1'' Spectacle Lenses, ''E2'' Contact Lenses, ''E3'' Spectacle Frames'
-          enum:
-          - E1
-          - E2
-          - E3
-        certificationConditionIndicator:
-          type: string
-          description: 'Loop: 2300, Segment: CRC, Element: CRC02, Notes: Allowed Values are: ''N'' No, ''Y'' Yes'
-          enum:
-          - N
-          - Y
-        conditionCodes:
-          maxItems: 5
-          minItems: 1
-          type: array
-          description: 'Loop: 2300, Segment: CRC, Element: CRC03 to CRC07, Notes: CRC03 is required, others are situational. Allowed Values are: ''L1'' General Standard of 20 Degree or .5 Diopter Sphere or Cylinder Change Met, ''L2'' Replacement Due to Loss or Theft, ''L3'' Replacement Due to Breakage or Damage, L4'' Replacement Due to Patient Preference, ''L5'' Replacement Due to Medical Reason'
-          items:
-            type: string
-            enum:
-            - L1
-            - L2
-            - L3
-            - L4
-            - L5
-      description: 'Loop 2300, Segment: CRC'
-    EditResponse:
-      type: object
-      properties:
-        errorDescription:
-          type: string
-        badData:
-          type: string
-        fieldIndex:
-          type: string
-        editName:
-          type: string
-        editActivity:
-          type: string
-        phaseID:
-          type: string
-        referenceID:
-          type: string
-        claimCorePath:
-          type: string
-        allowOverride:
-          type: string
-        qualifierCode:
-          type: string
-        element:
-          type: string
-        loop:
-          type: string
-        segment:
-          type: string
-    ClaimAdjustment:
-      required:
-      - adjustmentDetails
-      - adjustmentGroupCode
-      type: object
-      properties:
-        adjustmentGroupCode:
-          type: string
-          description: 'Loop: 2430, Segment: CAS, Element: CAS01, Notes: Code identifying the general category of payment adjustment'
-          enum:
-          - CO
-          - CR
-          - OA
-          - PI
-          - PR
-        adjustmentDetails:
-          maxItems: 6
-          minItems: 1
-          type: array
-          description: 'Loop: 2430, Segment: CAS'
-          items:
-            $ref: '#/components/schemas/ClaimAdjustmentDetails'
+          description: 'Segment: CR1, Element: CR110'
       description: CR1
     ResponseMeta:
       type: object
@@ -2695,177 +2626,6 @@ components:
           type: string
           description: Used by Optum to identify where this request can be found for support
       description: meta data about the request
-    ConditionIndicatorDurableMedicalEquipment:
-      required:
-      - certificationConditionIndicator
-      - conditionIndicator
-      type: object
-      properties:
-        certificationConditionIndicator:
-          type: string
-          description: 'Loop 2400, Segment: CRC, Element: CRC02 and CRC01=09, Note: Allowed Values are: ''N'' No, ''Y'' Yes'
-          example: Y
-          enum:
-          - Y
-          - N
-        conditionIndicator:
-          type: string
-          description: 'Loop 2400, Segment: CRC, Element: CRC03, Note: Allowed Values are: ''38'' Certification signed by the physician is on file at the supplier''s office, ''ZV'' Replacement Item'
-          example: '38'
-          enum:
-          - '38'
-          - ZV
-        conditionIndicatorCode:
-          type: string
-          description: 'Loop 2400, Segment: CRC, Element: CRC04, Note: Allowed Values are: ''38'' Certification signed by the physician is on file at the supplier''s office, ''ZV'' Replacement Item'
-          example: '38'
-          enum:
-          - '38'
-          - ZV
-      description: CRC
-    ClaimAdjustmentDetails:
-      required:
-      - adjustmentAmount
-      - adjustmentReasonCode
-      type: object
-      properties:
-        adjustmentReasonCode:
-          type: string
-          description: 'Loop: 2430, Segment: CAS, Element: CAS02, CAS05, CAS08, CAS11, CAS14, CAS17'
-        adjustmentAmount:
-          type: string
-          description: 'Loop: 2430, Segment: CAS, Element: CAS03, CAS06, CAS09, CAS12, CAS15, CAS18'
-        adjustmentQuantity:
-          type: string
-          description: 'Loop: 2430, Segment: CAS, Element: CAS04, CAS07, CAS10, CAS13, CAS16, CAS19'
-      description: CAS
-    OtherSubscriberName:
-      required:
-      - otherInsuredIdentifier
-      - otherInsuredIdentifierTypeCode
-      - otherInsuredLastName
-      - otherInsuredQualifier
-      type: object
-      properties:
-        otherInsuredQualifier:
-          type: string
-          description: 'Loop: 2330A, Segment: NM1, Element: NM102, Notes: Allowed Values are: ''1'' Person, ''2'' Non-Person Entity'
-          enum:
-          - '1'
-          - '2'
-        otherInsuredLastName:
-          type: string
-          description: 'Loop: 2330A, Segment: NM1, Element: NM103'
-        otherInsuredFirstName:
-          type: string
-          description: 'Loop: 2330A, Segment: NM1, Element: NM102, Notes: Required when NM102 = 1 (Person)'
-        otherInsuredMiddleName:
-          type: string
-          description: 'Loop: 2330A, Segment: NM1, Element: NM105, Notes: Required when NM102 = 1 (Person)'
-        otherInsuredNameSuffix:
-          type: string
-          description: 'Loop: 2330A, Segment: NM1, Element: NM107, Notes: Required when NM102 = 1 (Person)'
-        otherInsuredIdentifierTypeCode:
-          type: string
-          description: 'Loop: 2330A, Segment: NM1, Element: NM108, Notes: Allowable values are: ''II'' Standard Unique HealthIdentifier for each individual in the United States and ''MI'' member identification number'
-          enum:
-          - II
-          - MI
-        otherInsuredIdentifier:
-          type: string
-          description: 'Loop: 2330A, Segment: NM1, Element: NM109'
-        otherInsuredAddress:
-          $ref: '#/components/schemas/Address'
-        otherInsuredAdditionalIdentifier:
-          type: string
-          description: 'Loop: 2330A, Segment: REF, Element: REF02 when REF01=SY'
-      description: 'Loop: 2330A'
-    DurableMedicalEquipmentCertificateOfMedicalNecessity:
-      required:
-      - attachmentTransmissionCode
-      type: object
-      properties:
-        attachmentTransmissionCode:
-          type: string
-          description: 'Loop: 2400, Segment: PWK, Element: PWK02 when PWK01=CT, Note: Allowed Values are: ''AB'' Previously Submitted to Payer, ''AD'' Certification Included in this Claim, ''AF'' Narrative Segment Included in this Claim, ''AG'' No Documentation is Required, ''NS'' Not Specified'
-          enum:
-          - AB
-          - AD
-          - AF
-          - AG
-          - NS
-      description: PWK
-    OtherPayerServiceFacilityLocation:
-      required:
-      - otherPayerServiceFacilityLocationSecondaryIdentifier
-      type: object
-      properties:
-        otherPayerServiceFacilityLocationSecondaryIdentifier:
-          maxItems: 3
-          minItems: 1
-          type: array
-          description: 'Loop 2330E, Segments: NM1 and REF'
-          items:
-            $ref: '#/components/schemas/ReferenceIdentification'
-      description: Loop 2330E
-    ServiceLineDateInformation:
-      type: object
-      properties:
-        prescriptionDate:
-          type: string
-          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=471, Notes: Date Expressed in Format CCYYMMDD'
-        certificationRevisionOrRecertificationDate:
-          type: string
-          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=607, Notes: Date Expressed in Format CCYYMMDD'
-        beginTherapyDate:
-          type: string
-          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=463, Notes: Date Expressed in Format CCYYMMDD'
-        lastCertificationDate:
-          type: string
-          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=461, Notes: Date Expressed in Format CCYYMMDD'
-        treatmentOrTherapyDate:
-          type: string
-          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=304, Notes: Date Expressed in Format CCYYMMDD'
-        hemoglobinTestDate:
-          type: string
-          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=738, Notes: Date Expressed in Format CCYYMMDD'
-        serumCreatineTestDate:
-          type: string
-          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=739, Notes: Date Expressed in Format CCYYMMDD'
-        shippedDate:
-          type: string
-          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=011, Notes: Date Expressed in Format CCYYMMDD'
-        lastXRayDate:
-          type: string
-          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=455, Notes: Date Expressed in Format CCYYMMDD'
-        initialTreatmentDate:
-          type: string
-          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=454, Notes: Date Expressed in Format CCYYMMDD'
-    DurableMedicalEquipmentService:
-      required:
-      - days
-      - frequencyCode
-      - purchasePrice
-      - rentalPrice
-      type: object
-      properties:
-        days:
-          type: string
-          description: 'Loop: 2410, Segment: SV5, Element: SV503'
-        rentalPrice:
-          type: string
-          description: 'Loop: 2410, Segment: SV5, Element: SV504'
-        purchasePrice:
-          type: string
-          description: 'Loop: 2410, Segment: SV5, Element: SV505'
-        frequencyCode:
-          type: string
-          description: 'Loop: 2410, Segment: SV5, Element: SV506, Note: Allowed Values are: ''1'' weekly, ''4'' monthly, ''6'' daily'
-          enum:
-          - '1'
-          - '4'
-          - '6'
-      description: SV5
     ClaimSubmissionRequest:
       required:
       - billing
@@ -2925,41 +2685,20 @@ components:
         tradingPartnerName:
           type: string
           description: Loop 2010BB NM103
-    RawX12Request:
-      type: object
-      properties:
-        x12:
-          type: string
-          description: For the x12 endpoint, the value should be a full 837 edi request.
-    AmbulanceTransportInformation:
+    OtherPayerServiceFacilityLocation:
       required:
-      - ambulanceTransportReasonCode
-      - transportDistanceInMiles
+      - otherPayerServiceFacilityLocationSecondaryIdentifier
       type: object
       properties:
-        patientWeightInPounds:
-          type: string
-          description: 'Segment: CR1, Element: CR102'
-        ambulanceTransportReasonCode:
-          type: string
-          description: 'CR104, Note: Allowed Values are: ''A'' Patient was transported to nearest facility for care of symptoms, complaints, or both, ''B'' Patient was transported for the benefit of a preferred physician, ''C'' Patient was transported for the nearness of family members, ''D'' Patient was transported for the care of a specialist or for availability of specialized equipment, ''E'' Patient Transferred to Rehabilitation Facility'
-          enum:
-          - A
-          - B
-          - C
-          - D
-          - E
-        transportDistanceInMiles:
-          type: string
-          description: 'Segment: CR1, Element: CR106'
-        roundTripPurposeDescription:
-          type: string
-          description: 'Segment: CR1, Element: CR109'
-        stretcherPurposeDescription:
-          type: string
-          description: 'Segment: CR1, Element: CR110'
-      description: CR1
-    rendering:
+        otherPayerServiceFacilityLocationSecondaryIdentifier:
+          maxItems: 3
+          minItems: 1
+          type: array
+          description: 'Loop 2330E, Segments: NM1 and REF'
+          items:
+            $ref: '#/components/schemas/ReferenceIdentification'
+      description: Loop 2330E
+    referring:
       required:
       - providerType
       type: object
@@ -3030,43 +2769,304 @@ components:
           $ref: '#/components/schemas/Address'
         contactInformation:
           $ref: '#/components/schemas/ContactInformation'
-      description: 'Loop: 2420A'
-    DurableMedicalEquipmentCertification:
+      description: 'Loop: 2420F'
+    OtherPayerReferringProvider:
       required:
-      - certificationTypeCode
-      - durableMedicalEquipmentDurationInMonths
+      - otherPayerReferringProviderIdentifier
       type: object
       properties:
-        certificationTypeCode:
+        otherPayerReferringProviderIdentifier:
+          maxItems: 3
+          minItems: 1
+          type: array
+          description: 'Loop 2330E, Segment: NM1 and REF'
+          items:
+            $ref: '#/components/schemas/ReferenceIdentification'
+      description: Loop 2330C
+    EpsdtReferral:
+      required:
+      - certificationConditionCodeAppliesIndicator
+      - conditionCodes
+      type: object
+      properties:
+        certificationConditionCodeAppliesIndicator:
           type: string
-          description: 'Loop: 2400, Segment: CR3, Element: CR301, Note: Allowed Values are: ''I'' Initial, ''R'' Renewal, ''S'' Revised'
+          description: 'Loop: 2300, Segment: CRC, Element: CRC02 When CRC01=ZZ, Note: ''N'' No, ''Y'' Yes'
           enum:
-          - I
-          - R
-          - S
-        durableMedicalEquipmentDurationInMonths:
-          type: string
-          description: 'Loop: 2400, Segment: CR3, Element: CR303 when CR302=MO'
-      description: CR3
-    ClaimNote:
+          - N
+          - Y
+        conditionCodes:
+          maxItems: 3
+          minItems: 1
+          type: array
+          description: 'Loop: 2300, Segment: CRC, Elements: CRC03, CRC04, CRC05 Note: Allowed Values are: ''AV'' Available- Not Used, ''NU'' Not Used, ''S2'' Under Treatment, ''ST'' New Services Requested'
+          items:
+            type: string
+            enum:
+            - AV
+            - NU
+            - S2
+            - ST
+      description: CRC
+    PayToPlan:
+      required:
+      - address
+      - organizationName
+      - primaryIdentifier
+      - primaryIdentifierTypeCode
+      - taxIdentificationNumber
       type: object
       properties:
-        additionalInformation:
+        organizationName:
           type: string
-          description: 'Loop 2300, Segment: NTE, Element: NTE02, Note: NTE01=ADD'
-        certificationNarrative:
+          description: 'Loop: 2010AC, Segment: NM1, Element: NM103'
+          example: Example Org
+        primaryIdentifierTypeCode:
           type: string
-          description: 'Loop 2300, Segment: NTE, Element: NTE02, Note: NTE01=CER'
-        goalRehabOrDischargePlans:
+          description: 'Loop: 2010AC, Segment: NM1, Element: NM108, Notes: ''PI'' Payor Identification and ''XV'' Centers for Medicare/Medicaid Services PlanID'
+          example: PI
+          enum:
+          - PI
+          - XV
+        primaryIdentifier:
           type: string
-          description: 'Loop 2300, Segment: NTE, Element: NTE02, Note: NTE01=DCP'
-        diagnosisDescription:
+          description: 'Loop: 2010AC, Segment: NM1, Element: NM109'
+        address:
+          $ref: '#/components/schemas/Address'
+        secondaryIdentifierTypeCode:
           type: string
-          description: 'Loop 2300, Segment: NTE, Element: NTE02, Note: NTE01=DGN'
-        thirdPartOrgNotes:
+          description: 'Loop: 2010AC, Segment: REF, Element: REF01, Notes: ''2U Payer Identification Number, ''FY'' Claim Office Number, ''NF National Association of Insurance Commissioners'''
+          example: 2U
+          enum:
+          - 2U
+          - FY
+          - NF
+        secondaryIdentifier:
           type: string
-          description: 'Loop 2300, Segment: NTE, Element: NTE02, Note: NTE01=TPO'
-      description: NTE
+          description: 'Loop: 2010AC, Segment: REF, Element: REF02'
+          example: '11'
+        taxIdentificationNumber:
+          type: string
+          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=EI'
+      description: 2010AC
+    billing:
+      required:
+      - providerType
+      type: object
+      properties:
+        providerType:
+          type: string
+          example: BillingProvider
+        npi:
+          type: string
+          description: 'NM109, Notes: National Provider Identifier'
+          example: '1760854442'
+        ssn:
+          type: string
+          description: 'REF02 when REF01=SY, Notes: The Social Security Number must be a string of nine numbers with no separators'
+          example: '000000000'
+        employerId:
+          type: string
+          description: 'REF02 when REF01=EI, Notes: The Employer Identification Number must be a string of exactly nine numbers with no separators'
+          example: '123456789'
+        commercialNumber:
+          type: string
+          description: REF02 when REF01=G2
+        locationNumber:
+          type: string
+          description: REF02 when REF01=LU
+        payerIdentificationNumber:
+          type: string
+          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=2U'
+        employerIdentificationNumber:
+          type: string
+          description: 'LOOP: 2010AC, Segment: REF, Element: REF02 when REF01=EI'
+        claimOfficeNumber:
+          type: string
+          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=FY'
+        naic:
+          type: string
+          description: 'Loop: 2010AC, Segment: REF, Element: REF02 when REF01=NF, Notes: National Association of Insurance Commissioners (NAIC) Code'
+        stateLicenseNumber:
+          type: string
+          description: REF02 when REF01=0B
+        providerUpinNumber:
+          type: string
+          description: 'REF02 when REF01=1G, Notes: UPINs must be formatted as either X99999 or XXX999'
+        taxonomyCode:
+          type: string
+          description: PRV03
+        firstName:
+          type: string
+          description: NM104
+          example: johnone
+        lastName:
+          type: string
+          description: NM103
+          example: doeone
+        middleName:
+          type: string
+          description: NM105
+          example: middleone
+        suffix:
+          type: string
+          description: NM107
+          example: Jr
+        organizationName:
+          type: string
+          description: NM103
+          example: HAPPY DOCTORS GROUPPRACTICE
+        address:
+          $ref: '#/components/schemas/Address'
+        contactInformation:
+          $ref: '#/components/schemas/ContactInformation'
+      description: 'Loop: 2000A'
+    DurableMedicalEquipmentService:
+      required:
+      - days
+      - frequencyCode
+      - purchasePrice
+      - rentalPrice
+      type: object
+      properties:
+        days:
+          type: string
+          description: 'Loop: 2410, Segment: SV5, Element: SV503'
+        rentalPrice:
+          type: string
+          description: 'Loop: 2410, Segment: SV5, Element: SV504'
+        purchasePrice:
+          type: string
+          description: 'Loop: 2410, Segment: SV5, Element: SV505'
+        frequencyCode:
+          type: string
+          description: 'Loop: 2410, Segment: SV5, Element: SV506, Note: Allowed Values are: ''1'' weekly, ''4'' monthly, ''6'' daily'
+          enum:
+          - '1'
+          - '4'
+          - '6'
+      description: SV5
+    ClaimPricingRepricingInformation:
+      required:
+      - pricingMethodologyCode
+      - repricedAllowedAmount
+      type: object
+      properties:
+        pricingMethodologyCode:
+          type: string
+          description: 'Loop: 2300, Segment: HCP, Element: HCP01, Note: Allowed Values are: ''00'' Zero Pricing (Not Covered Under Contract), ''01'' Priced as Billed at 100%, ''02'' Priced at the Standard Fee Schedule, ''03'' Priced at a Contractual Percentage, ''04'' Bundled Pricing, ''05'' Peer Review Pricing, ''06'' Bundled Pricing, ''07'' Flat Rate Pricing, ''08'' Combination Pricing, ''09'' Maternity Pricing, ''10'' Other Pricing, ''11'' Lower of Cost, ''12'' Ratio of Cost, ''13'' Cost Reimbursed, ''14'' Adjustment Pricing'
+          example: '01'
+          enum:
+          - '00'
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 08
+          - 09
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+        repricedAllowedAmount:
+          type: string
+          description: 'Loop: 2300, Segment: HCP, Element: HCP02'
+          example: '1'
+        repricedSavingAmount:
+          type: string
+          description: 'Loop: 2300, Segment: HCP, Element: HCP03'
+        repricingOrganizationIdentifier:
+          type: string
+          description: 'Loop: 2300, Segment: HCP, Element: HCP04'
+        repricingPerDiemOrFlatRateAmount:
+          type: string
+          description: 'Loop: 2300, Segment: HCP, Element: HCP05'
+        repricedApprovedAmbulatoryPatientGroupCode:
+          type: string
+          description: 'Loop: 2300, Segment: HCP, Element: HCP06'
+        repricedApprovedAmbulatoryPatientGroupAmount:
+          type: string
+          description: 'Loop: 2300, Segment: HCP, Element: HCP07'
+        rejectReasonCode:
+          type: string
+          description: 'Loop: 2300, Segment: HCP, Element: HCP13, Note: Allowed Values are: ''T1'' Cannot Identify Provider as TPO (Third Party Organization) Participant, ''T2'' Cannot Identify Payer as TPO (Third Party Organization) Participant, ''T3'' Cannot Identify Insured as TPO (Third Party Organization) Participant, ''T4'' Payer Name or Identifier Missing, ''T5'' Certification Information Missing, ''16'' Claim does not contain enough information for repricing'
+          enum:
+          - T1
+          - T2
+          - T3
+          - T4
+          - T5
+          - T6
+        policyComplianceCode:
+          type: string
+          description: 'Loop: 2300, Segment: HCP, Element: HCP14, Note: Allowed Values are: ''1'' Procedure Followed (Compliance), ''2'' Not Followed - Call Not Made (Non-Compliance Call Not Made), ''3'' Not Medically Necessary (Non-Compliance Non-Medically Necessary), ''4'' Not Followed Other (Non-Compliance Other), ''5'' Emergency Admit to Non-Network Hospital'
+          enum:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+        exceptionCode:
+          type: string
+          description: 'Loop: 2300, Segment: HCP, Element: HCP15, Note: Allowed Values are: ''1'' Non-Network Professional Provider in Network Hospital, ''2'' Emergency Care, ''3'' Services or Specialist not in Network, ''4'' Out-of-Service Area, ''5'' State Mandates, ''6'' Other'
+          enum:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          - '6'
+      description: HCP
+    OtherPayerSupervisingProvider:
+      required:
+      - otherPayerSupervisingProviderIdentifier
+      type: object
+      properties:
+        otherPayerSupervisingProviderIdentifier:
+          maxItems: 3
+          minItems: 1
+          type: array
+          description: 'Loop 2330F, Segments: NM1 and REF'
+          items:
+            $ref: '#/components/schemas/ReferenceIdentification'
+      description: Loop 2330F
+    ServiceLineDateInformation:
+      type: object
+      properties:
+        prescriptionDate:
+          type: string
+          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=471, Notes: Date Expressed in Format CCYYMMDD'
+        certificationRevisionOrRecertificationDate:
+          type: string
+          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=607, Notes: Date Expressed in Format CCYYMMDD'
+        beginTherapyDate:
+          type: string
+          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=463, Notes: Date Expressed in Format CCYYMMDD'
+        lastCertificationDate:
+          type: string
+          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=461, Notes: Date Expressed in Format CCYYMMDD'
+        treatmentOrTherapyDate:
+          type: string
+          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=304, Notes: Date Expressed in Format CCYYMMDD'
+        hemoglobinTestDate:
+          type: string
+          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=738, Notes: Date Expressed in Format CCYYMMDD'
+        serumCreatineTestDate:
+          type: string
+          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=739, Notes: Date Expressed in Format CCYYMMDD'
+        shippedDate:
+          type: string
+          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=011, Notes: Date Expressed in Format CCYYMMDD'
+        lastXRayDate:
+          type: string
+          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=455, Notes: Date Expressed in Format CCYYMMDD'
+        initialTreatmentDate:
+          type: string
+          description: 'Loop: 2400, Segment: DPT, Element: DTP03 when DPT01=454, Notes: Date Expressed in Format CCYYMMDD'
   securitySchemes:
     bearer-key:
       type: http

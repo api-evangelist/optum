@@ -128,71 +128,13 @@ paths:
       - Provider Participation List
 components:
   schemas:
-    ApiResponseProviderParticipationResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            totalNoOfRecords:
-              type: integer
-              format: int64
-              description: Total number of records available
-            pageSize:
-              type: integer
-              format: int32
-              description: Maximum number of records per page
-            pageNumber:
-              type: integer
-              format: int32
-              description: Current page number
-            providerParticipation:
-              type: array
-              items:
-                $ref: '#/components/schemas/ProviderParticipation'
-        status:
-          type: string
-          description: HTTP Response Status
-          example: success
-        message:
-          type: string
-          description: Returns 'VENDOR MATCHED' message if records are found, otherwise 'NO VENDOR MATCHED'
-          enum:
-          - VENDOR MATCHED
-          - NO VENDOR MATCHED
-        error:
-          $ref: '#/components/schemas/ApiErrorResponse'
-    ProviderParticipation:
-      type: object
-      properties:
-        vendor_orgId:
-          type: string
-        vendorName:
-          type: string
-          description: Vendor name. Possible values are Athena, Veradigm, Moxe, EPP etc.
-        emrInternalOrgs:
-          type: array
-          items:
-            type: object
-            properties:
-              emr_id:
-                type: string
-              emr:
-                type: string
-              providerInfo:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProviderInfo'
-    ApiErrorResponse:
+    Error:
       type: object
       properties:
         status:
-          type: integer
-          format: int32
-        statusMessage:
           type: string
-        error:
-          $ref: '#/components/schemas/Error'
+        detail:
+          $ref: '#/components/schemas/ErrorDetail'
     ProviderInfo:
       type: object
       properties:
@@ -243,6 +185,27 @@ components:
         optInEndDate:
           type: string
           format: date
+    ProviderParticipation:
+      type: object
+      properties:
+        vendor_orgId:
+          type: string
+        vendorName:
+          type: string
+          description: Vendor name. Possible values are Athena, Veradigm, Moxe, EPP etc.
+        emrInternalOrgs:
+          type: array
+          items:
+            type: object
+            properties:
+              emr_id:
+                type: string
+              emr:
+                type: string
+              providerInfo:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProviderInfo'
     ErrorDetail:
       type: object
       properties:
@@ -250,13 +213,50 @@ components:
           type: string
         message:
           type: string
-    Error:
+    ApiResponseProviderParticipationResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            totalNoOfRecords:
+              type: integer
+              format: int64
+              description: Total number of records available
+            pageSize:
+              type: integer
+              format: int32
+              description: Maximum number of records per page
+            pageNumber:
+              type: integer
+              format: int32
+              description: Current page number
+            providerParticipation:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProviderParticipation'
+        status:
+          type: string
+          description: HTTP Response Status
+          example: success
+        message:
+          type: string
+          description: Returns 'VENDOR MATCHED' message if records are found, otherwise 'NO VENDOR MATCHED'
+          enum:
+          - VENDOR MATCHED
+          - NO VENDOR MATCHED
+        error:
+          $ref: '#/components/schemas/ApiErrorResponse'
+    ApiErrorResponse:
       type: object
       properties:
         status:
+          type: integer
+          format: int32
+        statusMessage:
           type: string
-        detail:
-          $ref: '#/components/schemas/ErrorDetail'
+        error:
+          $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http

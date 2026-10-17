@@ -124,45 +124,15 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    CapabilityStatementResource:
-      type: object
-      properties:
-        type:
-          type: string
-          example: Claim
-        profile:
-          type: string
-          format: uri
-        searchInclude:
-          type: array
-          items:
-            type: string
-        interaction:
-          type: array
-          items:
-            $ref: '#/components/schemas/CapabilityStatementInteraction'
-        operation:
-          type: array
-          items:
-            $ref: '#/components/schemas/CapabilityStatementOperation'
-    Narrative:
-      type: object
-      properties:
-        status:
-          type: string
-          example: generated
-        div:
-          type: string
-          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
-    CapabilityStatementSoftware:
+    CapabilityStatementOperation:
       type: object
       properties:
         name:
           type: string
-          example: uhcpp-paan-pas-server
-        version:
+          example: submit
+        definition:
           type: string
-          example: 8.8.0
+          format: uri
     CapabilityStatementInteraction:
       type: object
       properties:
@@ -221,15 +191,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CapabilityStatementRest'
-    CapabilityStatementOperation:
+    CapabilityStatementResource:
       type: object
       properties:
-        name:
+        type:
           type: string
-          example: submit
-        definition:
+          example: Claim
+        profile:
           type: string
           format: uri
+        searchInclude:
+          type: array
+          items:
+            type: string
+        interaction:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapabilityStatementInteraction'
+        operation:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapabilityStatementOperation'
     CapabilityStatementImplementation:
       type: object
       properties:
@@ -240,6 +222,15 @@ components:
           type: string
           format: uri
           example: https://apimarketplace-stg.uhc.com/PriorAuth/v1
+    CapabilityStatementSoftware:
+      type: object
+      properties:
+        name:
+          type: string
+          example: uhcpp-paan-pas-server
+        version:
+          type: string
+          example: 8.8.0
     CapabilityStatementRest:
       type: object
       properties:
@@ -254,6 +245,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CapabilityStatementOperation'
+    Narrative:
+      type: object
+      properties:
+        status:
+          type: string
+          example: generated
+        div:
+          type: string
+          example: <div xmlns="http://www.w3.org/1999/xhtml">Operation</div>
   securitySchemes:
     oAuth:
       type: oauth2

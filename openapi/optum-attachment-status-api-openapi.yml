@@ -179,19 +179,6 @@ components:
           type: string
         rejectionInformation:
           type: string
-    StatusDetails:
-      type: object
-      properties:
-        statusMessage:
-          type: string
-        statusCode:
-          type: string
-        statusTimeStamp:
-          type: string
-        documents:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentDetails'
     DocumentDetails:
       type: object
       properties:
@@ -215,9 +202,36 @@ components:
           type:
           - string
           - 'null'
-    BadRequest:
+    StatusDetails:
+      type: object
+      properties:
+        statusMessage:
+          type: string
+        statusCode:
+          type: string
+        statusTimeStamp:
+          type: string
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentDetails'
+    MetadataResponses:
+      type: array
+      items:
+        $ref: '#/components/schemas/MetadataResponse'
+    NotAuthorized:
       allOf:
-      - $ref: '#/components/schemas/ErrorResponse'
+      - $ref: '#/components/schemas/UnAuthorized'
+    UnAuthorized:
+      type: object
+      properties:
+        error:
+          type: string
+        error_description:
+          type: string
+      example:
+        error: invalid_request
+        error_description: The access token is missing
     MetadataResponse:
       type: object
       properties:
@@ -241,6 +255,9 @@ components:
       example:
         statusCode: ErrorResponseCode
         statusMessage: SystemErrors.INTERNAL_ERROR
+    BadRequest:
+      allOf:
+      - $ref: '#/components/schemas/ErrorResponse'
     DetailedResponse:
       type: object
       properties:
@@ -252,23 +269,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/StatusDetails'
-    NotAuthorized:
-      allOf:
-      - $ref: '#/components/schemas/UnAuthorized'
-    UnAuthorized:
-      type: object
-      properties:
-        error:
-          type: string
-        error_description:
-          type: string
-      example:
-        error: invalid_request
-        error_description: The access token is missing
-    MetadataResponses:
-      type: array
-      items:
-        $ref: '#/components/schemas/MetadataResponse'
   securitySchemes:
     bearerToken:
       type: apiKey

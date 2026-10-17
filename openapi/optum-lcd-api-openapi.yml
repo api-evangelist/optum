@@ -413,92 +413,6 @@ paths:
           description: Service Unavailable
 components:
   schemas:
-    Contractor:
-      required:
-      - contractorName
-      - contractorNumber
-      - contractorPart
-      - contractorType
-      - regionCode
-      - regionName
-      type: object
-      properties:
-        regionCode:
-          type: string
-          xml:
-            name: region-code
-        regionName:
-          type: string
-          xml:
-            name: region-name
-        contractorName:
-          type: string
-          xml:
-            name: contractor-name
-        contractorPart:
-          type: string
-          xml:
-            name: contractor-part
-        contractorType:
-          type: string
-          xml:
-            name: contractor-type
-        contractorNumber:
-          type: string
-          xml:
-            name: contractor-number
-    DiagnosticCodes:
-      type: object
-      properties:
-        supportingMedicalNecessity:
-          $ref: '#/components/schemas/SupportingMedicalNecessity'
-        notSupportingMedicalNecessity:
-          $ref: '#/components/schemas/NotSupportingMedicalNecessity'
-    Regions:
-      type: object
-      properties:
-        region:
-          type: array
-          items:
-            $ref: '#/components/schemas/Region'
-      xml:
-        name: regions
-    NotSupportingMedicalNecessity:
-      type: object
-      properties:
-        codeGroup:
-          type: array
-          xml:
-            name: code-group
-          items:
-            $ref: '#/components/schemas/CodeGroup'
-        numcodes:
-          type: integer
-          format: int32
-          xml:
-            attribute: true
-        toomanycodes:
-          type: boolean
-          xml:
-            attribute: true
-    RevenueCodes:
-      type: object
-      properties:
-        codeInfo:
-          type: array
-          xml:
-            name: code-info
-          items:
-            $ref: '#/components/schemas/CodeInfo'
-    ContractorPolicies:
-      type: object
-      properties:
-        policy:
-          type: array
-          items:
-            $ref: '#/components/schemas/Policy'
-      xml:
-        name: contractor-policies
     Policy:
       type: object
       properties:
@@ -522,7 +436,49 @@ components:
           type: string
           xml:
             attribute: true
-    SupportingMedicalNecessity:
+    ContractorList:
+      required:
+      - contractor
+      type: object
+      properties:
+        contractor:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contractor'
+      xml:
+        name: contractor-list
+    ContractorPolicyDetails:
+      required:
+      - policyInfo
+      type: object
+      properties:
+        policyInfo:
+          $ref: '#/components/schemas/PolicyInfo'
+        ncdCodingInformation:
+          $ref: '#/components/schemas/NcdCodingInformation'
+        lcdCodingInformation:
+          $ref: '#/components/schemas/LcdCodingInformation'
+      xml:
+        name: contractor-policy-details
+    NcdCodingInformation:
+      type: object
+      properties:
+        procedureCodes:
+          $ref: '#/components/schemas/ProcedureCodes'
+        diagnosticCodes:
+          $ref: '#/components/schemas/DiagnosticCodes'
+    LcdCodingInformation:
+      type: object
+      properties:
+        typeOfBillCodes:
+          $ref: '#/components/schemas/TypeOfBillCodes'
+        revenueCodes:
+          $ref: '#/components/schemas/RevenueCodes'
+        procedureCodes:
+          $ref: '#/components/schemas/ProcedureCodes'
+        diagnosticCodes:
+          $ref: '#/components/schemas/DiagnosticCodes'
+    NotSupportingMedicalNecessity:
       type: object
       properties:
         codeGroup:
@@ -540,26 +496,15 @@ components:
           type: boolean
           xml:
             attribute: true
-    NcdCodingInformation:
+    ContractorPolicies:
       type: object
       properties:
-        procedureCodes:
-          $ref: '#/components/schemas/ProcedureCodes'
-        diagnosticCodes:
-          $ref: '#/components/schemas/DiagnosticCodes'
-    ContractorPolicyDetails:
-      required:
-      - policyInfo
-      type: object
-      properties:
-        policyInfo:
-          $ref: '#/components/schemas/PolicyInfo'
-        ncdCodingInformation:
-          $ref: '#/components/schemas/NcdCodingInformation'
-        lcdCodingInformation:
-          $ref: '#/components/schemas/LcdCodingInformation'
+        policy:
+          type: array
+          items:
+            $ref: '#/components/schemas/Policy'
       xml:
-        name: contractor-policy-details
+        name: contractor-policies
     ProcedureCodes:
       type: object
       properties:
@@ -578,17 +523,13 @@ components:
           type: boolean
           xml:
             attribute: true
-    CodeGroup:
+    DiagnosticCodes:
       type: object
       properties:
-        paragraph:
-          type: string
-        codeInfo:
-          type: array
-          xml:
-            name: code-info
-          items:
-            $ref: '#/components/schemas/CodeInfo'
+        supportingMedicalNecessity:
+          $ref: '#/components/schemas/SupportingMedicalNecessity'
+        notSupportingMedicalNecessity:
+          $ref: '#/components/schemas/NotSupportingMedicalNecessity'
     PolicyInfo:
       required:
       - effectiveDate
@@ -633,17 +574,15 @@ components:
           format: int32
         policyType:
           type: string
-    ContractorList:
-      required:
-      - contractor
+    Regions:
       type: object
       properties:
-        contractor:
+        region:
           type: array
           items:
-            $ref: '#/components/schemas/Contractor'
+            $ref: '#/components/schemas/Region'
       xml:
-        name: contractor-list
+        name: regions
     Region:
       type: object
       properties:
@@ -654,6 +593,24 @@ components:
           xml:
             name: region-code
             attribute: true
+    RevenueCodes:
+      type: object
+      properties:
+        codeInfo:
+          type: array
+          xml:
+            name: code-info
+          items:
+            $ref: '#/components/schemas/CodeInfo'
+    TypeOfBillCodes:
+      type: object
+      properties:
+        codeInfo:
+          type: array
+          xml:
+            name: code-info
+          items:
+            $ref: '#/components/schemas/CodeInfo'
     CodeInfo:
       required:
       - code
@@ -668,26 +625,69 @@ components:
           type: string
           xml:
             attribute: true
-    LcdCodingInformation:
+    Contractor:
+      required:
+      - contractorName
+      - contractorNumber
+      - contractorPart
+      - contractorType
+      - regionCode
+      - regionName
       type: object
       properties:
-        typeOfBillCodes:
-          $ref: '#/components/schemas/TypeOfBillCodes'
-        revenueCodes:
-          $ref: '#/components/schemas/RevenueCodes'
-        procedureCodes:
-          $ref: '#/components/schemas/ProcedureCodes'
-        diagnosticCodes:
-          $ref: '#/components/schemas/DiagnosticCodes'
-    TypeOfBillCodes:
+        regionCode:
+          type: string
+          xml:
+            name: region-code
+        regionName:
+          type: string
+          xml:
+            name: region-name
+        contractorName:
+          type: string
+          xml:
+            name: contractor-name
+        contractorPart:
+          type: string
+          xml:
+            name: contractor-part
+        contractorType:
+          type: string
+          xml:
+            name: contractor-type
+        contractorNumber:
+          type: string
+          xml:
+            name: contractor-number
+    CodeGroup:
       type: object
       properties:
+        paragraph:
+          type: string
         codeInfo:
           type: array
           xml:
             name: code-info
           items:
             $ref: '#/components/schemas/CodeInfo'
+    SupportingMedicalNecessity:
+      type: object
+      properties:
+        codeGroup:
+          type: array
+          xml:
+            name: code-group
+          items:
+            $ref: '#/components/schemas/CodeGroup'
+        numcodes:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        toomanycodes:
+          type: boolean
+          xml:
+            attribute: true
   securitySchemes:
     bearerAuth:
       type: http

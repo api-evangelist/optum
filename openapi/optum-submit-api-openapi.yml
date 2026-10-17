@@ -424,14 +424,25 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    CodeableConcept:
+    Coding:
       type: object
-      description: FHIR CodeableConcept
+      description: Coding structure for answers
       properties:
-        coding:
-          type: array
-          items:
-            $ref: '#/components/schemas/Coding'
+        code:
+          type: string
+          example: '1'
+        display:
+          type: string
+          example: Age ≥ 50
+    Period:
+      type: object
+      properties:
+        start:
+          type: string
+          example: '2025-04-11'
+        end:
+          type: string
+          example: '2025-07-10'
     ResponseItem:
       type: object
       properties:
@@ -446,58 +457,43 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Adjudication'
-    Entry:
+    Reference:
       type: object
+      description: FHIR Reference
       properties:
-        resource:
-          $ref: '#/components/schemas/Claim'
-    CareTeam:
-      type: object
-      properties:
-        provider:
-          $ref: '#/components/schemas/Reference'
-        responsible:
-          type: boolean
-          example: true
-    Period:
-      type: object
-      properties:
-        start:
+        reference:
           type: string
-          example: '2025-04-11'
-        end:
-          type: string
-          example: '2025-07-10'
-    Extension:
-      type: object
-      description: FHIR extension with Reference
-      properties:
-        url:
-          type: string
-          example: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
-        valueReference:
-          $ref: '#/components/schemas/Reference'
-    Adjudication:
+          example: Patient/anonymous
+    Identifier:
       type: object
       properties:
-        category:
-          $ref: '#/components/schemas/CodeableConcept'
-        reason:
-          $ref: '#/components/schemas/CodeableConcept'
-        extension:
+        system:
+          type: string
+          example: http://example.org/cdex/acn
+        value:
+          type: string
+          example: '123456'
+    SubmitResponse:
+      type: object
+      description: FHIR Bundle containing ClaimResponse
+      properties:
+        resourceType:
+          type: string
+          example: Bundle
+        entry:
           type: array
           items:
-            $ref: '#/components/schemas/Extension'
-    Coding:
+            $ref: '#/components/schemas/ResponseEntry'
+    Meta:
       type: object
-      description: Coding structure for answers
+      description: FHIR metadata
       properties:
-        code:
-          type: string
-          example: '1'
-        display:
-          type: string
-          example: Age ≥ 50
+        profile:
+          type: array
+          description: FHIR profile URLs
+          items:
+            type: string
+            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
     SubmitRequest:
       type: object
       description: FHIR Bundle containing Claim submission request
@@ -515,88 +511,22 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Entry'
-    Reference:
+    CareTeam:
       type: object
-      description: FHIR Reference
       properties:
-        reference:
-          type: string
-          example: Patient/anonymous
-    Claim:
-      type: object
-      description: FHIR Claim Inquiry Request
-      properties:
-        resourceType:
-          type: string
-          example: Claim
-        id:
-          type: string
-        meta:
-          $ref: '#/components/schemas/Meta'
-        identifier:
-          type: array
-          items:
-            $ref: '#/components/schemas/Identifier'
-        status:
-          type: string
-          example: active
-        type:
-          $ref: '#/components/schemas/CodeableConcept'
-        use:
-          type: string
-          example: preauthorization
-        created:
-          type: string
-          example: '2023-10-05T08:30:00Z'
-        patient:
-          $ref: '#/components/schemas/Reference'
         provider:
           $ref: '#/components/schemas/Reference'
-        careTeam:
+        responsible:
+          type: boolean
+          example: true
+    CodeableConcept:
+      type: object
+      description: FHIR CodeableConcept
+      properties:
+        coding:
           type: array
           items:
-            $ref: '#/components/schemas/CareTeam'
-    ResponseEntry:
-      type: object
-      properties:
-        resource:
-          $ref: '#/components/schemas/ClaimResponse'
-        search:
-          type: object
-          properties:
-            mode:
-              type: string
-              example: match
-    SubmitResponse:
-      type: object
-      description: FHIR Bundle containing ClaimResponse
-      properties:
-        resourceType:
-          type: string
-          example: Bundle
-        entry:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseEntry'
-    Identifier:
-      type: object
-      properties:
-        system:
-          type: string
-          example: http://example.org/cdex/acn
-        value:
-          type: string
-          example: '123456'
-    Meta:
-      type: object
-      description: FHIR metadata
-      properties:
-        profile:
-          type: array
-          description: FHIR profile URLs
-          items:
-            type: string
-            example: http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaireresponse-adapt
+            $ref: '#/components/schemas/Coding'
     ClaimResponse:
       type: object
       description: FHIR ClaimResponse
@@ -639,6 +569,76 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResponseItem'
+    ResponseEntry:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/ClaimResponse'
+        search:
+          type: object
+          properties:
+            mode:
+              type: string
+              example: match
+    Entry:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/Claim'
+    Extension:
+      type: object
+      description: FHIR extension with Reference
+      properties:
+        url:
+          type: string
+          example: http://hl7.org/fhir/us/davinci-dtr/StructureDefinition/qr-context
+        valueReference:
+          $ref: '#/components/schemas/Reference'
+    Claim:
+      type: object
+      description: FHIR Claim Inquiry Request
+      properties:
+        resourceType:
+          type: string
+          example: Claim
+        id:
+          type: string
+        meta:
+          $ref: '#/components/schemas/Meta'
+        identifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identifier'
+        status:
+          type: string
+          example: active
+        type:
+          $ref: '#/components/schemas/CodeableConcept'
+        use:
+          type: string
+          example: preauthorization
+        created:
+          type: string
+          example: '2023-10-05T08:30:00Z'
+        patient:
+          $ref: '#/components/schemas/Reference'
+        provider:
+          $ref: '#/components/schemas/Reference'
+        careTeam:
+          type: array
+          items:
+            $ref: '#/components/schemas/CareTeam'
+    Adjudication:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/CodeableConcept'
+        reason:
+          $ref: '#/components/schemas/CodeableConcept'
+        extension:
+          type: array
+          items:
+            $ref: '#/components/schemas/Extension'
   securitySchemes:
     oAuth:
       type: oauth2

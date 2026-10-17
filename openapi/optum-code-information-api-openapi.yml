@@ -1217,6 +1217,244 @@ paths:
           description: Service Unavailable
 components:
   schemas:
+    PhysicianDoc:
+      required:
+      - text
+      type: object
+      properties:
+        title:
+          type: string
+        text:
+          type: string
+    StatusType:
+      type: object
+      properties:
+        reasonPhrase:
+          type: string
+        family:
+          type: string
+          enum:
+          - INFORMATIONAL
+          - SUCCESSFUL
+          - REDIRECTION
+          - CLIENT_ERROR
+          - SERVER_ERROR
+          - OTHER
+        statusCode:
+          type: integer
+          format: int32
+    Cci:
+      required:
+      - cciColumn1
+      - cciColumn2
+      type: object
+      properties:
+        cciColumn2:
+          type: array
+          xml:
+            name: cci-column2
+          items:
+            $ref: '#/components/schemas/CciColumn2'
+        cciColumn1:
+          type: array
+          xml:
+            name: cci-column1
+          items:
+            $ref: '#/components/schemas/CciColumn1'
+      xml:
+        name: cci
+    IndexSearchResult:
+      type: object
+      properties:
+        term:
+          type: string
+        level:
+          type: integer
+          format: int64
+        codes:
+          type: string
+    IngenixCodersDictionary:
+      required:
+      - entry
+      type: object
+      properties:
+        entry:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entry'
+      xml:
+        name: optum360-coders-dictionary
+    CodeHistoryReferences:
+      type: object
+      properties:
+        notInAmaBook:
+          type: string
+          xml:
+            name: NotInAmaBook
+        retroactive:
+          type: string
+          xml:
+            name: Retroactive
+    Conflict:
+      type: object
+      properties:
+        code1:
+          $ref: '#/components/schemas/Code1'
+        code2:
+          $ref: '#/components/schemas/Code2'
+        name:
+          type: string
+        message:
+          type: string
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    EntityTag:
+      type: object
+      properties:
+        value:
+          type: string
+        weak:
+          type: boolean
+    Items:
+      type: object
+      properties:
+        item:
+          type: array
+          items:
+            type: string
+      xml:
+        name: items
+    CciColumn1:
+      type: object
+      properties:
+        modifierAllowed:
+          type: boolean
+          xml:
+            name: modifier-allowed
+        reason:
+          type: string
+        code:
+          type: string
+          xml:
+            attribute: true
+        href:
+          type: string
+          xml:
+            attribute: true
+    CompleteCodeHistory:
+      required:
+      - codeHistory
+      type: object
+      properties:
+        codeHistory:
+          type: array
+          xml:
+            name: code-history
+          items:
+            $ref: '#/components/schemas/CodeHistory'
+      xml:
+        name: complete-code-history
+    CciColumn2:
+      type: object
+      properties:
+        modifierAllowed:
+          type: boolean
+          xml:
+            name: modifier-allowed
+        reason:
+          type: string
+        code:
+          type: string
+          xml:
+            attribute: true
+        href:
+          type: string
+          xml:
+            attribute: true
+    Code1:
+      type: object
+      properties:
+        description:
+          type: string
+        reason:
+          type: string
+        modifier:
+          type: string
+        primarysecondary:
+          type: string
+        notes:
+          type: string
+        value:
+          type: string
+          xml:
+            attribute: true
+    IndexSearchResults:
+      required:
+      - indexSearchResult
+      type: object
+      properties:
+        indexSearchResult:
+          type: array
+          xml:
+            name: index-search-result
+          items:
+            $ref: '#/components/schemas/IndexSearchResult'
+      xml:
+        name: index-search-results
+    NewCookie:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        version:
+          type: integer
+          format: int32
+        path:
+          type: string
+        domain:
+          type: string
+        comment:
+          type: string
+        maxAge:
+          type: integer
+          format: int32
+        expiry:
+          type: string
+          format: date-time
+        secure:
+          type: boolean
+        httpOnly:
+          type: boolean
+        sameSite:
+          type: string
+          enum:
+          - NONE
+          - LAX
+          - STRICT
+    MediaType:
+      type: object
+      properties:
+        type:
+          type: string
+        subtype:
+          type: string
+        parameters:
+          type: object
+          additionalProperties:
+            type: string
+        wildcardType:
+          type: boolean
+        wildcardSubtype:
+          type: boolean
     Entry:
       required:
       - cpt
@@ -1240,77 +1478,6 @@ components:
           type: string
           xml:
             attribute: true
-    Multicci:
-      required:
-      - conflict
-      type: object
-      properties:
-        conflict:
-          type: array
-          items:
-            $ref: '#/components/schemas/Conflict'
-      xml:
-        name: multicci
-    Cci:
-      required:
-      - cciColumn1
-      - cciColumn2
-      type: object
-      properties:
-        cciColumn2:
-          type: array
-          xml:
-            name: cci-column2
-          items:
-            $ref: '#/components/schemas/CciColumn2'
-        cciColumn1:
-          type: array
-          xml:
-            name: cci-column1
-          items:
-            $ref: '#/components/schemas/CciColumn1'
-      xml:
-        name: cci
-    InstructionalNote:
-      required:
-      - note
-      type: object
-      properties:
-        header:
-          type: string
-        note:
-          type: array
-          items:
-            type: string
-    Link:
-      type: object
-      properties:
-        href:
-          type: string
-          xml:
-            attribute: true
-        value:
-          type: string
-    Conflict:
-      type: object
-      properties:
-        code1:
-          $ref: '#/components/schemas/Code1'
-        code2:
-          $ref: '#/components/schemas/Code2'
-        name:
-          type: string
-        message:
-          type: string
-    PhysicianDoc:
-      required:
-      - text
-      type: object
-      properties:
-        title:
-          type: string
-        text:
-          type: string
     PhysicianDocs:
       type: object
       properties:
@@ -1322,92 +1489,35 @@ components:
             $ref: '#/components/schemas/PhysicianDoc'
       xml:
         name: physician-docs
-    Code2:
+    CodeHistory:
       type: object
       properties:
-        description:
-          type: string
-        reason:
-          type: string
-        modifier:
-          type: string
-        primarysecondary:
-          type: string
-        notes:
-          type: string
-        value:
+        changeEffectiveDate:
           type: string
           xml:
-            attribute: true
-    CodeProperties:
-      type: object
-      properties:
-        desc35:
+            name: ChangeEffectiveDate
+        status:
           type: string
           xml:
-            name: desc-35
-        desc48:
+            name: Status
+        changeSummary:
           type: string
           xml:
-            name: desc-48
-        desc255:
+            name: ChangeSummary
+        fullInfo:
           type: string
           xml:
-            name: desc-255
-        descFull:
+            name: FullInfo
+        char48Info:
           type: string
           xml:
-            name: desc-full
-        descLay:
+            name: Char48Info
+        char35Info:
           type: string
           xml:
-            name: desc-lay
-        codingTip:
-          type: string
-          xml:
-            name: coding-tip
-        documentationTip:
-          type: string
-          xml:
-            name: documentation-tip
-        reimbursementTip:
-          type: string
-          xml:
-            name: reimbursement-tip
-      xml:
-        name: code-properties
-    CodeHistoryReferences:
-      type: object
-      properties:
-        notInAmaBook:
-          type: string
-          xml:
-            name: NotInAmaBook
-        retroactive:
-          type: string
-          xml:
-            name: Retroactive
-    IngenixCodersDictionary:
-      required:
-      - entry
-      type: object
-      properties:
-        entry:
-          type: array
-          items:
-            $ref: '#/components/schemas/Entry'
-      xml:
-        name: optum360-coders-dictionary
-    IndexSearchResult:
-      type: object
-      properties:
-        term:
-          type: string
-        level:
-          type: integer
-          format: int64
-        codes:
-          type: string
+            name: Char35Info
+        codeHistoryReferences:
+          $ref: '#/components/schemas/CodeHistoryReferences'
     InstructionalNotes:
       type: object
       properties:
@@ -1419,23 +1529,6 @@ components:
             $ref: '#/components/schemas/InstructionalNote'
       xml:
         name: instructional-notes
-    Code1:
-      type: object
-      properties:
-        description:
-          type: string
-        reason:
-          type: string
-        modifier:
-          type: string
-        primarysecondary:
-          type: string
-        notes:
-          type: string
-        value:
-          type: string
-          xml:
-            attribute: true
     Response:
       type: object
       properties:
@@ -1545,175 +1638,82 @@ components:
             type: array
             items:
               type: string
-    IndexSearchResults:
+    Multicci:
       required:
-      - indexSearchResult
+      - conflict
       type: object
       properties:
-        indexSearchResult:
+        conflict:
           type: array
-          xml:
-            name: index-search-result
           items:
-            $ref: '#/components/schemas/IndexSearchResult'
+            $ref: '#/components/schemas/Conflict'
       xml:
-        name: index-search-results
-    CciColumn1:
+        name: multicci
+    Code2:
       type: object
       properties:
-        modifierAllowed:
-          type: boolean
-          xml:
-            name: modifier-allowed
+        description:
+          type: string
         reason:
           type: string
-        code:
+        modifier:
           type: string
-          xml:
-            attribute: true
-        href:
+        primarysecondary:
           type: string
-          xml:
-            attribute: true
-    CompleteCodeHistory:
-      required:
-      - codeHistory
-      type: object
-      properties:
-        codeHistory:
-          type: array
-          xml:
-            name: code-history
-          items:
-            $ref: '#/components/schemas/CodeHistory'
-      xml:
-        name: complete-code-history
-    StatusType:
-      type: object
-      properties:
-        reasonPhrase:
-          type: string
-        family:
-          type: string
-          enum:
-          - INFORMATIONAL
-          - SUCCESSFUL
-          - REDIRECTION
-          - CLIENT_ERROR
-          - SERVER_ERROR
-          - OTHER
-        statusCode:
-          type: integer
-          format: int32
-    CodeHistory:
-      type: object
-      properties:
-        changeEffectiveDate:
-          type: string
-          xml:
-            name: ChangeEffectiveDate
-        status:
-          type: string
-          xml:
-            name: Status
-        changeSummary:
-          type: string
-          xml:
-            name: ChangeSummary
-        fullInfo:
-          type: string
-          xml:
-            name: FullInfo
-        char48Info:
-          type: string
-          xml:
-            name: Char48Info
-        char35Info:
-          type: string
-          xml:
-            name: Char35Info
-        codeHistoryReferences:
-          $ref: '#/components/schemas/CodeHistoryReferences'
-    NewCookie:
-      type: object
-      properties:
-        name:
+        notes:
           type: string
         value:
           type: string
-        version:
-          type: integer
-          format: int32
-        path:
-          type: string
-        domain:
-          type: string
-        comment:
-          type: string
-        maxAge:
-          type: integer
-          format: int32
-        expiry:
-          type: string
-          format: date-time
-        secure:
-          type: boolean
-        httpOnly:
-          type: boolean
-        sameSite:
-          type: string
-          enum:
-          - NONE
-          - LAX
-          - STRICT
-    EntityTag:
+          xml:
+            attribute: true
+    CodeProperties:
       type: object
       properties:
-        value:
+        desc35:
           type: string
-        weak:
-          type: boolean
-    MediaType:
+          xml:
+            name: desc-35
+        desc48:
+          type: string
+          xml:
+            name: desc-48
+        desc255:
+          type: string
+          xml:
+            name: desc-255
+        descFull:
+          type: string
+          xml:
+            name: desc-full
+        descLay:
+          type: string
+          xml:
+            name: desc-lay
+        codingTip:
+          type: string
+          xml:
+            name: coding-tip
+        documentationTip:
+          type: string
+          xml:
+            name: documentation-tip
+        reimbursementTip:
+          type: string
+          xml:
+            name: reimbursement-tip
+      xml:
+        name: code-properties
+    InstructionalNote:
+      required:
+      - note
       type: object
       properties:
-        type:
+        header:
           type: string
-        subtype:
-          type: string
-        parameters:
-          type: object
-          additionalProperties:
-            type: string
-        wildcardType:
-          type: boolean
-        wildcardSubtype:
-          type: boolean
-    Items:
-      type: object
-      properties:
-        item:
+        note:
           type: array
           items:
             type: string
-      xml:
-        name: items
-    CciColumn2:
-      type: object
-      properties:
-        modifierAllowed:
-          type: boolean
-          xml:
-            name: modifier-allowed
-        reason:
-          type: string
-        code:
-          type: string
-          xml:
-            attribute: true
-        href:
-          type: string
-          xml:
-            attribute: true
   securitySchemes:
     bearerAuth:
       type: http

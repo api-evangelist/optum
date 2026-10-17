@@ -121,6 +121,33 @@ paths:
                 statusCode: 500
 components:
   schemas:
+    Input:
+      type: object
+      properties:
+        x12RequestData:
+          description: 837X12 request data for Institutional/Professional claims
+          example: ISA*00*...
+          type: string
+        payerId:
+          description: Payer ID
+          example: '123456789'
+          type: string
+      required:
+      - payerId
+      - x12RequestData
+    ClaimPreCheckResponseWrapper:
+      type: object
+      properties:
+        claimPreCheck:
+          description: Claim Pre-Check Response data
+          $ref: '#/components/schemas/ClaimPreCheckResponse'
+      description: Wrapper for Claim Pre-Check Response
+    Variables:
+      type: object
+      properties:
+        input:
+          description: Input data for the Claims Pre-Check operation
+          $ref: '#/components/schemas/Input'
     ClaimPreCheckResponse:
       type: object
       properties:
@@ -149,26 +176,6 @@ components:
           example: '200'
           type: string
       description: Response model for Claim Pre-Check operations
-    Input:
-      type: object
-      properties:
-        x12RequestData:
-          description: 837X12 request data for Institutional/Professional claims
-          example: ISA*00*...
-          type: string
-        payerId:
-          description: Payer ID
-          example: '123456789'
-          type: string
-      required:
-      - payerId
-      - x12RequestData
-    Variables:
-      type: object
-      properties:
-        input:
-          description: Input data for the Claims Pre-Check operation
-          $ref: '#/components/schemas/Input'
     ClaimPreCheckRequest:
       type: object
       properties:
@@ -181,13 +188,6 @@ components:
         variables:
           description: Variables for the Claims Pre-Check operation
           $ref: '#/components/schemas/Variables'
-    ClaimPreCheckResponseWrapper:
-      type: object
-      properties:
-        claimPreCheck:
-          description: Claim Pre-Check Response data
-          $ref: '#/components/schemas/ClaimPreCheckResponse'
-      description: Wrapper for Claim Pre-Check Response
   securitySchemes:
     oAuth:
       type: oauth2

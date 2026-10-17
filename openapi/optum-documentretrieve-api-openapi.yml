@@ -135,31 +135,6 @@ paths:
       - documentRetrieve
 components:
   schemas:
-    DocumentLookup:
-      type: object
-      required:
-      - homeCommunityId
-      - repositoryUniqueId
-      - documentUniqueId
-      properties:
-        homeCommunityId:
-          type: string
-        documentUniqueId:
-          type: string
-        repositoryUniqueId:
-          type: string
-    HttpClientServerError:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date
-        status:
-          type: integer
-        error:
-          type: string
-        path:
-          type: string
     AdditionalRetrievalParameters:
       type: object
       properties:
@@ -198,6 +173,31 @@ components:
           $ref: '#/components/schemas/Authorization'
         documentLookup:
           $ref: '#/components/schemas/DocumentLookup'
+    HttpClientServerError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date
+        status:
+          type: integer
+        error:
+          type: string
+        path:
+          type: string
+    DocumentLookup:
+      type: object
+      required:
+      - homeCommunityId
+      - repositoryUniqueId
+      - documentUniqueId
+      properties:
+        homeCommunityId:
+          type: string
+        documentUniqueId:
+          type: string
+        repositoryUniqueId:
+          type: string
     MultiValueMap:
       type: object
       properties:

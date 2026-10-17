@@ -398,45 +398,6 @@ paths:
           description: Service Unavailable
 components:
   schemas:
-    Modifiers:
-      type: object
-      properties:
-        physician:
-          $ref: '#/components/schemas/Links'
-        facility:
-          $ref: '#/components/schemas/Links'
-        opps:
-          $ref: '#/components/schemas/Links'
-        mpfs:
-          $ref: '#/components/schemas/Links'
-        asc:
-          $ref: '#/components/schemas/Links'
-        ambulance:
-          $ref: '#/components/schemas/Links'
-        dme:
-          $ref: '#/components/schemas/Links'
-      xml:
-        name: modifiers
-    ModifierDesc:
-      type: object
-      properties:
-        descFull:
-          type: string
-          xml:
-            name: desc-full
-        usage:
-          type: string
-        definition:
-          type: string
-      xml:
-        name: code-properties
-    Ama:
-      type: object
-      properties:
-        code:
-          type: string
-        description:
-          type: string
     ModifierProperty:
       required:
       - sources
@@ -466,23 +427,7 @@ components:
           $ref: '#/components/schemas/Links'
       xml:
         name: modifier-property
-    Sources:
-      required:
-      - source
-      - sourceRationale
-      type: object
-      properties:
-        source:
-          type: array
-          items:
-            $ref: '#/components/schemas/Source'
-        sourceRationale:
-          type: array
-          xml:
-            name: source_rationale
-          items:
-            $ref: '#/components/schemas/SourceRationale'
-    SourceRationale:
+    Source:
       type: object
       properties:
         value:
@@ -500,6 +445,64 @@ components:
             name: Link
           items:
             $ref: '#/components/schemas/Link'
+    Ama:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+          xml:
+            attribute: true
+        value:
+          type: string
+    Modifiers:
+      type: object
+      properties:
+        physician:
+          $ref: '#/components/schemas/Links'
+        facility:
+          $ref: '#/components/schemas/Links'
+        opps:
+          $ref: '#/components/schemas/Links'
+        mpfs:
+          $ref: '#/components/schemas/Links'
+        asc:
+          $ref: '#/components/schemas/Links'
+        ambulance:
+          $ref: '#/components/schemas/Links'
+        dme:
+          $ref: '#/components/schemas/Links'
+      xml:
+        name: modifiers
+    Optum360:
+      type: object
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+    Sources:
+      required:
+      - source
+      - sourceRationale
+      type: object
+      properties:
+        source:
+          type: array
+          items:
+            $ref: '#/components/schemas/Source'
+        sourceRationale:
+          type: array
+          xml:
+            name: source_rationale
+          items:
+            $ref: '#/components/schemas/SourceRationale'
     Modifier51Exempt:
       required:
       - ama
@@ -516,14 +519,20 @@ components:
             $ref: '#/components/schemas/Ama'
       xml:
         name: modifier-51-exempt
-    Optum360:
+    ModifierDesc:
       type: object
       properties:
-        code:
+        descFull:
           type: string
-        description:
+          xml:
+            name: desc-full
+        usage:
           type: string
-    Source:
+        definition:
+          type: string
+      xml:
+        name: code-properties
+    SourceRationale:
       type: object
       properties:
         value:
@@ -532,15 +541,6 @@ components:
           type: string
           xml:
             attribute: true
-    Link:
-      type: object
-      properties:
-        href:
-          type: string
-          xml:
-            attribute: true
-        value:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http
