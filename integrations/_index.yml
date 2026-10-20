@@ -119,3 +119,41 @@
     detected: '2026-10-18'
   status: not-a-workflow
   arazzo: null
+- slug: optum-directtrust-accreditation-e-prescribing
+  label: DirectTrust Accreditation (e-prescribing)
+  partner_name: DirectTrust Accreditation (e-prescribing)
+  category: E-prescribing accreditation (EPCS / ePrescribing)
+  type: register
+  channel: standard-directory
+  evidence: https://accreditation.directtrust.org/accredited-organization-detail/?accountID=6674830000003340166
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: DirectTrust Accredited Organizations (accreditation.directtrust.org; EHNAC merged into DirectTrust)
+    spec_file: null
+    standard: DirectTrust / EHNAC e-prescribing accreditation (EPCS, ePrescribing-EHN)
+    role: directtrust-accredited-in-market
+    registered_name: Optum
+    register_id: '6674830000003340166'
+    website: https://www.optum.com/
+    matched_domain: optum.com
+    matched_by: domain
+    identity_source: the website the organization filed on its DirectTrust detail page (no lookup)
+    programs:
+    - program: Healthcare Network-EHN
+      status: Accreditation
+      expiry: '2028-10-31'
+    - program: Healthcare Network-EHN
+      status: Accreditation
+      expiry: '2027-09-30'
+    certified_products: []
+    signal_note: certified_products = one entry per e-prescribing PROGRAM (EPCS-Prescribing, EPCS-Pharmacy, ePrescribing-EHN)
+      with a granted status; Candidate / Provisional = participation only; lapsed when the expiry month has passed;
+      other DirectTrust programs are context, never counted
+    detected_by: sweep-e-prescribing.py
+    detected: '2026-10-20'
+    market_fit: own apis.yml tags in-market (pharmacy / e-prescribing / medication); no e-Rx program held
+    other_registrations:
+    - Optum Insight eFR Billing Application
+  status: not-a-workflow
+  arazzo: null

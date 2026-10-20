@@ -142,6 +142,74 @@ edges:
     detected: '2026-10-18'
   detected_by: sweep-official-sdks.py
   first_seen: '2026-10-18'
+- partner_name: DirectTrust Accreditation (e-prescribing)
+  partner: null
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://accreditation.directtrust.org/accredited-organization-detail/?accountID=6674830000003340166
+  category: E-prescribing accreditation (EPCS / ePrescribing)
+  contract_reference:
+    register: DirectTrust Accredited Organizations (accreditation.directtrust.org; EHNAC merged into DirectTrust)
+    spec_file: null
+    standard: DirectTrust / EHNAC e-prescribing accreditation (EPCS, ePrescribing-EHN)
+    role: directtrust-accredited-in-market
+    registered_name: Optum
+    register_id: '6674830000003340166'
+    website: https://www.optum.com/
+    matched_domain: optum.com
+    matched_by: domain
+    identity_source: the website the organization filed on its DirectTrust detail page (no lookup)
+    programs:
+    - program: Healthcare Network-EHN
+      status: Accreditation
+      expiry: '2028-10-31'
+    - program: Healthcare Network-EHN
+      status: Accreditation
+      expiry: '2027-09-30'
+    certified_products: []
+    signal_note: certified_products = one entry per e-prescribing PROGRAM (EPCS-Prescribing, EPCS-Pharmacy, ePrescribing-EHN)
+      with a granted status; Candidate / Provisional = participation only; lapsed when the expiry month has passed;
+      other DirectTrust programs are context, never counted
+    detected_by: sweep-e-prescribing.py
+    detected: '2026-10-20'
+    market_fit: own apis.yml tags in-market (pharmacy / e-prescribing / medication); no e-Rx program held
+    other_registrations:
+    - Optum Insight eFR Billing Application
+  detected_by: sweep-e-prescribing.py
+  first_seen: '2026-10-20'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official CLI (npm registry)
+  evidence: https://www.npmjs.com/package/@optum/knack-cli
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public package index)
+    spec_file: null
+    packages:
+    - name: '@optum/knack-cli'
+      version: 1.4.1
+      released: '2025-12-19'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@optum/knack-cli
+      cli: bin knack
+      repo_leg: github-org:optum
+      publisher_leg: email:optum.com
+      matched_by: domain
+    current: true
+    signal_note: 'the provider''s own command-line tool on a package manager: distribution, not an integration;
+      lapsed = no release in 24 months or deprecated / disabled by the manager'
+    detected_by: sweep-official-clis.py
+    detected: '2026-10-20'
+  detected_by: sweep-official-clis.py
+  first_seen: '2026-10-20'
 generated: '2026-10-12'
 method: searched
 checked:
@@ -157,6 +225,14 @@ checked:
 - https://rubygems.org/api/v1
 - https://www.commonwellalliance.org/wp-json/wp/v2/pages?slug=commonwell-connected-products&_fields=id,link,content
 - https://www.commonwellalliance.org/wp-json/wp/v2/pages?slug=commonwell-members&_fields=id,link,content
+- https://accreditation.directtrust.org/accredited-organizations
+- https://www.drummondgroup.com/certified-products/epcs/
+- https://www.ncpdp.org/Members
+- https://cdn.winget.microsoft.com/cache
+- https://formulae.brew.sh/api/cask.json
+- https://formulae.brew.sh/api/formula.json
+- https://github.com/ScoopInstaller/Extras
+- https://github.com/ScoopInstaller/Main
 marketplace_apps: []
 source:
 - eclinicalworks/integrations/eclinicalworks-integration-edges.yml
