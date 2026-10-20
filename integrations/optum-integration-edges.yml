@@ -262,9 +262,17 @@ method: searched
 checked:
 - eclinicalworks/integrations/eclinicalworks-integration-edges.yml
 - guidewire/integrations/guidewire-integration-edges.yml
+- https://accreditation.directtrust.org/accredited-organizations
 - https://api.nuget.org/v3
 - https://azuremarketplace.microsoft.com/
+- https://cdn.winget.microsoft.com/cache
+- https://connectathon-results.ihe.net/custom-search/
 - https://crates.io/api/v1
+- https://formulae.brew.sh/api/cask.json
+- https://formulae.brew.sh/api/formula.json
+- https://github.com/ScoopInstaller/Extras
+- https://github.com/ScoopInstaller/Main
+- https://product-registry.ihe.net/
 - https://proxy.golang.org
 - https://pypi.org/pypi
 - https://registry.npmjs.org
@@ -272,16 +280,8 @@ checked:
 - https://rubygems.org/api/v1
 - https://www.commonwellalliance.org/wp-json/wp/v2/pages?slug=commonwell-connected-products&_fields=id,link,content
 - https://www.commonwellalliance.org/wp-json/wp/v2/pages?slug=commonwell-members&_fields=id,link,content
-- https://accreditation.directtrust.org/accredited-organizations
 - https://www.drummondgroup.com/certified-products/epcs/
 - https://www.ncpdp.org/Members
-- https://cdn.winget.microsoft.com/cache
-- https://formulae.brew.sh/api/cask.json
-- https://formulae.brew.sh/api/formula.json
-- https://github.com/ScoopInstaller/Extras
-- https://github.com/ScoopInstaller/Main
-- https://connectathon-results.ihe.net/custom-search/
-- https://product-registry.ihe.net/
 marketplace_apps: []
 source:
 - eclinicalworks/integrations/eclinicalworks-integration-edges.yml
