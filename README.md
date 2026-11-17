@@ -76,7 +76,6 @@ Everything profiled for Optum is published on APIs.io rather than in this reposi
 
 - [Optum Real (Medical) API](https://apis.io/apis/optum/optum-real-medical-api/) — Optum Real point-of-care APIs on the oihub gateway: pre-service eligibility, claim pre-check, claim actions, claim inquiry, patient benefit check, document…
 - [Optum Interoperability APIs (CMS Patient Access)](https://apis.io/apis/optum/optum-interoperability-apis-cms-patient-access/) — Optum's payer-side CMS Interoperability and Patient Access (CMS-9115-F) surface — Patient Access, Provider Directory and Payer-to-Payer exchange for the…
-- [Optum Ambulance Fee Schedule APIs API](https://apis.io/apis/optum/optum-ambulance-fee-schedule-apis-api/) — The Ambulance Fee Schedule APIs API from Optum — 2 operation(s) for ambulance fee schedule apis.
 - [Optum Anesthesia Fee APIs API](https://apis.io/apis/optum/optum-anesthesia-fee-apis-api/) — The Anesthesia Fee APIs API from Optum — 1 operation(s) for anesthesia fee apis.
 - [Optum APC Calculator APIs API](https://apis.io/apis/optum/optum-apc-calculator-apis-api/) — The APC Calculator APIs API from Optum — 1 operation(s) for apc calculator apis.
 - [Optum APC Cross Codes APIs API](https://apis.io/apis/optum/optum-apc-cross-codes-apis-api/) — The APC Cross Codes APIs API from Optum — 3 operation(s) for apc cross codes apis.
@@ -87,10 +86,7 @@ Everything profiled for Optum is published on APIs.io rather than in this reposi
 - [Optum Attachment Submission API](https://apis.io/apis/optum/optum-attachment-submission-api/) — Attachment Submission
 - [Optum Authentication API](https://apis.io/apis/optum/optum-authentication-api/) — The Authentication API from Optum — 1 operation(s) for authentication.
 - [Optum Authorization (Orchestration) API](https://apis.io/apis/optum/optum-authorization-orchestration-api/) — The Authorization (Orchestration) API from Optum — 2 operation(s) for authorization (orchestration).
-- [Optum Average Sales Price APIs API](https://apis.io/apis/optum/optum-average-sales-price-apis-api/) — The Average Sales Price APIs API from Optum — 1 operation(s) for average sales price apis.
 - [Optum CC/MCC Code and Excludes List for I10CM and I9V1 APIs API](https://apis.io/apis/optum/optum-cc-mcc-code-and-excludes-list-for-i10cm-and-i9v1-apis-api/) — The CC/MCC Code and Excludes List for I10CM and I9V1 APIs API from Optum — 2 operation(s) for cc/mcc code and excludes list for i10cm and i9v1 apis.
-- [Optum CCI Edits APIs API](https://apis.io/apis/optum/optum-cci-edits-apis-api/) — The CCI Edits APIs API from Optum — 10 operation(s) for cci edits apis.
-- [Optum CCI Edits Code Validator API](https://apis.io/apis/optum/optum-cci-edits-code-validator-api-api/) — The CCI Edits Code Validator API API from Optum — 1 operation(s) for cci edits code validator api.
 - [Optum CDI and Coding Support PDF Information API](https://apis.io/apis/optum/optum-cdi-and-coding-support-pdf-information-api/) — The CDI and Coding Support PDF Information API from Optum — 1 operation(s) for cdi and coding support pdf information.
 - [Optum CDI Information API](https://apis.io/apis/optum/optum-cdi-information-api/) — The CDI Information API from Optum — 2 operation(s) for cdi information.
 - [Optum Check Enhanced Dental Eligibility API](https://apis.io/apis/optum/optum-check-enhanced-dental-eligibility-api/) — The Check Enhanced Dental Eligibility API from Optum — 1 operation(s) for check enhanced dental eligibility.
@@ -102,10 +98,6 @@ Everything profiled for Optum is published on APIs.io rather than in this reposi
 - [Optum Claim Status Category Code APIs API](https://apis.io/apis/optum/optum-claim-status-category-code-apis-api/) — The Claim Status Category Code APIs API from Optum — 1 operation(s) for claim status category code apis.
 - [Optum Claim Status Code APIs API](https://apis.io/apis/optum/optum-claim-status-code-apis-api/) — The Claim Status Code APIs API from Optum — 1 operation(s) for claim status code apis.
 - [Optum Claim Pre Check API](https://apis.io/apis/optum/optum-claimprecheck-api/) — The ClaimPreCheck API from Optum — 1 operation(s) for claimprecheck.
-- [Optum Clinical Diagnostic Laboratory APIs API](https://apis.io/apis/optum/optum-clinical-diagnostic-laboratory-apis-api/) — The Clinical Diagnostic Laboratory APIs API from Optum — 1 operation(s) for clinical diagnostic laboratory apis.
-- [Optum CMS HCC APIs API](https://apis.io/apis/optum/optum-cms-hcc-apis-api/) — The CMS HCC APIs API from Optum — 3 operation(s) for cms hcc apis.
-- [Optum CMS IOM's Policy APIs API](https://apis.io/apis/optum/optum-cms-iom-s-policy-apis-api/) — The CMS IOM's Policy APIs API from Optum — 1 operation(s) for cms iom's policy apis.
-- [Optum CMS Transmittal APIs API](https://apis.io/apis/optum/optum-cms-transmittal-apis-api/) — The CMS Transmittal APIs API from Optum — 3 operation(s) for cms transmittal apis.
 - [Optum Code Book APIs API](https://apis.io/apis/optum/optum-code-book-apis-api/) — The Code Book APIs API from Optum — 2 operation(s) for code book apis.
 - [Optum Code Fee API](https://apis.io/apis/optum/optum-code-fee-api/) — The Code Fee API from Optum — 4 operation(s) for code fee.
 - [Optum Code History APIs API](https://apis.io/apis/optum/optum-code-history-apis-api/) — The Code History APIs API from Optum — 1 operation(s) for code history apis.
@@ -113,17 +105,13 @@ Everything profiled for Optum is published on APIs.io rather than in this reposi
 - [Optum Code Information API](https://apis.io/apis/optum/optum-code-information-api/) — The Code Information API from Optum — 15 operation(s) for code information.
 - [Optum Code Information APIs API](https://apis.io/apis/optum/optum-code-information-apis-api/) — The Code Information APIs API from Optum — 9 operation(s) for code information apis.
 - [Optum Code Specific Guidelines API](https://apis.io/apis/optum/optum-code-specific-guidelines-api/) — The Code Specific Guidelines API from Optum — 2 operation(s) for code specific guidelines.
-- [Optum Code Specific Guidelines APIs API](https://apis.io/apis/optum/optum-code-specific-guidelines-apis-api/) — The Code Specific Guidelines APIs API from Optum — 2 operation(s) for code specific guidelines apis.
 - [Optum Coding Documentation Guideline APIs API](https://apis.io/apis/optum/optum-coding-documentation-guideline-apis-api/) — The Coding Documentation Guideline APIs API from Optum — 2 operation(s) for coding documentation guideline apis.
 - [Optum Coding Support API](https://apis.io/apis/optum/optum-coding-support-api/) — The Coding Support API from Optum — 1 operation(s) for coding support.
 - [Optum Coding Tips API](https://apis.io/apis/optum/optum-coding-tips-api-api/) — The Coding Tips API API from Optum — 2 operation(s) for coding tips api.
 - [Optum Color Codes API](https://apis.io/apis/optum/optum-color-codes-api/) — The Color Codes API from Optum — 5 operation(s) for color codes.
 - [Optum Color codes APIs API](https://apis.io/apis/optum/optum-color-codes-apis-api/) — The Color codes APIs API from Optum — 23 operation(s) for color codes apis.
-- [Optum Compliance APIs API](https://apis.io/apis/optum/optum-compliance-apis-api/) — The Compliance APIs API from Optum — 5 operation(s) for compliance apis.
-- [Optum Consumer Code Manager API](https://apis.io/apis/optum/optum-consumer-code-manager-api-api/) — The Consumer Code Manager API API from Optum — 1 operation(s) for consumer code manager api.
 - [Optum Coverage Discovery API](https://apis.io/apis/optum/optum-coverage-discovery-api/) — Create and retrieve asynchronous Coverage Discovery tasks. Coverage Discovery paths and add-ons are enabled per customer and are not included automatically.…
 - [Optum Create Attachments API](https://apis.io/apis/optum/optum-create-attachments-api/) — Operations for creating and uploading attachments.
-- [Optum Cross Coder API](https://apis.io/apis/optum/optum-cross-coder-api-api/) — The Cross Coder API API from Optum — 3 operation(s) for cross coder api.
 - [Optum Data File API](https://apis.io/apis/optum/optum-data-file-api/) — The Data File API from Optum — 2 operation(s) for data file.
 - [Optum Decision Support Record Service API](https://apis.io/apis/optum/optum-decisionsupportrecordservice-api/) — The DecisionSupportRecordService API from Optum — 2 operation(s) for decisionsupportrecordservice.
 - [Optum Dental Claim Actions API](https://apis.io/apis/optum/optum-dental-claim-actions-api/) — The Dental Claim Actions API from Optum — 1 operation(s) for dental claim actions.
@@ -132,18 +120,15 @@ Everything profiled for Optum is published on APIs.io rather than in this reposi
 - [Optum Device Offset Codes Pair APIs API](https://apis.io/apis/optum/optum-device-offset-codes-pair-apis-api/) — The Device Offset Codes Pair APIs API from Optum — 1 operation(s) for device offset codes pair apis.
 - [Optum Diagnostic Related Groups (DRG) Indicators APIs API](https://apis.io/apis/optum/optum-diagnostic-related-groups-drg-indicators-apis-api/) — The Diagnostic Related Groups (DRG) Indicators APIs API from Optum — 1 operation(s) for diagnostic related groups (drg) indicators apis.
 - [Optum Discovery API](https://apis.io/apis/optum/optum-discovery-api/) — The Discovery API from Optum — 1 operation(s) for discovery.
-- [Optum DME and PEN Fee Schedule APIs API](https://apis.io/apis/optum/optum-dme-and-pen-fee-schedule-apis-api/) — The DME and PEN Fee Schedule APIs API from Optum — 3 operation(s) for dme and pen fee schedule apis.
 - [Optum Document Retrieve API](https://apis.io/apis/optum/optum-documentretrieve-api/) — The documentRetrieve API from Optum — 1 operation(s) for documentretrieve.
 - [Optum DRG Calculator APIs API](https://apis.io/apis/optum/optum-drg-calculator-apis-api/) — The DRG Calculator APIs API from Optum — 1 operation(s) for drg calculator apis.
 - [Optum DRG Codes API](https://apis.io/apis/optum/optum-drg-codes-api/) — The DRG Codes API from Optum — 1 operation(s) for drg codes.
 - [Optum DRG Information APIs API](https://apis.io/apis/optum/optum-drg-information-apis-api/) — The DRG Information APIs API from Optum — 6 operation(s) for drg information apis.
 - [Optum Dtr Capability Statement API](https://apis.io/apis/optum/optum-dtrcapabilitystatement-api/) — The DtrCapabilityStatement API from Optum — 1 operation(s) for dtrcapabilitystatement.
-- [Optum Eligibility API](https://apis.io/apis/optum/optum-eligibility-api/) — Medical Eligibility
 - [Optum Eligibility Requests API](https://apis.io/apis/optum/optum-eligibility-requests-api/) — Submit new real-time eligibility transactions. These endpoints accept either a normalized JSON request or a JSON request body with `x12` set to the X12 270…
 - [Optum Eligibility Transactions API](https://apis.io/apis/optum/optum-eligibility-transactions-api/) — Retrieve previously processed real-time eligibility transactions. Use these endpoints to list transactions, filter by status, date range, patient details,…
 - [Optum ERA Enrollment API](https://apis.io/apis/optum/optum-era-enrollment-api-api/) — ERA Enrollment API
 - [Optum Exports API](https://apis.io/apis/optum/optum-exports-api/) — The Exports API from Optum — 1 operation(s) for exports.
-- [Optum Facility Compliance APIs API](https://apis.io/apis/optum/optum-facility-compliance-apis-api/) — The Facility Compliance APIs API from Optum — 12 operation(s) for facility compliance apis.
 - [Optum Federal Register Addendum B API](https://apis.io/apis/optum/optum-federal-register-addendum-b-api-api/) — The Federal Register Addendum B API API from Optum — 1 operation(s) for federal register addendum b api.
 - [Optum Federal Register Addendum B History API](https://apis.io/apis/optum/optum-federal-register-addendum-b-history-api-api/) — The Federal Register Addendum B History API API from Optum — 1 operation(s) for federal register addendum b history api.
 - [Optum Fields API](https://apis.io/apis/optum/optum-fields-api/) — The Fields API from Optum — 1 operation(s) for fields.
@@ -157,13 +142,11 @@ Everything profiled for Optum is published on APIs.io rather than in this reposi
 - [Optum HCC Information API](https://apis.io/apis/optum/optum-hcc-information-api/) — The HCC Information API from Optum — 4 operation(s) for hcc information.
 - [Optum HCPCS Table of Drugs API](https://apis.io/apis/optum/optum-hcpcs-table-of-drugs-api-api/) — The HCPCS Table of Drugs API API from Optum — 1 operation(s) for hcpcs table of drugs api.
 - [Optum Health Care Decision Reason API](https://apis.io/apis/optum/optum-health-care-decision-reason-api-api/) — The Health Care Decision Reason API API from Optum — 1 operation(s) for health care decision reason api.
-- [Optum Health Check API](https://apis.io/apis/optum/optum-health-check-api/) — The Health Check API from Optum — 7 operation(s) for health check.
 - [Optum I-OCE Edits APIs API](https://apis.io/apis/optum/optum-i-oce-edits-apis-api/) — The I-OCE Edits APIs API from Optum — 4 operation(s) for i-oce edits apis.
 - [Optum I10PCS Code Builder APIs API](https://apis.io/apis/optum/optum-i10pcs-code-builder-apis-api/) — The I10PCS Code Builder APIs API from Optum — 3 operation(s) for i10pcs code builder apis.
 - [Optum ICD10 Mapping API](https://apis.io/apis/optum/optum-icd10-mapping-api/) — The ICD10 Mapping API from Optum — 1 operation(s) for icd10 mapping.
 - [Optum ICD9 Mapping API](https://apis.io/apis/optum/optum-icd9-mapping-api/) — The ICD9 Mapping API from Optum — 1 operation(s) for icd9 mapping.
 - [Optum Image Intelligence API](https://apis.io/apis/optum/optum-image-intelligence-api/) — Operations for enabling Image Intelligence for attachments.
-- [Optum Inquiry API](https://apis.io/apis/optum/optum-inquiry-api/) — The Inquiry API from Optum — 3 operation(s) for inquiry.
 - [Optum Institutional Claims API](https://apis.io/apis/optum/optum-institutional-claims-api/) — Institutional Claims
 - [Optum LCD API](https://apis.io/apis/optum/optum-lcd-api/) — The LCD API from Optum — 4 operation(s) for lcd.
 - [Optum Mapping APIs API](https://apis.io/apis/optum/optum-mapping-apis-api/) — The Mapping APIs API from Optum — 4 operation(s) for mapping apis.
@@ -171,21 +154,14 @@ Everything profiled for Optum is published on APIs.io rather than in this reposi
 - [Optum MCE Associated ICD9 APIs API](https://apis.io/apis/optum/optum-mce-associated-icd9-apis-api/) — The MCE Associated ICD9 APIs API from Optum — 1 operation(s) for mce associated icd9 apis.
 - [Optum MCE Edits ICD9 and ICD10 API](https://apis.io/apis/optum/optum-mce-edits-icd9-and-icd10-api-api/) — The MCE Edits ICD9 and ICD10 API API from Optum — 3 operation(s) for mce edits icd9 and icd10 api.
 - [Optum MDC Optimizing Tips APIs API](https://apis.io/apis/optum/optum-mdc-optimizing-tips-apis-api/) — The MDC Optimizing Tips APIs API from Optum — 2 operation(s) for mdc optimizing tips apis.
-- [Optum Medically Unlikely Edits(MUEs) APIs API](https://apis.io/apis/optum/optum-medically-unlikely-edits-mues-apis-api/) — The Medically Unlikely Edits(MUEs) APIs API from Optum — 1 operation(s) for medically unlikely edits(mues) apis.
-- [Optum Medicare Carrier Localities API](https://apis.io/apis/optum/optum-medicare-carrier-localities-api/) — The Medicare Carrier Localities API from Optum — 1 operation(s) for medicare carrier localities.
-- [Optum Medicare Coverage Policy for part A and Part B APIs API](https://apis.io/apis/optum/optum-medicare-coverage-policy-for-part-a-and-part-b-apis-api/) — The Medicare Coverage Policy for part A and Part B APIs API from Optum — 4 operation(s) for medicare coverage policy for part a and part b apis.
-- [Optum Medicare Fee Schedule APIs API](https://apis.io/apis/optum/optum-medicare-fee-schedule-apis-api/) — The Medicare Fee Schedule APIs API from Optum — 10 operation(s) for medicare fee schedule apis.
 - [Optum Medicare Policy API](https://apis.io/apis/optum/optum-medicare-policy-api/) — The Medicare Policy API from Optum — 3 operation(s) for medicare policy.
 - [Optum Merck Manual API](https://apis.io/apis/optum/optum-merck-manual-api-api/) — The Merck Manual API API from Optum — 2 operation(s) for merck manual api.
-- [Optum Modifier CrossWalk API](https://apis.io/apis/optum/optum-modifier-crosswalk-api-api/) — The Modifier CrossWalk API API from Optum — 2 operation(s) for modifier crosswalk api.
 - [Optum Modifiers API](https://apis.io/apis/optum/optum-modifiers-api/) — The Modifiers API from Optum — 5 operation(s) for modifiers.
 - [Optum Modifiers APIs API](https://apis.io/apis/optum/optum-modifiers-apis-api/) — The Modifiers APIs API from Optum — 6 operation(s) for modifiers apis.
 - [Optum MPFS National Payment Table Facility APIs API](https://apis.io/apis/optum/optum-mpfs-national-payment-table-facility-apis-api/) — The MPFS National Payment Table Facility APIs API from Optum — 1 operation(s) for mpfs national payment table facility apis.
 - [Optum National Charge Data API](https://apis.io/apis/optum/optum-national-charge-data-api-api/) — The National Charge Data API API from Optum — 1 operation(s) for national charge data api.
-- [Optum National Drug Code API](https://apis.io/apis/optum/optum-national-drug-code-api-api/) — The National Drug Code API API from Optum — 1 operation(s) for national drug code api.
 - [Optum Next Question API](https://apis.io/apis/optum/optum-nextquestion-api/) — The NextQuestion API from Optum — 1 operation(s) for nextquestion.
 - [Optum Noa API](https://apis.io/apis/optum/optum-noa-api/) — The Noa API from Optum — 2 operation(s) for noa.
-- [Optum Not Otherwise Classified (NOC) Drug Pricing APIs API](https://apis.io/apis/optum/optum-not-otherwise-classified-noc-drug-pricing-apis-api/) — The Not Otherwise Classified (NOC) Drug Pricing APIs API from Optum — 1 operation(s) for not otherwise classified (noc) drug pricing apis.
 - [Optum Notes Information APIs API](https://apis.io/apis/optum/optum-notes-information-apis-api/) — The Notes Information APIs API from Optum — 6 operation(s) for notes information apis.
 - [Optum Oihub API](https://apis.io/apis/optum/optum-oihub-api/) — The Oihub API from Optum — 1 operation(s) for oihub.
 - [Optum Operation Definition API](https://apis.io/apis/optum/optum-operationdefinition-api/) — The OperationDefinition API from Optum — 1 operation(s) for operationdefinition.
@@ -200,13 +176,11 @@ Everything profiled for Optum is published on APIs.io rather than in this reposi
 - [Optum Payers API](https://apis.io/apis/optum/optum-payers-api/) — The Payers API from Optum — 1 operation(s) for payers.
 - [Optum Payersheet API](https://apis.io/apis/optum/optum-payersheet-api/) — API to process Payersheet information
 - [Optum Payments API](https://apis.io/apis/optum/optum-payments-api/) — The Payments API from Optum — 2 operation(s) for payments.
-- [Optum Policy Lookup APIs API](https://apis.io/apis/optum/optum-policy-lookup-apis-api/) — The Policy Lookup APIs API from Optum — 4 operation(s) for policy lookup apis.
 - [Optum Prepaydme API](https://apis.io/apis/optum/optum-prepaydme-api/) — The prepaydme API from Optum — 1 operation(s) for prepaydme.
 - [Optum Prepaylab API](https://apis.io/apis/optum/optum-prepaylab-api/) — The prepaylab API from Optum — 1 operation(s) for prepaylab.
 - [Optum Print Code Detail Summary API](https://apis.io/apis/optum/optum-print-code-detail-summary-api-api/) — The Print Code Detail Summary API API from Optum — 1 operation(s) for print code detail summary api.
 - [Optum prior auth API](https://apis.io/apis/optum/optum-prior-auth-api-api/) — The prior auth api API from Optum — 1 operation(s) for prior auth api.
 - [Optum Professional Claims API](https://apis.io/apis/optum/optum-professional-claims-api/) — Professional Claims
-- [Optum Prometheus API](https://apis.io/apis/optum/optum-prometheus-api/) — The Prometheus API from Optum — 2 operation(s) for prometheus.
 - [Optum Provider Lookup APIs API](https://apis.io/apis/optum/optum-provider-lookup-apis-api/) — The Provider Lookup APIs API from Optum — 1 operation(s) for provider lookup apis.
 - [Optum Provider Participation List API](https://apis.io/apis/optum/optum-provider-participation-list-api/) — The Provider Participation List API from Optum — 1 operation(s) for provider participation list.
 - [Optum Provider Access Bulk Member Match API](https://apis.io/apis/optum/optum-provideraccessbulkmembermatch-api/) — The ProviderAccessBulkMemberMatch API from Optum — 1 operation(s) for provideraccessbulkmembermatch.
@@ -216,7 +190,6 @@ Everything profiled for Optum is published on APIs.io rather than in this reposi
 - [Optum QPP MIPS APIs API](https://apis.io/apis/optum/optum-qpp-mips-apis-api/) — The QPP MIPS APIs API from Optum — 4 operation(s) for qpp mips apis.
 - [Optum Questionnaire Package API](https://apis.io/apis/optum/optum-questionnairepackage-api/) — The QuestionnairePackage API from Optum — 1 operation(s) for questionnairepackage.
 - [Optum Reference Code API](https://apis.io/apis/optum/optum-reference-code-api/) — The Reference Code API from Optum — 6 operation(s) for reference code.
-- [Optum Release Dates API](https://apis.io/apis/optum/optum-release-dates-api-api/) — The Release Dates API API from Optum — 1 operation(s) for release dates api.
 - [Optum Remittance Advice Remark Codes APIs API](https://apis.io/apis/optum/optum-remittance-advice-remark-codes-apis-api/) — The Remittance Advice Remark Codes APIs API from Optum — 1 operation(s) for remittance advice remark codes apis.
 - [Optum Report API](https://apis.io/apis/optum/optum-report-api/) — The Report API from Optum — 3 operation(s) for report.
 - [Optum Reports API](https://apis.io/apis/optum/optum-reports-api/) — The Reports API from Optum — 1 operation(s) for reports.
@@ -224,7 +197,6 @@ Everything profiled for Optum is published on APIs.io rather than in this reposi
 - [Optum Revenue Codes API](https://apis.io/apis/optum/optum-revenue-codes-api-api/) — The Revenue Codes API API from Optum — 4 operation(s) for revenue codes api.
 - [Optum Review Attachments API](https://apis.io/apis/optum/optum-review-attachments-api/) — Operations for retrieving attachments for review.
 - [Optum Roster Management API](https://apis.io/apis/optum/optum-roster-management-api/) — The Roster Management API from Optum — 1 operation(s) for roster management.
-- [Optum State List Fee Schedule APIs API](https://apis.io/apis/optum/optum-state-list-fee-schedule-apis-api/) — The State List Fee Schedule APIs API from Optum — 1 operation(s) for state list fee schedule apis.
 - [Optum Submission API](https://apis.io/apis/optum/optum-submission-api/) — The Submission API from Optum — 2 operation(s) for submission.
 - [Optum Submit API](https://apis.io/apis/optum/optum-submit-api/) — The Submit API from Optum — 1 operation(s) for submit.
 - [Optum Submit Attachment API](https://apis.io/apis/optum/optum-submitattachment-api/) — The SubmitAttachment API from Optum — 1 operation(s) for submitattachment.
@@ -235,8 +207,36 @@ Everything profiled for Optum is published on APIs.io rather than in this reposi
 - [Optum UB04 Code Lists API](https://apis.io/apis/optum/optum-ub04-code-lists-api/) — The UB04 Code Lists API from Optum — 1 operation(s) for ub04 code lists.
 - [Optum V3 Ingestion API](https://apis.io/apis/optum/optum-v3-ingestion-api/) — ODX V3 Ingestion Service API for processing XDR Request in P&R request with HL7 V3 payload
 - [Optum Wage Index API](https://apis.io/apis/optum/optum-wage-index-api-api/) — The Wage Index API API from Optum — 1 operation(s) for wage index api.
+- [Optum Ambulance Fee Schedule APIs API](https://apis.io/apis/optum/optum-ambulance-fee-schedule-apis-api/) — The Ambulance Fee Schedule APIs API from Optum — 2 operation(s) for ambulance fee schedule apis.
+- [Optum Average Sales Price APIs API](https://apis.io/apis/optum/optum-average-sales-price-apis-api/) — The Average Sales Price APIs API from Optum — 1 operation(s) for average sales price apis.
+- [Optum CCI Edits APIs API](https://apis.io/apis/optum/optum-cci-edits-apis-api/) — The CCI Edits APIs API from Optum — 10 operation(s) for cci edits apis.
+- [Optum CCI Edits Code Validator API](https://apis.io/apis/optum/optum-cci-edits-code-validator-api-api/) — The CCI Edits Code Validator API API from Optum — 1 operation(s) for cci edits code validator api.
+- [Optum Clinical Diagnostic Laboratory APIs API](https://apis.io/apis/optum/optum-clinical-diagnostic-laboratory-apis-api/) — The Clinical Diagnostic Laboratory APIs API from Optum — 1 operation(s) for clinical diagnostic laboratory apis.
+- [Optum CMS HCC APIs API](https://apis.io/apis/optum/optum-cms-hcc-apis-api/) — The CMS HCC APIs API from Optum — 3 operation(s) for cms hcc apis.
+- [Optum CMS IOM's Policy APIs API](https://apis.io/apis/optum/optum-cms-iom-s-policy-apis-api/) — The CMS IOM's Policy APIs API from Optum — 1 operation(s) for cms iom's policy apis.
+- [Optum CMS Transmittal APIs API](https://apis.io/apis/optum/optum-cms-transmittal-apis-api/) — The CMS Transmittal APIs API from Optum — 3 operation(s) for cms transmittal apis.
+- [Optum Code Specific Guidelines APIs API](https://apis.io/apis/optum/optum-code-specific-guidelines-apis-api/) — The Code Specific Guidelines APIs API from Optum — 2 operation(s) for code specific guidelines apis.
+- [Optum Compliance APIs API](https://apis.io/apis/optum/optum-compliance-apis-api/) — The Compliance APIs API from Optum — 5 operation(s) for compliance apis.
+- [Optum Consumer Code Manager API](https://apis.io/apis/optum/optum-consumer-code-manager-api-api/) — The Consumer Code Manager API API from Optum — 1 operation(s) for consumer code manager api.
+- [Optum Cross Coder API](https://apis.io/apis/optum/optum-cross-coder-api-api/) — The Cross Coder API API from Optum — 3 operation(s) for cross coder api.
+- [Optum DME and PEN Fee Schedule APIs API](https://apis.io/apis/optum/optum-dme-and-pen-fee-schedule-apis-api/) — The DME and PEN Fee Schedule APIs API from Optum — 3 operation(s) for dme and pen fee schedule apis.
 - [Optum Document Reference API](https://apis.io/apis/optum/optum-document-reference-api/) — The Document Reference API from Optum — 1 operation(s) for document reference.
+- [Optum Eligibility API](https://apis.io/apis/optum/optum-eligibility-api/) — Medical Eligibility
+- [Optum Facility Compliance APIs API](https://apis.io/apis/optum/optum-facility-compliance-apis-api/) — The Facility Compliance APIs API from Optum — 12 operation(s) for facility compliance apis.
+- [Optum Health Check API](https://apis.io/apis/optum/optum-health-check-api/) — The Health Check API from Optum — 21 operation(s) for health check.
+- [Optum Inquiry API](https://apis.io/apis/optum/optum-inquiry-api/) — The Inquiry API from Optum — 3 operation(s) for inquiry.
+- [Optum Medically Unlikely Edits(MUEs) APIs API](https://apis.io/apis/optum/optum-medically-unlikely-edits-mues-apis-api/) — The Medically Unlikely Edits(MUEs) APIs API from Optum — 1 operation(s) for medically unlikely edits(mues) apis.
+- [Optum Medicare Carrier Localities API](https://apis.io/apis/optum/optum-medicare-carrier-localities-api/) — The Medicare Carrier Localities API from Optum — 1 operation(s) for medicare carrier localities.
+- [Optum Medicare Coverage Policy for part A and Part B APIs API](https://apis.io/apis/optum/optum-medicare-coverage-policy-for-part-a-and-part-b-apis-api/) — The Medicare Coverage Policy for part A and Part B APIs API from Optum — 4 operation(s) for medicare coverage policy for part a and part b apis.
+- [Optum Medicare Fee Schedule APIs API](https://apis.io/apis/optum/optum-medicare-fee-schedule-apis-api/) — The Medicare Fee Schedule APIs API from Optum — 10 operation(s) for medicare fee schedule apis.
+- [Optum Modifier CrossWalk API](https://apis.io/apis/optum/optum-modifier-crosswalk-api-api/) — The Modifier CrossWalk API API from Optum — 2 operation(s) for modifier crosswalk api.
+- [Optum National Drug Code API](https://apis.io/apis/optum/optum-national-drug-code-api-api/) — The National Drug Code API API from Optum — 1 operation(s) for national drug code api.
+- [Optum Not Otherwise Classified (NOC) Drug Pricing APIs API](https://apis.io/apis/optum/optum-not-otherwise-classified-noc-drug-pricing-apis-api/) — The Not Otherwise Classified (NOC) Drug Pricing APIs API from Optum — 1 operation(s) for not otherwise classified (noc) drug pricing apis.
+- [Optum Policy Lookup APIs API](https://apis.io/apis/optum/optum-policy-lookup-apis-api/) — The Policy Lookup APIs API from Optum — 4 operation(s) for policy lookup apis.
+- [Optum Prometheus API](https://apis.io/apis/optum/optum-prometheus-api/) — The Prometheus API from Optum — 2 operation(s) for prometheus.
 - [Optum Query Service API](https://apis.io/apis/optum/optum-query-service-api/) — The Query Service API from Optum — 1 operation(s) for query service.
+- [Optum Release Dates API](https://apis.io/apis/optum/optum-release-dates-api-api/) — The Release Dates API API from Optum — 1 operation(s) for release dates api.
+- [Optum State List Fee Schedule APIs API](https://apis.io/apis/optum/optum-state-list-fee-schedule-apis-api/) — The State List Fee Schedule APIs API from Optum — 1 operation(s) for state list fee schedule apis.
 
 ### Published properties
 
@@ -260,11 +260,54 @@ Which operations an agent can call, which act, and which need a human in the loo
 
 - [Optum Agentic Access](https://apis.io/agentic-access/optum/optum-agentic-access/)
 
+#### JSON Schema (171)
+
+The data models the API reads and writes.
+
+- [ABNForm](https://apis.io/schemas/optum/optum-abnform/)
+- [ApcCalculatorRequest](https://apis.io/schemas/optum/optum-apc-calculator-request/)
+- [ApiResponseClientOrderDetailsResponse](https://apis.io/schemas/optum/optum-api-response-client-order-details-response/)
+- [ApiResponseClientOrderStatusResponse](https://apis.io/schemas/optum/optum-api-response-client-order-status-response/)
+- [ApiResponseProviderParticipationResponse](https://apis.io/schemas/optum/optum-api-response-provider-participation-response/)
+- [ApiResponseVendorOrderDetailsResponse](https://apis.io/schemas/optum/optum-api-response-vendor-order-details-response/)
+- [ApiResponseVendorOrderStatusResponse](https://apis.io/schemas/optum/optum-api-response-vendor-order-status-response/)
+- [Attachment](https://apis.io/schemas/optum/optum-attachment/)
+- [AttachmentFile](https://apis.io/schemas/optum/optum-attachment-file/)
+- [AttachmentRequest](https://apis.io/schemas/optum/optum-attachment-request/)
+- [AttachmentResponse](https://apis.io/schemas/optum/optum-attachment-response/)
+- [AuthorizationNoaJSON](https://apis.io/schemas/optum/optum-authorization-noa-json/)
+- [AuthorizationResponse](https://apis.io/schemas/optum/optum-authorization-response/)
+- [AuthorizationSubmissionJSON](https://apis.io/schemas/optum/optum-authorization-submission-json/)
+- [AuthorizationX12Request](https://apis.io/schemas/optum/optum-authorization-x12-request/)
+- [BulkMemberMatchRequest](https://apis.io/schemas/optum/optum-bulk-member-match-request/)
+- [BulkMemberMatchResponse](https://apis.io/schemas/optum/optum-bulk-member-match-response/)
+- [BulkMemberMatchStatusResponse](https://apis.io/schemas/optum/optum-bulk-member-match-status-response/)
+- [Cci](https://apis.io/schemas/optum/optum-cci/)
+- [Cdi](https://apis.io/schemas/optum/optum-cdi/)
+- [CheckJob_Request](https://apis.io/schemas/optum/optum-check-job-request/)
+- [CheckJob_Response_Success](https://apis.io/schemas/optum/optum-check-job-response-success/)
+- [ClaimPaymentAdviceTransactionResponse](https://apis.io/schemas/optum/optum-claim-payment-advice-transaction-response/)
+- [ClaimPreCheckRequest](https://apis.io/schemas/optum/optum-claim-pre-check-request/)
+- [ClaimPreCheckResponseWrapper](https://apis.io/schemas/optum/optum-claim-pre-check-response-wrapper/)
+- …and 146 more published on APIs.io
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Optum Context](https://apis.io/jsonld/optum/optum-context/)
+
 #### Overlays (1)
 
 OpenAPI overlays, including conversational phrasing for each operation.
 
 - [Optum Servers And Provenance Overlay](https://apis.io/overlays/optum/optum-servers-and-provenance-overlay/)
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [Optum API Rules](https://apis.io/rules/optum/optum-rules/)
 
 #### Security (3)
 
@@ -291,6 +334,12 @@ Published plans, tiers and prices.
 Published request limits.
 
 - [Optum Rate Limits](https://apis.io/rate-limits/optum/optum-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Optum Finops](https://apis.io/finops/optum/optum-finops/)
 
 ## Where to find this API
 
